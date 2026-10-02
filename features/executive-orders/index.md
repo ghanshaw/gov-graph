@@ -35,6 +35,12 @@ search and year filtering. Individual orders have detail and full-text views.
 - [x] Item markers wider than their column, e.g. (iii), no longer run into the text
 - [x] Numbered lists ("1. …") are parsed as items (marker keeps its period, `"1."`) and shown with a hanging number. A quotation stays open until its closing mark, so numbered or unmarked paragraphs after an opening “ stay in the quoted block (e.g. the contract clause in EO 14398); quoted paragraphs carry `quote_marker` and hang it beside the text
 
+- [x] Dark teal redesign (see `features/redesign-dark-teal`): order lists are a table with a filter rail (Year signed with counts, President, View, Order); the order page uses the reading layout with the contents list, order facts and subjects in the left rail
+- [x] GraphQL: `executiveOrderYearCounts(president, documentType, search, years)` for the rail's year counts
+- [x] The two Trump terms are told apart by signing date in the list query (the Federal Register has one identifier for both); each term's page no longer lists the other's orders
+
+- [x] Order page buttons in the order Show/Hide full text, Show/Hide PDF, PDF ↗, Federal Register ↗, GovInfo ↗ (govinfo link from `structure.govinfo.details_url`, shown when present); the full text is shown by default
+
 ## Todo
 - [ ] Structured text for Bush (291 orders in the database, 2001–2009): add him to the fetch script's president list and run the loader
 - [ ] Amending orders that restate whole sections without quotation marks produce repeated section numbers (13545, 13637, 13719, 13824, 14032, 14048, 14327)

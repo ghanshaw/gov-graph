@@ -1,5 +1,3 @@
-import OrderOutline from './OrderOutline';
-
 const CITATION_GROUPS = [
   { label: 'Executive orders', types: ['executive_order'] },
   { label: 'Statutes', types: ['usc', 'public_law', 'statute'] },
@@ -44,7 +42,8 @@ function Item({ item, sectionId }) {
       className="item"
       // Only first-level markers are unique within a section.
       id={item.level === 1 ? `${sectionId}-${item.marker.replace(/\.$/, '')}` : undefined}
-      style={item.level > 1 ? { marginLeft: `${(item.level - 1) * 1.75}rem` } : undefined}
+      // Indentation per level is set in index.css (.eo-doc .item).
+      style={item.level > 1 ? { '--level': item.level } : undefined}
     >
       {/* Numbered lists keep their period ("1."); every other marker is printed in parentheses. */}
       <span className="marker">{item.marker.endsWith('.') ? item.marker : `(${item.marker})`}</span>
@@ -57,11 +56,11 @@ function Item({ item, sectionId }) {
 // Amending orders set out replacement text as a run of paragraphs that each open with a
 // quotation mark. A run is shown as one block, lined up with the text that introduces it.
 function QuotedBlock({ items, after }) {
-  const indent = after?.marker ? `${(after.level - 1) * 1.75 + 2.5}rem` : undefined;
+  const afterItem = Boolean(after?.marker);
   return (
-    <blockquote className="quoted" style={indent ? { marginLeft: indent } : undefined}>
+    <blockquote className={afterItem ? 'quoted after-item' : 'quoted'} style={afterItem ? { '--level': after.level } : undefined}>
       {items.map((item, i) => {
-        const style = item.quote_level > 1 ? { marginLeft: `${(item.quote_level - 1) * 1.5}rem` } : undefined;
+        const style = item.quote_level > 1 ? { marginLeft: `${(item.quote_level - 1) * 24}px` } : undefined;
         // The marker is part of the quoted text ("“(i) Open …", "1. The contractor …");
         // it is set in its own column so the lines of the item align.
         const markerEnd = item.quote_marker ? item.text.indexOf(item.quote_marker) : -1;
@@ -99,17 +98,12 @@ export default function OrderText({ structure }) {
     publication, source, govinfo, end_matter: endMatter, attachments = [],
   } = structure;
 
-  // Orders with no "Section 1" heading have a single unnumbered section.
-  const numbered = sections.filter(s => s.number != null);
-
   const citationGroups = CITATION_GROUPS
     .map(group => ({ ...group, items: citations.filter(c => group.types.includes(c.type)) }))
     .filter(group => group.items.length > 0);
 
   return (
     <div className="eo-doc">
-      {numbered.length > 0 && <OrderOutline sections={numbered} />}
-
       {preamble.length > 0 && (
         <div className="preamble">
           {preamble.map((p, i) => <p key={i}>{renderSpans(p.text, p.spans)}</p>)}
@@ -143,21 +137,19 @@ export default function OrderText({ structure }) {
       )}
 
       {citationGroups.length > 0 && (
-        <aside className="refs" aria-label="Documents cited in this order">
-          <h2>Cited in this order</h2>
+        <div className="panel">
+          <h3>Cited in this order</h3>
           {citationGroups.map(group => (
             <div key={group.label}>
-              <h3>{group.label}</h3>
-              <ul>
+              <h4>{group.label}</h4>
+              <div className="chips">
                 {group.items.map(c => (
-                  <li key={c.href}>
-                    <a href={c.href} target="_blank" rel="noopener noreferrer">{c.labels[0]}</a>
-                  </li>
+                  <a key={c.href} className="chip" href={c.href} target="_blank" rel="noopener noreferrer">{c.labels[0]}</a>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
-        </aside>
+        </div>
       )}
 
       {source?.html_url && (

@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
 import { GET_BILL } from '../queries';
+import PageLayout from '../components/PageLayout';
+import Crumbs from '../components/Crumbs';
+import { RailGroup, Fact } from '../components/Rail';
 import TagPanel from '../components/TagPanel';
 
 const TYPE_CODE = {
@@ -20,7 +23,7 @@ const TYPE_FULL = {
   SRES: 'Senate Resolution',
 };
 
-const PARTY_COLOR = { D: '#93c5fd', R: '#fca5a5', I: '#86efac' };
+const PARTY_CLASS = { D: 'party-dem', R: 'party-rep', I: 'party-ind' };
 
 // Map congress.gov text version type strings to canonical stages
 const VERSION_STAGE = {
@@ -105,135 +108,47 @@ function formatDate(iso) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function MetaField({ label, children }) {
-  return (
-    <div>
-      <div style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: '0.65rem',
-        color: 'var(--gold)',
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        marginBottom: '0.4rem',
-      }}>
-        {label}
-      </div>
-      <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: '0.95rem', color: 'var(--cream)' }}>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function BillStepper({ bill }) {
-  const stageInfo = deriveStageInfo(bill);
-  const reachedKeys = STAGES.filter(s => stageInfo[s.key].reached).map(s => s.key);
+function BillStepper({ stageInfo }) {
   const lastReachedIdx = STAGES.reduce((acc, s, i) => stageInfo[s.key].reached ? i : acc, -1);
 
   return (
-    <div style={{ marginBottom: '3rem' }}>
-      <div style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: '0.65rem',
-        color: 'var(--gold)',
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        marginBottom: '1.25rem',
-      }}>
-        Legislative Progress
-      </div>
+    <div className="page-section">
+      <h2 className="section-title">Legislative progress</h2>
 
-      {/* Stepper row */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 0, overflowX: 'auto', paddingBottom: '0.5rem' }}>
+      <div className="stepper">
         {STAGES.map((stage, i) => {
           const info = stageInfo[stage.key];
-          const isReached = info.reached;
-          const isCurrent = i === lastReachedIdx;
-          const isPast = i < lastReachedIdx;
+          const classes = ['step'];
+          if (info.reached) classes.push('reached');
+          if (i === lastReachedIdx) classes.push('current');
+          // The line to the next step is drawn once this step has been passed or reached.
+          if (i <= lastReachedIdx) classes.push('passed');
 
           return (
-            <div key={stage.key} style={{ display: 'flex', alignItems: 'flex-start', flex: 1, minWidth: 80 }}>
-              {/* Step */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                {/* Circle */}
-                <div style={{
-                  width: 28, height: 28,
-                  borderRadius: '50%',
-                  background: isReached ? 'var(--gold)' : 'transparent',
-                  border: `2px solid ${isReached ? 'var(--gold)' : 'rgba(201,168,76,0.2)'}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0,
-                  boxShadow: isCurrent ? '0 0 0 4px rgba(201,168,76,0.15)' : 'none',
-                  transition: 'all 0.2s',
-                }}>
-                  {isReached && (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6l3 3 5-5" stroke="#0a1628" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                </div>
-
-                {/* Label + date */}
-                <div style={{ textAlign: 'center', marginTop: '0.5rem', padding: '0 4px' }}>
-                  <div style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: '0.6rem',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: isReached ? 'var(--gold)' : 'rgba(201,168,76,0.3)',
-                    marginBottom: '0.2rem',
-                    whiteSpace: 'nowrap',
-                  }}>
-                    {stage.label}
-                  </div>
-                  {info.date && formatDate(info.date) && (
-                    <div style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: '0.55rem',
-                      color: 'var(--text-muted)',
-                      whiteSpace: 'nowrap',
-                    }}>
-                      {formatDate(info.date)}
-                    </div>
-                  )}
-                  {/* Document links */}
-                  {info.documents.length > 0 && (
-                    <div style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'column', gap: '0.2rem', alignItems: 'center' }}>
-                      {info.documents.map((v, di) => {
-                        const pdf = v.formats?.find(f => f.type === 'PDF');
-                        const html = v.formats?.find(f => f.type === 'Formatted Text' || f.type === 'HTML');
-                        const link = pdf || html;
-                        return link ? (
-                          <a key={di} href={link.url} target="_blank" rel="noopener noreferrer" style={{
-                            fontFamily: "'IBM Plex Mono', monospace",
-                            fontSize: '0.55rem',
-                            color: 'var(--gold)',
-                            textDecoration: 'none',
-                            border: '1px solid rgba(201,168,76,0.3)',
-                            borderRadius: '3px',
-                            padding: '2px 6px',
-                            whiteSpace: 'nowrap',
-                          }}>
-                            {pdf ? 'PDF' : 'Text'} ↗
-                          </a>
-                        ) : null;
-                      })}
-                    </div>
-                  )}
-                </div>
+            <div key={stage.key} className={classes.join(' ')}>
+              <div className="step-mark">
+                {info.reached && (
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
               </div>
 
-              {/* Connector line (not after last) */}
-              {i < STAGES.length - 1 && (
-                <div style={{
-                  height: 2,
-                  flex: 1,
-                  marginTop: 13,
-                  background: isPast || isCurrent
-                    ? 'rgba(201,168,76,0.5)'
-                    : 'rgba(201,168,76,0.1)',
-                  minWidth: 16,
-                }} />
+              <div className="step-label">{stage.label}</div>
+              {info.date && formatDate(info.date) && <div className="step-date">{formatDate(info.date)}</div>}
+              {info.documents.length > 0 && (
+                <div className="step-docs">
+                  {info.documents.map((v, di) => {
+                    const pdf = v.formats?.find(f => f.type === 'PDF');
+                    const html = v.formats?.find(f => f.type === 'Formatted Text' || f.type === 'HTML');
+                    const link = pdf || html;
+                    return link ? (
+                      <a key={di} className="chip" href={link.url} target="_blank" rel="noopener noreferrer">
+                        {pdf ? 'PDF' : 'Text'} ↗
+                      </a>
+                    ) : null;
+                  })}
+                </div>
               )}
             </div>
           );
@@ -294,68 +209,17 @@ const ACTION_CODE_NAME = {
 };
 
 function ActionRow({ action }) {
-  const [hovered, setHovered] = useState(false);
-
   return (
-    <div
-      style={{ position: 'relative' }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Tick */}
-      <div style={{
-        position: 'absolute',
-        left: '-1.45rem',
-        top: '0.35rem',
-        width: 6, height: 6,
-        borderRadius: '50%',
-        background: hovered ? 'var(--gold)' : 'rgba(201,168,76,0.4)',
-        transition: 'background 0.15s',
-      }} />
-
-      <div style={{ marginBottom: '0.2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem' }}>
-          <div style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.6rem',
-            color: 'var(--text-muted)',
-            letterSpacing: '0.04em',
-          }}>
-            {formatDate(action.actionDate)}
-          </div>
-          {action.actionCode && hovered && (
-            <span style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '0.55rem',
-              color: 'rgba(201,168,76,0.4)',
-              letterSpacing: '0.06em',
-            }}>
-              {action.actionCode}
-            </span>
-          )}
-        </div>
-        {ACTION_CODE_NAME[action.actionCode] && (
-          <div style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.55rem',
-            color: 'rgba(201,168,76,0.5)',
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            marginTop: '0.1rem',
-          }}>
-            {ACTION_CODE_NAME[action.actionCode]}
-          </div>
-        )}
+    <div className="action-row">
+      <div className="action-when">
+        {formatDate(action.actionDate)}
+        {/* The raw action code shows on hover (index.css). */}
+        {action.actionCode && <span className="action-code">{action.actionCode}</span>}
       </div>
-      <div style={{
-        fontFamily: "'IBM Plex Sans', sans-serif",
-        fontSize: '0.875rem',
-        color: 'var(--cream)',
-        lineHeight: 1.5,
-        fontWeight: 300,
-      }}>
-        {action.text}
-      </div>
+      {ACTION_CODE_NAME[action.actionCode] && (
+        <div className="action-name">{ACTION_CODE_NAME[action.actionCode]}</div>
+      )}
+      <div className="action-text">{action.text}</div>
     </div>
   );
 }
@@ -367,59 +231,18 @@ function ActionsLog({ actions }) {
   const shown = expanded ? actions : actions.slice(0, 5);
 
   return (
-    <div style={{ marginBottom: '3rem' }}>
-      <button
-        onClick={() => setExpanded(e => !e)}
-        style={{
-          display: 'flex', alignItems: 'center', gap: '0.5rem',
-          background: 'none', border: 'none', cursor: 'pointer',
-          padding: 0, marginBottom: '1rem',
-        }}
-      >
-        <span style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.65rem',
-          color: 'var(--gold)',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-        }}>
-          Action History ({actions.length})
-        </span>
-        <span style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.6rem',
-          color: 'var(--text-muted)',
-          transform: expanded ? 'rotate(180deg)' : 'none',
-          transition: 'transform 0.15s',
-          display: 'inline-block',
-        }}>▾</span>
-      </button>
+    <div className="page-section">
+      <h2 className="section-title">Action history ({actions.length})</h2>
 
-      <div style={{
-        borderLeft: '1px solid rgba(201,168,76,0.15)',
-        paddingLeft: '1.25rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem',
-      }}>
+      <div className="action-log">
         {shown.map((action, i) => (
           <ActionRow key={i} action={action} />
         ))}
       </div>
 
       {actions.length > 5 && (
-        <button
-          onClick={() => setExpanded(e => !e)}
-          style={{
-            marginTop: '0.75rem',
-            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.6rem',
-            color: 'var(--text-muted)',
-            letterSpacing: '0.06em',
-          }}
-        >
-          {expanded ? '− Show less' : `+ Show ${actions.length - 5} more`}
+        <button type="button" className="btn more" aria-expanded={expanded} onClick={() => setExpanded(e => !e)}>
+          {expanded ? 'Show less' : `Show ${actions.length - 5} more`}
         </button>
       )}
     </div>
@@ -443,157 +266,88 @@ export default function BillDetail() {
   const typeCode = TYPE_CODE[t] || t;
   const typeFull = TYPE_FULL[t] || t;
 
-  const introducedDate = bill?.introducedDate
+  const crumbs = (
+    <Crumbs items={[
+      { label: 'Congress', to: '/congress' },
+      { label: `${number}th Congress`, to: `/congress/${number}` },
+      { label: `${typeCode} ${billNumber}` },
+    ]} />
+  );
+
+  if (!bill) {
+    return (
+      <PageLayout head={crumbs}>
+        {loading && <div className="state">Loading…</div>}
+        {error && <div className="error">Failed to load bill: {error.message}</div>}
+        {!loading && !error && <div className="state">Bill not found.</div>}
+      </PageLayout>
+    );
+  }
+
+  const introducedDate = bill.introducedDate
     ? new Date(bill.introducedDate + 'T00:00:00').toLocaleDateString('en-US', {
         month: 'long', day: 'numeric', year: 'numeric',
       })
     : null;
 
+  const stageInfo = deriveStageInfo(bill);
+
+  const head = (
+    <>
+      {crumbs}
+      <span className="eyebrow">{typeFull} {bill.number} · {typeCode} {bill.number}</span>
+      <h1 className="doc-title">{bill.title || 'Untitled Bill'}</h1>
+
+      <dl className="facts">
+        {introducedDate && <div><dt>Introduced</dt><dd>{introducedDate}</dd></div>}
+        {bill.sponsor && (
+          <div>
+            <dt>Sponsor</dt>
+            <dd>
+              {bill.sponsor.fullName}
+              {bill.sponsor.party && (
+                <small className={PARTY_CLASS[bill.sponsor.party]}>({bill.sponsor.party}-{bill.sponsor.state})</small>
+              )}
+            </dd>
+          </div>
+        )}
+        {bill.policyArea && <div><dt>Policy area</dt><dd>{bill.policyArea}</dd></div>}
+        <div><dt>Congress</dt><dd>{bill.congress}th Congress</dd></div>
+      </dl>
+
+      <div className="actions">
+        {bill.url && (
+          <a className="btn primary" href={bill.url} target="_blank" rel="noopener noreferrer">
+            View on Congress.gov ↗
+          </a>
+        )}
+      </div>
+    </>
+  );
+
+  const rail = (
+    <>
+      <RailGroup title="Progress">
+        {STAGES.map(stage => (
+          <Fact key={stage.key} label={stage.label}>
+            {stageInfo[stage.key].reached ? formatDate(stageInfo[stage.key].date) ?? '✓' : '—'}
+          </Fact>
+        ))}
+      </RailGroup>
+      <RailGroup title="In this bill">
+        <Fact label="Actions">{bill.actions?.length ?? 0}</Fact>
+        <Fact label="Text versions">{bill.textVersions?.length ?? 0}</Fact>
+      </RailGroup>
+    </>
+  );
+
   return (
-    <main style={{ maxWidth: '820px', margin: '0 auto', padding: '3rem 2rem' }}>
-      <Link to={`/congress/${number}`} style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '0.4rem',
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: '0.7rem',
-        color: 'var(--text-muted)',
-        textDecoration: 'none',
-        letterSpacing: '0.08em',
-        marginBottom: '3rem',
-        transition: 'color 0.15s',
-      }}
-        onMouseEnter={e => e.currentTarget.style.color = 'var(--gold)'}
-        onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-      >
-        ← {number}th Congress
-      </Link>
+    <PageLayout head={head} rail={rail}>
+      <BillStepper stageInfo={stageInfo} />
 
-      {loading && (
-        <div style={{ color: 'var(--text-muted)', fontFamily: "'IBM Plex Mono', monospace", fontSize: '0.75rem' }}>
-          Loading…
-        </div>
-      )}
+      <ActionsLog actions={bill.actions} />
 
-      {error && (
-        <div style={{
-          background: 'rgba(192,57,43,0.1)',
-          border: '1px solid rgba(192,57,43,0.4)',
-          borderRadius: '4px',
-          padding: '1.5rem',
-          color: '#e88',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.8rem',
-        }}>
-          Failed to load bill: {error.message}
-        </div>
-      )}
-
-      {bill && (
-        <div>
-          <div style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.7rem',
-            color: 'var(--gold)',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            marginBottom: '0.75rem',
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: '0.75rem',
-          }}>
-            <span>{number}th Congress · {typeFull} {bill.number}</span>
-            <span style={{ color: 'rgba(201,168,76,0.4)', fontSize: '0.6rem' }}>{typeCode} {bill.number}</span>
-          </div>
-
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
-            fontWeight: 900,
-            color: 'var(--cream)',
-            margin: '0 0 2.5rem 0',
-            lineHeight: 1.2,
-          }}>
-            {bill.title || 'Untitled Bill'}
-          </h1>
-
-          {/* Meta grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-            gap: '1.5rem',
-            marginBottom: '3rem',
-            padding: '2rem',
-            background: 'rgba(17,32,64,0.5)',
-            border: '1px solid rgba(201,168,76,0.15)',
-            borderRadius: '6px',
-          }}>
-            {introducedDate && (
-              <MetaField label="Introduced">{introducedDate}</MetaField>
-            )}
-            {bill.sponsor && (
-              <MetaField label="Sponsor">
-                <span>{bill.sponsor.fullName}</span>
-                {bill.sponsor.party && (
-                  <span style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: '0.75rem',
-                    color: PARTY_COLOR[bill.sponsor.party] || 'var(--text-muted)',
-                    marginLeft: '0.4rem',
-                  }}>
-                    ({bill.sponsor.party}-{bill.sponsor.state})
-                  </span>
-                )}
-              </MetaField>
-            )}
-            {bill.policyArea && (
-              <MetaField label="Policy Area">{bill.policyArea}</MetaField>
-            )}
-            <MetaField label="Congress">{bill.congress}th Congress</MetaField>
-          </div>
-
-          {/* Stage stepper */}
-          <BillStepper bill={bill} />
-
-          {/* Actions log */}
-          <ActionsLog actions={bill.actions} />
-
-          {/* External link */}
-          {bill.url && (
-            <a
-              href={bill.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '0.75rem',
-                color: 'var(--gold)',
-                textDecoration: 'none',
-                border: '1px solid rgba(201,168,76,0.4)',
-                borderRadius: '4px',
-                padding: '10px 20px',
-                transition: 'all 0.15s',
-                letterSpacing: '0.05em',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'rgba(201,168,76,0.1)';
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.8)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.4)';
-              }}
-            >
-              View on Congress.gov ↗
-            </a>
-          )}
-
-          {bill && <TagPanel entityType="legislation" entityId={bill.id} />}
-        </div>
-      )}
-    </main>
+      <TagPanel entityType="legislation" entityId={bill.id} />
+    </PageLayout>
   );
 }

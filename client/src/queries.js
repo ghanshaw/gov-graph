@@ -20,6 +20,15 @@ export const GET_EXECUTIVE_ORDERS = gql`
   }
 `;
 
+export const GET_EXECUTIVE_ORDER_YEAR_COUNTS = gql`
+  query GetExecutiveOrderYearCounts($president: String, $documentType: String, $search: String, $years: [Int!]!) {
+    executiveOrderYearCounts(president: $president, documentType: $documentType, search: $search, years: $years) {
+      year
+      count
+    }
+  }
+`;
+
 export const GET_EXECUTIVE_ORDER_TEXT = gql`
   query GetExecutiveOrderText($number: String!) {
     executiveOrderText(number: $number)

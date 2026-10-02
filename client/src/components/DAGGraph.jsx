@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import dagre from "dagre";
 
+// How the citing case treated the cited one. CSS variables from index.css, so they are
+// applied as styles (an SVG attribute would not resolve them everywhere).
 const TREATMENT_COLOR = {
-  affirmed: "#22c55e",
-  overruled: "#ef4444",
-  reversed: "#ef4444",
-  distinguished: "#f59e0b",
-  null: "#6b7280",
+  affirmed: "var(--ok)",
+  overruled: "var(--danger)",
+  reversed: "var(--danger)",
+  distinguished: "var(--warn)",
+  null: "var(--muted)",
 };
 
 const NODE_W = 180;
@@ -99,7 +101,7 @@ export default function DAGGraph({ nodes, edges }) {
         .attr("orient", "auto")
         .append("path")
         .attr("d", `M0,0 L${MARKER_SIZE * 2},${MARKER_SIZE} L0,${MARKER_SIZE * 2} z`)
-        .attr("fill", color);
+        .style("fill", color);
     });
 
     const root = svg.append("g").attr("class", "root");
@@ -131,7 +133,7 @@ export default function DAGGraph({ nodes, edges }) {
         .append("path")
         .attr("d", d)
         .attr("fill", "none")
-        .attr("stroke", color)
+        .style("stroke", color)
         .attr("stroke-width", 1.8)
         .attr("stroke-dasharray", curved ? "6 4" : null)
         .attr("marker-end", `url(#${markerId})`)
@@ -163,21 +165,12 @@ export default function DAGGraph({ nodes, edges }) {
           if (n.url) window.open(n.url, "_blank", "noopener");
         });
 
-      // Seed node: gold ring
-      if (n.isSeed) {
-        grp
-          .append("path")
-          .attr("d", nodePath(0, 0))
-          .attr("fill", "none")
-          .attr("stroke", "#c9a84c")
-          .attr("stroke-width", 3);
-      }
-
+      // The seed case is outlined and labelled in the accent colour.
       grp
         .append("path")
         .attr("d", nodePath(0, 0))
-        .attr("fill", "#1a2f52")
-        .attr("stroke", n.isSeed ? "#c9a84c" : "#334e7e")
+        .style("fill", n.isSeed ? "var(--accent-soft)" : "var(--bg)")
+        .style("stroke", n.isSeed ? "var(--accent)" : "var(--rule)")
         .attr("stroke-width", n.isSeed ? 2 : 1);
 
       // Case name (truncated)
@@ -188,49 +181,30 @@ export default function DAGGraph({ nodes, edges }) {
         .append("text")
         .attr("y", -7)
         .attr("text-anchor", "middle")
-        .attr("fill", n.isSeed ? "#c9a84c" : "#f5f0e8")
-        .attr("font-family", "'IBM Plex Sans', sans-serif")
+        .style("fill", n.isSeed ? "var(--accent)" : "var(--text)")
+        .style("font-family", "var(--sans)")
         .attr("font-size", 12)
-        .attr("font-weight", n.isSeed ? 600 : 400)
+        .attr("font-weight", n.isSeed ? 600 : 500)
         .text(label);
 
       grp
         .append("text")
         .attr("y", 10)
         .attr("text-anchor", "middle")
-        .attr("fill", "rgba(136,153,187,0.8)")
-        .attr("font-family", "'IBM Plex Mono', monospace")
+        .style("fill", "var(--muted)")
+        .style("font-family", "var(--mono)")
         .attr("font-size", 10)
         .text(`${n.court ?? "SCOTUS"} · ${n.year}`);
     });
   }, [nodes, edges]);
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      <svg ref={svgRef} style={{ width: "100%", height: "100%", background: "#112040" }} />
+    <div className="graph">
+      <svg ref={svgRef} />
       {tooltip && (
-        <div
-          style={{
-            position: "fixed",
-            left: tooltip.x + 14,
-            top: tooltip.y - 10,
-            background: "#1a2f52",
-            border: "1px solid #334e7e",
-            borderRadius: 6,
-            padding: "8px 12px",
-            color: "#f5f0e8",
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: 13,
-            pointerEvents: "none",
-            zIndex: 9999,
-            maxWidth: 240,
-            boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
-          }}
-        >
-          <div style={{ fontWeight: 600, marginBottom: 4 }}>{tooltip.node.name}</div>
-          <div style={{ color: "rgba(136,153,187,0.8)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>
-            {tooltip.node.court ?? "SCOTUS"} · {tooltip.node.year}
-          </div>
+        <div className="graph-tip" style={{ left: tooltip.x + 14, top: tooltip.y - 10 }}>
+          <b>{tooltip.node.name}</b>
+          <span>{tooltip.node.court ?? "SCOTUS"} · {tooltip.node.year}</span>
         </div>
       )}
     </div>

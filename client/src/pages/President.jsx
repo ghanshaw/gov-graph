@@ -1,6 +1,9 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
 import { GET_EXECUTIVE_ORDERS } from '../queries';
+import PageLayout from '../components/PageLayout';
+import Crumbs from '../components/Crumbs';
+import { RailGroup, Fact } from '../components/Rail';
 
 const PRESIDENT_META = {
   'barack-obama': { name: 'Barack Obama', ordinal: '44th', years: '2009 – 2017' },
@@ -36,109 +39,49 @@ export default function President() {
   const memoCount = useCount(slug, 'memorandum');
   const counts = { 'executive-orders': eoCount, memoranda: memoCount };
 
-  return (
-    <main style={{ maxWidth: '820px', margin: '0 auto', padding: '5rem 2rem' }}>
-      <Link to="/" style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '0.4rem',
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: '0.7rem',
-        color: 'var(--text-muted)',
-        textDecoration: 'none',
-        letterSpacing: '0.08em',
-        marginBottom: '3rem',
-        transition: 'color 0.15s',
-      }}
-        onMouseEnter={e => e.currentTarget.style.color = 'var(--gold)'}
-        onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-      >
-        ← All Presidents
-      </Link>
+  const rail = (
+    <>
+      <RailGroup title="In office">
+        {meta.ordinal && <Fact label="President">{meta.ordinal}</Fact>}
+        {meta.years && <Fact label="Term">{meta.years}</Fact>}
+      </RailGroup>
+      <RailGroup title="Documents">
+        {DOCUMENT_TYPES.map(dt => (
+          <Fact key={dt.key} label={dt.label}>{counts[dt.key] != null ? counts[dt.key].toLocaleString() : '…'}</Fact>
+        ))}
+      </RailGroup>
+    </>
+  );
 
-      <div style={{ marginBottom: '4rem' }}>
-        <div style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.7rem',
-          color: 'var(--gold)',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          marginBottom: '0.5rem',
-        }}>
-          {meta.ordinal} President · {meta.years}
-        </div>
-        <h1 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 'clamp(2rem, 5vw, 3rem)',
-          fontWeight: 900,
-          color: 'var(--cream)',
-          margin: 0,
-          lineHeight: 1.1,
-        }}>
+  return (
+    <PageLayout rail={rail}>
+      <Crumbs items={[{ label: 'Presidents', to: '/' }, { label: meta.name }]} />
+      <div className="page-head">
+        <h1 className="page-title">
           {meta.name}
+          {meta.ordinal && <small>{meta.ordinal} President · {meta.years}</small>}
         </h1>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {DOCUMENT_TYPES.map(dt => (
-          <Link key={dt.key} to={`/${slug}/${dt.key}`} style={{ textDecoration: 'none' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2rem',
-                padding: '1.75rem 2rem',
-                background: 'rgba(17,32,64,0.5)',
-                border: '1px solid rgba(201,168,76,0.15)',
-                borderRadius: '6px',
-                transition: 'border-color 0.2s, background 0.2s',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)';
-                e.currentTarget.style.background = 'rgba(17,32,64,0.8)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.15)';
-                e.currentTarget.style.background = 'rgba(17,32,64,0.5)';
-              }}
-            >
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.35rem' }}>
-                  <div style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: '1.25rem',
-                    fontWeight: 700,
-                    color: 'var(--cream)',
-                  }}>
-                    {dt.label}
-                  </div>
-                  {counts[dt.key] !== null && (
-                    <span style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: '0.65rem',
-                      color: 'var(--gold)',
-                      letterSpacing: '0.06em',
-                    }}>
-                      {counts[dt.key].toLocaleString()}
-                    </span>
-                  )}
-                </div>
-                <div style={{
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontSize: '0.875rem',
-                  color: 'var(--text-muted)',
-                  fontWeight: 300,
-                  lineHeight: 1.5,
-                }}>
-                  {dt.description}
-                </div>
-              </div>
-              <div style={{ color: 'var(--gold)', fontSize: '1.25rem', opacity: 0.6, flexShrink: 0 }}>→</div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </main>
+      <table className="records">
+        <thead>
+          <tr>
+            <th>Document type</th>
+            <th className="date">Documents</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DOCUMENT_TYPES.map(dt => (
+            <tr key={dt.key}>
+              <td className="title">
+                <Link to={`/${slug}/${dt.key}`}>{dt.label}</Link>
+                <span className="sub">{dt.description}</span>
+              </td>
+              <td className="date">{counts[dt.key] != null ? counts[dt.key].toLocaleString() : ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </PageLayout>
   );
 }

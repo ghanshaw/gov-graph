@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { GET_EXECUTIVE_ORDERS, GET_TIMELINE_CASES } from '../queries';
+import PageLayout from '../components/PageLayout';
+import { RailGroup } from '../components/Rail';
 import HorizontalTimeline, { RangeSelector } from '../components/HorizontalTimeline';
 
 const OBAMA_COURTS = ['roberts-2', 'roberts-3', 'roberts-4', 'roberts-4b'];
@@ -16,54 +18,34 @@ function CourtQuery({ courtSlug, onData }) {
   return null;
 }
 
-function ToggleButton({ active, onClick, children, color, testId }) {
+// A kind of event that is shown or hidden as a whole.
+function ToggleButton({ active, onClick, children, testId }) {
   return (
     <button
+      type="button"
+      role="checkbox"
+      aria-checked={active}
       data-testid={testId}
+      className={active ? 'opt check on' : 'opt check'}
       onClick={onClick}
-      style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: '0.65rem',
-        letterSpacing: '0.08em',
-        padding: '6px 14px',
-        borderRadius: '3px',
-        border: active
-          ? `1px solid ${color || 'var(--gold)'}`
-          : '1px solid rgba(201,168,76,0.2)',
-        background: active ? `${color || 'var(--gold)'}1a` : 'transparent',
-        color: active ? (color || 'var(--gold)') : 'var(--text-muted)',
-        fontWeight: active ? 600 : 400,
-        cursor: 'pointer',
-        transition: 'all 0.15s',
-        textTransform: 'uppercase',
-      }}
     >
-      {children}
+      <b />{children}
     </button>
   );
 }
 
+// One of the kinds of presidential action.
 function SubToggle({ active, onClick, children, testId }) {
   return (
     <button
+      type="button"
+      role="radio"
+      aria-checked={active}
       data-testid={testId}
+      className={active ? 'opt sub on' : 'opt sub'}
       onClick={onClick}
-      style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: '0.6rem',
-        letterSpacing: '0.06em',
-        padding: '4px 10px',
-        borderRadius: '2px',
-        border: active ? 'none' : '1px solid rgba(201,168,76,0.15)',
-        background: active ? 'rgba(201,168,76,0.18)' : 'transparent',
-        color: active ? 'var(--gold)' : 'rgba(136,153,187,0.6)',
-        fontWeight: active ? 600 : 400,
-        cursor: 'pointer',
-        transition: 'all 0.15s',
-        textTransform: 'uppercase',
-      }}
     >
-      {children}
+      <b />{children}
     </button>
   );
 }
@@ -172,117 +154,69 @@ export default function Timeline() {
   const activeStart = rangeStart ?? minYear;
   const activeEnd   = rangeEnd   ?? maxYear;
 
+  const showEos = showPresidential && (presidentialSub === 'eo' || presidentialSub === 'both');
+  const showMemos = showPresidential && (presidentialSub === 'memorandum' || presidentialSub === 'both');
+
+  const rail = (
+    <>
+      <div className="group" data-testid="timeline-controls">
+        <h3>Show</h3>
+        <ToggleButton
+          active={showPresidential}
+          onClick={() => setShowPresidential(v => !v)}
+          testId="timeline-toggle-presidential"
+        >
+          Presidential actions
+        </ToggleButton>
+        {showPresidential && (
+          <div data-testid="timeline-presidential-subtypes" role="radiogroup" aria-label="Presidential actions">
+            <SubToggle active={presidentialSub === 'eo'} onClick={() => setPresidentialSub('eo')} testId="timeline-subtype-eo">
+              Executive orders
+            </SubToggle>
+            <SubToggle active={presidentialSub === 'memorandum'} onClick={() => setPresidentialSub('memorandum')} testId="timeline-subtype-memorandum">
+              Memoranda
+            </SubToggle>
+            <SubToggle active={presidentialSub === 'both'} onClick={() => setPresidentialSub('both')} testId="timeline-subtype-both">
+              Both
+            </SubToggle>
+          </div>
+        )}
+        <ToggleButton
+          active={showScotus}
+          onClick={() => setShowScotus(v => !v)}
+          testId="timeline-toggle-scotus"
+        >
+          Supreme Court cases
+        </ToggleButton>
+      </div>
+
+      <RailGroup title="On the timeline">
+        {showEos && (
+          <div className="fact"><span><i className="dot eo" />Executive orders</span><b>{eoCount}</b></div>
+        )}
+        {showMemos && (
+          <div className="fact"><span><i className="dot memo" />Memoranda</span><b>{memoCount}</b></div>
+        )}
+        {showScotus && (
+          <div className="fact"><span><i className="dot scotus" />Supreme Court</span><b>{scotusCount}</b></div>
+        )}
+      </RailGroup>
+    </>
+  );
+
   return (
     <>
       {OBAMA_COURTS.map(slug => (
         <CourtQuery key={slug} courtSlug={slug} onData={handleCourtData} />
       ))}
 
-      <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '5rem 2rem 4rem' }}>
-        {/* Header */}
-        <div style={{ marginBottom: '3rem' }}>
-          <div style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.7rem',
-            color: 'var(--gold)',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            marginBottom: '0.75rem',
-          }}>
-            2009 – 2017 · Obama Administration
-          </div>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-            fontWeight: 900,
-            color: 'var(--cream)',
-            margin: '0 0 1rem 0',
-            lineHeight: 1.1,
-          }}>
-            Historical Timeline
-          </h1>
-          <p style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: '1rem',
-            color: 'var(--text-muted)',
-            margin: 0,
-            maxWidth: '520px',
-            lineHeight: 1.7,
-            fontWeight: 300,
-          }}>
-            Presidential actions and Supreme Court decisions during the Obama years.
-          </p>
+      <PageLayout rail={rail}>
+        <div className="page-head">
+          <h1 className="page-title">Historical Timeline <small>2009 – 2017 · Obama Administration</small></h1>
         </div>
-
-        {/* Controls */}
-        <div data-testid="timeline-controls" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-
-            {/* Presidential Actions toggle + sub-options */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <ToggleButton
-                active={showPresidential}
-                onClick={() => setShowPresidential(v => !v)}
-                testId="timeline-toggle-presidential"
-              >
-                Presidential Actions
-              </ToggleButton>
-              {showPresidential && (
-                <div data-testid="timeline-presidential-subtypes" style={{ display: 'flex', gap: '0.25rem', paddingLeft: '2px' }}>
-                  <SubToggle active={presidentialSub === 'eo'} onClick={() => setPresidentialSub('eo')} testId="timeline-subtype-eo">
-                    Exec. Orders
-                  </SubToggle>
-                  <SubToggle active={presidentialSub === 'memorandum'} onClick={() => setPresidentialSub('memorandum')} testId="timeline-subtype-memorandum">
-                    Memoranda
-                  </SubToggle>
-                  <SubToggle active={presidentialSub === 'both'} onClick={() => setPresidentialSub('both')} testId="timeline-subtype-both">
-                    Both
-                  </SubToggle>
-                </div>
-              )}
-            </div>
-
-            {/* SCOTUS toggle */}
-            <div>
-              <ToggleButton
-                active={showScotus}
-                onClick={() => setShowScotus(v => !v)}
-                color="rgba(245,240,232,0.8)"
-                testId="timeline-toggle-scotus"
-              >
-                SCOTUS Cases
-              </ToggleButton>
-            </div>
-          </div>
-
-          {/* Legend counts */}
-          <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-            {showPresidential && (presidentialSub === 'eo' || presidentialSub === 'both') && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--gold)', display: 'inline-block' }} />
-                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '0.6rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
-                  {eoCount} EOs
-                </span>
-              </div>
-            )}
-            {showPresidential && (presidentialSub === 'memorandum' || presidentialSub === 'both') && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgba(201,168,76,0.45)', display: 'inline-block' }} />
-                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '0.6rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
-                  {memoCount} Memoranda
-                </span>
-              </div>
-            )}
-            {showScotus && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgba(245,240,232,0.55)', display: 'inline-block' }} />
-                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '0.6rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
-                  {scotusCount} SCOTUS
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
+        <p className="lede">
+          Presidential actions and Supreme Court decisions during the Obama years.
+        </p>
 
         {/* Range selector */}
         {allDates.length > 0 && (
@@ -293,29 +227,16 @@ export default function Timeline() {
           />
         )}
 
-        {/* Timeline card */}
-        <div data-testid="timeline-card" style={{
-          background: 'rgba(17,32,64,0.4)',
-          border: '1px solid rgba(201,168,76,0.15)',
-          borderRadius: '6px',
-          padding: '2rem 1.5rem',
-          marginTop: '1.25rem',
-        }}>
+        <div data-testid="timeline-card" className="timeline-card">
           {loading && visibleEvents.length === 0 ? (
-            <div style={{ color: 'var(--text-muted)', fontFamily: "'IBM Plex Mono', monospace", fontSize: '0.75rem', textAlign: 'center', padding: '3rem 0' }}>
-              Loading…
-            </div>
+            <div className="state">Loading…</div>
           ) : (
             <HorizontalTimeline events={visibleEvents} rangeStart={activeStart} rangeEnd={activeEnd} />
           )}
         </div>
 
-        <div style={{ marginTop: '0.75rem', textAlign: 'right' }}>
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '0.6rem', color: 'var(--text-muted)', letterSpacing: '0.08em' }}>
-            SCROLL TO EXPLORE →
-          </span>
-        </div>
-      </main>
+        <p className="note">Scroll sideways to explore · scroll up or down over the timeline to zoom</p>
+      </PageLayout>
     </>
   );
 }

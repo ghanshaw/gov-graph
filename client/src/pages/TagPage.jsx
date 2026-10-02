@@ -1,46 +1,39 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
 import { GET_TAG_PAGE } from '../queries';
-
-function SectionHeader({ label }) {
-  return (
-    <div style={{
-      fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.7rem', color: 'var(--gold)',
-      letterSpacing: '0.1em', textTransform: 'uppercase',
-      paddingBottom: '0.5rem', borderBottom: '1px solid rgba(201,168,76,0.15)',
-      marginBottom: '0.75rem',
-    }}>
-      {label}
-    </div>
-  );
-}
+import PageLayout from '../components/PageLayout';
+import Crumbs from '../components/Crumbs';
+import { RailGroup, Fact } from '../components/Rail';
 
 function EntityRow({ href, external, title, meta }) {
-  const inner = (
-    <div style={{
-      display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
-      padding: '0.75rem 0', borderBottom: '1px solid rgba(201,168,76,0.06)',
-      color: 'var(--cream)', textDecoration: 'none',
-    }}>
-      <span style={{ fontFamily: 'IBM Plex Sans, sans-serif', fontSize: '0.95rem' }}>{title}</span>
-      {meta && <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.7rem', color: 'var(--text-muted)', marginLeft: '1rem', whiteSpace: 'nowrap' }}>{meta}</span>}
-    </div>
+  return (
+    <tr>
+      <td className="title">
+        {external
+          ? <a href={href} target="_blank" rel="noopener noreferrer">{title}</a>
+          : <Link to={href}>{title}</Link>}
+      </td>
+      <td className="date">{meta ?? ''}</td>
+    </tr>
   );
-
-  const linkStyle = { textDecoration: 'none', color: 'inherit', display: 'block' };
-  const hoverOn = e => e.currentTarget.querySelector('span').style.color = 'var(--gold)';
-  const hoverOff = e => e.currentTarget.querySelector('span').style.color = 'var(--cream)';
-
-  if (external) {
-    return <a href={href} target="_blank" rel="noopener noreferrer" style={linkStyle} onMouseEnter={hoverOn} onMouseLeave={hoverOff}>{inner}</a>;
-  }
-  return <Link to={href} style={linkStyle} onMouseEnter={hoverOn} onMouseLeave={hoverOff}>{inner}</Link>;
 }
 
 function DegradedRow({ entityId }) {
   return (
-    <div style={{ padding: '0.75rem 0', borderBottom: '1px solid rgba(201,168,76,0.06)', fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-      {entityId} <span style={{ fontSize: '0.65rem' }}>(unavailable)</span>
+    <tr>
+      <td className="meta">{entityId} (unavailable)</td>
+      <td className="date" />
+    </tr>
+  );
+}
+
+function EntityTable({ label, children }) {
+  return (
+    <div className="page-section">
+      <h2 className="section-title">{label}</h2>
+      <table className="records">
+        <tbody>{children}</tbody>
+      </table>
     </div>
   );
 }
@@ -56,37 +49,37 @@ export default function TagPage() {
   const bills = result?.legislation || [];
   const total = eos.length + cases.length + bills.length;
 
+  const rail = tag && (
+    <>
+      <RailGroup title="Tagged">
+        <Fact label="Executive orders">{eos.length}</Fact>
+        <Fact label="Supreme Court cases">{cases.length}</Fact>
+        <Fact label="Legislation">{bills.length}</Fact>
+      </RailGroup>
+      <RailGroup title="Tag">
+        <Fact label="Source">{tag.source}</Fact>
+      </RailGroup>
+    </>
+  );
+
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-      <div style={{ marginBottom: '0.5rem' }}>
-        <Link to="/tags" style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.7rem', color: 'var(--gold)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none' }}>
-          ← Tags
-        </Link>
+    <PageLayout rail={rail}>
+      <Crumbs items={[{ label: 'Tags', to: '/tags' }, { label: word }]} />
+      <div className="page-head">
+        <h1 className="page-title">
+          {word}
+          {!loading && tag && <small>{total} {total === 1 ? 'document' : 'documents'}</small>}
+        </h1>
       </div>
 
-      <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '2.2rem', color: 'var(--cream)', margin: '0.5rem 0 0.25rem' }}>
-        {word}
-      </h1>
+      {loading && <div className="state">Loading…</div>}
+
+      {!loading && !tag && <div className="state">No tag found for “{word}”.</div>}
 
       {!loading && tag && (
-        <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
-          {total} {total === 1 ? 'entity' : 'entities'} · source: {tag.source}
-        </div>
-      )}
-
-      {loading && <div style={{ color: 'var(--text-muted)', fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.8rem' }}>Loading…</div>}
-
-      {!loading && !tag && (
-        <div style={{ color: 'var(--text-muted)', fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.85rem', marginTop: '1rem' }}>
-          No tag found for "{word}".
-        </div>
-      )}
-
-      {!loading && tag && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        <>
           {eos.length > 0 && (
-            <section>
-              <SectionHeader label="Executive Orders" />
+            <EntityTable label="Executive Orders">
               {eos.map(({ entityId, order }) =>
                 order ? (
                   <EntityRow
@@ -100,12 +93,11 @@ export default function TagPage() {
                   <DegradedRow key={entityId} entityId={entityId} />
                 )
               )}
-            </section>
+            </EntityTable>
           )}
 
           {cases.length > 0 && (
-            <section>
-              <SectionHeader label="Supreme Court" />
+            <EntityTable label="Supreme Court">
               {cases.map(({ entityId, case: c }) =>
                 c ? (
                   <EntityRow
@@ -119,12 +111,11 @@ export default function TagPage() {
                   <DegradedRow key={entityId} entityId={entityId} />
                 )
               )}
-            </section>
+            </EntityTable>
           )}
 
           {bills.length > 0 && (
-            <section>
-              <SectionHeader label="Legislation" />
+            <EntityTable label="Legislation">
               {bills.map(({ entityId, bill }) => {
                 if (!bill) return <DegradedRow key={entityId} entityId={entityId} />;
                 const href = `/congress/${bill.congress}/${bill.type.toLowerCase()}/${bill.number}`;
@@ -137,16 +128,12 @@ export default function TagPage() {
                   />
                 );
               })}
-            </section>
+            </EntityTable>
           )}
 
-          {total === 0 && (
-            <div style={{ color: 'var(--text-muted)', fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.85rem' }}>
-              No entities tagged yet.
-            </div>
-          )}
-        </div>
+          {total === 0 && <div className="state">No documents tagged yet.</div>}
+        </>
       )}
-    </div>
+    </PageLayout>
   );
 }

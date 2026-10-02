@@ -28,8 +28,9 @@ cross-references, and legal relationships.
 - `server/references/` — sample source documents kept for reference (e.g. the `eo-13636-*` files)
   and static HTML design mocks (`eo-list-design-*`, `eo-detail-design-*`; see Design Mocks)
 - `research/` — background notes (e.g. `legal-document-structure.md`)
-- `design/` — design references. `design/navy/` records the navy-and-gold design as of
-  2026-10-02 (notes, full-page screenshots, source snapshots, `capture.sh`) ahead of a redesign
+- `design/` — design references. `design/navy/` records the previous navy-and-gold design as of
+  2026-10-02 (notes, full-page screenshots, source snapshots, `capture.sh`), before the move to
+  the dark teal design
 - `features/` — feature tracking (see below)
 
 `server/.env` (gitignored; template in `server/.env.example`) holds `DATABASE_URL`,
@@ -133,18 +134,30 @@ Static, non-interactive HTML mocks live in `server/references/`. They use real o
 dates and text, hardcoded. Chrome's automation cannot open `file://` URLs; to check one, serve
 the folder briefly (`python3 -m http.server 9002 --bind 127.0.0.1`) and stop it afterwards.
 
-- **Current app design:** navy `#0a1628`, gold `#c9a84c`, cream `#f5f0e8`, muted `#8899bb`;
-  Playfair Display headings, IBM Plex Sans text, IBM Plex Mono labels (`client/src/index.css`).
-  Mocks in this look: `eo-list-design-ledger-navy.html`, `eo-list-design-ledger-combined-navy.html`.
-- **Dark teal design** (list + order page as a pair): `eo-list-design-dark-teal.html`,
+- **Current app design: dark teal** (list + order page as a pair): `eo-list-design-dark-teal.html`,
   `eo-detail-design-dark-teal.html`. White, Inter, JetBrains Mono for numbers, accent `#0f766e`
   (pale `#e6f4f2`), text `#14181f`, muted `#667085`, hairlines `#e4e7ec`. List page: filter rail
   on the left (Year signed with bars and counts), table with sticky column headings and year rows.
+- **Previous design: navy** `#0a1628`, gold `#c9a84c`, cream `#f5f0e8`; Playfair Display, IBM Plex.
+  Recorded in `design/navy/`. Mocks in this look: `eo-list-design-ledger-navy.html`,
+  `eo-list-design-ledger-combined-navy.html`.
 - **Other list-page explorations:** `eo-list-design-ledger.html` (rows under year headings),
   `-ledger-daybook` (by date, warm palette), `-ledger-combined` / `-combined-blue` /
   `-combined-green` (ledger rows + filter rail), `-gazette`, `-graphite`.
 - **Order text explorations:** `eo-13636-readable.html`, `-readable-briefing.html`,
   `-readable-document.html`.
+
+How the design is built in the app (`features/redesign-dark-teal`):
+
+- All styling is classes in `client/src/index.css` (tokens on `:root`); components carry no
+  colours or fonts, and inline `style` is used for geometry only. Hover is CSS, not JS.
+  Drawing code (d3, SVG) takes colours from the tokens via `style`, e.g. `var(--accent)`.
+- Every page is a `PageLayout` (`client/src/components/`): a rail on the left and the content,
+  or, with `head`, the reading layout for a single document. Rail pieces are in `Rail.jsx`
+  (`RailGroup`, `RadioOptions`, `CheckOption`, `YearFacet`, `Fact`); lists are `table.records`.
+- Tailwind is imported but unused; class names must avoid its utility names (`block`,
+  `contents`, `outline`), which it would generate rules for.
+- Colours with a meaning (party, branch, status) have their own tokens and `.chip` variants.
 
 Preferences settled while reviewing the mocks:
 

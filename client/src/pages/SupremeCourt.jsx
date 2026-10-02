@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
 import { GET_NATURAL_COURTS } from '../queries';
+import PageLayout from '../components/PageLayout';
+import { RailGroup, Fact } from '../components/Rail';
 
 function formatDateRange(startDate, endDate) {
   const fmt = d => new Date(d + 'T00:00:00').getFullYear();
@@ -11,140 +13,70 @@ export default function SupremeCourt() {
   const { data, loading } = useQuery(GET_NATURAL_COURTS);
   const courts = data?.naturalCourts || [];
 
-  return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '5rem 2rem' }}>
-      <div style={{ marginBottom: '4rem' }}>
-        <div style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.7rem',
-          color: 'var(--gold)',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          marginBottom: '0.75rem',
-        }}>
-          Supreme Court of the United States · CourtListener
-        </div>
-        <h1 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-          fontWeight: 900,
-          color: 'var(--cream)',
-          margin: '0 0 1rem 0',
-          lineHeight: 1.1,
-          letterSpacing: '-0.01em',
-        }}>
-          Natural Courts
-        </h1>
-        <p style={{
-          fontFamily: "'IBM Plex Sans', sans-serif",
-          fontSize: '1rem',
-          color: 'var(--text-muted)',
-          margin: 0,
-          maxWidth: '520px',
-          lineHeight: 1.7,
-          fontWeight: 300,
-        }}>
-          A natural court is the period during which no change in Court membership occurs. Browse majority opinions by court composition.
-        </p>
-      </div>
+  // Natural courts per Chief Justice, in the order they appear.
+  const byChief = courts.reduce((acc, court) => {
+    acc[court.chiefJustice] = (acc[court.chiefJustice] || 0) + 1;
+    return acc;
+  }, {});
 
-      {loading && (
-        <div style={{ color: 'var(--text-muted)', fontFamily: "'IBM Plex Mono', monospace", fontSize: '0.75rem' }}>
-          Loading…
-        </div>
-      )}
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {courts.map((court, i) => (
-          <Link key={court.slug} to={`/supreme-court/${court.slug}`} style={{ textDecoration: 'none' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2rem',
-                padding: '2rem 2.5rem',
-                background: 'rgba(17,32,64,0.5)',
-                border: '1px solid rgba(201,168,76,0.15)',
-                borderRadius: '6px',
-                transition: 'border-color 0.2s, background 0.2s',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)';
-                e.currentTarget.style.background = 'rgba(17,32,64,0.8)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.15)';
-                e.currentTarget.style.background = 'rgba(17,32,64,0.5)';
-              }}
-            >
-              <div style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: '2rem',
-                fontWeight: 900,
-                color: 'rgba(201,168,76,0.2)',
-                lineHeight: 1,
-                flexShrink: 0,
-                minWidth: '2.5rem',
-                textAlign: 'right',
-              }}>
-                {courts.length - i}
-              </div>
-
-              <div style={{ borderLeft: '1px solid rgba(201,168,76,0.2)', paddingLeft: '2rem', flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
-                  <h2 style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: '1.35rem',
-                    fontWeight: 700,
-                    color: 'var(--cream)',
-                    margin: 0,
-                  }}>
-                    {court.name}
-                  </h2>
-                  <span style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: '0.65rem',
-                    color: 'var(--gold)',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                  }}>
-                    {formatDateRange(court.startDate, court.endDate)}
-                  </span>
-                </div>
-                <p style={{
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontSize: '0.875rem',
-                  color: 'var(--text-muted)',
-                  margin: '0 0 0.75rem 0',
-                  fontWeight: 300,
-                  lineHeight: 1.5,
-                }}>
-                  {court.description}
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                  {court.justices.map(j => (
-                    <span key={j} style={{
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: '0.6rem',
-                      color: 'var(--text-muted)',
-                      background: 'rgba(201,168,76,0.06)',
-                      border: '1px solid rgba(201,168,76,0.15)',
-                      borderRadius: '2px',
-                      padding: '2px 7px',
-                      letterSpacing: '0.03em',
-                    }}>
-                      {j.split(' ').slice(-1)[0]}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ color: 'var(--gold)', fontSize: '1.25rem', flexShrink: 0, opacity: 0.6 }}>→</div>
-            </div>
-          </Link>
+  const rail = (
+    <>
+      <RailGroup title="Chief Justice">
+        {Object.entries(byChief).map(([chief, count]) => (
+          <Fact key={chief} label={chief}>{count}</Fact>
         ))}
+        {courts.length === 0 && <p>{loading ? 'Loading…' : 'No courts.'}</p>}
+      </RailGroup>
+      <RailGroup title="Source">
+        <p>Majority opinions from CourtListener.</p>
+      </RailGroup>
+    </>
+  );
+
+  return (
+    <PageLayout rail={rail}>
+      <div className="crumbs">Supreme Court of the United States</div>
+      <div className="page-head">
+        <h1 className="page-title">
+          Natural Courts
+          {courts.length > 0 && <small>{courts.length} courts</small>}
+        </h1>
       </div>
-    </main>
+      <p className="lede">
+        A natural court is the period during which no change in Court membership occurs. Browse majority opinions by court composition.
+      </p>
+
+      {loading && <div className="state">Loading…</div>}
+
+      {courts.length > 0 && (
+        <table className="records">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Court</th>
+              <th className="date">Years</th>
+            </tr>
+          </thead>
+          <tbody>
+            {courts.map((court, i) => (
+              <tr key={court.slug}>
+                <td className="no">{courts.length - i}</td>
+                <td className="title">
+                  <Link to={`/supreme-court/${court.slug}`}>{court.name}</Link>
+                  <span className="sub">{court.description}</span>
+                  <div className="chips">
+                    {court.justices.map(j => (
+                      // Surname only: "John G. Roberts Jr." → "Roberts"
+                      <span key={j} className="chip">{j.replace(/,? (Jr|Sr)\.?$/, '').split(' ').slice(-1)[0]}</span>
+                    ))}
+                  </div>
+                </td>
+                <td className="date">{formatDateRange(court.startDate, court.endDate)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </PageLayout>
   );
 }

@@ -1,13 +1,18 @@
-import { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useQuery } from '@apollo/client/react';
-import { GET_EXECUTIVE_ORDERS } from '../queries';
-import ExecutiveOrderCard from '../components/ExecutiveOrderCard';
+import { GET_EXECUTIVE_ORDERS, GET_EXECUTIVE_ORDER_YEAR_COUNTS } from '../queries';
+import useDebounce from '../hooks/useDebounce';
+import PageLayout from '../components/PageLayout';
+import Crumbs from '../components/Crumbs';
+import SearchBox from '../components/SearchBox';
+import { RailGroup, RadioOptions, YearFacet, Fact } from '../components/Rail';
+import OrderTable from '../components/OrderTable';
 import Pagination from '../components/Pagination';
 
 const PER_PAGE = 20;
 
-const YEARS = ['All Years', ...Array.from({ length: new Date().getFullYear() - 2008 }, (_, i) => 2009 + i).reverse()];
+// Newest year at the top, as in the table.
+const YEARS = Array.from({ length: new Date().getFullYear() - 2008 }, (_, i) => 2009 + i).reverse();
 
 const PRESIDENTS = [
   { label: 'All', value: null },
@@ -22,18 +27,10 @@ const SORTS = [
   { label: 'Oldest first', value: 'oldest' },
 ];
 
-// Map app slug → Federal Register API slug for the query variable
-const SLUG_TO_API = {
-  'barack-obama': 'barack-obama',
-  'donald-trump': 'donald-trump',
-  'donald-trump-47': 'donald-trump-47',
-  'joseph-biden': 'joseph-biden',
-};
-
-// Map API president identifier → app slug (for card links)
-// donald-trump API identifier could be either term; we use signing date to disambiguate in the card
+// Map API president identifier → app slug (for row links)
+// donald-trump API identifier could be either term; we use signing date to disambiguate
 const API_TO_SLUG = {
-  'donald-trump': 'donald-trump', // default to 45th; card link resolves by year
+  'donald-trump': 'donald-trump', // default to 45th; row link resolves by year
   'joe-biden': 'joseph-biden',
   'barack-obama': 'barack-obama',
 };
@@ -46,18 +43,6 @@ function deriveSlug(order) {
     return 'donald-trump-47';
   }
   return slug;
-}
-
-function useDebounce(value, delay) {
-  const [debounced, setDebounced] = useState(value);
-  const timeoutRef = useState(null);
-
-  const update = useCallback((val) => {
-    if (timeoutRef[0]) clearTimeout(timeoutRef[0]);
-    timeoutRef[0] = setTimeout(() => setDebounced(val), delay);
-  }, [delay]);
-
-  return [debounced, update];
 }
 
 export default function ExecutiveOrders() {
@@ -75,7 +60,7 @@ export default function ExecutiveOrders() {
   };
 
   const handleYear = (val) => {
-    setYear(val === 'All Years' ? null : val);
+    setYear(val);
     setPage(1);
   };
 
@@ -101,319 +86,103 @@ export default function ExecutiveOrders() {
     },
   });
 
+  const { data: countsData } = useQuery(GET_EXECUTIVE_ORDER_YEAR_COUNTS, {
+    variables: {
+      president: president || undefined,
+      documentType: 'executive_order',
+      search: debouncedSearch || undefined,
+      years: YEARS,
+    },
+  });
+
+  // The count behind "All": the same filters with no year. It is more than the listed
+  // years add up to: the Federal Register's orders go back to 1994, and correction
+  // notices carry no signing date.
+  const { data: allData } = useQuery(GET_EXECUTIVE_ORDERS, {
+    variables: {
+      president: president || undefined,
+      documentType: 'executive_order',
+      page: 1,
+      perPage: 1,
+      search: debouncedSearch || undefined,
+    },
+  });
+
   const orders = data?.executiveOrders?.orders || [];
   const totalCount = data?.executiveOrders?.totalCount || 0;
   const totalPages = data?.executiveOrders?.totalPages || 1;
 
+  const yearCounts = countsData
+    ? Object.fromEntries(countsData.executiveOrderYearCounts.map(c => [c.year, c.count]))
+    : null;
+  const allTotal = allData?.executiveOrders?.totalCount ?? null;
+  const earlier = yearCounts && allTotal != null
+    ? allTotal - Object.values(yearCounts).reduce((a, b) => a + b, 0)
+    : 0;
+
+  const rail = (
+    <>
+      <RailGroup title="Year signed">
+        <YearFacet years={YEARS} counts={yearCounts} total={allTotal} value={year} onChange={handleYear} />
+        {earlier > 0 && <Fact label={`Before ${YEARS[YEARS.length - 1]} or undated`}>{earlier.toLocaleString()}</Fact>}
+      </RailGroup>
+      <div>
+        <RailGroup title="President">
+          <RadioOptions label="President" options={PRESIDENTS} value={president} onChange={handlePresident} />
+        </RailGroup>
+        <RailGroup title="Order">
+          <RadioOptions label="Order" options={SORTS} value={sort} onChange={handleSort} />
+        </RailGroup>
+      </div>
+    </>
+  );
+
   return (
-    <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 2rem' }}>
-
-      {/* Hero */}
-      <div style={{ marginBottom: '3rem' }}>
-        <div style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.7rem',
-          color: 'var(--gold)',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          marginBottom: '0.75rem',
-        }}>
-          Federal Register · All Administrations
-        </div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '1rem' }}>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-            fontWeight: 900,
-            color: 'var(--cream)',
-            margin: '0 0 1rem 0',
-            lineHeight: 1.1,
-            letterSpacing: '-0.01em',
-          }}>
-            Executive Orders
-          </h1>
-          {!loading && totalCount > 0 && (
-            <div style={{ textAlign: 'right', flexShrink: 0, marginBottom: '1rem' }}>
-              <div style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
-                fontWeight: 900,
-                color: 'var(--gold)',
-                lineHeight: 1,
-              }}>
-                {totalCount.toLocaleString()}
-              </div>
-              <div style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '0.6rem',
-                color: 'var(--text-muted)',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                marginTop: '0.25rem',
-              }}>
-                {debouncedSearch || year || president ? 'Results' : 'Total'}
-              </div>
-            </div>
-          )}
-        </div>
-        <p style={{
-          fontFamily: "'IBM Plex Sans', sans-serif",
-          fontSize: '1rem',
-          color: 'var(--text-muted)',
-          margin: 0,
-          maxWidth: '560px',
-          lineHeight: 1.7,
-          fontWeight: 300,
-        }}>
-          Search executive orders across all administrations, sourced from the Federal Register.
-        </p>
-      </div>
-
-      {/* Controls */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-
-        {/* Search */}
-        <div style={{ position: 'relative' }}>
-          <span style={{
-            position: 'absolute',
-            left: '14px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: 'var(--text-muted)',
-            fontSize: '0.85rem',
-            pointerEvents: 'none',
-          }}>⌕</span>
-          <input
-            type="text"
-            placeholder="Search across all executive orders…"
-            value={searchInput}
-            autoFocus
-            onChange={e => handleSearch(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px 14px 12px 36px',
-              background: 'rgba(17,32,64,0.8)',
-              border: '1px solid rgba(201,168,76,0.25)',
-              borderRadius: '4px',
-              color: 'var(--cream)',
-              fontFamily: "'IBM Plex Sans', sans-serif",
-              fontSize: '1rem',
-              outline: 'none',
-              transition: 'border 0.2s',
-              boxSizing: 'border-box',
-            }}
-            onFocus={e => e.target.style.border = '1px solid rgba(201,168,76,0.6)'}
-            onBlur={e => e.target.style.border = '1px solid rgba(201,168,76,0.25)'}
-          />
-        </div>
-
-        {/* President filter */}
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.65rem',
-            color: 'var(--text-muted)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginRight: '0.25rem',
-          }}>President</span>
-          {PRESIDENTS.map(p => {
-            const isActive = president === p.value;
-            return (
-              <button
-                key={p.label}
-                onClick={() => handlePresident(p.value)}
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: '0.7rem',
-                  padding: '6px 12px',
-                  border: isActive ? '1px solid var(--gold)' : '1px solid rgba(201,168,76,0.25)',
-                  borderRadius: '3px',
-                  background: isActive ? 'var(--gold)' : 'transparent',
-                  color: isActive ? 'var(--navy)' : 'var(--text-muted)',
-                  cursor: 'pointer',
-                  fontWeight: isActive ? 600 : 400,
-                  transition: 'all 0.15s ease',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                {p.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Year filter */}
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.65rem',
-            color: 'var(--text-muted)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginRight: '0.25rem',
-          }}>Year</span>
-          {YEARS.map(y => {
-            const isActive = (y === 'All Years' && !year) || y === year;
-            return (
-              <button
-                key={y}
-                onClick={() => handleYear(y)}
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: '0.7rem',
-                  padding: '6px 12px',
-                  border: isActive ? '1px solid var(--gold)' : '1px solid rgba(201,168,76,0.25)',
-                  borderRadius: '3px',
-                  background: isActive ? 'var(--gold)' : 'transparent',
-                  color: isActive ? 'var(--navy)' : 'var(--text-muted)',
-                  cursor: 'pointer',
-                  fontWeight: isActive ? 600 : 400,
-                  transition: 'all 0.15s ease',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                {y}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Result count and sort */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: '1rem',
-        flexWrap: 'wrap',
-        minHeight: '2rem',
-        marginBottom: '1.5rem',
-      }}>
-        <div style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.7rem',
-          color: 'var(--text-muted)',
-          letterSpacing: '0.05em',
-        }}>
+    <PageLayout rail={rail}>
+      <Crumbs items={[{ label: 'Federal Register' }, { label: 'Executive Orders' }]} />
+      <div className="page-head">
+        <h1 className="page-title">
+          Executive Orders
           {!loading && !error && (
-            <>
-              {totalCount.toLocaleString()} found
-              {debouncedSearch && ` matching "${debouncedSearch}"`}
-              {year && ` in ${year}`}
+            <small>
+              {totalCount.toLocaleString()} {totalCount === 1 ? 'document' : 'documents'}
+              {year && ` · ${year}`}
               {president && ` · ${PRESIDENTS.find(p => p.value === president)?.label}`}
-            </>
+              {debouncedSearch && ` · matching “${debouncedSearch}”`}
+            </small>
           )}
-        </div>
-
-        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-          <span style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.65rem',
-            color: 'var(--text-muted)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginRight: '0.25rem',
-          }}>Sort</span>
-          {SORTS.map(s => {
-            const isActive = sort === s.value;
-            return (
-              <button
-                key={s.value}
-                onClick={() => handleSort(s.value)}
-                aria-pressed={isActive}
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: '0.7rem',
-                  padding: '6px 12px',
-                  border: isActive ? '1px solid var(--gold)' : '1px solid rgba(201,168,76,0.25)',
-                  borderRadius: '3px',
-                  background: isActive ? 'var(--gold)' : 'transparent',
-                  color: isActive ? 'var(--navy)' : 'var(--text-muted)',
-                  cursor: 'pointer',
-                  fontWeight: isActive ? 600 : 400,
-                  transition: 'all 0.15s ease',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                {s.label}
-              </button>
-            );
-          })}
-        </div>
+        </h1>
+        <SearchBox value={searchInput} onChange={handleSearch} placeholder="Search by title or number…" autoFocus />
       </div>
 
-      {/* States */}
-      {loading && (
-        <div style={{ textAlign: 'center', padding: '6rem 0', color: 'var(--text-muted)' }}>
-          <div style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.75rem',
-            letterSpacing: '0.1em',
-          }}>
-            Loading records…
-          </div>
-        </div>
-      )}
+      {loading && <div className="state">Loading records…</div>}
 
-      {error && (
-        <div style={{
-          background: 'rgba(192,57,43,0.1)',
-          border: '1px solid rgba(192,57,43,0.4)',
-          borderRadius: '4px',
-          padding: '1.5rem',
-          color: '#e88',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.8rem',
-        }}>
-          Failed to load data: {error.message}
-        </div>
-      )}
+      {error && <div className="error">Failed to load data: {error.message}</div>}
 
-      {/* Results */}
       {!loading && !error && orders.length === 0 && (
-        <div style={{
-          textAlign: 'center',
-          padding: '5rem 0',
-          color: 'var(--text-muted)',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.8rem',
-        }}>
-          {debouncedSearch || year || president
-            ? 'No executive orders match your filters.'
-            : 'Enter a search term or select a filter to browse executive orders.'}
-        </div>
+        <div className="state">No executive orders match your filters.</div>
       )}
 
       {!loading && !error && orders.length > 0 && (
         <>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))',
-            gridAutoRows: '1fr',
-            gap: '1rem',
-          }}>
-            {orders.map(order => {
-              const slug = deriveSlug(order);
-              return (
-                <ExecutiveOrderCard
-                  key={order.number || order.title}
-                  order={order}
-                  slug={slug}
-                  docType="executive-orders"
-                  showPresident
-                />
-              );
-            })}
-          </div>
+          <OrderTable
+            orders={orders}
+            slugFor={deriveSlug}
+            docType="executive-orders"
+            showPresident
+            newestFirst={sort === 'newest'}
+            counts={yearCounts}
+          />
 
           <Pagination
             currentPage={page}
             totalPages={totalPages}
+            totalCount={totalCount}
+            perPage={PER_PAGE}
             onPageChange={p => { setPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           />
         </>
       )}
-    </main>
+    </PageLayout>
   );
 }

@@ -58,6 +58,11 @@ export const typeDefs = `#graphql
     totalPages: Int!
   }
 
+  type YearCount {
+    year: Int!
+    count: Int!
+  }
+
   type NaturalCourt {
     slug: String!
     name: String!
@@ -187,6 +192,14 @@ export const typeDefs = `#graphql
       year: Int
       order: String
     ): ExecutiveOrderPage!
+
+    # How many documents the same filters return for each of the given signing years.
+    executiveOrderYearCounts(
+      president: String
+      documentType: String
+      search: String
+      years: [Int!]!
+    ): [YearCount!]!
 
     executiveOrder(number: String!): ExecutiveOrder
     executiveOrderText(number: String!): String

@@ -1,35 +1,10 @@
 import { useState, useCallback } from 'react';
+import PageLayout from '../components/PageLayout';
+import { RailGroup } from '../components/Rail';
 
-const BRANCH_COLORS = {
-  legislative: {
-    header: 'rgba(59,130,246,0.85)',
-    border: 'rgba(59,130,246,0.4)',
-    connector: 'rgba(59,130,246,0.35)',
-    badgeBg: 'rgba(59,130,246,0.12)',
-    badgeText: '#93c5fd',
-  },
-  executive: {
-    header: 'rgba(201,168,76,0.85)',
-    border: 'rgba(201,168,76,0.4)',
-    connector: 'rgba(201,168,76,0.35)',
-    badgeBg: 'rgba(201,168,76,0.12)',
-    badgeText: 'var(--gold)',
-  },
-  judicial: {
-    header: 'rgba(168,85,247,0.85)',
-    border: 'rgba(168,85,247,0.4)',
-    connector: 'rgba(168,85,247,0.35)',
-    badgeBg: 'rgba(168,85,247,0.12)',
-    badgeText: '#c4b5fd',
-  },
-  default: {
-    header: 'rgba(26,48,96,0.95)',
-    border: 'rgba(201,168,76,0.3)',
-    connector: 'rgba(201,168,76,0.3)',
-    badgeBg: 'rgba(201,168,76,0.08)',
-    badgeText: 'var(--gold)',
-  },
-};
+// Colours come from the branch a node belongs to: the class sets --branch and
+// --branch-soft (index.css), which the cards, rows and connecting lines use.
+const branchClass = branch => `branch-${branch || 'default'}`;
 
 const CORPUS = [
   {
@@ -384,166 +359,49 @@ const CARD_GAP = 20;
 // Depth at which children switch from horizontal spread to vertical list
 const VERTICAL_DEPTH = 3;
 
-function OrgCard({ node, colors, isLeaf, isExpanded, onToggle, compact }) {
-  const [hovered, setHovered] = useState(false);
+function OrgCard({ node, branch, isLeaf, isExpanded, onToggle, compact }) {
+  const caret = !isLeaf && <span className="org-caret">{isExpanded ? '▾' : '▸'}</span>;
 
   if (compact) {
     // Vertical list row style for depth >= VERTICAL_DEPTH
     return (
       <div
-        onClick={() => onToggle && onToggle(node.id)}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '5px 10px',
-          borderRadius: '3px',
-          border: `1px solid ${hovered ? colors.border : 'rgba(255,255,255,0.05)'}`,
-          background: hovered ? 'rgba(17,32,64,0.8)' : 'rgba(10,22,40,0.4)',
-          cursor: isLeaf ? 'default' : 'pointer',
-          transition: 'all 0.12s',
-          gap: '8px',
-        }}
+        className={`org-row ${branchClass(branch)}${isLeaf ? ' leaf' : ''}`}
+        onClick={isLeaf ? undefined : () => onToggle(node.id)}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
-          <div style={{
-            width: '4px',
-            height: '4px',
-            borderRadius: '50%',
-            background: isLeaf ? 'var(--text-muted)' : colors.badgeText,
-            flexShrink: 0,
-          }} />
-          <span style={{
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: '0.72rem',
-            color: isLeaf ? 'var(--text-muted)' : 'var(--cream-dark)',
-            lineHeight: 1.3,
-          }}>
-            {node.label}
-          </span>
-          {node.abbr && (
-            <span style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '0.58rem',
-              color: colors.badgeText,
-              background: colors.badgeBg,
-              padding: '1px 4px',
-              borderRadius: '2px',
-              flexShrink: 0,
-            }}>
-              {node.abbr}
-            </span>
-          )}
-        </div>
-        {!isLeaf && (
-          <span style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '0.55rem',
-            color: colors.badgeText,
-            opacity: 0.6,
-            flexShrink: 0,
-          }}>
-            {isExpanded ? '▾' : '▸'}
-          </span>
-        )}
+        <span className="org-dot" />
+        <span className="org-label">{node.label}</span>
+        {node.abbr && <span className="org-abbr">{node.abbr}</span>}
+        {caret}
       </div>
     );
   }
 
   return (
     <div
+      className={`org-card ${branchClass(branch)}${isLeaf ? ' leaf' : ''}`}
       onClick={isLeaf ? undefined : () => onToggle(node.id)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        width: `${CARD_WIDTH}px`,
-        borderRadius: '5px',
-        border: `1px solid ${colors.border}`,
-        background: hovered && !isLeaf ? 'rgba(17,32,64,0.9)' : 'rgba(17,32,64,0.7)',
-        cursor: isLeaf ? 'default' : 'pointer',
-        transition: 'all 0.15s',
-        position: 'relative',
-        flexShrink: 0,
-        transform: hovered && !isLeaf ? 'translateY(-1px)' : 'none',
-        boxShadow: hovered && !isLeaf ? '0 4px 16px rgba(0,0,0,0.4)' : 'none',
-      }}
+      style={{ width: `${CARD_WIDTH}px` }}
     >
-      <div style={{
-        background: isLeaf ? 'rgba(255,255,255,0.04)' : colors.header,
-        padding: '8px 10px',
-        borderRadius: '4px 4px 0 0',
-      }}>
-        <div style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: '0.78rem',
-          fontWeight: 600,
-          color: isLeaf ? 'var(--text-muted)' : 'var(--cream)',
-          lineHeight: 1.25,
-          wordBreak: 'break-word',
-          paddingRight: '14px',
-        }}>
-          {node.label}
-        </div>
-      </div>
+      <div className="org-card-head">{node.label}</div>
 
       {(node.abbr || node.desc) && (
-        <div style={{ padding: '5px 10px 8px' }}>
-          {node.abbr && (
-            <div style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '0.6rem',
-              color: colors.badgeText,
-              background: colors.badgeBg,
-              display: 'inline-block',
-              padding: '2px 5px',
-              borderRadius: '2px',
-              marginBottom: node.desc ? '4px' : 0,
-            }}>
-              {node.abbr}
-            </div>
-          )}
-          {node.desc && (
-            <div style={{
-              fontFamily: "'IBM Plex Sans', sans-serif",
-              fontSize: '0.62rem',
-              color: 'var(--text-muted)',
-              marginTop: node.abbr ? '2px' : 0,
-            }}>
-              {node.desc}
-            </div>
-          )}
+        <div className="org-card-body">
+          {node.abbr && <span className="org-abbr">{node.abbr}</span>}
+          {node.desc && <div className="org-desc">{node.desc}</div>}
         </div>
       )}
 
-      {!isLeaf && (
-        <div style={{
-          position: 'absolute',
-          bottom: '6px',
-          right: '8px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.6rem',
-          color: colors.badgeText,
-          opacity: 0.7,
-        }}>
-          {isExpanded ? '▾' : '▸'}
-        </div>
-      )}
+      {caret}
     </div>
   );
 }
 
 // Compact vertical list rendered at depth >= VERTICAL_DEPTH
 function VerticalList({ nodes, branch, expanded, onToggle }) {
-  const colors = BRANCH_COLORS[branch || 'default'];
+  const line = `org-line ${branchClass(branch)}`;
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: `${CARD_WIDTH}px`,
-      marginTop: '0px',
-    }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: `${CARD_WIDTH}px` }}>
       {nodes.map((node, i) => {
         const hasChildren = node.children && node.children.length > 0;
         const isExpanded = expanded.has(node.id);
@@ -554,20 +412,20 @@ function VerticalList({ nodes, branch, expanded, onToggle }) {
               {/* vertical spine + horizontal branch */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '18px', flexShrink: 0 }}>
                 {/* top half of vertical spine (always shown) */}
-                <div style={{ width: '2px', height: '13px', background: colors.connector }} />
+                <div className={line} style={{ width: '2px', height: '13px' }} />
                 {/* elbow: horizontal branch */}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div style={{ width: '2px', height: '2px', background: colors.connector }} />
-                  <div style={{ width: '14px', height: '2px', background: colors.connector }} />
+                  <div className={line} style={{ width: '2px', height: '2px' }} />
+                  <div className={line} style={{ width: '14px', height: '2px' }} />
                 </div>
                 {/* bottom half of vertical spine (hidden for last item) */}
-                <div style={{ width: '2px', flexGrow: 1, background: isLast ? 'transparent' : colors.connector }} />
+                <div className={isLast ? undefined : line} style={{ width: '2px', flexGrow: 1 }} />
               </div>
 
-              <div style={{ flex: 1, paddingBottom: '3px' }}>
+              <div style={{ flex: 1, minWidth: 0, paddingBottom: '3px' }}>
                 <OrgCard
                   node={node}
-                  colors={colors}
+                  branch={branch}
                   isLeaf={!hasChildren}
                   isExpanded={isExpanded}
                   onToggle={onToggle}
@@ -580,7 +438,7 @@ function VerticalList({ nodes, branch, expanded, onToggle }) {
               <div style={{ display: 'flex' }}>
                 {/* continuing spine below the card for nested children */}
                 <div style={{ width: '18px', flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
-                  <div style={{ width: '2px', background: isLast ? 'transparent' : colors.connector }} />
+                  <div className={isLast ? undefined : line} style={{ width: '2px' }} />
                 </div>
                 <div style={{ flex: 1, paddingLeft: '4px' }}>
                   <VerticalList
@@ -600,90 +458,84 @@ function VerticalList({ nodes, branch, expanded, onToggle }) {
 }
 
 function OrgLevel({ nodes, branch, depth, expanded, onToggle }) {
+  const bar = `org-line ${branchClass(branch)}`;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ position: 'relative', display: 'flex', gap: `${CARD_GAP}px`, justifyContent: 'center' }}>
-        {nodes.length > 1 && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: `${CARD_WIDTH / 2}px`,
-            width: `${(nodes.length - 1) * (CARD_WIDTH + CARD_GAP)}px`,
-            height: '2px',
-            background: BRANCH_COLORS[branch || 'default'].connector,
-          }} />
-        )}
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      {nodes.map((node, i) => {
+        const nodeBranch = node.branch || branch;
+        const line = `org-line ${branchClass(nodeBranch)}`;
+        const hasChildren = node.children && node.children.length > 0;
+        const isExpanded = expanded.has(node.id);
+        const nextDepth = depth + 1;
+        const childrenAreVertical = nextDepth >= VERTICAL_DEPTH;
 
-        {nodes.map(node => {
-          const nodeBranch = node.branch || branch;
-          const colors = BRANCH_COLORS[nodeBranch || 'default'];
-          const hasChildren = node.children && node.children.length > 0;
-          const isExpanded = expanded.has(node.id);
-          const nextDepth = depth + 1;
-          const childrenAreVertical = nextDepth >= VERTICAL_DEPTH;
+        return (
+          // A column is as wide as its subtree, so neighbouring subtrees never overlap.
+          <div key={node.id} style={{
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: `0 ${CARD_GAP / 2}px`,
+          }}>
+            {/* The bar joining siblings, drawn as a half above each column so it runs
+                from the first column's centre to the last one's. */}
+            {i > 0 && <div className={bar} style={{ position: 'absolute', top: 0, left: 0, right: '50%', height: '2px' }} />}
+            {i < nodes.length - 1 && <div className={bar} style={{ position: 'absolute', top: 0, left: '50%', right: 0, height: '2px' }} />}
 
-          return (
-            <div key={node.id} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: `${CARD_WIDTH}px`,
-            }}>
-              <div style={{ width: '2px', height: '24px', background: colors.connector }} />
+            <div className={line} style={{ width: '2px', height: '24px' }} />
 
-              <OrgCard
-                node={node}
-                colors={colors}
-                isLeaf={!hasChildren}
-                isExpanded={isExpanded}
-                onToggle={onToggle}
-              />
+            <OrgCard
+              node={node}
+              branch={nodeBranch}
+              isLeaf={!hasChildren}
+              isExpanded={isExpanded}
+              onToggle={onToggle}
+            />
 
-              {hasChildren && isExpanded && (
-                <>
-                  <div style={{ width: '2px', height: '16px', background: colors.connector }} />
-                  {childrenAreVertical ? (
-                    <VerticalList
-                      nodes={node.children}
-                      branch={nodeBranch}
-                      expanded={expanded}
-                      onToggle={onToggle}
-                    />
-                  ) : (
-                    <OrgLevel
-                      nodes={node.children}
-                      branch={nodeBranch}
-                      depth={nextDepth}
-                      expanded={expanded}
-                      onToggle={onToggle}
-                    />
-                  )}
-                </>
-              )}
-            </div>
-          );
-        })}
-      </div>
+            {hasChildren && isExpanded && (
+              <>
+                <div className={line} style={{ width: '2px', height: '16px' }} />
+                {childrenAreVertical ? (
+                  <VerticalList
+                    nodes={node.children}
+                    branch={nodeBranch}
+                    expanded={expanded}
+                    onToggle={onToggle}
+                  />
+                ) : (
+                  <OrgLevel
+                    nodes={node.children}
+                    branch={nodeBranch}
+                    depth={nextDepth}
+                    expanded={expanded}
+                    onToggle={onToggle}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
 function RootLevel({ node, expanded, onToggle }) {
-  const colors = BRANCH_COLORS.default;
   const isExpanded = expanded.has(node.id);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <OrgCard
         node={node}
-        colors={colors}
+        branch={null}
         isLeaf={false}
         isExpanded={isExpanded}
         onToggle={onToggle}
       />
       {isExpanded && node.children && (
         <>
-          <div style={{ width: '2px', height: '24px', background: colors.connector }} />
+          <div className={`org-line ${branchClass(null)}`} style={{ width: '2px', height: '24px' }} />
           <OrgLevel
             nodes={node.children}
             branch={null}
@@ -695,6 +547,12 @@ function RootLevel({ node, expanded, onToggle }) {
       )}
     </div>
   );
+}
+
+// Document types (the leaves of the tree) under a node.
+function countLeaves(node) {
+  if (!node.children || node.children.length === 0) return 1;
+  return node.children.reduce((sum, child) => sum + countLeaves(child), 0);
 }
 
 export default function CorpusBrowser() {
@@ -723,80 +581,42 @@ export default function CorpusBrowser() {
 
   const collapseAll = () => setExpanded(new Set(['root']));
 
+  const root = CORPUS[0];
+
+  const rail = (
+    <>
+      <RailGroup title="Document types">
+        {root.children.map(branch => (
+          <div key={branch.id} className="fact">
+            <span className={`chip ${branch.branch}`}>{branch.label}</span>
+            <b>{countLeaves(branch)}</b>
+          </div>
+        ))}
+      </RailGroup>
+      <RailGroup title="Tree">
+        <div className="rail-buttons">
+          <button type="button" className="btn small" onClick={expandAll}>Expand all</button>
+          <button type="button" className="btn small" onClick={collapseAll}>Collapse all</button>
+        </div>
+      </RailGroup>
+    </>
+  );
+
   return (
-    <main style={{ padding: '5rem 2rem 4rem', minWidth: 0 }}>
-      <div style={{ maxWidth: '860px', margin: '0 auto 3rem' }}>
-        <div style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '0.65rem',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: 'var(--gold)',
-          marginBottom: '0.75rem',
-        }}>
-          U.S. Federal Government · Document Taxonomy
-        </div>
-        <h1 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-          fontWeight: 700,
-          color: 'var(--cream)',
-          margin: '0 0 1rem',
-          lineHeight: 1.15,
-        }}>
-          Federal Document Corpus
-        </h1>
-        <p style={{
-          fontFamily: "'IBM Plex Sans', sans-serif",
-          fontSize: '0.95rem',
-          color: 'var(--text-muted)',
-          lineHeight: 1.65,
-          maxWidth: '600px',
-          marginBottom: '1.5rem',
-        }}>
-          A hierarchical map of official document types across all three branches of the U.S. federal government. Click any node to expand or collapse its subtree.
-        </p>
+    <PageLayout rail={rail}>
+      <div className="crumbs">U.S. Federal Government · Document Taxonomy</div>
+      <div className="page-head">
+        <h1 className="page-title">Federal Document Corpus <small>{countLeaves(root)} document types</small></h1>
+      </div>
+      <p className="lede">
+        A hierarchical map of official document types across all three branches of the U.S. federal government. Click any node to expand or collapse its subtree.
+      </p>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {[
-            { label: 'Expand All', action: expandAll },
-            { label: 'Collapse All', action: collapseAll },
-          ].map(({ label, action }) => (
-            <button
-              key={label}
-              onClick={action}
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '0.65rem',
-                letterSpacing: '0.06em',
-                padding: '5px 12px',
-                borderRadius: '3px',
-                border: '1px solid rgba(201,168,76,0.25)',
-                background: 'transparent',
-                color: 'var(--text-muted)',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.color = 'var(--gold)';
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.color = 'var(--text-muted)';
-                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)';
-              }}
-            >
-              {label}
-            </button>
-          ))}
+      <div className="org-scroll">
+        <div className="org-tree">
+          <RootLevel node={root} expanded={expanded} onToggle={toggle} />
         </div>
       </div>
-
-      <div style={{ overflowX: 'auto', paddingBottom: '2rem' }}>
-        <div style={{ minWidth: 'max-content', display: 'flex', justifyContent: 'center', padding: '0 2rem' }}>
-          <RootLevel node={CORPUS[0]} expanded={expanded} onToggle={toggle} />
-        </div>
-      </div>
-    </main>
+    </PageLayout>
   );
 }

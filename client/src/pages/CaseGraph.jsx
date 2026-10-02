@@ -1,14 +1,23 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
+import PageLayout from '../components/PageLayout';
+import { RailGroup, RadioOptions, Fact } from '../components/Rail';
 import DAGGraph from "../components/DAGGraph";
 import { GET_CASE_GRAPH } from "../queries";
 
+// Same colours as TREATMENT_COLOR in components/DAGGraph.jsx.
 const LEGEND = [
-  { label: "Affirmed", color: "#22c55e" },
-  { label: "Overruled / Reversed", color: "#ef4444" },
-  { label: "Distinguished", color: "#f59e0b" },
-  { label: "Unknown", color: "#6b7280" },
+  { label: "Affirmed", color: "var(--ok)" },
+  { label: "Overruled / Reversed", color: "var(--danger)" },
+  { label: "Distinguished", color: "var(--warn)" },
+  { label: "Unknown", color: "var(--muted)" },
+  { label: "Skip-level", color: "var(--muted)", dashed: true },
+];
+
+const VIEWS = [
+  { label: 'Simplified', value: true },
+  { label: 'Full', value: false },
 ];
 
 // Roe v. Wade DB id
@@ -30,90 +39,48 @@ export default function CaseGraph() {
   const visibleNodeIds = new Set([String(seedId)]);
   edges.forEach(e => { visibleNodeIds.add(e.source); visibleNodeIds.add(e.target); });
   const nodes = data ? data.caseGraph.nodes.filter(n => visibleNodeIds.has(n.id)) : [];
+  const seed = data?.caseGraph.nodes.find(n => n.isSeed);
+
+  const rail = (
+    <>
+      <RailGroup title="Citations">
+        {LEGEND.map(({ label, color, dashed }) => (
+          <div key={label} className="legend-row">
+            <svg width={28} height={12} style={{ color }}>
+              <line x1={0} y1={6} x2={22} y2={6} stroke="currentColor" strokeWidth={2} strokeDasharray={dashed ? '4 3' : undefined} />
+              <polygon points="22,2 28,6 22,10" fill="currentColor" />
+            </svg>
+            {label}
+          </div>
+        ))}
+      </RailGroup>
+      <div>
+        <RailGroup title="View">
+          <RadioOptions label="View" options={VIEWS} value={simplified} onChange={setSimplified} />
+        </RailGroup>
+        <RailGroup title="In this graph">
+          <Fact label="Cases">{data ? nodes.length : '…'}</Fact>
+          <Fact label="Citations">{data ? edges.length : '…'}</Fact>
+        </RailGroup>
+      </div>
+    </>
+  );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 56px)", background: "#112040" }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "12px 24px",
-          borderBottom: "1px solid #1e3a5f",
-          flexShrink: 0,
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              margin: 0,
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 20,
-              color: "#f5f0e8",
-              fontWeight: 600,
-            }}
-          >
-            Case Citation Graph
-          </h1>
-          <p style={{ margin: "2px 0 0", fontSize: 12, color: "rgba(136,153,187,0.8)", fontFamily: "'IBM Plex Sans', sans-serif" }}>
-            Scroll to zoom · Drag to pan · Click node to open source
-          </p>
-        </div>
-        <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-          {LEGEND.map(({ label, color }) => (
-            <div key={label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <svg width={28} height={12}>
-                <line x1={0} y1={6} x2={28} y2={6} stroke={color} strokeWidth={2} />
-                <polygon points="22,2 28,6 22,10" fill={color} />
-              </svg>
-              <span style={{ color: "#f5f0e8", fontSize: 12, fontFamily: "'IBM Plex Sans', sans-serif" }}>{label}</span>
-            </div>
-          ))}
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <svg width={28} height={12}>
-              <line x1={0} y1={6} x2={28} y2={6} stroke="#6b7280" strokeWidth={2} strokeDasharray="4 3" />
-              <polygon points="22,2 28,6 22,10" fill="#6b7280" />
-            </svg>
-            <span style={{ color: "#f5f0e8", fontSize: 12, fontFamily: "'IBM Plex Sans', sans-serif" }}>Skip-level</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 0, background: "#1a2f52", borderRadius: 6, border: "1px solid #334e7e", overflow: "hidden" }}>
-            {["Simplified", "Full"].map(label => {
-              const active = label === "Simplified" ? simplified : !simplified;
-              return (
-                <button
-                  key={label}
-                  onClick={() => setSimplified(label === "Simplified")}
-                  style={{
-                    padding: "4px 12px",
-                    fontSize: 12,
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                    border: "none",
-                    cursor: "pointer",
-                    background: active ? "#2a4a7f" : "transparent",
-                    color: active ? "#f5f0e8" : "rgba(136,153,187,0.7)",
-                    transition: "background 0.15s",
-                  }}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+    <PageLayout rail={rail}>
+      <div className="page-head">
+        <h1 className="page-title">
+          Case Citation Graph
+          {seed && <small>{seed.name}</small>}
+        </h1>
       </div>
-      <div style={{ flex: 1, overflow: "hidden" }}>
-        {loading && (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "rgba(136,153,187,0.8)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 13 }}>
-            Loading graph…
-          </div>
-        )}
-        {error && (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#ef4444", fontFamily: "'IBM Plex Mono', monospace", fontSize: 13 }}>
-            {error.message}
-          </div>
-        )}
+
+      <div className="graph-frame">
+        {loading && <div className="state">Loading graph…</div>}
+        {error && <div className="error">{error.message}</div>}
         {data && <DAGGraph nodes={nodes} edges={edges} />}
       </div>
-    </div>
+      <p className="note">Scroll to zoom · Drag to pan · Click a case to open its source</p>
+    </PageLayout>
   );
 }

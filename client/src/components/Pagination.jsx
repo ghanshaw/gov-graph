@@ -1,4 +1,5 @@
-export default function Pagination({ currentPage, totalPages, onPageChange }) {
+// totalCount and perPage are optional; with both, the range shown ("Showing 1–20 of 294") is printed on the left.
+export default function Pagination({ currentPage, totalPages, onPageChange, totalCount, perPage }) {
   if (totalPages <= 1) return null;
 
   const getPages = () => {
@@ -23,70 +24,41 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
     return withEllipsis;
   };
 
-  const btnBase = {
-    fontFamily: "'IBM Plex Mono', monospace",
-    fontSize: '0.75rem',
-    padding: '6px 12px',
-    border: '1px solid rgba(201,168,76,0.25)',
-    borderRadius: '3px',
-    cursor: 'pointer',
-    transition: 'all 0.15s ease',
-    background: 'transparent',
-    color: 'var(--text-muted)',
-    letterSpacing: '0.05em',
-  };
-
-  const activeStyle = {
-    ...btnBase,
-    background: 'var(--gold)',
-    color: 'var(--navy)',
-    border: '1px solid var(--gold)',
-    fontWeight: 600,
-  };
-
-  const disabledStyle = {
-    ...btnBase,
-    opacity: 0.3,
-    cursor: 'not-allowed',
-  };
+  const first = (currentPage - 1) * perPage + 1;
+  const last = Math.min(currentPage * perPage, totalCount);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', padding: '2rem 0' }}>
-      <button
-        style={currentPage === 1 ? disabledStyle : btnBase}
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-        onMouseEnter={e => { if (currentPage !== 1) e.currentTarget.style.color = 'var(--gold)'; }}
-        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; }}
-      >
-        ← Prev
-      </button>
+    <div className="pager">
+      <span>
+        {totalCount != null && perPage
+          ? `Showing ${first.toLocaleString()}–${last.toLocaleString()} of ${totalCount.toLocaleString()}`
+          : `Page ${currentPage} of ${totalPages}`}
+      </span>
+      <div className="pages">
+        <button type="button" disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
+          ← Prev
+        </button>
 
-      {getPages().map((page, i) =>
-        page === '...'
-          ? <span key={`e-${i}`} style={{ color: 'var(--text-muted)', fontSize: '0.75rem', padding: '0 4px' }}>…</span>
-          : (
-            <button
-              key={page}
-              style={page === currentPage ? activeStyle : btnBase}
-              onClick={() => onPageChange(page)}
-              onMouseEnter={e => { if (page !== currentPage) e.currentTarget.style.color = 'var(--gold)'; }}
-              onMouseLeave={e => { if (page !== currentPage) e.currentTarget.style.color = 'var(--text-muted)'; }}
-            >
-              {page}
-            </button>
-          )
-      )}
+        {getPages().map((page, i) =>
+          page === '...'
+            ? <span key={`e-${i}`} className="gap">…</span>
+            : (
+              <button
+                key={page}
+                type="button"
+                className={page === currentPage ? 'on' : undefined}
+                aria-current={page === currentPage ? 'page' : undefined}
+                onClick={() => onPageChange(page)}
+              >
+                {page}
+              </button>
+            )
+        )}
 
-      <button
-        style={currentPage === totalPages ? disabledStyle : btnBase}
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-        onMouseEnter={e => { if (currentPage !== totalPages) e.currentTarget.style.color = 'var(--gold)'; }}
-        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; }}
-      >
-        Next →
-      </button>
+        <button type="button" disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>
+          Next →
+        </button>
+      </div>
     </div>
   );
 }

@@ -120,6 +120,28 @@ const PRESIDENT_API_SLUG = {
   'joseph-biden': 'joe-biden',
 };
 
+// The Federal Register has one identifier for both Trump terms; a term is told apart by signing date.
+const TERM_SIGNING_DATES = {
+  'donald-trump':    { lte: '2021-01-20' },
+  'donald-trump-47': { gte: '2025-01-20' },
+};
+
+// Federal Register search conditions shared by the order list and its year counts.
+function orderConditions({ president, documentType, search, year }) {
+  const params = { 'conditions[presidential_document_type]': documentType };
+  if (president) params['conditions[president]'] = PRESIDENT_API_SLUG[president] || president;
+  if (search) params['conditions[term]'] = search;
+  if (year) {
+    params['conditions[signing_date][gte]'] = `${year}-01-01`;
+    params['conditions[signing_date][lte]'] = `${year}-12-31`;
+  } else {
+    const term = TERM_SIGNING_DATES[president] || {};
+    if (term.gte) params['conditions[signing_date][gte]'] = term.gte;
+    if (term.lte) params['conditions[signing_date][lte]'] = term.lte;
+  }
+  return params;
+}
+
 function mapOrder(doc) {
   const date = doc.signing_date || doc.publication_date || null;
   return {
@@ -152,7 +174,7 @@ export const resolvers = {
       if (cached) return cached;
 
       const params = {
-        'conditions[presidential_document_type]': documentType,
+        ...orderConditions({ president, documentType, search, year }),
         'fields[]': [
           'executive_order_number',
           'title',
@@ -170,17 +192,6 @@ export const resolvers = {
         order: sortOrder,
       };
 
-      if (president) {
-        const apiSlug = PRESIDENT_API_SLUG[president] || president;
-        params['conditions[president]'] = apiSlug;
-      }
-
-      if (search) params['conditions[term]'] = search;
-      if (year) {
-        params['conditions[signing_date][gte]'] = `${year}-01-01`;
-        params['conditions[signing_date][lte]'] = `${year}-12-31`;
-      }
-
       const response = await axios.get(BASE_URL, { params });
       const { results, count, total_pages } = response.data;
 
@@ -190,6 +201,28 @@ export const resolvers = {
         currentPage: page,
         totalPages: total_pages || 1,
       };
+
+      cache.set(cacheKey, result);
+      return result;
+    },
+
+    // One count request per year, with the list's own conditions, so each number matches
+    // what choosing that year shows. (The Federal Register's yearly facets count by
+    // publication date, not signing date.)
+    executiveOrderYearCounts: async (_, { president, documentType = 'executive_order', search, years }) => {
+      const cacheKey = `eo-years:${president || 'all'}:${documentType}:${search || ''}:${years.join(',')}`;
+      const cached = cache.get(cacheKey);
+      if (cached) return cached;
+
+      const result = await Promise.all(years.map(async year => {
+        const params = {
+          ...orderConditions({ president, documentType, search, year }),
+          'fields[]': ['document_number'],
+          per_page: 1,
+        };
+        const response = await axios.get(BASE_URL, { params });
+        return { year, count: response.data.count || 0 };
+      }));
 
       cache.set(cacheKey, result);
       return result;
