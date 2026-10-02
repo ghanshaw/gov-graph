@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>govgraph · features</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f1117;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #2a2d3a;
+    }
+
+    header h1 { font-size: 1rem; font-weight: 500; color: #8892a4; letter-spacing: 0.05em; }
+    header h1 span { color: #e2e8f0; }
+    header time { font-size: 0.75rem; color: #8892a4; }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .card:hover { border-color: #4f8ef7; background: #1e2235; }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .card-header h2 { font-size: 0.95rem; font-weight: 600; color: #e2e8f0; line-height: 1.3; }
+
+    .badge {
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+    .badge.complete    { background: #14532d; color: #86efac; }
+    .badge.in-progress { background: #1e3a5f; color: #93c5fd; }
+    .badge.blocked     { background: #450a0a; color: #fca5a5; }
+    .badge.not-started { background: #1e2130; color: #8892a4; }
+
+    .progress-track {
+      height: 6px;
+      background: #2a2d3a;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.6rem;
+    }
+    .progress-fill { height: 100%; border-radius: 3px; }
+    .progress-fill.complete    { background: #22c55e; }
+    .progress-fill.in-progress { background: #4f8ef7; }
+    .progress-fill.blocked     { background: #ef4444; }
+    .progress-fill.not-started { background: #8892a4; }
+
+    .counts { font-size: 0.75rem; color: #8892a4; }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #8892a4;
+      padding: 3rem;
+      font-size: 0.9rem;
+    }
+
+    /* Detail panel */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 10;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+    }
+    .overlay.open { display: flex; }
+
+    .detail {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 680px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .detail-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: #8892a4;
+      font-size: 1.2rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    .detail-close:hover { color: #e2e8f0; background: #2a2d3a; }
+
+    .detail-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .detail-title h2 { font-size: 1.2rem; font-weight: 700; }
+
+    .detail-progress {
+      margin-bottom: 1.5rem;
+    }
+    .detail-progress .progress-track { height: 8px; margin-bottom: 0.4rem; }
+    .detail-progress .counts { font-size: 0.8rem; }
+
+    .detail-section { margin-bottom: 1.5rem; }
+    .detail-section h3 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8892a4;
+      margin-bottom: 0.6rem;
+    }
+    .detail-section p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #c8d0dc;
+    }
+
+    .task-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .task-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: #c8d0dc;
+    }
+    .task-list li .check {
+      flex-shrink: 0;
+      width: 1rem;
+      height: 1rem;
+      margin-top: 0.15rem;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+    }
+    .task-list li.done .check { background: #14532d; color: #86efac; }
+    .task-list li.todo .check { border: 1.5px solid #2a2d3a; }
+    .task-list li.done { color: #8892a4; text-decoration: line-through; text-decoration-color: #4a5568; }
+
+    .notes-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .notes-list li {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #8892a4;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .notes-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: #4a5568;
+    }
+
+    .empty-state { font-size: 0.85rem; color: #4a5568; font-style: italic; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>govgraph / <span>features</span></h1>
+    <time>Jun 7, 2026, 4:40 PM</time>
+  </header>
+  <main>
+    
+    <div class="card" onclick="openDetail(0)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openDetail(0)">
+      <div class="card-header">
+        <h2>Case Law Graph</h2>
+        <span class="badge in-progress">In Progress</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill in-progress" style="width: 73%"></div>
+      </div>
+      <p class="counts">11 done · 4 remaining</p>
+    </div>
+
+    <div class="card" onclick="openDetail(1)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openDetail(1)">
+      <div class="card-header">
+        <h2>Executive Orders</h2>
+        <span class="badge in-progress">In Progress</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill in-progress" style="width: 69%"></div>
+      </div>
+      <p class="counts">9 done · 4 remaining</p>
+    </div>
+
+    <div class="card" onclick="openDetail(2)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openDetail(2)">
+      <div class="card-header">
+        <h2>Feature Tracking</h2>
+        <span class="badge complete">Complete</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill complete" style="width: 100%"></div>
+      </div>
+      <p class="counts">5 done · 0 remaining</p>
+    </div>
+
+    <div class="card" onclick="openDetail(3)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openDetail(3)">
+      <div class="card-header">
+        <h2>Record Management (Schema Migration)</h2>
+        <span class="badge not-started">Not Started</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill not-started" style="width: 0%"></div>
+      </div>
+      <p class="counts">0 done · 7 remaining</p>
+    </div>
+
+    <div class="card" onclick="openDetail(4)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openDetail(4)">
+      <div class="card-header">
+        <h2>Tagging System</h2>
+        <span class="badge complete">Complete</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill complete" style="width: 100%"></div>
+      </div>
+      <p class="counts">13 done · 0 remaining</p>
+    </div>
+  </main>
+
+  <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+    <div class="detail" id="detail">
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+      <div class="detail-title">
+        <h2 id="d-title"></h2>
+        <span class="badge" id="d-badge"></span>
+      </div>
+      <div class="detail-progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="d-bar"></div>
+        </div>
+        <p class="counts" id="d-counts"></p>
+      </div>
+      <div class="detail-section" id="d-goal-section">
+        <h3>Goal</h3>
+        <p id="d-goal"></p>
+      </div>
+      <div class="detail-section">
+        <h3>Steps Completed</h3>
+        <ul class="task-list" id="d-done"></ul>
+      </div>
+      <div class="detail-section">
+        <h3>Steps Remaining</h3>
+        <ul class="task-list" id="d-todo"></ul>
+      </div>
+      <div class="detail-section" id="d-notes-section">
+        <h3>Decisions &amp; Notes</h3>
+        <ul class="notes-list" id="d-notes"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const FEATURES = [{"title":"Case Law Graph","status":"In Progress","goal":"A directed acyclic graph of legal cases where each case is a node and citations are directed edges. Powers a visual state diagram showing how cases relate to and revise each other over time. Currently seeded with the Roe → Casey → Dobbs lineage (+ Griswold). Frontend at `/case-graph` with Simplified/Full toggle and `?caseId=` param support.","doneItems":["Schema: `cases` and `case_relationships` tables in Supabase","Add `is_direct BOOLEAN` column to `case_relationships`","Add `cluster_id INTEGER` column to `cases`","Seed 4 cases: Griswold (1965), Roe (1973), Casey (1992), Dobbs (2022)","Seed 5 edges (all `treatment = NULL`, `is_direct = true`, sourced from CourtListener)","GraphQL: `caseGraph(caseId)` query returning nodes + edges with `isDirect`","GraphQL: `caseInGraph(clusterId)` — returns DB id if case is in graph, else null","Frontend: `/case-graph` page with Dagre + D3 layout","Frontend: Simplified/Full toggle (filter by `is_direct`)","Frontend: `?caseId=<DB id>` param; defaults to Roe (id: 263)","\"View in Case Graph →\" button on CaseDetail pages for in-graph cases"],"todoItems":["CONAN integration for overruled edges (Congress.gov API, key in `.env` as `CONGRESS_API_KEY`)","Broader seeding beyond the Roe lineage","Add treatment colors/legend for `overruled` edge type in DAGGraph.jsx","Verify edge color for `cited_with_approval` (currently maps to gray — should be distinct)"],"notesLines":["Treatment policy: never infer treatment. Valid sources only: SCDB (disposition-based), CONAN (overruled), Shepard's (future/paid)","Transitive edges are never deleted from DB — visibility controlled at query/render layer via `is_direct`","Some transitive edges carry independent legal meaning (e.g. Dobbs → Griswold is not implied by Dobbs → Roe → Griswold)","2-pass query in resolver to capture sibling edges","`relationship_type` = structural kind (`citation`, `implicit_overruling`, `superseded_by_statute`)","`treatment` = what the citing case said (NULL = unknown/not yet sourced)"],"done":11,"todo":4,"total":15,"pct":73},{"title":"Executive Orders","status":"In Progress","goal":"Surface presidential executive orders (and related documents — memoranda, proclamations) from the Federal Register API. Each president has a profile page; documents are browsable by type with search and year filtering. Individual orders have detail and full-text views.","doneItems":["Federal Register API integration (no key required, 10-min node-cache TTL)","GraphQL: `executiveOrders(president, documentType, page, perPage, search, year)` query","GraphQL: `executiveOrder(number)` and `executiveOrderText(number)` queries","Presidents list page (`/`)","President profile page (`/:slug`) with document type nav","Paginated list page with search + year filter (`/:slug/:docType`)","Order detail page (`/:slug/:docType/eo/:number`)","Full text page (`/:slug/:docType/eo/:number/text`)","Obama and Biden coverage"],"todoItems":["Add remaining presidents (Trump I, Bush, Clinton)","Add Proclamations document type","Add Notices / Rules document type","Fix search function (currently broken — may require own DB table)"],"notesLines":["`:slug` param is the Federal Register president slug (e.g. `barack-obama`, `donald-trump`)","`president` field on Federal Register API returns `{ identifier, name }` object — extract `.identifier` in `mapOrder`","Search and year filter are server-side via Federal Register API query params"],"done":9,"todo":4,"total":13,"pct":69},{"title":"Feature Tracking","status":"Complete","goal":"A lightweight system for tracking feature development across the govgraph project. Each feature lives in its own subfolder under `features/` with an `index.md` as the canonical status file. A Node.js script generates a static dashboard HTML from all feature files, runnable via `npm run dashboard`.","doneItems":["Define index.md format","Design generate-dashboard.js script","Design dashboard HTML/CSS layout","Create root package.json with dashboard script","Update CLAUDE.md with feature tracking instructions"],"todoItems":[],"notesLines":["Zero npm dependencies for the generator script (Node built-ins only)","Dashboard is a static file — open directly in browser, no server needed","`features/dashboard.html` is generated, not hand-edited"],"done":5,"todo":0,"total":5,"pct":100},{"title":"Record Management (Schema Migration)","status":"Not Started","goal":"Migrate the database to a unified `corpus` table that acts as a cross-branch index of all documents. Each branch-specific table (executive_documents, cases, legislation) gets its own entity table, and a shared `corpus` row ties them together. Enables cross-branch search, timeline, and tag pages.","doneItems":[],"todoItems":["Phase 1: Run new schema.sql against Supabase; migrate existing `tags` + `entity_tags` → new `tags` + `corpus_tags`; seed `congresses` and `courts` tables; verify case graph data intact","Phase 2: Write ingest scripts for `executive_documents`, `cases`, `legislation` → also write to `corpus`; defer `body` (full text) and `bill_actions`","Phase 3: Seed `people` + `person_roles` for presidents and SCOTUS justices; link `executive_documents.president_id` and `case_opinions.author_id`","Phase 4: Update `applyTag`/`removeTag` resolvers to write to `corpus_tags` via `corpus_id`; update `tagsForEntity` and `tagPage`; delete `entity_tags` once migrated","Phase 5: Add GraphQL surface — `person(id)`, `corpus(branch, dateRange, tag)`, `search(query)` (Postgres `tsvector`)","Phase 6: Frontend — `/people/:id` profile pages (roles + associated documents per person)","Phase 7: Frontend — timeline view, updated tag pages, cross-branch search"],"notesLines":["`legislation.status` only stored when terminal (`enacted` or `failed`); otherwise fetched live from Congress.gov","`bill_actions` deferred — action history continues fetching live from Congress.gov for now","`body` (full text) columns deferred — populate lazily in a later phase","Legislators deferred from Phase 3 (presidents + justices first)","Relationships table (document-to-document citations) also deferred"],"done":0,"todo":7,"total":7,"pct":0},{"title":"Tagging System","status":"Complete","goal":"A curator-applied tagging system allowing entities across all three branches (EOs, SCOTUS cases, legislation) to be labeled with a shared tag (e.g. \"birthright\") and viewed together on a unified tag page. Implemented 2026-05-21.","doneItems":["DB: `tags` table (id, word UNIQUE, source, created_at)","DB: `entity_tags` table (tag_id, entity_type, entity_id, UNIQUE on triplet)","GraphQL types: `Tag`, `TagSummary`, `TagPageResult`, `TaggedExecutiveOrder`, `TaggedScotusCase`, `TaggedLegislation`","GraphQL queries: `allTags`, `tagPage`, `tagsForEntity`","GraphQL mutations: `applyTag`, `removeTag`","Resolver: `tagsForEntity`, `allTags`, `tagPage` (fans out to Federal Register / CourtListener / Congress.gov in parallel)","Fix: `mapOrder` updated — Federal Register `president` field is `{ identifier, name }` object, not a string","Frontend: `TagPanel.jsx` — chip display + add/remove UI on detail pages","Frontend: `TagsIndex.jsx` — `/tags` route, all tags with entity counts","Frontend: `TagPage.jsx` — `/tags/:word`, entities grouped by branch","Wired TagPanel into Detail.jsx, CaseDetail.jsx, BillDetail.jsx","Added `/tags` and `/tags/:word` routes in App.jsx","Header: \"Tags\" nav link added"],"todoItems":[],"notesLines":["Entity ID formats: EO → number string `\"14160\"`, SCOTUS → CourtListener cluster ID `\"9118676\"`, legislation → `\"119-HRES-27\"` (`${congress}-${type}-${number}`)","Apollo hooks (`useQuery`, `useMutation`) must be imported from `@apollo/client/react`, not `@apollo/client` — Vite dep bundling does not re-export from root package","EO internal route is `/:slug/:docType/eo/:number` — president slug reconstructed at render time from `president` field; falls back to Federal Register URL if null","`entity_tags` will eventually be migrated to `corpus_tags` once the corpus table exists (see record-management feature)"],"done":13,"todo":0,"total":13,"pct":100}];
+
+    function statusClass(s) {
+      s = s.toLowerCase();
+      if (s === 'complete' || s === 'completed') return 'complete';
+      if (s.includes('progress')) return 'in-progress';
+      if (s === 'blocked') return 'blocked';
+      return 'not-started';
+    }
+
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function openDetail(idx) {
+      const f = FEATURES[idx];
+      const cls = statusClass(f.status);
+
+      document.getElementById('d-title').textContent = f.title;
+
+      const badge = document.getElementById('d-badge');
+      badge.textContent = f.status;
+      badge.className = 'badge ' + cls;
+
+      const bar = document.getElementById('d-bar');
+      bar.style.width = f.pct + '%';
+      bar.className = 'progress-fill ' + cls;
+
+      const total = f.total;
+      document.getElementById('d-counts').textContent =
+        total === 0 ? 'No tasks yet' : f.done + ' done · ' + f.todo + ' remaining';
+
+      const goalEl = document.getElementById('d-goal');
+      goalEl.textContent = f.goal || '';
+      document.getElementById('d-goal-section').style.display = f.goal ? '' : 'none';
+
+      const doneEl = document.getElementById('d-done');
+      doneEl.innerHTML = f.doneItems.length
+        ? f.doneItems.map(t => '<li class="done"><span class="check">✓</span><span>' + esc(t) + '</span></li>').join('')
+        : '<li><span class="empty-state">Nothing completed yet</span></li>';
+
+      const todoEl = document.getElementById('d-todo');
+      todoEl.innerHTML = f.todoItems.length
+        ? f.todoItems.map(t => '<li class="todo"><span class="check"></span><span>' + esc(t) + '</span></li>').join('')
+        : '<li><span class="empty-state">No remaining steps</span></li>';
+
+      const notesEl = document.getElementById('d-notes');
+      notesEl.innerHTML = f.notesLines.length
+        ? f.notesLines.map(n => '<li>' + esc(n) + '</li>').join('')
+        : '';
+      document.getElementById('d-notes-section').style.display = f.notesLines.length ? '' : 'none';
+
+      document.getElementById('overlay').classList.add('open');
+    }
+
+    function closeDetail() {
+      document.getElementById('overlay').classList.remove('open');
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('overlay')) closeDetail();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+  </script>
+</body>
+</html>

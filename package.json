@@ -1,0 +1,9 @@
+{
+  "name": "gov-graph",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dashboard": "node scripts/generate-dashboard.js"
+  }
+}
