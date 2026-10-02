@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Orders — Graphite design (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Graphite: neutral near-black, one vivid accent, big numerals, a chart for the year filter. */
+  :root {
+    --bg: #0e0f11; --panel: #16181b; --panel-2: #1c1f23; --text: #f1f2f4; --muted: #8b9199; --rule: #25282d;
+    --accent: #c6f432; --accent-ink: #0e0f11;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Space Grotesk", system-ui, sans-serif; font-size: 16px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+
+  /* Top bar */
+  .top { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .brand i { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .top nav { display: flex; gap: 6px; font-size: 13.5px; color: var(--muted); overflow-x: auto; white-space: nowrap; }
+  .top nav a { padding: 7px 12px; border-radius: 999px; }
+  .top nav a:hover { color: var(--text); }
+  .top nav a.on { background: var(--panel-2); color: var(--text); }
+  .top .search { margin-left: auto; display: flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 14px; color: var(--muted); min-width: 240px; }
+  .top .search input { border: 0; background: none; font: inherit; font-size: 14px; color: var(--text); width: 100%; outline: none; }
+  .top .search kbd { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; border: 1px solid var(--rule); border-radius: 4px; padding: 0 5px; }
+
+  /* Hero: headline on the left, year chart on the right */
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 24px; padding: 28px 0 24px; }
+  .hero-text { background: var(--panel); border: 1px solid var(--rule); border-radius: 20px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; }
+  .crumbs { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+  .crumbs b { color: var(--accent); font-weight: 500; }
+  h1 { font-size: clamp(2.6rem, 6vw, 4.4rem); font-weight: 700; letter-spacing: -0.04em; line-height: 0.95; margin: 18px 0 0; }
+  .hero-text p { color: var(--muted); margin: 14px 0 0; max-width: 30em; }
+  .big { display: flex; align-items: baseline; gap: 12px; margin-top: 22px; }
+  .big b { font-size: 3.4rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--accent); }
+  .big span { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+
+  .chart { background: var(--panel); border: 1px solid var(--rule); border-radius: 20px; padding: 24px 28px 20px; display: flex; flex-direction: column; }
+  .chart-head { display: flex; justify-content: space-between; align-items: baseline; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+  .chart-head b { color: var(--text); font-weight: 500; }
+  .bars { flex: 1; display: grid; grid-template-columns: repeat(9, 1fr); gap: 10px; align-items: end; margin-top: 18px; min-height: 190px; }
+  .bar { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; height: 100%; cursor: pointer; }
+  .bar .n { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+  .bar .col { width: 100%; border-radius: 8px 8px 3px 3px; background: var(--panel-2); border: 1px solid var(--rule); transition: background 0.15s; }
+  .bar .y { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11.5px; color: var(--muted); }
+  .bar:hover .col { background: #2a2e34; }
+  .bar.on .col { background: var(--accent); border-color: var(--accent); }
+  .bar.on .n, .bar.on .y { color: var(--accent); }
+
+  /* Toolbar */
+  .toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 6px 0 18px; }
+  .toolbar .showing { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12.5px; color: var(--muted); margin-right: auto; }
+  .toolbar .showing b { color: var(--text); font-weight: 500; }
+  .pill { display: flex; background: var(--panel); border: 1px solid var(--rule); border-radius: 999px; padding: 3px; font-size: 13px; }
+  .pill button { font: inherit; border: 0; background: none; color: var(--muted); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+  .pill button.on { background: var(--text); color: var(--bg); font-weight: 600; }
+
+  /* Tiles */
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .tile { background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; padding: 20px 22px 18px; display: flex; flex-direction: column; min-height: 190px; transition: border-color 0.15s, transform 0.15s; }
+  .tile:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .tile .no { font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1; color: var(--muted); }
+  .tile:hover .no { color: var(--accent); }
+  .tile h2 { font-size: 1.02rem; font-weight: 500; line-height: 1.35; margin: 14px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .tile .foot { margin-top: auto; padding-top: 16px; display: flex; justify-content: space-between; align-items: center; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+  .tile .arrow { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--rule); }
+  .tile:hover .arrow { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .tile.wide { grid-column: span 2; background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .tile.wide .no, .tile.wide .foot { color: rgba(14, 15, 17, 0.62); }
+  .tile.wide h2 { font-size: 1.45rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.2; -webkit-line-clamp: 4; }
+  .tile.wide .arrow { border-color: rgba(14, 15, 17, 0.3); }
+  .tile.wide:hover .no { color: var(--accent-ink); }
+  .tile.wide:hover .arrow { background: var(--accent-ink); color: var(--accent); border-color: var(--accent-ink); }
+  .badge { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; border: 1px solid currentColor; border-radius: 999px; padding: 1px 9px; align-self: flex-start; margin-bottom: 14px; }
+
+  .pager { display: flex; justify-content: center; gap: 6px; padding: 34px 0 72px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; color: var(--muted); }
+  .pager a { min-width: 38px; height: 38px; display: grid; place-items: center; padding: 0 12px; border-radius: 999px; border: 1px solid var(--rule); }
+  .pager a:hover { color: var(--text); border-color: var(--muted); }
+  .pager a.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 500; }
+
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .top .search { display: none; }
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .tile.wide { grid-column: span 1; }
+    .bars { gap: 5px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="#"><i></i>GovLens</a>
+      <nav>
+        <a class="on" href="#">Presidents</a><a href="#">Executive Orders</a><a href="#">Supreme Court</a><a href="#">Congress</a>
+        <a href="#">Timeline</a><a href="#">Corpus</a><a href="#">Case Graph</a><a href="#">Sources</a><a href="#">Tags</a>
+      </nav>
+      <label class="search"><span>⌕</span><input type="text" placeholder="Search executive orders"><kbd>/</kbd></label>
+    </div>
+
+    <div class="hero">
+      <div class="hero-text">
+        <div>
+          <div class="crumbs">Presidents / Barack Obama / <b>Executive Orders</b></div>
+          <h1>Executive<br>Orders</h1>
+          <p>Every executive order issued by President Barack Obama, sourced from the Federal Register.</p>
+        </div>
+        <div class="big"><b>294</b><span>documents<br>2009 — 2017</span></div>
+      </div>
+
+      <div class="chart">
+        <div class="chart-head"><span><b>Orders per year</b> · select a year to filter</span><span>All years</span></div>
+        <div class="bars">
+          <div class="bar"><span class="n">42</span><span class="col" style="height: 93%"></span><span class="y">2009</span></div>
+          <div class="bar"><span class="n">40</span><span class="col" style="height: 89%"></span><span class="y">2010</span></div>
+          <div class="bar"><span class="n">34</span><span class="col" style="height: 76%"></span><span class="y">2011</span></div>
+          <div class="bar"><span class="n">40</span><span class="col" style="height: 89%"></span><span class="y">2012</span></div>
+          <div class="bar"><span class="n">23</span><span class="col" style="height: 51%"></span><span class="y">2013</span></div>
+          <div class="bar"><span class="n">34</span><span class="col" style="height: 76%"></span><span class="y">2014</span></div>
+          <div class="bar"><span class="n">29</span><span class="col" style="height: 64%"></span><span class="y">2015</span></div>
+          <div class="bar on"><span class="n">45</span><span class="col" style="height: 100%"></span><span class="y">2016</span></div>
+          <div class="bar"><span class="n">7</span><span class="col" style="height: 16%"></span><span class="y">2017</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span class="showing">Showing <b>1–20</b> of <b>45</b> in <b>2016</b></span>
+      <div class="pill"><button class="on">Grid</button><button>Timeline</button></div>
+      <div class="pill"><button class="on">Newest</button><button>Oldest</button></div>
+    </div>
+
+    <div class="grid">
+      <a class="tile wide" href="http://localhost:9000/barack-obama/executive-orders/eo/13757">
+        <span class="badge">Latest in 2016</span>
+        <span class="no">13757</span>
+        <h2>Taking Additional Steps to Address the National Emergency With Respect to Significant Malicious Cyber-Enabled Activities</h2>
+        <div class="foot"><span>Dec 28, 2016</span><span class="arrow">→</span></div>
+      </a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13756"><span class="no">13756</span><h2>Adjustments of Certain Rates of Pay</h2><div class="foot"><span>Dec 27, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13755"><span class="no">13755</span><h2>Providing an Order of Succession Within the Department of Labor</h2><div class="foot"><span>Dec 23, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13754"><span class="no">13754</span><h2>Northern Bering Sea Climate Resilience</h2><div class="foot"><span>Dec 9, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13753"><span class="no">13753</span><h2>Amending the Order of Succession in the Department of Homeland Security</h2><div class="foot"><span>Dec 9, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13752"><span class="no">13752</span><h2>Relating to the Implementation of the Convention on the International Recovery of Child Support and Other Forms of Family Maintenance</h2><div class="foot"><span>Dec 8, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13751"><span class="no">13751</span><h2>Safeguarding the Nation From the Impacts of Invasive Species</h2><div class="foot"><span>Dec 5, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13750"><span class="no">13750</span><h2>Providing for the Appointment of Alumni of the Fulbright U.S. Student Program, the Benjamin A. Gilman International Scholarship Program, and the Critical Language Scholarship Program to the Competitive Service</h2><div class="foot"><span>Nov 29, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13748"><span class="no">13748</span><h2>Establishing a Community Solutions Council</h2><div class="foot"><span>Nov 16, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13747"><span class="no">13747</span><h2>Advancing the Global Health Security Agenda To Achieve a World Safe and Secure From Infectious Disease Threats</h2><div class="foot"><span>Nov 4, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13744"><span class="no">13744</span><h2>Coordinating Efforts To Prepare the Nation for Space Weather Events</h2><div class="foot"><span>Oct 13, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13743"><span class="no">13743</span><h2>Charitable Fundraising</h2><div class="foot"><span>Oct 13, 2016</span><span class="arrow">→</span></div></a>
+      <a class="tile" href="http://localhost:9000/barack-obama/executive-orders/eo/13742"><span class="no">13742</span><h2>Termination of Emergency With Respect to the Actions and Policies of the Government of Burma</h2><div class="foot"><span>Oct 7, 2016</span><span class="arrow">→</span></div></a>
+    </div>
+
+    <div class="pager"><a class="on" href="#">1</a><a href="#">2</a><a href="#">3</a><a href="#">Next →</a></div>
+  </div>
+</body>
+</html>

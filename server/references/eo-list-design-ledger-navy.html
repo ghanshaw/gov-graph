@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Orders — Ledger design, navy and gold (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* The ledger layout (dense rows under year headings) in the design the app uses today:
+     navy and gold, Playfair Display headings, IBM Plex Sans text, IBM Plex Mono labels.
+     Colours and fonts are the ones in client/src/index.css. */
+  :root {
+    --navy: #0a1628; --navy-mid: #112040; --navy-light: #1a3060;
+    --gold: #c9a84c; --gold-light: #e8c97a;
+    --cream: #f5f0e8; --cream-dark: #e8e0cc; --text-muted: #8899bb;
+    --rule: rgba(201, 168, 76, 0.15);
+    --panel: rgba(17, 32, 64, 0.6);
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--navy); color: var(--cream); font-family: "IBM Plex Sans", system-ui, sans-serif; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  /* Top bar, as in the app header */
+  .top { border-bottom: 1px solid var(--rule); }
+  .top .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; white-space: nowrap; }
+  .brand .seal { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--gold); display: grid; place-items: center; color: var(--gold); font-size: 13px; }
+  .brand b { display: block; font-family: "Playfair Display", serif; font-size: 18px; font-weight: 700; line-height: 1.1; }
+  .brand small { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+  .top nav { display: flex; gap: 2px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--text-muted); overflow-x: auto; white-space: nowrap; }
+  .top nav a { padding: 6px 10px; border-radius: 3px; }
+  .top nav a:hover { color: var(--cream); }
+  .top nav a.on { color: var(--gold); background: rgba(201, 168, 76, 0.12); }
+
+  /* Header */
+  header.page { padding: 48px 0 28px; }
+  .crumbs { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 18px; }
+  .crumbs a:hover { color: var(--gold); }
+  .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  h1 { font-family: "Playfair Display", serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 12px; }
+  .lede { color: var(--text-muted); font-weight: 300; line-height: 1.7; margin: 0; max-width: 560px; }
+  .stats { display: flex; gap: 32px; text-align: right; }
+  .stat b { display: block; font-family: "Playfair Display", serif; font-size: 2.1rem; font-weight: 900; line-height: 1; color: var(--gold); }
+  .stat span { display: block; margin-top: 6px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+
+  /* Controls */
+  .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 14px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--navy); z-index: 5; }
+  .search { flex: 1; min-width: 220px; display: flex; align-items: center; gap: 8px; background: rgba(17, 32, 64, 0.8); border: 1px solid rgba(201, 168, 76, 0.25); border-radius: 4px; padding: 9px 14px; color: var(--text-muted); }
+  .search:focus-within { border-color: rgba(201, 168, 76, 0.6); }
+  .search input { border: 0; background: none; font: inherit; font-size: 14px; color: var(--cream); width: 100%; outline: none; }
+  .search input::placeholder { color: var(--text-muted); }
+  .seg { display: flex; border: 1px solid rgba(201, 168, 76, 0.25); border-radius: 4px; overflow: hidden; }
+  .seg button { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; border: 0; background: none; padding: 8px 14px; color: var(--text-muted); cursor: pointer; }
+  .seg button.on { background: var(--gold); color: var(--navy); font-weight: 600; }
+  .years { display: flex; gap: 6px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; }
+  .years a { padding: 6px 12px; border: 1px solid rgba(201, 168, 76, 0.25); border-radius: 3px; color: var(--text-muted); }
+  .years a:hover { border-color: var(--gold); color: var(--cream); }
+  .years a.on { background: var(--gold); border-color: var(--gold); color: var(--navy); font-weight: 600; }
+
+  /* Register */
+  .year-head { display: flex; align-items: baseline; gap: 12px; padding: 28px 0 10px; }
+  .year-head h2 { font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.14em; color: var(--gold); margin: 0; }
+  .year-head span { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; color: var(--text-muted); }
+  .year-head i { flex: 1; height: 1px; background: rgba(201, 168, 76, 0.3); }
+  .row { display: grid; grid-template-columns: 78px minmax(0, 1fr) 118px 20px; gap: 18px; align-items: baseline; padding: 13px 10px; margin: 0 -10px; border-radius: 4px; border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+  .row:hover { background: rgba(17, 32, 64, 0.9); border-bottom-color: transparent; }
+  .row .no { font-family: var(--mono); font-size: 12.5px; font-weight: 500; letter-spacing: 0.06em; color: var(--gold); }
+  .row .title { font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .row .date { font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-align: right; white-space: nowrap; }
+  .row .go { color: rgba(201, 168, 76, 0.35); text-align: right; }
+  .row:hover .go { color: var(--gold); }
+
+  /* Pagination */
+  .pager { display: flex; justify-content: space-between; align-items: center; padding: 28px 0 64px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.05em; color: var(--text-muted); }
+  .pager .pages { display: flex; gap: 6px; }
+  .pager a { min-width: 32px; height: 32px; display: grid; place-items: center; border-radius: 3px; padding: 0 10px; border: 1px solid rgba(201, 168, 76, 0.25); }
+  .pager a:hover { border-color: var(--gold); color: var(--cream); }
+  .pager a.on { background: var(--gold); border-color: var(--gold); color: var(--navy); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 64px minmax(0, 1fr); }
+    .row .date { grid-column: 2; text-align: left; }
+    .row .go { display: none; }
+    .stats { text-align: left; }
+  }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="wrap">
+      <a class="brand" href="#"><span class="seal">★</span><span><b>GovLens</b><small>Public Records</small></span></a>
+      <nav>
+        <a class="on" href="#">Presidents</a><a href="#">Executive Orders</a><a href="#">Supreme Court</a><a href="#">Congress</a>
+        <a href="#">Timeline</a><a href="#">Corpus</a><a href="#">Case Graph</a><a href="#">Sources</a><a href="#">Tags</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header class="page">
+      <div class="crumbs"><a href="#">Presidents</a> / <a href="#">Barack Obama</a> / Executive Orders</div>
+      <div class="head-row">
+        <div>
+          <h1>Executive Orders</h1>
+          <p class="lede">Every executive order issued by President Barack Obama, sourced from the Federal Register.</p>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>294</b><span>documents</span></div>
+          <div class="stat"><b>2009–2017</b><span>in office</span></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="controls">
+      <label class="search"><span>⌕</span><input type="text" placeholder="Search executive orders…"></label>
+      <div class="seg"><button class="on">List</button><button>Timeline</button></div>
+      <div class="seg"><button class="on">Newest</button><button>Oldest</button></div>
+      <div class="years">
+        <a class="on" href="#">All</a><a href="#">2017</a><a href="#">2016</a><a href="#">2015</a><a href="#">2014</a><a href="#">2013</a><a href="#">2012</a><a href="#">2011</a><a href="#">2010</a><a href="#">2009</a>
+      </div>
+    </div>
+
+    <div class="year-head"><h2>2017</h2><span>7 orders</span><i></i></div>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13764"><span class="no">13764</span><span class="title">Amending the Civil Service Rules, Executive Order 13488, and Executive Order 13467 To Modernize the Executive Branch-Wide Governance Structure and Processes for Security Clearances, Suitability and Fitness for Employment, and Credentialing, and Related Matters</span><span class="date">Jan 17, 2017</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13763"><span class="no">13763</span><span class="title">Providing an Order of Succession Within the Environmental Protection Agency</span><span class="date">Jan 13, 2017</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13762"><span class="no">13762</span><span class="title">Providing an Order of Succession Within the Department of Justice</span><span class="date">Jan 13, 2017</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13761"><span class="no">13761</span><span class="title">Recognizing Positive Actions by the Government of Sudan and Providing for the Revocation of Certain Sudan-Related Sanctions</span><span class="date">Jan 13, 2017</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13760"><span class="no">13760</span><span class="title">Exclusions From the Federal Labor-Management Relations Program</span><span class="date">Jan 12, 2017</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13759"><span class="no">13759</span><span class="title">Designating the World Organisation for Animal Health as a Public International Organization Entitled To Enjoy Certain Privileges, Exemptions, and Immunities</span><span class="date">Jan 12, 2017</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13758"><span class="no">13758</span><span class="title">Amending Executive Order 11016 To Update Eligibility Criteria for Award of the Purple Heart</span><span class="date">Jan 12, 2017</span><span class="go">→</span></a>
+
+    <div class="year-head"><h2>2016</h2><span>45 orders</span><i></i></div>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13757"><span class="no">13757</span><span class="title">Taking Additional Steps to Address the National Emergency With Respect to Significant Malicious Cyber-Enabled Activities</span><span class="date">Dec 28, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13756"><span class="no">13756</span><span class="title">Adjustments of Certain Rates of Pay</span><span class="date">Dec 27, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13755"><span class="no">13755</span><span class="title">Providing an Order of Succession Within the Department of Labor</span><span class="date">Dec 23, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13754"><span class="no">13754</span><span class="title">Northern Bering Sea Climate Resilience</span><span class="date">Dec 9, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13753"><span class="no">13753</span><span class="title">Amending the Order of Succession in the Department of Homeland Security</span><span class="date">Dec 9, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13752"><span class="no">13752</span><span class="title">Relating to the Implementation of the Convention on the International Recovery of Child Support and Other Forms of Family Maintenance</span><span class="date">Dec 8, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13751"><span class="no">13751</span><span class="title">Safeguarding the Nation From the Impacts of Invasive Species</span><span class="date">Dec 5, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13748"><span class="no">13748</span><span class="title">Establishing a Community Solutions Council</span><span class="date">Nov 16, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13747"><span class="no">13747</span><span class="title">Advancing the Global Health Security Agenda To Achieve a World Safe and Secure From Infectious Disease Threats</span><span class="date">Nov 4, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13744"><span class="no">13744</span><span class="title">Coordinating Efforts To Prepare the Nation for Space Weather Events</span><span class="date">Oct 13, 2016</span><span class="go">→</span></a>
+    <a class="row" href="http://localhost:9000/barack-obama/executive-orders/eo/13743"><span class="no">13743</span><span class="title">Charitable Fundraising</span><span class="date">Oct 13, 2016</span><span class="go">→</span></a>
+
+    <div class="pager">
+      <span>Showing 1–20 of 294</span>
+      <div class="pages"><a class="on" href="#">1</a><a href="#">2</a><a href="#">3</a><a href="#">…</a><a href="#">15</a><a href="#">Next →</a></div>
+    </div>
+  </div>
+</body>
+</html>

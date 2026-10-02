@@ -1,7 +1,26 @@
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
 import { GET_EXECUTIVE_ORDER } from '../queries';
 import TagPanel from '../components/TagPanel';
+import OrderText from '../components/OrderText';
+
+const SECONDARY_BUTTON = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '0.5rem',
+  fontFamily: "'IBM Plex Mono', monospace",
+  fontSize: '0.75rem',
+  color: 'var(--gold)',
+  background: 'transparent',
+  padding: '10px 20px',
+  borderRadius: '3px',
+  textDecoration: 'none',
+  border: '1px solid rgba(201,168,76,0.4)',
+  letterSpacing: '0.06em',
+  cursor: 'pointer',
+  transition: 'border-color 0.15s',
+};
 
 const PRESIDENT_NAMES = {
   'barack-obama':    'Barack Obama',
@@ -10,6 +29,15 @@ const PRESIDENT_NAMES = {
   'joseph-biden':    'Joe Biden',
 };
 
+// The stored text opens with "Administration of …" and "Executive Order N—Title",
+// which this page already shows in its header.
+function bodyParagraphs(body, number) {
+  const paragraphs = body.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+  if (/^Administration of /.test(paragraphs[0] ?? '')) paragraphs.shift();
+  if ((paragraphs[0] ?? '').startsWith(`Executive Order ${number}`)) paragraphs.shift();
+  return paragraphs;
+}
+
 export default function Detail() {
   const { slug, docType, number } = useParams();
   const { data, loading, error } = useQuery(GET_EXECUTIVE_ORDER, {
@@ -17,6 +45,18 @@ export default function Detail() {
   });
 
   const order = data?.executiveOrder;
+  const hasText = Boolean(order?.structure || order?.body);
+
+  // The text is shown on load and can be hidden.
+  const [showText, setShowText] = useState(true);
+
+  const [showPdf, setShowPdf] = useState(false);
+
+  // Links that point at a provision (#sec-4-a) scroll to it once the text has rendered.
+  useEffect(() => {
+    if (!showText || !hasText || !window.location.hash) return;
+    document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
+  }, [showText, hasText]);
 
   const formattedDate = order?.dateSigned
     ? new Date(order.dateSigned + 'T00:00:00').toLocaleDateString('en-US', {
@@ -93,7 +133,7 @@ export default function Detail() {
 
           {/* Title */}
           <h1 style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'IBM Plex Sans', sans-serif",
             fontSize: 'clamp(1.6rem, 4vw, 2.5rem)',
             fontWeight: 700,
             color: 'var(--cream)',
@@ -214,8 +254,7 @@ export default function Detail() {
             display: 'flex',
             gap: '1rem',
             flexWrap: 'wrap',
-            paddingTop: '2rem',
-            borderTop: '1px solid rgba(201,168,76,0.15)',
+            marginBottom: '2.5rem',
           }}>
             {order.url && (
               <a
@@ -243,7 +282,59 @@ export default function Detail() {
                 View on Federal Register ↗
               </a>
             )}
-            {order.bodyHtmlUrl && (
+            {hasText && (
+              <button
+                type="button"
+                aria-expanded={showText}
+                aria-controls="eo-text"
+                onClick={() => setShowText(shown => !shown)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: '0.75rem',
+                  color: 'var(--gold)',
+                  background: 'transparent',
+                  padding: '10px 20px',
+                  borderRadius: '3px',
+                  border: '1px solid rgba(201,168,76,0.4)',
+                  letterSpacing: '0.06em',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--gold)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(201,168,76,0.4)'}
+              >
+                {showText ? 'Hide full text' : 'Show full text'}
+              </button>
+            )}
+            {order.pdfUrl && (
+              <>
+                <button
+                  type="button"
+                  aria-expanded={showPdf}
+                  aria-controls="eo-pdf"
+                  onClick={() => setShowPdf(shown => !shown)}
+                  style={SECONDARY_BUTTON}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--gold)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(201,168,76,0.4)'}
+                >
+                  {showPdf ? 'Hide PDF' : 'Show PDF'}
+                </button>
+                <a
+                  href={order.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={SECONDARY_BUTTON}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--gold)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(201,168,76,0.4)'}
+                >
+                  PDF ↗
+                </a>
+              </>
+            )}
+            {order.bodyHtmlUrl && !hasText && (
               <Link
                 to={`/${slug}/${docType}/eo/${order.number}/text`}
                 style={{
@@ -268,6 +359,43 @@ export default function Detail() {
               </Link>
             )}
           </div>
+
+          {/* PDF as printed in the Federal Register, passed through the server (see server/pdf.js) */}
+          {order.pdfUrl && showPdf && (
+            <iframe
+              id="eo-pdf"
+              title={`Executive Order ${order.number} (PDF)`}
+              src={`/pdf/eo/${order.number}#navpanes=0&view=FitH`}
+              style={{
+                display: 'block',
+                width: '100%',
+                height: '85vh',
+                marginBottom: '2.5rem',
+                border: '1px solid rgba(201,168,76,0.25)',
+                borderRadius: '4px',
+                background: 'var(--navy-mid)',
+              }}
+            />
+          )}
+
+          {/* Full text: structured where the order has been parsed, plain paragraphs otherwise */}
+          {hasText && showText && (
+            <div id="eo-text" style={{
+              marginBottom: '2.5rem',
+              paddingTop: '2.5rem',
+              borderTop: '1px solid rgba(201,168,76,0.15)',
+            }}>
+              {order.structure ? (
+                <OrderText structure={order.structure} />
+              ) : (
+                <div className="eo-full-text">
+                  {bodyParagraphs(order.body, order.number).map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           <TagPanel entityType="executive_order" entityId={order.number} />
         </article>

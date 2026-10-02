@@ -6,6 +6,11 @@ import ExecutiveOrderCard from '../components/ExecutiveOrderCard';
 import Pagination from '../components/Pagination';
 import TimelineView from '../components/TimelineView';
 
+const SORTS = [
+  { label: 'Newest first', value: 'newest' },
+  { label: 'Oldest first', value: 'oldest' },
+];
+
 const PER_PAGE = 20;
 
 const PRESIDENT_META = {
@@ -42,6 +47,7 @@ export default function Home() {
   const [debouncedSearch, setDebouncedSearch] = useDebounce('', 400);
   const [year, setYear] = useState(null);
   const [view, setView] = useState('grid');
+  const [sort, setSort] = useState('newest');
 
   const handleSearch = (val) => {
     setSearchInput(val);
@@ -51,6 +57,11 @@ export default function Home() {
 
   const handleYear = (val) => {
     setYear(val === 'All Years' ? null : val);
+    setPage(1);
+  };
+
+  const handleSort = (val) => {
+    setSort(val);
     setPage(1);
   };
 
@@ -64,6 +75,7 @@ export default function Home() {
       perPage: isTimeline ? 500 : PER_PAGE,
       search: debouncedSearch || undefined,
       year: year || undefined,
+      order: sort,
     },
   });
 
@@ -247,20 +259,67 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Result count */}
-      {!loading && !error && (
+      {/* Result count and sort */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '1rem',
+        flexWrap: 'wrap',
+        minHeight: '2rem',
+        marginBottom: '1.5rem',
+      }}>
         <div style={{
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '0.7rem',
           color: 'var(--text-muted)',
-          marginBottom: '1.5rem',
           letterSpacing: '0.05em',
         }}>
-          {totalCount.toLocaleString()} found
-          {debouncedSearch && ` matching "${debouncedSearch}"`}
-          {year && ` in ${year}`}
+          {!loading && !error && (
+            <>
+              {totalCount.toLocaleString()} found
+              {debouncedSearch && ` matching "${debouncedSearch}"`}
+              {year && ` in ${year}`}
+            </>
+          )}
         </div>
-      )}
+
+        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '0.65rem',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            marginRight: '0.25rem',
+          }}>Sort</span>
+          {SORTS.map(s => {
+            const isActive = sort === s.value;
+            return (
+              <button
+                key={s.value}
+                onClick={() => handleSort(s.value)}
+                aria-pressed={isActive}
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: '0.7rem',
+                  padding: '6px 12px',
+                  border: isActive ? '1px solid var(--gold)' : '1px solid rgba(201,168,76,0.25)',
+                  borderRadius: '3px',
+                  background: isActive ? 'var(--gold)' : 'transparent',
+                  color: isActive ? 'var(--navy)' : 'var(--text-muted)',
+                  cursor: 'pointer',
+                  fontWeight: isActive ? 600 : 400,
+                  transition: 'all 0.15s ease',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* States */}
       {loading && (
@@ -304,11 +363,12 @@ export default function Home() {
               No executive orders found.
             </div>
           ) : isTimeline ? (
-            <TimelineView orders={orders} slug={slug} docType={docType} />
+            <TimelineView orders={orders} slug={slug} docType={docType} newestFirst={sort === 'newest'} />
           ) : (
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))',
+              gridAutoRows: '1fr',
               gap: '1rem',
             }}>
               {orders.map(order => (

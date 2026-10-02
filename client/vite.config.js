@@ -5,8 +5,11 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    port: 9000,
+    strictPort: true,
     proxy: {
-      '/graphql': 'http://localhost:4000',
+      '/graphql': 'http://localhost:9001',
+      '/pdf': 'http://localhost:9001',
     },
   },
 })

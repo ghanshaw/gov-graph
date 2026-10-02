@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Order 13636 — Improving Critical Infrastructure Cybersecurity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --text: #1f2328;
+    --muted: #5c6470;
+    --rule: #e3e0d8;
+    --accent: #1a4480;
+    --accent-soft: #e8eef7;
+    --deadline: #8a4b00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161c;
+      --surface: #181d25;
+      --text: #e4e7ec;
+      --muted: #98a2b3;
+      --rule: #2a313c;
+      --accent: #8fb8f2;
+      --accent-soft: #1d2a3d;
+      --deadline: #f0b46a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 1.5rem; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 18px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 42rem);
+    gap: 4rem;
+    justify-content: center;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+
+  /* Contents */
+  nav.toc { position: sticky; top: 1.5rem; align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; font-size: 0.85rem; line-height: 1.4; }
+  nav.toc summary { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; cursor: pointer; list-style: none; }
+  nav.toc summary::-webkit-details-marker { display: none; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--rule); }
+  nav.toc a { display: flex; gap: 0.6rem; padding: 0.4rem 0.75rem; margin-left: -2px; border-left: 2px solid transparent; color: var(--muted); text-decoration: none; }
+  nav.toc a:hover { color: var(--text); }
+  nav.toc a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
+  .toc-num { font-family: "Roboto Mono", ui-monospace, monospace; font-size: 0.78rem; min-width: 1.3rem; text-align: right; opacity: 0.8; }
+
+  /* Header */
+  header.doc { padding-bottom: 2rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--rule); }
+  .eyebrow { display: inline-block; font-family: "Roboto Mono", ui-monospace, monospace; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 0.25rem 0.7rem; border-radius: 3px; }
+  h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.015em; margin: 1rem 0 1.5rem; }
+  dl.meta { display: flex; flex-wrap: wrap; gap: 0.9rem 2.5rem; margin: 0; }
+  dl.meta dt { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  dl.meta dd { margin: 0.1rem 0 0; font-size: 0.95rem; }
+
+  /* Body */
+  .preamble p { font-size: 1.12rem; line-height: 1.65; color: var(--text); margin: 0 0 2.5rem; padding-left: 1.25rem; border-left: 3px solid var(--accent); }
+  section { margin: 0 0 3rem; }
+  .sec-label { font-family: "Roboto Mono", ui-monospace, monospace; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.15rem; }
+  h2 { font-size: 1.4rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.005em; margin: 0 0 1rem; }
+  section p { margin: 0 0 1.1rem; }
+  .item { display: grid; grid-template-columns: 2.1rem minmax(0, 1fr); column-gap: 0.4rem; }
+  .marker { font-family: "Roboto Mono", ui-monospace, monospace; font-size: 0.85rem; font-weight: 500; color: var(--accent); padding-top: 0.12rem; }
+  .item:target { background: var(--accent-soft); border-radius: 4px; }
+  .deadline { font-weight: 500; color: var(--deadline); }
+  dfn { font-style: normal; font-weight: 700; }
+  a.cite { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset: 0.18em; }
+  a.cite:hover { text-decoration-color: var(--accent); }
+
+  /* Signature and end matter */
+  .signature { margin: 3.5rem 0 3rem; text-align: right; }
+  .signature .name { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin: 0; }
+  .signature p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  aside.refs { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.5rem 1.75rem; font-size: 0.92rem; line-height: 1.5; }
+  aside.refs h2 { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 1rem; }
+  aside.refs h3 { font-size: 0.85rem; font-weight: 500; margin: 1rem 0 0.4rem; }
+  aside.refs h3:first-of-type { margin-top: 0; }
+  aside.refs ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem 0.6rem; }
+  aside.refs li a { display: inline-block; padding: 0.2rem 0.65rem; border: 1px solid var(--rule); border-radius: 999px; text-decoration: none; }
+  aside.refs li a:hover { border-color: var(--accent); }
+  footer.source { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.82rem; line-height: 1.55; }
+
+  /* Mid-width windows keep the outline on the left, just tighter. */
+  @media (max-width: 68rem) {
+    .layout { grid-template-columns: 12rem minmax(0, 42rem); gap: 2.5rem; }
+  }
+  @media (max-width: 46rem) {
+    .layout { grid-template-columns: minmax(0, 42rem); gap: 0; padding-top: 2rem; }
+    nav.toc { position: static; max-height: none; margin-bottom: 2.5rem; padding: 1rem 1.25rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; }
+    nav.toc summary { margin-bottom: 0; }
+    nav.toc details[open] summary { margin-bottom: 0.75rem; }
+    nav.toc summary::after { content: " +"; }
+    nav.toc details[open] summary::after { content: " −"; }
+    body { font-size: 17px; }
+  }
+  @media print {
+    nav.toc { display: none; }
+    .layout { display: block; padding: 0; }
+    body { background: #fff; color: #000; font-size: 11pt; }
+    section { break-inside: avoid-page; }
+  }
+</style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="toc" aria-label="Outline">
+      <details open>
+        <summary>Outline</summary>
+        <ol>
+          <li><a href="#sec-1"><span class="toc-num">1</span>Policy</a></li>
+          <li><a href="#sec-2"><span class="toc-num">2</span>Critical Infrastructure</a></li>
+          <li><a href="#sec-3"><span class="toc-num">3</span>Policy Coordination</a></li>
+          <li><a href="#sec-4"><span class="toc-num">4</span>Cybersecurity Information Sharing</a></li>
+          <li><a href="#sec-5"><span class="toc-num">5</span>Privacy and Civil Liberties Protections</a></li>
+          <li><a href="#sec-6"><span class="toc-num">6</span>Consultative Process</a></li>
+          <li><a href="#sec-7"><span class="toc-num">7</span>Baseline Framework to Reduce Cyber Risk to Critical Infrastructure</a></li>
+          <li><a href="#sec-8"><span class="toc-num">8</span>Voluntary Critical Infrastructure Cybersecurity Program</a></li>
+          <li><a href="#sec-9"><span class="toc-num">9</span>Identification of Critical Infrastructure at Greatest Risk</a></li>
+          <li><a href="#sec-10"><span class="toc-num">10</span>Adoption of Framework</a></li>
+          <li><a href="#sec-11"><span class="toc-num">11</span>Definitions</a></li>
+          <li><a href="#sec-12"><span class="toc-num">12</span>General Provisions</a></li>
+        </ol>
+      </details>
+    </nav>
+
+    <main>
+      <header class="doc">
+        <span class="eyebrow">Executive Order 13636</span>
+        <h1>Improving Critical Infrastructure Cybersecurity</h1>
+        <dl class="meta">
+          <div><dt>Signed</dt><dd>February 12, 2013</dd></div>
+          <div><dt>President</dt><dd>Barack Obama</dd></div>
+          <div><dt>Published</dt><dd>February 19, 2013 · 78 FR 11739</dd></div>
+        </dl>
+      </header>
+
+      <article>
+        <div class="preamble"><p>By the authority vested in me as President by the Constitution and the laws of the United States of America, it is hereby ordered as follows:</p></div>
+
+        <section id="sec-1">
+          <p class="sec-label">Section 1</p>
+          <h2>Policy</h2>
+          <p>Repeated cyber intrusions into critical infrastructure demonstrate the need for improved cybersecurity. The cyber threat to critical infrastructure continues to grow and represents one of the most serious national security challenges we must confront. The national and economic security of the United States depends on the reliable functioning of the Nation's critical infrastructure in the face of such threats. It is the policy of the United States to enhance the security and resilience of the Nation's critical infrastructure and to maintain a cyber environment that encourages efficiency, innovation, and economic prosperity while promoting safety, security, business confidentiality, privacy, and civil liberties. We can achieve these goals through a partnership with the owners and operators of critical infrastructure to improve cybersecurity information sharing and collaboratively develop and implement risk-based standards.</p>
+        </section>
+        <section id="sec-2">
+          <p class="sec-label">Section 2</p>
+          <h2>Critical Infrastructure</h2>
+          <p>As used in this order, the term critical infrastructure means systems and assets, whether physical or virtual, so vital to the United States that the incapacity or destruction of such systems and assets would have a debilitating impact on security, national economic security, national public health or safety, or any combination of those matters.</p>
+        </section>
+        <section id="sec-3">
+          <p class="sec-label">Section 3</p>
+          <h2>Policy Coordination</h2>
+          <p>Policy coordination, guidance, dispute resolution, and periodic in-progress reviews for the functions and programs described and assigned herein shall be provided through the interagency process established in Presidential Policy Directive-1 of February 13, 2009 (Organization of the National Security Council System), or any successor.</p>
+        </section>
+        <section id="sec-4">
+          <p class="sec-label">Section 4</p>
+          <h2>Cybersecurity Information Sharing</h2>
+          <div class="item" id="sec-4-a"><span class="marker">(a)</span><p>It is the policy of the United States Government to increase the volume, timeliness, and quality of cyber threat information shared with U.S. private sector entities so that these entities may better protect and defend themselves against cyber threats. <span class="deadline">Within 120 days of the date of this order</span>, the Attorney General, the Secretary of Homeland Security (the &ldquo;Secretary&rdquo;), and the Director of National Intelligence shall each issue instructions consistent with their authorities and with the requirements of section 12(c) of this order to ensure the timely production of unclassified reports of cyber threats to the U.S. homeland that identify a specific targeted entity. The instructions shall address the need to protect intelligence and law enforcement sources, methods, operations, and investigations.</p></div><div class="item" id="sec-4-b"><span class="marker">(b)</span><p>The Secretary and the Attorney General, in coordination with the Director of National Intelligence, shall establish a process that rapidly disseminates the reports produced pursuant to section 4(a) of this order to the targeted entity. Such process shall also, consistent with the need to protect national security information, include the dissemination of classified reports to critical infrastructure entities authorized to receive them. The Secretary and the Attorney General, in coordination with the Director of National Intelligence, shall establish a system for tracking the production, dissemination, and disposition of these reports.</p></div><div class="item" id="sec-4-c"><span class="marker">(c)</span><p>To assist the owners and operators of critical infrastructure in protecting their systems from unauthorized access, exploitation, or harm, the Secretary, consistent with <a class="cite cite-law" href="https://www.govinfo.gov/link/uscode/6/143" target="_blank" rel="noopener">6 U.S.C. 143</a> and in collaboration with the Secretary of Defense, shall, within 120 days of the date of this order, establish procedures to expand the Enhanced Cybersecurity Services program to all critical infrastructure sectors. This voluntary information sharing program will provide classified cyber threat and technical information from the Government to eligible critical infrastructure companies or commercial service providers that offer security services to critical infrastructure.</p></div><div class="item" id="sec-4-d"><span class="marker">(d)</span><p>The Secretary, as the Executive Agent for the Classified National Security Information Program created under <a class="cite cite-eo" href="https://www.federalregister.gov/executive-order/13549" target="_blank" rel="noopener">Executive Order 13549</a> of August 18, 2010 (Classified National Security Information Program for State, Local, Tribal, and Private Sector Entities), shall expedite the processing of security clearances to appropriate personnel employed by critical infrastructure owners and operators, prioritizing the critical infrastructure identified in section 9 of this order.</p></div><div class="item" id="sec-4-e"><span class="marker">(e)</span><p>In order to maximize the utility of cyber threat information sharing with the private sector, the Secretary shall expand the use of programs that bring private sector subject-matter experts into Federal service on a temporary basis. These subject matter experts should provide advice regarding the content, structure, and types of information most useful to critical infrastructure owners and operators in reducing and mitigating cyber risks.</p></div>
+        </section>
+        <section id="sec-5">
+          <p class="sec-label">Section 5</p>
+          <h2>Privacy and Civil Liberties Protections</h2>
+          <div class="item" id="sec-5-a"><span class="marker">(a)</span><p>Agencies shall coordinate their activities under this order with their senior agency officials for privacy and civil liberties and ensure that privacy and civil liberties protections are incorporated into such activities. Such protections shall be based upon the Fair Information Practice Principles and other privacy and civil liberties policies, principles, and frameworks as they apply to each agency's activities.</p></div><div class="item" id="sec-5-b"><span class="marker">(b)</span><p>The Chief Privacy Officer and the Officer for Civil Rights and Civil Liberties of the Department of Homeland Security (DHS) shall assess the privacy and civil liberties risks of the functions and programs undertaken by DHS as called for in this order and shall recommend to the Secretary ways to minimize or mitigate such risks, in a publicly available report, to be released within 1 year of the date of this order. Senior agency privacy and civil liberties officials for other agencies engaged in activities under this order shall conduct assessments of their agency activities and provide those assessments to DHS for consideration and inclusion in the report. The report shall be reviewed on an annual basis and revised as necessary. The report may contain a classified annex if necessary. Assessments shall include evaluation of activities against the Fair Information Practice Principles and other applicable privacy and civil liberties policies, principles, and frameworks. Agencies shall consider the assessments and recommendations of the report in implementing privacy and civil liberties protections for agency activities.</p></div><div class="item" id="sec-5-c"><span class="marker">(c)</span><p>In producing the report required under subsection (b) of this section, the Chief Privacy Officer and the Officer for Civil Rights and Civil Liberties of DHS shall consult with the Privacy and Civil Liberties Oversight Board and coordinate with the Office of Management and Budget (OMB).</p></div><div class="item" id="sec-5-d"><span class="marker">(d)</span><p>Information submitted voluntarily in accordance with <a class="cite cite-law" href="https://www.govinfo.gov/link/uscode/6/133" target="_blank" rel="noopener">6 U.S.C. 133</a> by private entities under this order shall be protected from disclosure to the fullest extent permitted by law.</p></div>
+        </section>
+        <section id="sec-6">
+          <p class="sec-label">Section 6</p>
+          <h2>Consultative Process</h2>
+          <p>The Secretary shall establish a consultative process to coordinate improvements to the cybersecurity of critical infrastructure. As part of the consultative process, the Secretary shall engage and consider the advice, on matters set forth in this order, of the Critical Infrastructure Partnership Advisory Council; Sector Coordinating Councils; critical infrastructure owners and operators; Sector-Specific Agencies; other relevant agencies; independent regulatory agencies; State, local, territorial, and tribal governments; universities; and outside experts.</p>
+        </section>
+        <section id="sec-7">
+          <p class="sec-label">Section 7</p>
+          <h2>Baseline Framework to Reduce Cyber Risk to Critical Infrastructure</h2>
+          <div class="item" id="sec-7-a"><span class="marker">(a)</span><p>The Secretary of Commerce shall direct the Director of the National Institute of Standards and Technology (the &ldquo;Director&rdquo;) to lead the development of a framework to reduce cyber risks to critical infrastructure (the &ldquo;Cybersecurity Framework&rdquo;). The Cybersecurity Framework shall include a set of standards, methodologies, procedures, and processes that align policy, business, and technological approaches to address cyber risks. The Cybersecurity Framework shall incorporate voluntary consensus standards and industry best practices to the fullest extent possible. The Cybersecurity Framework shall be consistent with voluntary international standards when such international standards will advance the objectives of this order, and shall meet the requirements of the National Institute of Standards and Technology Act, as amended (<a class="cite cite-law" href="https://www.govinfo.gov/link/uscode/15/271" target="_blank" rel="noopener">15 U.S.C. 271</a> <em>et seq.</em>), the National Technology Transfer and Advancement Act of 1995 (<a class="cite cite-law" href="https://www.govinfo.gov/link/plaw/104/public/113" target="_blank" rel="noopener">Public Law 104-113</a>), and OMB Circular A-119, as revised.</p></div><div class="item" id="sec-7-b"><span class="marker">(b)</span><p>The Cybersecurity Framework shall provide a prioritized, flexible, repeatable, performance-based, and cost-effective approach, including information security measures and controls, to help owners and operators of critical infrastructure identify, assess, and manage cyber risk. The Cybersecurity Framework shall focus on identifying cross-sector security standards and guidelines applicable to critical infrastructure. The Cybersecurity Framework will also identify areas for improvement that should be addressed through future collaboration with particular sectors and standards-developing organizations. To enable technical innovation and account for organizational differences, the Cybersecurity Framework will provide guidance that is technology neutral and that enables critical infrastructure sectors to benefit from a competitive market for products and services that meet the standards, methodologies, procedures, and processes developed to address cyber risks. The Cybersecurity Framework shall include guidance for measuring the performance of an entity in implementing the Cybersecurity Framework.</p></div><div class="item" id="sec-7-c"><span class="marker">(c)</span><p>The Cybersecurity Framework shall include methodologies to identify and mitigate impacts of the Cybersecurity Framework and associated information security measures or controls on business confidentiality, and to protect individual privacy and civil liberties.</p></div><div class="item" id="sec-7-d"><span class="marker">(d)</span><p>In developing the Cybersecurity Framework, the Director shall engage in an open public review and comment process. The Director shall also consult with the Secretary, the National Security Agency, Sector-Specific Agencies and other interested agencies including OMB, owners and operators of critical infrastructure, and other stakeholders through the consultative process established in section 6 of this order. The Secretary, the Director of National Intelligence, and the heads of other relevant agencies shall provide threat and vulnerability information and technical expertise to inform the development of the Cybersecurity Framework. The Secretary shall provide performance goals for the Cybersecurity Framework informed by work under section 9 of this order.</p></div><div class="item" id="sec-7-e"><span class="marker">(e)</span><p><span class="deadline">Within 240 days of the date of this order</span>, the Director shall publish a preliminary version of the Cybersecurity Framework (the &ldquo;preliminary Framework&rdquo;). <span class="deadline">Within 1 year of the date of this order</span>, and after coordination with the Secretary to ensure suitability under section 8 of this order, the Director shall publish a final version of the Cybersecurity Framework (the &ldquo;final Framework&rdquo;).</p></div><div class="item" id="sec-7-f"><span class="marker">(f)</span><p>Consistent with statutory responsibilities, the Director will ensure the Cybersecurity Framework and related guidance is reviewed and updated as necessary, taking into consideration technological changes, changes in cyber risks, operational feedback from owners and operators of critical infrastructure, experience from the implementation of section 8 of this order, and any other relevant factors.</p></div>
+        </section>
+        <section id="sec-8">
+          <p class="sec-label">Section 8</p>
+          <h2>Voluntary Critical Infrastructure Cybersecurity Program</h2>
+          <div class="item" id="sec-8-a"><span class="marker">(a)</span><p>The Secretary, in coordination with Sector-Specific Agencies, shall establish a voluntary program to support the adoption of the Cybersecurity Framework by owners and operators of critical infrastructure and any other interested entities (the &ldquo;Program&rdquo;).</p></div><div class="item" id="sec-8-b"><span class="marker">(b)</span><p>Sector-Specific Agencies, in consultation with the Secretary and other interested agencies, shall coordinate with the Sector Coordinating Councils to review the Cybersecurity Framework and, if necessary, develop implementation guidance or supplemental materials to address sector-specific risks and operating environments.</p></div><div class="item" id="sec-8-c"><span class="marker">(c)</span><p>Sector-Specific Agencies shall report annually to the President, through the Secretary, on the extent to which owners and operators notified under section 9 of this order are participating in the Program.</p></div><div class="item" id="sec-8-d"><span class="marker">(d)</span><p>The Secretary shall coordinate establishment of a set of incentives designed to promote participation in the Program. <span class="deadline">Within 120 days of the date of this order</span>, the Secretary and the Secretaries of the Treasury and Commerce each shall make recommendations separately to the President, through the Assistant to the President for Homeland Security and Counterterrorism and the Assistant to the President for Economic Affairs, that shall include analysis of the benefits and relative effectiveness of such incentives, and whether the incentives would require legislation or can be provided under existing law and authorities to participants in the Program.</p></div><div class="item" id="sec-8-e"><span class="marker">(e)</span><p><span class="deadline">Within 120 days of the date of this order</span>, the Secretary of Defense and the Administrator of General Services, in consultation with the Secretary and the Federal Acquisition Regulatory Council, shall make recommendations to the President, through the Assistant to the President for Homeland Security and Counterterrorism and the Assistant to the President for Economic Affairs, on the feasibility, security benefits, and relative merits of incorporating security standards into acquisition planning and contract administration. The report shall address what steps can be taken to harmonize and make consistent existing procurement requirements related to cybersecurity.</p></div>
+        </section>
+        <section id="sec-9">
+          <p class="sec-label">Section 9</p>
+          <h2>Identification of Critical Infrastructure at Greatest Risk</h2>
+          <div class="item" id="sec-9-a"><span class="marker">(a)</span><p><span class="deadline">Within 150 days of the date of this order</span>, the Secretary shall use a risk-based approach to identify critical infrastructure where a cybersecurity incident could reasonably result in catastrophic regional or national effects on public health or safety, economic security, or national security. In identifying critical infrastructure for this purpose, the Secretary shall use the consultative process established in section 6 of this order and draw upon the expertise of Sector-Specific Agencies. The Secretary shall apply consistent, objective criteria in identifying such critical infrastructure. The Secretary shall not identify any commercial information technology products or consumer information technology services under this section. The Secretary shall review and update the list of identified critical infrastructure under this section on an annual basis, and provide such list to the President, through the Assistant to the President for Homeland Security and Counterterrorism and the Assistant to the President for Economic Affairs.</p></div><div class="item" id="sec-9-b"><span class="marker">(b)</span><p>Heads of Sector-Specific Agencies and other relevant agencies shall provide the Secretary with information necessary to carry out the responsibilities under this section. The Secretary shall develop a process for other relevant stakeholders to submit information to assist in making the identifications required in subsection (a) of this section.</p></div><div class="item" id="sec-9-c"><span class="marker">(c)</span><p>The Secretary, in coordination with Sector-Specific Agencies, shall confidentially notify owners and operators of critical infrastructure identified under subsection (a) of this section that they have been so identified, and ensure identified owners and operators are provided the basis for the determination. The Secretary shall establish a process through which owners and operators of critical infrastructure may submit relevant information and request reconsideration of identifications under subsection (a) of this section.</p></div>
+        </section>
+        <section id="sec-10">
+          <p class="sec-label">Section 10</p>
+          <h2>Adoption of Framework</h2>
+          <div class="item" id="sec-10-a"><span class="marker">(a)</span><p>Agencies with responsibility for regulating the security of critical infrastructure shall engage in a consultative process with DHS, OMB, and the National Security Staff to review the preliminary Cybersecurity Framework and determine if current cybersecurity regulatory requirements are sufficient given current and projected risks. In making such determination, these agencies shall consider the identification of critical infrastructure required under section 9 of this order. <span class="deadline">Within 90 days of the publication of the preliminary Framework</span>, these agencies shall submit a report to the President, through the Assistant to the President for Homeland Security and Counterterrorism, the Director of OMB, and the Assistant to the President for Economic Affairs, that states whether or not the agency has clear authority to establish requirements based upon the Cybersecurity Framework to sufficiently address current and projected cyber risks to critical infrastructure, the existing authorities identified, and any additional authority required.</p></div><div class="item" id="sec-10-b"><span class="marker">(b)</span><p>If current regulatory requirements are deemed to be insufficient, within 90 days of publication of the final Framework, agencies identified in subsection (a) of this section shall propose prioritized, risk-based, efficient, and coordinated actions, consistent with <a class="cite cite-eo" href="https://www.federalregister.gov/executive-order/12866" target="_blank" rel="noopener">Executive Order 12866</a> of September 30, 1993 (Regulatory Planning and Review), <a class="cite cite-eo" href="https://www.federalregister.gov/executive-order/13563" target="_blank" rel="noopener">Executive Order 13563</a> of January 18, 2011 (Improving Regulation and Regulatory Review), and <a class="cite cite-eo" href="https://www.federalregister.gov/executive-order/13609" target="_blank" rel="noopener">Executive Order 13609</a> of May 1, 2012 (Promoting International Regulatory Cooperation), to mitigate cyber risk.</p></div><div class="item" id="sec-10-c"><span class="marker">(c)</span><p><span class="deadline">Within 2 years after publication of the final Framework</span>, consistent with <a class="cite cite-eo" href="https://www.federalregister.gov/executive-order/13563" target="_blank" rel="noopener">Executive Order 13563</a> and <a class="cite cite-eo" href="https://www.federalregister.gov/executive-order/13610" target="_blank" rel="noopener">Executive Order 13610</a> of May 10, 2012 (Identifying and Reducing Regulatory Burdens), agencies identified in subsection (a) of this section shall, in consultation with owners and operators of critical infrastructure, report to OMB on any critical infrastructure subject to ineffective, conflicting, or excessively burdensome cybersecurity requirements. This report shall describe efforts made by agencies, and make recommendations for further actions, to minimize or eliminate such requirements.</p></div><div class="item" id="sec-10-d"><span class="marker">(d)</span><p>The Secretary shall coordinate the provision of technical assistance to agencies identified in subsection (a) of this section on the development of their cybersecurity workforce and programs.</p></div><div class="item" id="sec-10-e"><span class="marker">(e)</span><p>Independent regulatory agencies with responsibility for regulating the security of critical infrastructure are encouraged to engage in a consultative process with the Secretary, relevant Sector-Specific Agencies, and other affected parties to consider prioritized actions to mitigate cyber risks for critical infrastructure consistent with their authorities.</p></div>
+        </section>
+        <section id="sec-11">
+          <p class="sec-label">Section 11</p>
+          <h2>Definitions</h2>
+          <div class="item" id="sec-11-a"><span class="marker">(a)</span><p><dfn>&ldquo;Agency&rdquo;</dfn> means any authority of the United States that is an &ldquo;agency&rdquo; under <a class="cite cite-law" href="https://www.govinfo.gov/link/uscode/44/3502" target="_blank" rel="noopener">44 U.S.C. 3502(1)</a>, other than those considered to be independent regulatory agencies, as defined in <a class="cite cite-law" href="https://www.govinfo.gov/link/uscode/44/3502" target="_blank" rel="noopener">44 U.S.C. 3502(5)</a>.</p></div><div class="item" id="sec-11-b"><span class="marker">(b)</span><p><dfn>&ldquo;Critical Infrastructure Partnership Advisory Council&rdquo;</dfn> means the council established by DHS under <a class="cite cite-law" href="https://www.govinfo.gov/link/uscode/6/451" target="_blank" rel="noopener">6 U.S.C. 451</a> to facilitate effective interaction and coordination of critical infrastructure protection activities among the Federal Government; the private sector; and State, local, territorial, and tribal governments.</p></div><div class="item" id="sec-11-c"><span class="marker">(c)</span><p><dfn>&ldquo;Fair Information Practice Principles&rdquo;</dfn> means the eight principles set forth in Appendix A of the National Strategy for Trusted Identities in Cyberspace.</p></div><div class="item" id="sec-11-d"><span class="marker">(d)</span><p><dfn>&ldquo;Independent regulatory agency&rdquo;</dfn> has the meaning given the term in <a class="cite cite-law" href="https://www.govinfo.gov/link/uscode/44/3502" target="_blank" rel="noopener">44 U.S.C. 3502(5)</a>.</p></div><div class="item" id="sec-11-e"><span class="marker">(e)</span><p><dfn>&ldquo;Sector Coordinating Council&rdquo;</dfn> means a private sector coordinating council composed of representatives of owners and operators within a particular sector of critical infrastructure established by the National Infrastructure Protection Plan or any successor.</p></div><div class="item" id="sec-11-f"><span class="marker">(f)</span><p><dfn>&ldquo;Sector-Specific Agency&rdquo;</dfn> has the meaning given the term in Presidential Policy Directive-21 of February 12, 2013 (Critical Infrastructure Security and Resilience), or any successor.</p></div>
+        </section>
+        <section id="sec-12">
+          <p class="sec-label">Section 12</p>
+          <h2>General Provisions</h2>
+          <div class="item" id="sec-12-a"><span class="marker">(a)</span><p>This order shall be implemented consistent with applicable law and subject to the availability of appropriations. Nothing in this order shall be construed to provide an agency with authority for regulating the security of critical infrastructure in addition to or to a greater extent than the authority the agency has under existing law. Nothing in this order shall be construed to alter or limit any authority or responsibility of an agency under existing law.</p></div><div class="item" id="sec-12-b"><span class="marker">(b)</span><p>Nothing in this order shall be construed to impair or otherwise affect the functions of the Director of OMB relating to budgetary, administrative, or legislative proposals.</p></div><div class="item" id="sec-12-c"><span class="marker">(c)</span><p>All actions taken pursuant to this order shall be consistent with requirements and authorities to protect intelligence and law enforcement sources and methods. Nothing in this order shall be interpreted to supersede measures established under authority of law to protect the security and integrity of specific activities and associations that are in direct support of intelligence and law enforcement operations.</p></div><div class="item" id="sec-12-d"><span class="marker">(d)</span><p>This order shall be implemented consistent with U.S. international obligations.</p></div><div class="item" id="sec-12-e"><span class="marker">(e)</span><p>This order is not intended to, and does not, create any right or benefit, substantive or procedural, enforceable at law or in equity by any party against the United States, its departments, agencies, or entities, its officers, employees, or agents, or any other person.</p></div>
+        </section>
+
+        <div class="signature">
+          <p class="name">Barack Obama</p>
+          <p>The White House</p>
+          <p>February 12, 2013</p>
+        </div>
+      </article>
+
+      <aside class="refs" aria-label="Documents cited in this order">
+        <h2>Cited in this order</h2>
+        <h3>Executive orders</h3>
+        <ul><li><a href="https://www.federalregister.gov/executive-order/13549" target="_blank" rel="noopener">Executive Order 13549</a></li><li><a href="https://www.federalregister.gov/executive-order/12866" target="_blank" rel="noopener">Executive Order 12866</a></li><li><a href="https://www.federalregister.gov/executive-order/13563" target="_blank" rel="noopener">Executive Order 13563</a></li><li><a href="https://www.federalregister.gov/executive-order/13609" target="_blank" rel="noopener">Executive Order 13609</a></li><li><a href="https://www.federalregister.gov/executive-order/13610" target="_blank" rel="noopener">Executive Order 13610</a></li></ul>
+        <h3>Statutes</h3>
+        <ul><li><a href="https://www.govinfo.gov/link/uscode/6/143" target="_blank" rel="noopener">6 U.S.C. 143</a></li><li><a href="https://www.govinfo.gov/link/uscode/6/133" target="_blank" rel="noopener">6 U.S.C. 133</a></li><li><a href="https://www.govinfo.gov/link/uscode/15/271" target="_blank" rel="noopener">15 U.S.C. 271</a></li><li><a href="https://www.govinfo.gov/link/plaw/104/public/113" target="_blank" rel="noopener">Public Law 104-113</a></li><li><a href="https://www.govinfo.gov/link/uscode/44/3502" target="_blank" rel="noopener">44 U.S.C. 3502(1)</a></li><li><a href="https://www.govinfo.gov/link/uscode/6/451" target="_blank" rel="noopener">6 U.S.C. 451</a></li></ul>
+      </aside>
+
+      <footer class="source">
+        Text from the Federal Register, document <a href="https://www.federalregister.gov/documents/2013/02/19/2013-03915/improving-critical-infrastructure-cybersecurity" target="_blank" rel="noopener">2013-03915</a>
+        (78 FR 11739; filed 2-15-13; 11:15 am). Also available in the
+        <a href="https://www.govinfo.gov/app/details/DCPD-201300091" target="_blank" rel="noopener">Compilation of Presidential Documents</a> on govinfo.
+        The wording is unchanged; headings, indentation and highlighted deadlines were added for readability.
+      </footer>
+    </main>
+  </div>
+
+<script>
+  // Highlight the section currently being read in the contents list.
+  const links = new Map([...document.querySelectorAll('nav.toc a')].map(a => [a.getAttribute('href').slice(1), a]));
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      links.forEach(a => a.classList.remove('active'));
+      links.get(entry.target.id)?.classList.add('active');
+    }
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  document.querySelectorAll('article section').forEach(s => observer.observe(s));
+  // On small screens the contents list starts collapsed.
+  if (window.matchMedia('(max-width: 46rem)').matches) document.querySelector('nav.toc details').open = false;
+</script>
+</body>
+</html>

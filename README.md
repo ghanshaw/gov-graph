@@ -49,7 +49,7 @@ npm install
 node index.js
 ```
 
-GraphQL playground available at: http://localhost:4000/graphql
+GraphQL playground available at: http://localhost:9001/graphql
 
 ### 2. Start the frontend (new terminal)
 
@@ -59,7 +59,7 @@ npm install
 npm run dev
 ```
 
-App running at: http://localhost:5173
+App running at: http://localhost:9000
 
 ## GraphQL API
 

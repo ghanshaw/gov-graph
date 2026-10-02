@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Order 14413 — Dark teal design, order page (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* The order page with its full text open, in the dark teal design (list page: eo-list-design-dark-teal.html):
+     white, Inter, teal accent, a sticky left rail, hairline rows under a dark rule. */
+  :root {
+    --bg: #ffffff; --panel: #f7f8fa; --text: #14181f; --muted: #667085; --rule: #e4e7ec;
+    --accent: #0f766e; --accent-soft: #e6f4f2;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Inter", system-ui, sans-serif; font-size: 14.5px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  /* Top bar */
+  .top { border-bottom: 1px solid var(--rule); }
+  .top-inner { max-width: 1240px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; gap: 32px; height: 54px; }
+  .brand { font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .brand span { color: var(--muted); font-weight: 500; }
+  .top nav { display: flex; gap: 22px; font-size: 13.5px; color: var(--muted); overflow-x: auto; white-space: nowrap; }
+  .top nav a.on { color: var(--text); font-weight: 600; }
+  .top nav a:hover { color: var(--text); }
+
+  /* The heading sits above the text column; the rail starts lower, level with the text. */
+  .layout { max-width: 1240px; margin: 0 auto; padding: 0 28px; display: grid; grid-template-columns: 248px minmax(0, 820px); column-gap: 44px; }
+  .head { grid-column: 2; padding-top: 34px; }
+  .text { grid-column: 2; grid-row: 2; padding-bottom: 72px; min-width: 0; }
+
+  /* Left rail */
+  aside { grid-column: 1; grid-row: 2; padding: 0 8px 24px; margin: 0 -8px; position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 16px); overflow-y: auto; }
+  aside h3 { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  aside .group { margin-bottom: 30px; }
+  /* Contents: a quiet list on a vertical rule. The section being read is marked by colour
+     and a segment of the rule, not by a filled highlight. */
+  .toc { border-left: 2px solid var(--rule); }
+  .facet { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: baseline; padding: 7px 0 7px 14px; margin-left: -2px; border-left: 2px solid transparent; font-size: 13.5px; line-height: 1.4; color: var(--muted); }
+  .facet span:first-child { text-align: right; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
+  .facet:hover { color: var(--text); }
+  .facet.on { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+  .fact { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: 13px; color: var(--muted); }
+  .fact b { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; font-weight: 500; color: var(--text); }
+  .opt { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: var(--muted); }
+  .opt b { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--rule); display: inline-block; }
+  .opt.on { color: var(--text); font-weight: 500; }
+  .opt.on b { border: 4.5px solid var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { display: inline-block; font-size: 11.5px; font-weight: 500; color: var(--muted); background: var(--panel); border: 1px solid var(--rule); border-radius: 999px; padding: 1px 9px; }
+  a.chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Heading */
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .crumbs a:hover { color: var(--accent); }
+  .eyebrow { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12.5px; font-weight: 500; color: var(--accent); }
+  h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.022em; line-height: 1.15; margin: 6px 0 20px; }
+
+  /* Facts: a one-row table, like the list's column headings */
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--text); }
+  .facts div { padding: 10px 12px 12px; }
+  .facts div + div { border-left: 1px solid var(--rule); }
+  .facts dt { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .facts dd { margin: 3px 0 0; font-weight: 500; }
+  .facts dd.mono { font-size: 13px; }
+
+  /* Actions */
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; padding: 16px 0 26px; }
+  .btn { font: inherit; font-size: 13px; font-weight: 500; padding: 7px 13px; border-radius: 8px; border: 1px solid var(--rule); background: var(--bg); color: var(--text); cursor: pointer; }
+  .btn:hover { border-color: var(--text); }
+  .btn.primary { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .btn.active { background: var(--accent-soft); border-color: var(--accent-soft); color: var(--accent); }
+
+  /* Text */
+  .preamble { font-size: 16.5px; line-height: 1.6; padding: 2px 0 2px 16px; border-left: 3px solid var(--accent); margin: 0 0 36px; }
+  /* Sections are simply printed: a small "Section N" label, the title, then the text. */
+  section { margin-bottom: 40px; }
+  .sec-label { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 2px; }
+  section h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.3; margin: 0 0 14px; }
+  .row { display: grid; grid-template-columns: minmax(34px, max-content) minmax(0, 1fr); column-gap: 8px; margin-bottom: 14px; }
+  .row p { margin: 0; font-size: 15.5px; line-height: 1.7; }
+  .row.plain { grid-template-columns: minmax(0, 1fr); }
+  .row.l2 { margin-left: 42px; }
+  .row.l3 { margin-left: 84px; }
+  .marker { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; font-weight: 500; color: var(--accent); padding-top: 3px; white-space: nowrap; }
+  .row:target { background: var(--accent-soft); border-radius: 4px; }
+  .deadline { color: var(--accent); font-weight: 500; }
+  a.cite { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(15, 118, 110, 0.35); text-underline-offset: 3px; }
+  dfn { font-style: normal; font-weight: 600; }
+
+  /* End of the order */
+  .signature { text-align: right; padding: 8px 0 30px; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+  .signature b { display: block; font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); }
+  .panel { border-top: 1px solid var(--rule); padding: 16px 0 20px; }
+  .panel h3 { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+  .tag-form { display: flex; gap: 8px; }
+  .tag-form input { font: inherit; font-size: 13px; padding: 7px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); outline: none; min-width: 200px; }
+  .note { font-size: 12px; line-height: 1.55; color: var(--muted); border-top: 1px solid var(--rule); padding: 14px 0 0; margin: 0; }
+  .note a { color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .head, .text, aside { grid-column: 1; grid-row: auto; }
+    aside { position: static; max-height: none; padding-bottom: 0; }
+    aside .group.contents { display: none; }
+    .facts { grid-template-columns: 1fr 1fr; }
+    .facts div:nth-child(3) { border-left: 0; }
+    .facts div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+    .row.l2 { margin-left: 24px; }
+    .row.l3 { margin-left: 48px; }
+  }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="top-inner">
+      <a class="brand" href="#">GovLens <span>Public Records</span></a>
+      <nav>
+        <a class="on" href="#">Presidents</a><a href="#">Executive Orders</a><a href="#">Supreme Court</a><a href="#">Congress</a>
+        <a href="#">Timeline</a><a href="#">Corpus</a><a href="#">Case Graph</a><a href="#">Sources</a><a href="#">Tags</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="layout">
+    <header class="head">
+      <div class="crumbs"><a href="#">Presidents</a> / <a href="#">Donald Trump</a> / <a href="#">Executive Orders</a> / 14413</div>
+      <span class="eyebrow">Executive Order 14413</span>
+      <h1>Ushering in the Next Frontier of Quantum Innovation</h1>
+
+      <dl class="facts">
+        <div><dt>Signed</dt><dd>June 22, 2026</dd></div>
+        <div><dt>President</dt><dd>Donald J. Trump</dd></div>
+        <div><dt>Published</dt><dd>June 25, 2026</dd></div>
+        <div><dt>Citation</dt><dd class="mono">91 FR 38487</dd></div>
+      </dl>
+
+      <div class="actions">
+        <a class="btn primary" href="https://www.federalregister.gov/documents/2026/06/25/2026-12910/ushering-in-the-next-frontier-of-quantum-innovation">View on Federal Register ↗</a>
+        <button class="btn active" type="button">Hide full text</button>
+        <button class="btn" type="button">Show PDF</button>
+        <a class="btn" href="https://www.govinfo.gov/content/pkg/FR-2026-06-25/pdf/2026-12910.pdf">PDF ↗</a>
+      </div>
+    </header>
+
+    <aside>
+      <div class="group contents">
+        <h3>Contents</h3>
+        <div class="toc"><a class="facet on" href="#sec-1"><span>1</span><span>Purpose</span></a><a class="facet" href="#sec-2"><span>2</span><span>Policy</span></a><a class="facet" href="#sec-3"><span>3</span><span>Updating the National Quantum Strategy</span></a><a class="facet" href="#sec-4"><span>4</span><span>Harnessing Quantum Computing for Scientific Applications</span></a><a class="facet" href="#sec-5"><span>5</span><span>Deploying Quantum-Enabled Sensors and Networks</span></a><a class="facet" href="#sec-6"><span>6</span><span>Bolstering the Domestic Ecosystem for Quantum Supply Chains</span></a><a class="facet" href="#sec-7"><span>7</span><span>Protecting Quantum Technology</span></a><a class="facet" href="#sec-8"><span>8</span><span>Expanding and Retaining the Quantum Workforce</span></a><a class="facet" href="#sec-9"><span>9</span><span>Engaging with International Partners</span></a><a class="facet" href="#sec-10"><span>10</span><span>Reports</span></a><a class="facet" href="#sec-11"><span>11</span><span>General Provisions</span></a></div>
+      </div>
+      <div class="group">
+        <h3>In this order</h3>
+        <div class="fact"><span>Sections</span><b>11</b></div>
+        <div class="fact"><span>Deadlines</span><b>18</b></div>
+        <div class="fact"><span>Documents cited</span><b>2</b></div>
+        <div class="fact"><span>Printed pages</span><b>5</b></div>
+      </div>
+      <div class="group">
+        <h3>Show</h3>
+        <div class="opt on"><b></b>Formatted text</div>
+        <div class="opt"><b></b>Printed PDF</div>
+      </div>
+      <div class="group">
+        <h3>Subjects</h3>
+        <div class="chips"><span class="chip">Quantum innovation, advancement efforts</span><span class="chip">Director of National Intelligence</span><span class="chip">National Science Foundation</span><span class="chip">Office of Management and Budget</span><span class="chip">Office of Personnel Management</span><span class="chip">Office of Science and Technology Policy</span><span class="chip">Quantum technologies, advancement efforts</span><span class="chip">Research and development</span><span class="chip">Secretary of Commerce</span><span class="chip">Secretary of Energy</span><span class="chip">Secretary of War</span></div>
+      </div>
+    </aside>
+
+    <main class="text">
+      <p class="preamble">By the authority vested in me as President by the Constitution and the laws of the United States of America, it is hereby ordered:</p>
+
+        <section id="sec-1">
+          <p class="sec-label">Section 1</p>
+          <h2>Purpose</h2>
+          <div class="row plain"><p>America stands at the cusp of a quantum revolution. Quantum information science and technology (QIST) will provide transformational capabilities that will drive American innovation, power economic growth, generate high-paying jobs, and bolster national security. In 2018, I laid the foundation for United States leadership in QIST by signing into law the National Quantum Initiative Act and doubling Federal investment in QIST research and development. Today, as other nations move quickly to challenge American leadership, the United States must take a cohesive, whole-of-government approach to accelerate deployment and commercialization of quantum computing, sensing, and networking.</p></div><div class="row plain"><p>In addition to continuing trailblazing quantum research, we must act to solidify the Nation&#x27;s position as the world&#x27;s QIST superpower and deliver the commercial and research benefits of quantum innovation to the American people. Equally important, we must protect sensitive technologies and work with allies to ensure adversaries cannot use QIST to undermine national security.</p></div>
+        </section>
+        <section id="sec-2">
+          <p class="sec-label">Section 2</p>
+          <h2>Policy</h2>
+          <div class="row plain"><p>It is the policy of my Administration to ensure that the United States maintains a strategic technical advantage in QIST and leads the development of a robust and trusted quantum ecosystem across QIST research, manufacturing, commercialization, and application.</p></div>
+        </section>
+        <section id="sec-3">
+          <p class="sec-label">Section 3</p>
+          <h2>Updating the National Quantum Strategy</h2>
+          <div class="row l1"><span class="marker">(a)</span><p><span class="deadline">Within 180 days of the date of this order</span>, the Assistant to the President for Science and Technology (APST), in coordination with the Secretary of War, the Secretary of Commerce, the Secretary of Energy, the Director of National Intelligence (DNI), and the Director of the National Science Foundation (NSF), and in consultation with the Co-Chairs of the National Science and Technology Council Subcommittees on Quantum Information Science (SCQIS) and Economic and Security Implications of Quantum Information Science (ESIX), shall update the National Quantum Strategy (Strategy) with policies intended to support the maturing QIST ecosystem, including promoting commercialization and deployment of QIST, supporting the quantum-enabling technology ecosystem, and encouraging partnerships with United States industry.</p></div><div class="row l1"><span class="marker">(b)</span><p><span class="deadline">Within 30 days of the date of the publication of the updated Strategy</span>, relevant executive departments and agencies (agencies) shall each submit to the APST and the Director of the Office of Management and Budget (OMB) a summary of steps taken to align their processes, policies, and programs with the Strategy.</p></div>
+        </section>
+        <section id="sec-4">
+          <p class="sec-label">Section 4</p>
+          <h2>Harnessing Quantum Computing for Scientific Applications</h2>
+          <div class="row l1"><span class="marker">(a)</span><p>There is hereby established the Quantum Computer for Application Development and Discovery Science (QC-ADDS) Effort, which shall be coordinated by the APST. This national effort shall pursue development of a quantum computer at a scale intended to initiate the era of quantum-enabled scientific discovery, with the intent to deliver at least one such computer to a Department of Energy facility and, to the extent possible, make it available to the scientific community.</p></div><div class="row l1"><span class="marker">(b)</span><p>The Secretary of War, the Secretary of Commerce, the Secretary of Energy, the DNI, the Director of NSF, and the heads of other relevant agencies as appropriate, in consultation with the Director of OMB, shall ensure that relevant capabilities, manufacturing infrastructure, and expertise are made available to support the QC-ADDS Effort to the extent practicable, and shall deploy these resources towards exploration of quantum-computer-enabled capabilities for commercial, government, and national security applications. Additionally, the APST shall coordinate with the Administrator of the National Aeronautics and Space Administration (NASA), the Director of the National Security Agency (NSA), and the heads of other relevant agencies to identify additional actions to enhance the QC-ADDS Effort.</p></div><div class="row l1"><span class="marker">(c)</span><p><span class="deadline">Within 90 days of the date of this order</span>, the Secretary of Energy, in coordination with the APST and the heads of other relevant agencies, shall identify the technical specifications required for a QC-ADDS to perform transformative scientific applications that are on a path towards economically significant applications and beyond current classical computer capabilities, and shall publicly release a summary of those specifications, as appropriate.</p></div><div class="row l1"><span class="marker">(d)</span><p><span class="deadline">Within 180 days of the date of this order</span>, the Secretary of Energy, in consultation with the Director of OMB, shall explore potential private-sector partnership models to understand the potential cost, scope, and time frame for delivery of at least one QC-ADDS as described in subsection (a) of this section. Further, the Secretary of Commerce shall develop a plan, potentially including advance market commitments, to encourage contributions to the QC-ADDS Effort from commercial quantum computing companies. Finally, the Secretary of War shall establish or designate activities and programs to develop the tools and capabilities necessary to advance readiness for national security applications of quantum computing, potentially including the establishment of a center for such purpose.</p></div><div class="row l1"><span class="marker">(e)</span><p>To provide for the robust assessment of the QC-ADDS&#x27; and other quantum computing systems&#x27; capabilities, <span class="deadline">within 180 days of the date of this order</span>:</p></div><div class="row l2"><span class="marker">(i)</span><p>the Secretary of Energy, in consultation with the Secretary of War and the Secretary of Commerce, shall establish a national center to develop the tools and capabilities required to accurately assess the performance of quantum computing systems; and</p></div><div class="row l2"><span class="marker">(ii)</span><p>the Co-Chairs of the ESIX Subcommittee shall recommend to the APST a mechanism to facilitate information-sharing between relevant agencies to improve the Government&#x27;s ability to assess commercial quantum computing capabilities.</p></div><div class="row l1"><span class="marker">(f)</span><p>The DNI and the Secretary of War, in coordination with the Co-Chairs of the ESIX Subcommittee and in consultation with the Secretary of State, the Secretary of Commerce, and the Secretary of Energy, shall identify the national security implications of the increasing scale and performance of commercial quantum computers, such as the implications for the migration to post-quantum cryptography.</p></div>
+        </section>
+        <section id="sec-5">
+          <p class="sec-label">Section 5</p>
+          <h2>Deploying Quantum-Enabled Sensors and Networks</h2>
+          <div class="row l1"><span class="marker">(a)</span><p><span class="deadline">Within 60 days of the date of this order</span>, the Secretary of War shall identify at least three next-generation quantum sensor projects to prioritize in order to field these sensors by September 30, 2028.</p></div><div class="row l1"><span class="marker">(b)</span><p>Each of the following heads of relevant agencies shall develop a 5-year plan for advancing quantum sensing and networking as follows:</p></div><div class="row l2"><span class="marker">(i)</span><p>the Secretary of Commerce shall develop a plan for advancing commercial readiness of quantum sensing, quantum-sensor manufacturing technology, and quantum-network-enhanced timing;</p></div><div class="row l2"><span class="marker">(ii)</span><p>the Secretary of Energy shall develop a plan for using quantum sensing and imaging to measure and characterize complex systems, and for using quantum networking to enable distributed quantum computing;</p></div><div class="row l2"><span class="marker">(iii)</span><p>the Director of NSF shall develop a plan for basic science research to identify applications of quantum sensing and networking, develop novel systems-level concepts, and improve QIST manufacturing science; and</p></div><div class="row l2"><span class="marker">(iv)</span><p>the Administrator of NASA shall develop a plan for developing and extending civilian quantum sensing and networking for space applications.</p></div><div class="row l1"><span class="marker">(c)</span><p>The heads of relevant agencies shall prioritize research, development, testing, and evaluation of applications and hardware for quantum sensing and quantum networking.</p></div>
+        </section>
+        <section id="sec-6">
+          <p class="sec-label">Section 6</p>
+          <h2>Bolstering the Domestic Ecosystem for Quantum Supply Chains</h2>
+          <div class="row l1"><span class="marker">(a)</span><p>The Secretary of Commerce, in consultation with the Secretary of Energy and the heads of other relevant agencies, shall develop a plan to strengthen the QIST ecosystem through analyzing QIST supply chains, encouraging private sector adoption of QIST-related standards, and supporting research and development pathways that advance quantum-enabling technologies and eliminate QIST manufacturing barriers.</p></div><div class="row l1"><span class="marker">(b)</span><p><span class="deadline">Within 120 days of the date of this order</span>, the Secretary of War, the Secretary of Commerce, the Secretary of Energy, and the Director of NSF shall develop a plan, with coordination from the APST and the Director of OMB, to encourage and partner with the private sector, potentially using prize challenges or advance market commitments, to develop quantum-enabling component technologies in the United States, and to identify any changes to statutory or regulatory authorities required to address quantum-specific market hurdles.</p></div><div class="row l1"><span class="marker">(c)</span><p>All relevant agencies shall take steps to share, to the maximum extent possible, information regarding quantum computing supply chains, such as that generated by the Defense Advanced Research Projects Agency Quantum Benchmarking Initiative, with the Departments of War, Commerce, and Energy and with the APST and the Assistant to the President for National Security Affairs (APNSA), to inform Government-wide decision making.</p></div><div class="row l1"><span class="marker">(d)</span><p><span class="deadline">Within 180 days of the date of this order</span>:</p></div><div class="row l2"><span class="marker">(i)</span><p>the Secretary of War, in consultation with the heads of relevant agencies, shall take steps to increase domestic access to Department of War-sponsored QIST-relevant foundry resources, and strengthen efforts, as appropriate, to improve access to critical QIST supply chains; and</p></div><div class="row l2"><span class="marker">(ii)</span><p>the Director of NSF shall take steps to issue grants for establishing QIST user facilities through the National Quantum and Nanotechnology Infrastructure program.</p></div><div class="row l1"><span class="marker">(e)</span><p><span class="deadline">Within 210 days of the date of this order</span>, to support the reconstitution of the National Quantum Initiative Advisory Committee (NQIAC), as provided in section 104 of the National Quantum Initiative Act of 2018, as amended, and pursuant to <a class="cite" href="https://www.federalregister.gov/executive-order/14073">Executive Order 14073</a> of May 4, 2022 (Enhancing the National Quantum Initiative Advisory Committee), the APST shall recommend a revised NQIAC membership list and shall task the NQIAC to develop recommendations for stimulating the development of quantum-enabling technologies in the United States.</p></div>
+        </section>
+        <section id="sec-7">
+          <p class="sec-label">Section 7</p>
+          <h2>Protecting Quantum Technology</h2>
+          <div class="row l1"><span class="marker">(a)</span><p>The APST and the APNSA, in consultation with the Co-Chairs of the ESIX Subcommittee, shall coordinate with the relevant agencies to ensure that QIST activities and policies maintain robust and balanced security controls to safeguard critical information and protect national security interests, while not unduly impacting quantum innovation in the United States.</p></div><div class="row l1"><span class="marker">(b)</span><p>The Director of the Federal Bureau of Investigation, in coordination with the Secretary of State, the Secretary of War, the Secretary of Commerce, the Secretary of Energy, the Secretary of Homeland Security, the DNI, and the Director of the NSA, shall propose to the APST, the APNSA, and the Director of OMB staffing requirements to expand the Quantum Information Science and Technology Counterintelligence Protection Team (QCPT) to improve and coordinate protections against adversarial threats to the QIST ecosystem, including cybersecurity threats, coordinate public messaging and outreach related to those threats, and enhance sharing of threat information with Federal, industry, and academic QIST research and development entities. Relevant agencies shall coordinate and deconflict with the QCPT on all outreach to QIST industry and academia related to quantum-specific security guidance and threat information.</p></div>
+        </section>
+        <section id="sec-8">
+          <p class="sec-label">Section 8</p>
+          <h2>Expanding and Retaining the Quantum Workforce</h2>
+          <div class="row l1"><span class="marker">(a)</span><p><span class="deadline">Within 90 days of the date of this order</span>, the Director of the Office of Personnel Management, in consultation with the APST and the Director of OMB and in coordination with the Secretary of War, the Secretary of Commerce, the Secretary of Energy, the DNI, and the Director of NSF, shall develop a Government-wide QIST recruitment and retention strategy, potentially including special pay rates and increased limits for recruitment and retention incentives. This strategy should complement existing efforts to build a strong national security quantum-workforce.</p></div><div class="row l1"><span class="marker">(b)</span><p><span class="deadline">Within 120 days of the date of this order</span>:</p></div><div class="row l2"><span class="marker">(i)</span><p>the Secretary of Labor shall ensure that QIST-relevant industry needs are prioritized in workforce training efforts related to <a class="cite" href="https://www.federalregister.gov/executive-order/14278">Executive Order 14278</a> of April 23, 2025 (Preparing Americans for High-Paying Skilled Trade Jobs of the Future), and the implementation of America&#x27;s Talent Strategy where possible, including related to the expansion of registered apprenticeships for relevant occupations; and</p></div><div class="row l2"><span class="marker">(ii)</span><p>the Secretary of Labor and the Director of NSF, in coordination with the Co-Chairs of the SCQIS Subcommittee, shall develop an approach to tracking labor statistics for assessing the needs of the United States quantum ecosystem, including developing a definition for “QIST-relevant occupations”, and associated skills and credentials.</p></div><div class="row l1"><span class="marker">(c)</span><p><span class="deadline">Within 180 days of the date of this order</span>:</p></div><div class="row l2"><span class="marker">(i)</span><p>the APST shall engage with United States industry and academic institutions to promote the expansion of post-secondary training opportunities for supporting skillsets that will lead Americans into rewarding QIST industry jobs, such as by prioritizing hands-on training with QIST systems or concepts; and</p></div><div class="row l2"><span class="marker">(ii)</span><p>the Director of NSF shall take steps to initiate a network of National QIST Workforce Development Institutes to enhance QIST training opportunities and coordinate training efforts across Federal, State, and local agencies.</p></div>
+        </section>
+        <section id="sec-9">
+          <p class="sec-label">Section 9</p>
+          <h2>Engaging with International Partners</h2>
+          <div class="row l1"><span class="marker">(a)</span><p>The Secretary of State and the Secretary of Commerce, in coordination with other relevant agencies as appropriate, shall align their respective international engagements in ways designed to:</p></div><div class="row l2"><span class="marker">(i)</span><p>ensure that United States quantum and quantum-enabling technology companies have access to strategic markets and capital from like-minded countries;</p></div><div class="row l2"><span class="marker">(ii)</span><p>maintain an international ecosystem of quantum-enabling technology companies with access to trusted supply chains, through, for example, harmonizing investment restrictions with international allies and partners;</p></div><div class="row l2"><span class="marker">(iii)</span><p>prevent countries of concern from acquiring critical quantum-enabling technologies, through, for example, harmonizing research security and export control policies with international allies and partners;</p></div><div class="row l2"><span class="marker">(iv)</span><p>promote and enhance research and development collaboration and the flow of people and ideas across like-minded countries in support of the interests of the United States quantum industry; and</p></div><div class="row l2"><span class="marker">(v)</span><p>develop, promote, and coordinate effective quantum research and technology protection efforts with like-minded countries.</p></div><div class="row l1"><span class="marker">(b)</span><p>The Secretary of Commerce, in coordination with the United States Trade Representative, shall identify and provide recommendations to the President, through the APST, to address foreign trade barriers, discriminatory treatment, and other policies that limit the competitiveness of American QIST companies.</p></div><div class="row l1"><span class="marker">(c)</span><p><span class="deadline">Within 120 days of the date of this order</span>, the Secretary of State shall provide recommendations to the APNSA and the APST on how to align existing bilateral and multilateral international engagements, including Pax Silica, to advance the priorities of this order.</p></div>
+        </section>
+        <section id="sec-10">
+          <p class="sec-label">Section 10</p>
+          <h2>Reports</h2>
+          <div class="row l1"><span class="marker">(a)</span><p>Reports shall be submitted to the President, through the APST and the Director of OMB, regarding the actions directed in:</p></div><div class="row l2"><span class="marker">(i)</span><p>section 6(a) of this order <span class="deadline">within 90 days of the date of this order</span>; and</p></div><div class="row l2"><span class="marker">(ii)</span><p>section 5(b) of this order <span class="deadline">within 120 days of the date of this order</span>.</p></div><div class="row l1"><span class="marker">(b)</span><p>Reports shall be submitted to the President, through the APST and the APNSA, regarding the actions directed in:</p></div><div class="row l2"><span class="marker">(i)</span><p>section 7(b) of this order <span class="deadline">within 60 days of the date of this order</span>; and</p></div><div class="row l2"><span class="marker">(ii)</span><p>section 9(a) of this order <span class="deadline">within 180 days of the date of this order</span>.</p></div><div class="row l1"><span class="marker">(c)</span><p>Reports shall be submitted to the President, through the APST, the APNSA, and the National Cyber Director, regarding the actions directed in section 4(f) of this order <span class="deadline">within 1 year of the date of this order</span>, and annually thereafter.</p></div>
+        </section>
+        <section id="sec-11">
+          <p class="sec-label">Section 11</p>
+          <h2>General Provisions</h2>
+          <div class="row l1"><span class="marker">(a)</span><p>Nothing in this order shall be construed to impair or otherwise affect:</p></div><div class="row l2"><span class="marker">(i)</span><p>the authority granted by law to an executive department or agency, or the head thereof; or</p></div><div class="row l2"><span class="marker">(ii)</span><p>the functions of the Director of the Office of Management and Budget relating to budgetary, administrative, or legislative proposals.</p></div><div class="row l1"><span class="marker">(b)</span><p>This order shall be implemented consistent with applicable law and subject to the availability of appropriations.</p></div><div class="row l1"><span class="marker">(c)</span><p>This order is not intended to, and does not, create any right or benefit, substantive or procedural, enforceable at law or in equity by any party against the United States, its departments, agencies, or entities, its officers, employees, or agents, or any other person.</p></div><div class="row l1"><span class="marker">(d)</span><p>The costs for publication of this order shall be borne by the Department of Energy.</p></div>
+        </section>
+
+      <div class="signature"><b>Donald J. Trump</b>The White House<br>June 22, 2026</div>
+
+      <div class="panel">
+        <h3>Cited in this order</h3>
+        <div class="chips"><a class="chip" href="https://www.federalregister.gov/executive-order/14073">Executive Order 14073</a><a class="chip" href="https://www.federalregister.gov/executive-order/14278">Executive Order 14278</a></div>
+      </div>
+      <div class="panel">
+        <h3>Tags</h3>
+        <div class="tag-form"><input type="text" placeholder="add tag…"><button class="btn primary" type="button">Tag</button></div>
+      </div>
+      <p class="note">Text from the Federal Register, document <a href="https://www.federalregister.gov/documents/2026/06/25/2026-12910/ushering-in-the-next-frontier-of-quantum-innovation">2026-12910</a> (91 FR 38487; filed 6-24-26; 11:15 am). Also available in the <a href="https://www.govinfo.gov/app/details/DCPD-202600418">Compilation of Presidential Documents</a> on govinfo. The wording is unchanged; headings, indentation and highlighted deadlines were added for readability.</p>
+    </main>
+  </div>
+
+<script>
+  // Mark the section being read in the contents list.
+  const links = new Map([...document.querySelectorAll('aside .contents a')].map(a => [a.getAttribute('href').slice(1), a]));
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      links.forEach(a => a.classList.remove('on'));
+      links.get(entry.target.id)?.classList.add('on');
+    }
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  document.querySelectorAll('main section').forEach(sec => observer.observe(sec));
+</script>
+</body>
+</html>

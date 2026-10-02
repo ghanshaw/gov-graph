@@ -1,4 +1,6 @@
 export const typeDefs = `#graphql
+  scalar JSON
+
   type ExecutiveOrder {
     number: String
     title: String
@@ -7,9 +9,12 @@ export const typeDefs = `#graphql
     url: String
     fullTextUrl: String
     bodyHtmlUrl: String
+    pdfUrl: String
     topics: [String]
     year: Int
     president: String
+    body: String
+    structure: JSON
   }
 
   type Tag {
@@ -180,6 +185,7 @@ export const typeDefs = `#graphql
       perPage: Int
       search: String
       year: Int
+      order: String
     ): ExecutiveOrderPage!
 
     executiveOrder(number: String!): ExecutiveOrder

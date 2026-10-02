@@ -1,5 +1,6 @@
 import axios from 'axios';
 import NodeCache from 'node-cache';
+import { GraphQLScalarType } from 'graphql';
 import { NATURAL_COURTS } from './naturalCourts.js';
 import { CONGRESSES } from './congresses.js';
 import { pool } from './db.js';
@@ -129,6 +130,7 @@ function mapOrder(doc) {
     url: doc.html_url || null,
     fullTextUrl: doc.full_text_xml_url || doc.raw_text_url || null,
     bodyHtmlUrl: doc.body_html_url || null,
+    pdfUrl: doc.pdf_url || null,
     topics: doc.topics || [],
     year: date ? parseInt(date.split('-')[0]) : null,
     president: doc.president?.identifier || (typeof doc.president === 'string' ? doc.president : null),
@@ -136,9 +138,16 @@ function mapOrder(doc) {
 }
 
 export const resolvers = {
+  JSON: new GraphQLScalarType({
+    name: 'JSON',
+    description: 'Arbitrary JSON value, passed through as stored.',
+  }),
+
   Query: {
-    executiveOrders: async (_, { president, documentType = 'executive_order', page = 1, perPage = 20, search, year }) => {
-      const cacheKey = `eos:${president || 'all'}:${documentType}:${page}:${perPage}:${search || ''}:${year || ''}`;
+    executiveOrders: async (_, { president, documentType = 'executive_order', page = 1, perPage = 20, search, year, order }) => {
+      // Federal Register sort orders; anything else falls back to oldest first.
+      const sortOrder = ['newest', 'oldest', 'relevance'].includes(order) ? order : 'oldest';
+      const cacheKey = `eos:${president || 'all'}:${documentType}:${page}:${perPage}:${search || ''}:${year || ''}:${sortOrder}`;
       const cached = cache.get(cacheKey);
       if (cached) return cached;
 
@@ -158,7 +167,7 @@ export const resolvers = {
         ],
         per_page: perPage,
         page,
-        order: 'oldest',
+        order: sortOrder,
       };
 
       if (president) {
@@ -195,17 +204,18 @@ export const resolvers = {
         'conditions[presidential_document_type]': 'executive_order',
         'conditions[executive_order_numbers][]': parseInt(number, 10),
         'fields[]': [
-          'executive_order_number', 'title', 'signing_date', 'publication_date',
-          'abstract', 'html_url', 'full_text_xml_url', 'raw_text_url', 'body_html_url', 'topics', 'president',
+          'document_number', 'executive_order_number', 'title', 'signing_date', 'publication_date',
+          'abstract', 'html_url', 'full_text_xml_url', 'raw_text_url', 'body_html_url', 'pdf_url', 'topics', 'president',
         ],
-        per_page: 1,
+        per_page: 5,
       };
 
       const response = await axios.get(BASE_URL, { params });
       const results = response.data.results || [];
       if (!results.length) return null;
 
-      const order = mapOrder(results[0]);
+      // Correction / republication notices (C1-…, R1-…) share the order's number.
+      const order = mapOrder(results.find(r => !/^[CRZ]\d-/.test(r.document_number ?? '')) ?? results[0]);
       cache.set(cacheKey, order);
       return order;
     },
@@ -580,7 +590,7 @@ export const resolvers = {
             'conditions[executive_order_numbers][]': parseInt(num, 10),
             'fields[]': [
               'executive_order_number', 'title', 'signing_date', 'publication_date',
-              'abstract', 'html_url', 'full_text_xml_url', 'raw_text_url', 'body_html_url', 'topics', 'president',
+              'abstract', 'html_url', 'full_text_xml_url', 'raw_text_url', 'body_html_url', 'pdf_url', 'topics', 'president',
             ],
             per_page: 1,
           };
@@ -684,6 +694,46 @@ export const resolvers = {
       const result = mapScotusCase(cluster, opinions, syllabus);
       cache.set(cacheKey, result);
       return result;
+    },
+  },
+
+  ExecutiveOrder: {
+    // Full text from executive_documents (loaded from govinfo). Only runs when a query asks for `body`.
+    body: async (order) => {
+      if (!order.number) return null;
+      try {
+        const { rows } = await pool.query(
+          `SELECT body FROM executive_documents
+            WHERE doc_type = 'executive_order' AND number = $1 AND body IS NOT NULL
+            LIMIT 1`,
+          [order.number]
+        );
+        return rows[0]?.body ?? null;
+      } catch (err) {
+        // The rest of the order comes from the Federal Register, so a database
+        // outage should not take the whole page down.
+        console.error(`executive order ${order.number} body lookup failed:`, err.message);
+        return null;
+      }
+    },
+
+    // Parsed form of the order (sections → items → spans, citations), stored once by
+    // seed/load-executive-order-structure.js and rendered by the client.
+    structure: async (order) => {
+      if (!order.number) return null;
+      try {
+        const { rows } = await pool.query(
+          `SELECT structure FROM executive_documents
+            WHERE doc_type = 'executive_order' AND number = $1 AND structure IS NOT NULL
+              AND (source_id IS NULL OR source_id !~ '^[CR][0-9]-')
+            LIMIT 1`,
+          [order.number]
+        );
+        return rows[0]?.structure ?? null;
+      } catch (err) {
+        console.error(`executive order ${order.number} structure lookup failed:`, err.message);
+        return null;
+      }
     },
   },
 

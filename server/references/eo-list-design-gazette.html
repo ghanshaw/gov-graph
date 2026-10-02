@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Orders — Gazette design (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Gazette: an official journal on warm newsprint. Serif headlines, rules, one red. */
+  :root {
+    --paper: #f7f3ea; --ink: #1d1a16; --muted: #6f675a; --rule: #cfc7b6; --red: #a3231d; --wash: #efe9db;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Newsreader", Georgia, serif; font-size: 18px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .sans { font-family: "Libre Franklin", system-ui, sans-serif; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  /* Masthead */
+  .strip { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .strip nav { display: flex; gap: 20px; overflow-x: auto; white-space: nowrap; }
+  .strip nav a.on { color: var(--red); font-weight: 600; }
+  .strip nav a:hover { color: var(--ink); }
+  .masthead { text-align: center; padding: 30px 0 22px; border-bottom: 4px double var(--ink); }
+  .masthead .kicker { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--red); }
+  .masthead h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin: 10px 0 12px; }
+  .masthead p { font-style: italic; color: var(--muted); margin: 0; }
+  .dateline { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 10px 0; border-bottom: 1px solid var(--ink); }
+  .dateline b { font-weight: 600; }
+
+  /* Index of years + search */
+  .index { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; padding: 16px 0; border-bottom: 1px solid var(--rule); font-family: "Libre Franklin", system-ui, sans-serif; font-size: 13px; }
+  .index .years { display: flex; gap: 16px; flex-wrap: wrap; }
+  .index .years a { color: var(--muted); padding-bottom: 2px; border-bottom: 2px solid transparent; }
+  .index .years a sup { font-size: 9.5px; margin-left: 2px; }
+  .index .years a.on { color: var(--ink); font-weight: 600; border-bottom-color: var(--red); }
+  .index .years a:hover { color: var(--ink); }
+  .index input { margin-left: auto; font: inherit; background: transparent; border: 0; border-bottom: 1px solid var(--ink); padding: 4px 2px; min-width: 220px; outline: none; color: var(--ink); }
+  .index input::placeholder { color: var(--muted); font-style: italic; font-family: "Newsreader", Georgia, serif; font-size: 15px; }
+  .index .sort { color: var(--muted); }
+  .index .sort b { color: var(--ink); font-weight: 600; }
+
+  /* Front page */
+  .front { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 0; border-bottom: 1px solid var(--ink); }
+  .lead { padding: 30px 36px 32px 0; border-right: 1px solid var(--rule); }
+  .side { padding: 30px 0 32px 36px; }
+  .label { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+  .meta { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 12px; letter-spacing: 0.04em; color: var(--muted); }
+  .lead h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); font-weight: 600; line-height: 1.14; letter-spacing: -0.012em; margin: 10px 0 14px; }
+  .lead p { color: var(--muted); margin: 0 0 16px; max-width: 34em; }
+  .lead .read { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 13px; font-weight: 600; border-bottom: 2px solid var(--red); padding-bottom: 1px; }
+  .side article { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .side article:first-of-type { padding-top: 8px; }
+  .side article:last-child { border-bottom: 0; padding-bottom: 0; }
+  .side h3 { font-size: 1.16rem; font-weight: 600; line-height: 1.25; margin: 3px 0 0; }
+  a:hover h2, a:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+  /* Columns */
+  .section-head { display: flex; align-items: baseline; gap: 14px; padding: 26px 0 6px; }
+  .section-head h2 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+  .section-head span { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .columns { columns: 3; column-gap: 36px; column-rule: 1px solid var(--rule); padding-bottom: 12px; }
+  .entry { break-inside: avoid; display: block; padding: 13px 0; border-top: 1px solid var(--rule); }
+  .entry .no { font-family: "Libre Franklin", system-ui, sans-serif; font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; color: var(--red); }
+  .entry h3 { font-size: 1.08rem; font-weight: 500; line-height: 1.28; margin: 2px 0 3px; }
+
+  .pager { display: flex; justify-content: center; gap: 22px; align-items: baseline; padding: 26px 0 70px; margin-top: 18px; border-top: 4px double var(--ink); font-family: "Libre Franklin", system-ui, sans-serif; font-size: 13px; color: var(--muted); }
+  .pager a.on { color: var(--ink); font-weight: 700; border-bottom: 2px solid var(--red); }
+  .pager a:hover { color: var(--ink); }
+
+  @media (max-width: 880px) {
+    .front { grid-template-columns: 1fr; }
+    .lead { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+    .side { padding-left: 0; }
+    .columns { columns: 2; }
+    .index input { margin-left: 0; flex: 1; }
+  }
+  @media (max-width: 560px) { .columns { columns: 1; } body { font-size: 17px; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="strip">
+      <span>GovLens · Public Records</span>
+      <nav>
+        <a class="on" href="#">Presidents</a><a href="#">Executive Orders</a><a href="#">Supreme Court</a><a href="#">Congress</a>
+        <a href="#">Timeline</a><a href="#">Corpus</a><a href="#">Case Graph</a><a href="#">Sources</a><a href="#">Tags</a>
+      </nav>
+    </div>
+
+    <header class="masthead">
+      <div class="kicker">Barack Obama · 44th President</div>
+      <h1>Executive Orders</h1>
+      <p>A complete record of every executive order, as published in the Federal Register.</p>
+    </header>
+    <div class="dateline">
+      <span><b>294</b> documents</span>
+      <span>January 21, 2009 — January 17, 2017</span>
+      <span>Orders <b>13489</b> to <b>13764</b></span>
+    </div>
+
+    <div class="index">
+      <div class="years">
+        <a class="on" href="#">All years</a>
+        <a href="#">2017<sup>7</sup></a><a href="#">2016<sup>45</sup></a><a href="#">2015<sup>29</sup></a><a href="#">2014<sup>34</sup></a><a href="#">2013<sup>23</sup></a>
+        <a href="#">2012<sup>40</sup></a><a href="#">2011<sup>34</sup></a><a href="#">2010<sup>40</sup></a><a href="#">2009<sup>42</sup></a>
+      </div>
+      <span class="sort"><b>Newest first</b> · Oldest first</span>
+      <input type="text" placeholder="Search the orders…">
+    </div>
+
+    <div class="front">
+      <a class="lead" href="http://localhost:9000/barack-obama/executive-orders/eo/13764">
+        <span class="label">Latest order · No. 13764</span>
+        <h2>Amending the Civil Service Rules To Modernize the Executive Branch-Wide Governance Structure and Processes for Security Clearances</h2>
+        <p>Also amends Executive Order 13488 and Executive Order 13467, covering suitability and fitness for employment, credentialing, and related matters.</p>
+        <div class="meta" style="margin-bottom: 16px;">Signed January 17, 2017</div>
+        <span class="read">Read the order →</span>
+      </a>
+      <div class="side">
+        <span class="label">Also this month</span>
+        <a href="http://localhost:9000/barack-obama/executive-orders/eo/13761"><article><span class="meta">No. 13761 · January 13, 2017</span><h3>Recognizing Positive Actions by the Government of Sudan and Providing for the Revocation of Certain Sudan-Related Sanctions</h3></article></a>
+        <a href="http://localhost:9000/barack-obama/executive-orders/eo/13759"><article><span class="meta">No. 13759 · January 12, 2017</span><h3>Designating the World Organisation for Animal Health as a Public International Organization</h3></article></a>
+        <a href="http://localhost:9000/barack-obama/executive-orders/eo/13758"><article><span class="meta">No. 13758 · January 12, 2017</span><h3>Amending Executive Order 11016 To Update Eligibility Criteria for Award of the Purple Heart</h3></article></a>
+      </div>
+    </div>
+
+    <div class="section-head"><h2>2017</h2><span>7 orders</span></div>
+    <div class="columns">
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13763"><span class="no">No. 13763</span><h3>Providing an Order of Succession Within the Environmental Protection Agency</h3><span class="meta">January 13, 2017</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13762"><span class="no">No. 13762</span><h3>Providing an Order of Succession Within the Department of Justice</h3><span class="meta">January 13, 2017</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13760"><span class="no">No. 13760</span><h3>Exclusions From the Federal Labor-Management Relations Program</h3><span class="meta">January 12, 2017</span></a>
+    </div>
+
+    <div class="section-head"><h2>2016</h2><span>45 orders</span></div>
+    <div class="columns">
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13757"><span class="no">No. 13757</span><h3>Taking Additional Steps to Address the National Emergency With Respect to Significant Malicious Cyber-Enabled Activities</h3><span class="meta">December 28, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13756"><span class="no">No. 13756</span><h3>Adjustments of Certain Rates of Pay</h3><span class="meta">December 27, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13755"><span class="no">No. 13755</span><h3>Providing an Order of Succession Within the Department of Labor</h3><span class="meta">December 23, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13754"><span class="no">No. 13754</span><h3>Northern Bering Sea Climate Resilience</h3><span class="meta">December 9, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13753"><span class="no">No. 13753</span><h3>Amending the Order of Succession in the Department of Homeland Security</h3><span class="meta">December 9, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13752"><span class="no">No. 13752</span><h3>Relating to the Implementation of the Convention on the International Recovery of Child Support and Other Forms of Family Maintenance</h3><span class="meta">December 8, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13751"><span class="no">No. 13751</span><h3>Safeguarding the Nation From the Impacts of Invasive Species</h3><span class="meta">December 5, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13748"><span class="no">No. 13748</span><h3>Establishing a Community Solutions Council</h3><span class="meta">November 16, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13747"><span class="no">No. 13747</span><h3>Advancing the Global Health Security Agenda To Achieve a World Safe and Secure From Infectious Disease Threats</h3><span class="meta">November 4, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13744"><span class="no">No. 13744</span><h3>Coordinating Efforts To Prepare the Nation for Space Weather Events</h3><span class="meta">October 13, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13743"><span class="no">No. 13743</span><h3>Charitable Fundraising</h3><span class="meta">October 13, 2016</span></a>
+      <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13742"><span class="no">No. 13742</span><h3>Termination of Emergency With Respect to the Actions and Policies of the Government of Burma</h3><span class="meta">October 7, 2016</span></a>
+    </div>
+
+    <div class="pager">
+      <span>Page</span><a class="on" href="#">1</a><a href="#">2</a><a href="#">3</a><span>…</span><a href="#">15</a><a href="#">Next →</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client/core';
 
 export const GET_EXECUTIVE_ORDERS = gql`
-  query GetExecutiveOrders($president: String, $documentType: String, $page: Int, $perPage: Int, $search: String, $year: Int) {
-    executiveOrders(president: $president, documentType: $documentType, page: $page, perPage: $perPage, search: $search, year: $year) {
+  query GetExecutiveOrders($president: String, $documentType: String, $page: Int, $perPage: Int, $search: String, $year: Int, $order: String) {
+    executiveOrders(president: $president, documentType: $documentType, page: $page, perPage: $perPage, search: $search, year: $year, order: $order) {
       orders {
         number
         title
@@ -36,8 +36,11 @@ export const GET_EXECUTIVE_ORDER = gql`
       url
       fullTextUrl
       bodyHtmlUrl
+      pdfUrl
       topics
       year
+      body
+      structure
     }
   }
 `;

@@ -17,6 +17,11 @@ const PRESIDENTS = [
   { label: 'Trump (47th)', value: 'donald-trump-47' },
 ];
 
+const SORTS = [
+  { label: 'Newest first', value: 'newest' },
+  { label: 'Oldest first', value: 'oldest' },
+];
+
 // Map app slug → Federal Register API slug for the query variable
 const SLUG_TO_API = {
   'barack-obama': 'barack-obama',
@@ -61,6 +66,7 @@ export default function ExecutiveOrders() {
   const [debouncedSearch, setDebouncedSearch] = useDebounce('', 400);
   const [year, setYear] = useState(null);
   const [president, setPresident] = useState(null);
+  const [sort, setSort] = useState('newest');
 
   const handleSearch = (val) => {
     setSearchInput(val);
@@ -78,6 +84,11 @@ export default function ExecutiveOrders() {
     setPage(1);
   };
 
+  const handleSort = (val) => {
+    setSort(val);
+    setPage(1);
+  };
+
   const { data, loading, error } = useQuery(GET_EXECUTIVE_ORDERS, {
     variables: {
       president: president || undefined,
@@ -86,6 +97,7 @@ export default function ExecutiveOrders() {
       perPage: PER_PAGE,
       search: debouncedSearch || undefined,
       year: year || undefined,
+      order: sort,
     },
   });
 
@@ -268,21 +280,68 @@ export default function ExecutiveOrders() {
         </div>
       </div>
 
-      {/* Result count */}
-      {!loading && !error && (
+      {/* Result count and sort */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '1rem',
+        flexWrap: 'wrap',
+        minHeight: '2rem',
+        marginBottom: '1.5rem',
+      }}>
         <div style={{
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '0.7rem',
           color: 'var(--text-muted)',
-          marginBottom: '1.5rem',
           letterSpacing: '0.05em',
         }}>
-          {totalCount.toLocaleString()} found
-          {debouncedSearch && ` matching "${debouncedSearch}"`}
-          {year && ` in ${year}`}
-          {president && ` · ${PRESIDENTS.find(p => p.value === president)?.label}`}
+          {!loading && !error && (
+            <>
+              {totalCount.toLocaleString()} found
+              {debouncedSearch && ` matching "${debouncedSearch}"`}
+              {year && ` in ${year}`}
+              {president && ` · ${PRESIDENTS.find(p => p.value === president)?.label}`}
+            </>
+          )}
         </div>
-      )}
+
+        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '0.65rem',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            marginRight: '0.25rem',
+          }}>Sort</span>
+          {SORTS.map(s => {
+            const isActive = sort === s.value;
+            return (
+              <button
+                key={s.value}
+                onClick={() => handleSort(s.value)}
+                aria-pressed={isActive}
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: '0.7rem',
+                  padding: '6px 12px',
+                  border: isActive ? '1px solid var(--gold)' : '1px solid rgba(201,168,76,0.25)',
+                  borderRadius: '3px',
+                  background: isActive ? 'var(--gold)' : 'transparent',
+                  color: isActive ? 'var(--navy)' : 'var(--text-muted)',
+                  cursor: 'pointer',
+                  fontWeight: isActive ? 600 : 400,
+                  transition: 'all 0.15s ease',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* States */}
       {loading && (
@@ -331,6 +390,7 @@ export default function ExecutiveOrders() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))',
+            gridAutoRows: '1fr',
             gap: '1rem',
           }}>
             {orders.map(order => {

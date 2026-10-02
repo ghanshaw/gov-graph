@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Orders — Ledger daybook design (mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Ledger, daybook variant: one narrow column read by date. Month headings, the day as the row's anchor. */
+  :root {
+    --bg: #fbfaf8; --surface: #ffffff; --text: #1a1814; --muted: #77705f; --rule: #e8e4db;
+    --accent: #b4491f; --accent-soft: #fbeee7;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Inter", system-ui, sans-serif; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* Top bar */
+  .top { border-bottom: 1px solid var(--rule); background: var(--surface); }
+  .top .wrap { max-width: 1080px; display: flex; align-items: center; gap: 32px; height: 54px; }
+  .brand { font-weight: 700; letter-spacing: -0.01em; }
+  .brand span { color: var(--muted); font-weight: 500; }
+  .top nav { display: flex; gap: 22px; font-size: 13.5px; color: var(--muted); overflow-x: auto; white-space: nowrap; }
+  .top nav a.on { color: var(--text); font-weight: 600; }
+  .top nav a:hover { color: var(--text); }
+
+  /* Header */
+  header.page { padding: 48px 0 26px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  h1 { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; margin: 0 0 10px; }
+  .lede { color: var(--muted); margin: 0; }
+  .lede b { color: var(--text); font-weight: 600; }
+
+  /* Controls */
+  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 12px 0; position: sticky; top: 0; background: var(--bg); z-index: 5; border-bottom: 1px solid var(--rule); }
+  .search { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 14px; color: var(--muted); }
+  .search input { border: 0; background: none; font: inherit; color: var(--text); width: 100%; outline: none; }
+  .select { background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 14px; font-size: 13px; color: var(--text); white-space: nowrap; }
+  .select span { color: var(--muted); margin-right: 4px; }
+  .select::after { content: " ▾"; color: var(--muted); font-size: 11px; }
+
+  /* Year strip: one tick per year, sized by count */
+  .strip { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; padding: 18px 0 6px; }
+  .strip a { display: block; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11.5px; color: var(--muted); }
+  .strip i { display: block; height: 4px; border-radius: 2px; background: var(--rule); margin-bottom: 6px; }
+  .strip a.on { color: var(--accent); font-weight: 500; }
+  .strip a.on i { background: var(--accent); }
+  .strip a:hover i { background: var(--muted); }
+  .strip a.on:hover i { background: var(--accent); }
+
+  /* Daybook */
+  .month { display: flex; align-items: baseline; gap: 12px; padding: 30px 0 8px; }
+  .month h2 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
+  .month span { font-size: 13px; color: var(--muted); }
+  .entry { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; gap: 18px; align-items: start; padding: 14px 16px; margin: 0 -16px; border-radius: 12px; }
+  .entry + .entry { border-top: 1px solid var(--rule); border-top-left-radius: 0; border-top-right-radius: 0; }
+  .entry:hover { background: var(--surface); box-shadow: 0 1px 2px rgba(26, 24, 20, 0.05), 0 6px 20px rgba(26, 24, 20, 0.05); border-top-color: transparent; border-radius: 12px; }
+  .entry:hover + .entry { border-top-color: transparent; }
+  .day { text-align: left; line-height: 1.1; }
+  .day b { display: block; font-size: 24px; font-weight: 600; letter-spacing: -0.03em; }
+  .day span { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  /* Later orders on the same day leave the date blank, and don't hold the row open for it. */
+  .day.same { visibility: hidden; height: 0; }
+  .title { font-size: 15.5px; font-weight: 500; line-height: 1.42; padding-top: 2px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .no { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; font-weight: 500; color: var(--accent); background: var(--accent-soft); border-radius: 6px; padding: 3px 8px; margin-top: 2px; white-space: nowrap; }
+
+  .more { display: flex; justify-content: center; padding: 34px 0 72px; }
+  .more a { font-size: 14px; font-weight: 500; border: 1px solid var(--rule); background: var(--surface); border-radius: 999px; padding: 10px 22px; }
+  .more a:hover { border-color: var(--text); }
+  .more a span { color: var(--muted); font-weight: 400; margin-left: 6px; }
+
+  @media (max-width: 560px) {
+    .entry { grid-template-columns: 48px minmax(0, 1fr); }
+    .no { grid-column: 2; justify-self: start; }
+    h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="wrap">
+      <a class="brand" href="#">GovLens <span>Public Records</span></a>
+      <nav>
+        <a class="on" href="#">Presidents</a><a href="#">Executive Orders</a><a href="#">Supreme Court</a><a href="#">Congress</a>
+        <a href="#">Timeline</a><a href="#">Corpus</a><a href="#">Case Graph</a><a href="#">Sources</a><a href="#">Tags</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header class="page">
+      <div class="crumbs"><a href="#">Presidents</a> / <a href="#">Barack Obama</a> / Executive Orders</div>
+      <h1>Executive Orders</h1>
+      <p class="lede"><b>294</b> documents signed by President Barack Obama between 2009 and 2017, from the Federal Register.</p>
+    </header>
+
+    <div class="controls">
+      <label class="search"><span>⌕</span><input type="text" placeholder="Search executive orders…"></label>
+      <span class="select"><span>Sort</span>Newest first</span>
+      <span class="select"><span>View</span>By date</span>
+    </div>
+
+    <div class="strip">
+      <a href="#"><i style="opacity: 0.93"></i>2009 · 42</a>
+      <a href="#"><i style="opacity: 0.89"></i>2010 · 40</a>
+      <a href="#"><i style="opacity: 0.76"></i>2011 · 34</a>
+      <a href="#"><i style="opacity: 0.89"></i>2012 · 40</a>
+      <a href="#"><i style="opacity: 0.51"></i>2013 · 23</a>
+      <a href="#"><i style="opacity: 0.76"></i>2014 · 34</a>
+      <a href="#"><i style="opacity: 0.64"></i>2015 · 29</a>
+      <a href="#"><i></i>2016 · 45</a>
+      <a class="on" href="#"><i style="opacity: 0.4"></i>2017 · 7</a>
+    </div>
+
+    <div class="month"><h2>January 2017</h2><span>7 orders</span></div>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13764"><div class="day"><b>17</b><span>Tue</span></div><div class="title">Amending the Civil Service Rules, Executive Order 13488, and Executive Order 13467 To Modernize the Executive Branch-Wide Governance Structure and Processes for Security Clearances, Suitability and Fitness for Employment, and Credentialing, and Related Matters</div><span class="no">13764</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13763"><div class="day"><b>13</b><span>Fri</span></div><div class="title">Providing an Order of Succession Within the Environmental Protection Agency</div><span class="no">13763</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13762"><div class="day same"><b>13</b><span>Fri</span></div><div class="title">Providing an Order of Succession Within the Department of Justice</div><span class="no">13762</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13761"><div class="day same"><b>13</b><span>Fri</span></div><div class="title">Recognizing Positive Actions by the Government of Sudan and Providing for the Revocation of Certain Sudan-Related Sanctions</div><span class="no">13761</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13760"><div class="day"><b>12</b><span>Thu</span></div><div class="title">Exclusions From the Federal Labor-Management Relations Program</div><span class="no">13760</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13759"><div class="day same"><b>12</b><span>Thu</span></div><div class="title">Designating the World Organisation for Animal Health as a Public International Organization Entitled To Enjoy Certain Privileges, Exemptions, and Immunities</div><span class="no">13759</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13758"><div class="day same"><b>12</b><span>Thu</span></div><div class="title">Amending Executive Order 11016 To Update Eligibility Criteria for Award of the Purple Heart</div><span class="no">13758</span></a>
+
+    <div class="month"><h2>December 2016</h2><span>7 orders</span></div>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13757"><div class="day"><b>28</b><span>Wed</span></div><div class="title">Taking Additional Steps to Address the National Emergency With Respect to Significant Malicious Cyber-Enabled Activities</div><span class="no">13757</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13756"><div class="day"><b>27</b><span>Tue</span></div><div class="title">Adjustments of Certain Rates of Pay</div><span class="no">13756</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13755"><div class="day"><b>23</b><span>Fri</span></div><div class="title">Providing an Order of Succession Within the Department of Labor</div><span class="no">13755</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13754"><div class="day"><b>9</b><span>Fri</span></div><div class="title">Northern Bering Sea Climate Resilience</div><span class="no">13754</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13753"><div class="day same"><b>9</b><span>Fri</span></div><div class="title">Amending the Order of Succession in the Department of Homeland Security</div><span class="no">13753</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13752"><div class="day"><b>8</b><span>Thu</span></div><div class="title">Relating to the Implementation of the Convention on the International Recovery of Child Support and Other Forms of Family Maintenance</div><span class="no">13752</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13751"><div class="day"><b>5</b><span>Mon</span></div><div class="title">Safeguarding the Nation From the Impacts of Invasive Species</div><span class="no">13751</span></a>
+
+    <div class="month"><h2>November 2016</h2><span>5 orders</span></div>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13750"><div class="day"><b>29</b><span>Tue</span></div><div class="title">Providing for the Appointment of Alumni of the Fulbright U.S. Student Program, the Benjamin A. Gilman International Scholarship Program, and the Critical Language Scholarship Program to the Competitive Service</div><span class="no">13750</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13749"><div class="day same"><b>29</b><span>Tue</span></div><div class="title">Providing for the Appointment in the Competitive Service of Certain Employees of the Foreign Service</div><span class="no">13749</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13748"><div class="day"><b>16</b><span>Wed</span></div><div class="title">Establishing a Community Solutions Council</div><span class="no">13748</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13747"><div class="day"><b>4</b><span>Fri</span></div><div class="title">Advancing the Global Health Security Agenda To Achieve a World Safe and Secure From Infectious Disease Threats</div><span class="no">13747</span></a>
+    <a class="entry" href="http://localhost:9000/barack-obama/executive-orders/eo/13746"><div class="day"><b>3</b><span>Thu</span></div><div class="title">Advancing the Goals of the Power Africa Initiative to Expand Access to Electricity in Sub-Saharan Africa Through the Establishment of the President's Power Africa Working Group</div><span class="no">13746</span></a>
+
+    <div class="more"><a href="#">Load earlier orders <span>19 of 294 shown</span></a></div>
+  </div>
+</body>
+</html>

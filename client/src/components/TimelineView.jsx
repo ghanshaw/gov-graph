@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function TimelineView({ orders, slug, docType }) {
+export default function TimelineView({ orders, slug, docType, newestFirst = false }) {
   const byYear = orders.reduce((acc, order) => {
     const y = order.year || 'Unknown';
     if (!acc[y]) acc[y] = [];
@@ -8,7 +8,8 @@ export default function TimelineView({ orders, slug, docType }) {
     return acc;
   }, {});
 
-  const years = Object.keys(byYear).sort((a, b) => a - b);
+  // Orders arrive already sorted; the year groups follow the same direction.
+  const years = Object.keys(byYear).sort((a, b) => (newestFirst ? b - a : a - b));
 
   return (
     <div style={{ position: 'relative', paddingLeft: '2rem' }}>

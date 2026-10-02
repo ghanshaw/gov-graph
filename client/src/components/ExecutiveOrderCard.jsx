@@ -18,13 +18,14 @@ export default function ExecutiveOrderCard({ order, slug, docType, showPresident
   return (
     <Link
       to={`/${slug}/${docType}/eo/${order.number}`}
-      style={{ textDecoration: 'none', display: 'block' }}
+      style={{ textDecoration: 'none', display: 'block', height: '100%' }}
     >
       <article style={{
         background: 'rgba(17,32,64,0.6)',
         border: '1px solid rgba(201,168,76,0.15)',
         borderRadius: '4px',
         padding: '1.5rem',
+        height: '100%',
         transition: 'all 0.2s ease',
         cursor: 'pointer',
         position: 'relative',
@@ -67,12 +68,16 @@ export default function ExecutiveOrderCard({ order, slug, docType, showPresident
               </span>
             )}
             <h2 style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'IBM Plex Sans', sans-serif",
               fontSize: '1.05rem',
               fontWeight: 600,
               color: 'var(--cream)',
               margin: 0,
               lineHeight: 1.35,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
             }}>
               {order.title}
             </h2>

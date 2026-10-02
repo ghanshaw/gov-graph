@@ -1,0 +1,275 @@
+{
+  "doc_type": "executive_order",
+  "number": "14160",
+  "title": "Protecting the Meaning and Value of American Citizenship",
+  "president": {
+    "slug": "donald-trump-47",
+    "name": "Donald J. Trump"
+  },
+  "signed_date": "2025-01-20",
+  "publication": {
+    "date": "2025-01-29",
+    "citation": "90 FR 8449",
+    "volume": 90,
+    "start_page": 8449,
+    "end_page": 8450,
+    "document_number": "2025-02007"
+  },
+  "source": {
+    "name": "federal_register",
+    "html_url": "https://www.federalregister.gov/documents/2025/01/29/2025-02007/protecting-the-meaning-and-value-of-american-citizenship",
+    "body_html_url": "https://www.federalregister.gov/documents/full_text/html/2025/01/29/2025-02007.html",
+    "pdf_url": "https://www.govinfo.gov/content/pkg/FR-2025-01-29/pdf/2025-02007.pdf",
+    "raw_file": "eo-14160-federal-register.html"
+  },
+  "govinfo": {
+    "package_id": "DCPD-202500127",
+    "details_url": "https://www.govinfo.gov/app/details/DCPD-202500127",
+    "category": "U.S. citizenship, protection efforts",
+    "subjects": [
+      "Attorney General",
+      "Citizenship",
+      "Illegal immigration",
+      "Secretary of Homeland Security",
+      "Secretary of State",
+      "Social Security Administration"
+    ],
+    "references": [
+      {
+        "type": "usc",
+        "title": "8",
+        "section": "1401"
+      }
+    ],
+    "raw_file": "eo-14160-govinfo.html"
+  },
+  "preamble": [
+    {
+      "page": 8449,
+      "text": "By the authority vested in me as President by the Constitution and the laws of the United States of America, it is hereby ordered:",
+      "spans": []
+    }
+  ],
+  "sections": [
+    {
+      "number": 1,
+      "title": "Purpose",
+      "id": "sec-1",
+      "items": [
+        {
+          "marker": null,
+          "level": 0,
+          "page": 8449,
+          "text": "The privilege of United States citizenship is a priceless and profound gift. The Fourteenth Amendment states: “All persons born or naturalized in the United States, and subject to the jurisdiction thereof, are citizens of the United States and of the State wherein they reside.” That provision rightly repudiated the Supreme Court of the United States's shameful decision in Dred Scott v. Sandford, 60 U.S. (19 How.) 393 (1857), which misinterpreted the Constitution as permanently excluding people of African descent from eligibility for United States citizenship solely based on their race.",
+          "spans": [
+            {
+              "start": 375,
+              "end": 385,
+              "type": "emphasis",
+              "text": "Dred Scott"
+            },
+            {
+              "start": 389,
+              "end": 398,
+              "type": "emphasis",
+              "text": "Sandford,"
+            }
+          ]
+        },
+        {
+          "marker": null,
+          "level": 0,
+          "page": 8449,
+          "text": "But the Fourteenth Amendment has never been interpreted to extend citizenship universally to everyone born within the United States. The Fourteenth Amendment has always excluded from birthright citizenship persons who were born in the United States but not “subject to the jurisdiction thereof.” Consistent with this understanding, the Congress has further specified through legislation that “a person born in the United States, and subject to the jurisdiction thereof” is a national and citizen of the United States at birth, 8 U.S.C. 1401, generally mirroring the Fourteenth Amendment's text.",
+          "spans": [
+            {
+              "start": 527,
+              "end": 540,
+              "type": "citation",
+              "target": {
+                "type": "usc",
+                "title": "8",
+                "section": "1401"
+              },
+              "href": "https://www.govinfo.gov/link/uscode/8/1401",
+              "text": "8 U.S.C. 1401"
+            }
+          ]
+        },
+        {
+          "marker": null,
+          "level": 0,
+          "page": 8449,
+          "text": "Among the categories of individuals born in the United States and not subject to the jurisdiction thereof, the privilege of United States citizenship does not automatically extend to persons born in the United States: (1) when that person's mother was unlawfully present in the United States and the father was not a United States citizen or lawful permanent resident at the time of said person's birth, or (2) when that person's mother's presence in the United States at the time of said person's birth was lawful but temporary (such as, but not limited to, visiting the United States under the auspices of the Visa Waiver Program or visiting on a student, work, or tourist visa) and the father was not a United States citizen or lawful permanent resident at the time of said person's birth.",
+          "spans": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Policy",
+      "id": "sec-2",
+      "items": [
+        {
+          "marker": "a",
+          "level": 1,
+          "page": 8449,
+          "text": "It is the policy of the United States that no department or agency of the United States government shall issue documents recognizing United States citizenship, or accept documents issued by State, local, or other governments or authorities purporting to recognize United States citizenship, to persons: (1) when that person's mother was unlawfully present in the United States and the person's father was not a United States citizen or lawful permanent resident at the time of said person's birth, or (2) when that person's mother's presence in the United States was lawful but temporary, and the person's father was not a United States citizen or lawful permanent resident at the time of said person's birth.",
+          "spans": []
+        },
+        {
+          "marker": "b",
+          "level": 1,
+          "page": 8449,
+          "text": "Subsection (a) of this section shall apply only to persons who are born within the United States after 30 days from the date of this order.",
+          "spans": []
+        },
+        {
+          "marker": "c",
+          "level": 1,
+          "page": 8449,
+          "text": "Nothing in this order shall be construed to affect the entitlement of other individuals, including children of lawful permanent residents, to obtain documentation of their United States citizenship.",
+          "spans": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Enforcement",
+      "id": "sec-3",
+      "items": [
+        {
+          "marker": "a",
+          "level": 1,
+          "page": 8449,
+          "text": "The Secretary of State, the Attorney General, the Secretary of Homeland Security, and the Commissioner of Social Security shall take all appropriate measures to ensure that the regulations and policies of their respective departments and agencies are consistent with this order, and that no officers, employees, or agents of their respective departments and agencies act, or forbear from acting, in any manner inconsistent with this order.",
+          "spans": []
+        },
+        {
+          "marker": "b",
+          "level": 1,
+          "page": 8450,
+          "text": "The heads of all executive departments and agencies shall issue public guidance within 30 days of the date of this order regarding this order's implementation with respect to their operations and activities.",
+          "spans": [
+            {
+              "start": 80,
+              "end": 120,
+              "type": "deadline",
+              "amount": 30,
+              "unit": "day",
+              "text": "within 30 days of the date of this order"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Definitions",
+      "id": "sec-4",
+      "items": [
+        {
+          "marker": null,
+          "level": 0,
+          "page": 8450,
+          "text": "As used in this order:",
+          "spans": []
+        },
+        {
+          "marker": "a",
+          "level": 1,
+          "page": 8450,
+          "text": "“Mother” means the immediate female biological progenitor.",
+          "spans": [
+            {
+              "start": 1,
+              "end": 7,
+              "type": "defined_term",
+              "text": "Mother"
+            }
+          ]
+        },
+        {
+          "marker": "b",
+          "level": 1,
+          "page": 8450,
+          "text": "“Father” means the immediate male biological progenitor.",
+          "spans": [
+            {
+              "start": 1,
+              "end": 7,
+              "type": "defined_term",
+              "text": "Father"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "General Provisions",
+      "id": "sec-5",
+      "items": [
+        {
+          "marker": "a",
+          "level": 1,
+          "page": 8450,
+          "text": "Nothing in this order shall be construed to impair or otherwise affect:",
+          "spans": []
+        },
+        {
+          "marker": "i",
+          "level": 2,
+          "page": 8450,
+          "text": "the authority granted by law to an executive department or agency, or the head thereof; or",
+          "spans": []
+        },
+        {
+          "marker": "ii",
+          "level": 2,
+          "page": 8450,
+          "text": "the functions of the Director of the Office of Management and Budget relating to budgetary, administrative, or legislative proposals.",
+          "spans": []
+        },
+        {
+          "marker": "b",
+          "level": 1,
+          "page": 8450,
+          "text": "This order shall be implemented consistent with applicable law and subject to the availability of appropriations.",
+          "spans": []
+        },
+        {
+          "marker": "c",
+          "level": 1,
+          "page": 8450,
+          "text": "This order is not intended to, and does not, create any right or benefit, substantive or procedural, enforceable at law or in equity by any party against the United States, its departments, agencies, or entities, its officers, employees, or agents, or any other person.",
+          "spans": []
+        }
+      ]
+    }
+  ],
+  "signature": {
+    "name": "Donald J. Trump",
+    "place": "THE WHITE HOUSE",
+    "date": "January 20, 2025"
+  },
+  "end_matter": {
+    "fr_doc": "FR Doc. 2025-02007",
+    "filed": "Filed 1-28-25; 11:15 am",
+    "billing_code": "Billing code 3395-F4-P"
+  },
+  "citations": [
+    {
+      "type": "usc",
+      "title": "8",
+      "section": "1401",
+      "href": "https://www.govinfo.gov/link/uscode/8/1401",
+      "labels": [
+        "8 U.S.C. 1401"
+      ],
+      "cited_in": [
+        "1"
+      ]
+    }
+  ]
+}
