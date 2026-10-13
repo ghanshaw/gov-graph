@@ -1,5 +1,9 @@
 # Data Sources
 
+Renamed 2026-10-13 to follow `GLOSSARY.md`: the registry's middle level is a **program** (statistics) or
+**collection** (documents), stored in `source_programs`; "dataset" in older entries below means the same. A *series* is
+one date-and-value line (`economic_series`).
+
 ## Status
 In progress (2026-10-13). The registry is built and loaded: 44 organizations, 8 lineage entries, 43 datasets,
 22,797 files (4.3 GB) and all 51,406 economic and demographic series linked to a dataset. `/sources` and
@@ -97,7 +101,7 @@ here. The Abstract's coverage report (`features/statistical-abstract`, Phase 3) 
   prefixes of its files' paths in the data folder (longest wins); `series_sources` names the `source` keys of
   series read from many files (demographic series). Every other series goes by its file (`seriesFile`).
 - `server/lib/sources.js`: vocabularies, `checkSources`, `pathMatcher`, `seriesMatcher`, `urlFromPath`, schema
-  (`source_organizations`, `source_lineage`, `source_datasets`, `source_dataset_organizations`, `source_files`,
+  (`source_organizations`, `source_lineage`, `source_programs`, `source_program_organizations`, `source_files`,
   `economic_series.dataset`). Test `sources.test.js`: the file is sound, every series has a dataset.
 - `server/seed/load-sources.js [--dry-run] [--no-files]`: stores the registry, scans the data folder (sha-256,
   kept until a file's size or time changes; first run about 50 s, then about 40 s), links series. Reports files
@@ -109,7 +113,7 @@ here. The Abstract's coverage report (`features/statistical-abstract`, Phase 3) 
 - `server/sources.js`: `sourceDatasets`, `sourceDataset(slug)` (folders, national series, lineage),
   `sourceFiles(dataset, folder)` (its own query, so opening a folder does not replace the page's dataset in
   Apollo's cache), `sourceVocabulary`. Pages `DataSources.jsx` (filters: publisher kind, terms, fetched by,
-  Statistical Abstract), `SourceDataset.jsx`.
+  Statistical Abstract), `SourceProgram.jsx`.
 
 ## Findings (2026-10-13)
 - **University of Michigan consumer sentiment**: the usage agreement forbids reproducing, distributing or
@@ -133,6 +137,10 @@ here. The Abstract's coverage report (`features/statistical-abstract`, Phase 3) 
 - [x] Fetch log in every downloader; 22,797 files backfilled from the data folder (2026-10-13)
 - [x] Every economic and demographic series linked to its dataset, and set on each store (2026-10-13)
 - [x] `/sources` and `/sources/:slug` from the database, checked in Chrome (2026-10-13)
+
+- [x] Renamed dataset → program (2026-10-13): `source_programs`, `source_program_organizations`, `source_files.program`,
+  `economic_series.program` (tables and columns renamed in place, nothing reloaded), `sources.json` `programs`,
+  GraphQL `SourceProgram`, `/sources/<program>` (`SourceProgram.jsx`); list headings Programs / Collections
 
 ## Todo
 - [ ] Revisit Michigan sentiment and Freddie Mac: both kept for now although their terms forbid republishing (user, 2026-10-13)

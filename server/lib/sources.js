@@ -1,6 +1,6 @@
 // Where GovGraph's data comes from: organizations (who publishes), their lineage (renamed, merged,
-// moved, abolished), datasets (what they publish, the terms, how we get it) and files (what was
-// downloaded). Organizations, lineage and datasets are written by hand in seed/data/sources.json;
+// moved, abolished), programs (what they publish, the terms, how we get it) and files (what was
+// downloaded). Organizations, lineage and programs are written by hand in seed/data/sources.json;
 // files are found in the data folder. Used by seed/load-sources.js, server/sources.js and the test.
 
 import fs from 'fs';
@@ -21,16 +21,17 @@ export const ORGANIZATION_KINDS = {
 };
 export const BRANCHES = ['executive', 'legislative', 'judicial'];
 export const LINEAGE_KINDS = ['renamed', 'merged', 'transferred', 'split', 'abolished'];
-// A classification is a scheme for sorting other data (a codebook of topics), shown on the Structure page.
-export const DATASET_KINDS = { statistics: 'Statistics', documents: 'Documents', classification: 'Classification' };
+// A classification is a scheme for sorting other data (a codebook of topics), shown on the Taxonomies page.
+// A program produces statistics; a collection publishes documents (GLOSSARY.md). Both are rows of source_programs.
+export const PROGRAM_KINDS = { statistics: 'Programs', documents: 'Collections', classification: 'Classifications' };
 export const ROLES = ['publisher', 'producer', 'distributor', 'former-publisher'];
-// What a dataset's terms allow. Federal works are public domain (17 U.S.C. 105); anything else is
+// What a program's terms allow. Federal works are public domain (17 U.S.C. 105); anything else is
 // read on the publisher's site and dated (`checked`).
 export const LICENCES = {
   'public-domain': 'Public domain', 'open-licence': 'Open licence', 'free-with-terms': 'Free, with terms',
   licensed: 'Licensed', unchecked: 'Not checked',
 };
-// How a dataset is fetched, most preferred first.
+// How a program is fetched, most preferred first.
 export const ACCESS = {
   bulk: 'Bulk download', file: 'File', api: 'API', 'api-key': 'API with key', page: 'Web page', archive: 'Internet Archive',
 };
@@ -41,7 +42,7 @@ export const STATUSES = {
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** Every problem in sources.json, as sentences; [] when it is sound. */
-export function checkSources({ organizations, lineage, datasets }) {
+export function checkSources({ organizations, lineage, programs }) {
   const problems = [];
   const orgs = new Set();
   for (const o of organizations) {
@@ -61,13 +62,13 @@ export function checkSources({ organizations, lineage, datasets }) {
     if (!DATE.test(l.date ?? '')) problems.push(`${name}: date must be YYYY-MM-DD`);
     if (l.document && !/^(fr|bill|usc):\S+$/.test(l.document)) problems.push(`${name}: document must be fr:, bill: or usc:`);
   }
-  const slugs = new Set(datasets.map(d => d.slug));
+  const slugs = new Set(programs.map(d => d.slug));
   const prefixes = new Map();
   const seriesSources = new Map();
-  for (const d of datasets) {
-    const name = `dataset ${d.slug}`;
+  for (const d of programs) {
+    const name = `program ${d.slug}`;
     for (const key of ['slug', 'name', 'kind', 'description', 'homepage', 'status']) if (!d[key]) problems.push(`${name}: no ${key}`);
-    if (!DATASET_KINDS[d.kind]) problems.push(`${name}: unknown kind ${d.kind}`);
+    if (!PROGRAM_KINDS[d.kind]) problems.push(`${name}: unknown kind ${d.kind}`);
     if (!STATUSES[d.status]) problems.push(`${name}: unknown status ${d.status}`);
     if (!d.organizations?.some(o => o.role === 'publisher')) problems.push(`${name}: no publisher`);
     for (const o of d.organizations ?? []) {
@@ -105,9 +106,9 @@ export function checkSources({ organizations, lineage, datasets }) {
   return problems;
 }
 
-/** A matcher from a path in the data folder ('download.bls.gov/pub/…') to its dataset's slug: the longest prefix wins. */
-export function pathMatcher(datasets) {
-  const prefixes = datasets.flatMap(d => (d.paths ?? []).map(p => [p, d.slug])).sort((a, b) => b[0].length - a[0].length);
+/** A matcher from a path in the data folder ('download.bls.gov/pub/…') to its program's slug: the longest prefix wins. */
+export function pathMatcher(programs) {
+  const prefixes = programs.flatMap(d => (d.paths ?? []).map(p => [p, d.slug])).sort((a, b) => b[0].length - a[0].length);
   return rel => prefixes.find(([p]) => rel.startsWith(p))?.[1] ?? null;
 }
 
@@ -115,13 +116,13 @@ export function pathMatcher(datasets) {
 export const dataPath = file => path.relative(DATA_DIR, file).split(path.sep).join('/');
 
 /**
- * A matcher from a series (economic_series row or SERIES entry) to its dataset's slug. Series read
+ * A matcher from a series (economic_series row or SERIES entry) to its program's slug. Series read
  * from one file (every SERIES entry) go by that file's path; demographic series, read from many files,
  * by their `source` key (`series_sources`).
  */
-export function seriesMatcher(datasets) {
-  const byPath = pathMatcher(datasets);
-  const bySource = new Map(datasets.flatMap(d => (d.series_sources ?? []).map(s => [s, d.slug])));
+export function seriesMatcher(programs) {
+  const byPath = pathMatcher(programs);
+  const bySource = new Map(programs.flatMap(d => (d.series_sources ?? []).map(s => [s, d.slug])));
   const fileOf = new Map(SERIES.map(s => [s.slug, s]));
   return s => {
     if (bySource.has(s.source)) return bySource.get(s.source);
@@ -185,7 +186,7 @@ export const SCHEMA = `
     notes       TEXT
   );
 
-  CREATE TABLE IF NOT EXISTS source_datasets (
+  CREATE TABLE IF NOT EXISTS source_programs (
     slug              TEXT PRIMARY KEY,       -- 'bls-current-population-survey'
     name              TEXT NOT NULL,
     kind              TEXT NOT NULL,          -- 'statistics' | 'documents' | 'classification'
@@ -200,27 +201,27 @@ export const SCHEMA = `
     access_note       TEXT,
     status            TEXT NOT NULL,          -- 'active' | 'final' | 'discontinued' | 'moved'
     ended             DATE,
-    successor         TEXT,                   -- another dataset's slug
+    successor         TEXT,                   -- another program's slug
     collected         BOOLEAN NOT NULL DEFAULT true,   -- false: listed only (licensed data)
     in_abstract       BOOLEAN,                -- cited in the 2012 Statistical Abstract; null until compared
-    outside_abstract  TEXT,                   -- why a dataset the Abstract does not cite was added
+    outside_abstract  TEXT,                   -- why a program the Abstract does not cite was added
     paths             TEXT[] NOT NULL,        -- prefixes of its files' paths in the data folder
     notes             TEXT,
     position          INT NOT NULL            -- order in sources.json
   );
 
-  CREATE TABLE IF NOT EXISTS source_dataset_organizations (
-    dataset     TEXT NOT NULL REFERENCES source_datasets(slug) ON DELETE CASCADE,
+  CREATE TABLE IF NOT EXISTS source_program_organizations (
+    program     TEXT NOT NULL REFERENCES source_programs(slug) ON DELETE CASCADE,
     org         TEXT NOT NULL REFERENCES source_organizations(slug) ON DELETE CASCADE,
     role        TEXT NOT NULL,                -- 'publisher' | 'producer' | 'distributor' | 'former-publisher'
-    PRIMARY KEY (dataset, org, role)
+    PRIMARY KEY (program, org, role)
   );
 
   -- Every file in the data folder (path relative to it). The checksum is kept until the file's size
   -- or modification time changes.
   CREATE TABLE IF NOT EXISTS source_files (
     path          TEXT PRIMARY KEY,           -- 'download.bls.gov/pub/time.series/ln/ln.series'
-    dataset       TEXT,                       -- null: matches no dataset's paths
+    program       TEXT,                       -- null: matches no program's paths
     size          BIGINT NOT NULL,
     sha256        TEXT NOT NULL,
     modified_at   TIMESTAMPTZ NOT NULL,       -- the file's own time, which is when it was fetched unless copied
@@ -230,7 +231,7 @@ export const SCHEMA = `
     fetched_at    TIMESTAMPTZ,                -- from the fetch log
     scanned_at    TIMESTAMPTZ NOT NULL DEFAULT now()
   );
-  CREATE INDEX IF NOT EXISTS source_files_dataset ON source_files (dataset);
+  CREATE INDEX IF NOT EXISTS source_files_program ON source_files (program);
 
-  ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS dataset TEXT;
+  ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS program TEXT;
 `;

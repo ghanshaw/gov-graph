@@ -19,7 +19,7 @@ import BillDetail from './pages/BillDetail';
 import CorpusBrowser from './pages/CorpusBrowser';
 import CaseGraph from './pages/CaseGraph';
 import DataSources from './pages/DataSources';
-import SourceDataset from './pages/SourceDataset';
+import SourceProgram from './pages/SourceProgram';
 import TagsIndex from './pages/TagsIndex';
 import TagPage from './pages/TagPage';
 import ExecutiveOrders from './pages/ExecutiveOrders';
@@ -33,7 +33,7 @@ import PopulationFile from './pages/PopulationFile';
 import PopulationAcs from './pages/PopulationAcs';
 import Reports from './pages/Reports';
 import ReportDetail from './pages/ReportDetail';
-import Structure from './pages/Structure';
+import Taxonomies from './pages/Taxonomies';
 import './index.css';
 
 export default function App() {
@@ -54,10 +54,11 @@ export default function App() {
           <Route path="/congress/:number/:billType/:billNumber" element={<BillDetail />} />
           <Route path="/corpus" element={<CorpusBrowser />} />
           <Route path="/case-graph" element={<CaseGraph />} />
-          <Route path="/structure" element={<Structure />} />
-          <Route path="/abstract" element={<Navigate to="/structure" replace />} />
+          <Route path="/taxonomies" element={<Taxonomies />} />
+          <Route path="/structure" element={<Navigate to="/taxonomies" replace />} />
+          <Route path="/abstract" element={<Navigate to="/taxonomies" replace />} />
           <Route path="/sources" element={<DataSources />} />
-          <Route path="/sources/:slug" element={<SourceDataset />} />
+          <Route path="/sources/:slug" element={<SourceProgram />} />
           <Route path="/tags" element={<TagsIndex />} />
           <Route path="/tags/:word" element={<TagPage />} />
           <Route path="/executive-orders" element={<ExecutiveOrders />} />

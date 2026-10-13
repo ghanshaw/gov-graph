@@ -1,4 +1,4 @@
-// Printing the source registry (pages/DataSources.jsx, SourceDataset.jsx).
+// Printing the source registry (pages/DataSources.jsx, SourceProgram.jsx).
 
 /** 31959786 → "32.0 MB" */
 export function bytes(n) {
@@ -17,7 +17,7 @@ export const LICENCE_CHIP = {
 // A key is what we want to stop depending on.
 export const accessChip = a => (a === 'api-key' ? 'chip warn' : 'chip');
 
-/** Whether the 2012 Statistical Abstract cites the dataset: true, false or null (not yet compared). */
+/** Whether the 2012 Statistical Abstract cites the program: true, false or null (not yet compared). */
 export const abstractLabel = inAbstract =>
   inAbstract === true ? 'In the Statistical Abstract' : inAbstract === false ? 'Not in the Statistical Abstract' : 'Not yet compared';
 

@@ -124,7 +124,7 @@ export const GET_SERIES_LIST = gql`
   }
 `;
 
-// The same list with each series' dimensions, and the vocabulary they are labelled in (DatasetBuilder).
+// The same list with each series' dimensions, and the vocabulary they are labelled in (SeriesBuilder).
 export const GET_SERIES_DIMENSIONS = gql`
   query GetSeriesDimensions {
     seriesDimensionVocabulary
@@ -663,25 +663,25 @@ export const GET_ACS_TABLE = gql`
   }
 `;
 
-// Where the data comes from (server/sources.js): every dataset, and one with its files and series.
-const SOURCE_DATASET_FIELDS = `
+// Where the data comes from (server/sources.js): every program, and one with its files and series.
+const SOURCE_PROGRAM_FIELDS = `
   slug name kind kindLabel description homepage licence licenceLabel licenceDetail
   accessUsed accessBest accessKey accessContact accessNote status statusLabel ended successor successorName
   collected inAbstract outsideAbstract notes fileCount fileBytes lastModified seriesCount
   organizations { role organization { slug name shortName kind kindLabel branch parent parentName url notes } }
 `;
 
-export const GET_SOURCE_DATASETS = gql`
-  query GetSourceDatasets {
-    sourceDatasets { ${SOURCE_DATASET_FIELDS} }
+export const GET_SOURCE_PROGRAMS = gql`
+  query GetSourcePrograms {
+    sourcePrograms { ${SOURCE_PROGRAM_FIELDS} }
     sourceVocabulary
   }
 `;
 
-export const GET_SOURCE_DATASET = gql`
-  query GetSourceDataset($slug: String!) {
-    sourceDataset(slug: $slug) {
-      ${SOURCE_DATASET_FIELDS}
+export const GET_SOURCE_PROGRAM = gql`
+  query GetSourceProgram($slug: String!) {
+    sourceProgram(slug: $slug) {
+      ${SOURCE_PROGRAM_FIELDS}
       paths
       lineage { from fromName to toName date kind citation document href notes }
       folders(limit: 200) { path count bytes lastModified }
@@ -692,7 +692,7 @@ export const GET_SOURCE_DATASET = gql`
 `;
 
 export const GET_SOURCE_FILES = gql`
-  query GetSourceFiles($dataset: String!, $folder: String, $limit: Int) {
-    sourceFiles(dataset: $dataset, folder: $folder, limit: $limit) { path size sha256 modifiedAt url urlInferred archive fetchedAt }
+  query GetSourceFiles($program: String!, $folder: String, $limit: Int) {
+    sourceFiles(program: $program, folder: $folder, limit: $limit) { path size sha256 modifiedAt url urlInferred archive fetchedAt }
   }
 `;

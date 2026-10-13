@@ -1,29 +1,31 @@
 #!/usr/bin/env node
 /**
- * Build the Statistical Abstract's structure for the Structure page from the book itself (2012-statab.pdf in the data
+ * Build the Statistical Abstract's taxonomy for the Taxonomies page from the book itself (2012-statab.pdf in the data
  * folder): the contents (pages vii–x) give the sections, subsections, table ranges, pages and appendices; each
  * section's opening page gives its code (the section number) and its description (the first paragraph of its
  * introduction, "This section presents …"). Subsections have neither in the book.
- *   → server/seed/data/structures/statistical-abstract.json
+ *   → server/seed/data/taxonomies/statistical-abstract.json
  *
  * The downloaded PDF prints Education's pages (145–192) twice and ends at page 876, so a printed page after 192 is
  * 64 file pages on, not 16. Each section's page is checked to open with "Section N".
  *
  * Usage:
- *   node server/seed/build-abstract-structure.js [--dry-run]
+ *   node server/seed/build-abstract-taxonomy.js [--dry-run] [--allow-removing]
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { writeTaxonomy } from '../lib/taxonomies.js';
 import { DATA_DIR } from '../lib/data-dir.js';
 
 const PDF = path.join(DATA_DIR, 'www2.census.gov/library/publications/2011/compendia/statab/131ed/2012-statab.pdf');
-const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', 'structures', 'statistical-abstract.json');
+const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', 'taxonomies', 'statistical-abstract.json');
 const CONTENTS = [6, 7, 8, 9]; // file pages of the contents, printed vii–x
 const filePage = printed => printed + (printed <= 192 ? 16 : 64);
 const dryRun = process.argv.includes('--dry-run');
+const allowRemoving = process.argv.includes('--allow-removing');
 
 const slug = text => text.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -125,7 +127,7 @@ async function run() {
       children: s.subsections.map(sub => ({ id: `${slug(s.title)}/${slug(sub.title)}`, name: sub.title, page: sub.page })),
     });
   }
-  const structure = {
+  const taxonomy = {
     id: 'statistical-abstract',
     name: 'Statistical Abstract',
     basis: 'Follows the sections and subsections of the Statistical Abstract of the United States, 2012.',
@@ -134,7 +136,7 @@ async function run() {
       title: 'Statistical Abstract of the United States: 2012 (131st edition), U.S. Census Bureau',
       url: 'https://www.census.gov/library/publications/2011/compendia/statab/131ed.html',
       read: new Date().toISOString().slice(0, 10),
-      dataset: 'statistical-abstract',
+      program: 'statistical-abstract',
       note: 'Read from 2012-statab.pdf in the data folder: the contents (pages vii–x), and each section’s opening paragraph as its description. A section’s code is its number; the book does not number subsections. Page numbers are as printed. That PDF prints Education twice and ends at page 876.',
     },
     categories,
@@ -145,9 +147,9 @@ async function run() {
   const subsections = categories.reduce((n, c) => n + c.children.length, 0);
   console.log(`${categories.length} sections, ${subsections} subsections, ${appendices.length} appendices; index p. ${indexPage}`);
   if (sections.length !== 30 || sections.at(-1).tables[1] !== 1406) throw new Error('The contents did not read as 30 sections and 1,406 tables');
-  if (dryRun) return;
-  fs.writeFileSync(OUT, `${JSON.stringify(structure, null, 2)}\n`);
-  console.log(`  → ${path.relative(process.cwd(), OUT)}`);
+  // Category ids never change once made: the file's existing ids are kept (lib/taxonomies.js, keepIds).
+  writeTaxonomy(OUT, taxonomy, { allowRemoving, dryRun });
+  if (!dryRun) console.log(`  → ${path.relative(process.cwd(), OUT)}`);
 }
 
 run().catch(err => {

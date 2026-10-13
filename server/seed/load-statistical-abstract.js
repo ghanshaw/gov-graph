@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * Store the 2012 Statistical Abstract's sections, subsections and tables (features/statistical-abstract, Phase 2),
+ * Store the 2012 Statistical Abstract's sections and tables (features/statistical-abstract, Phase 2),
  * read from what seed/fetch-statistical-abstract.js saved: the section pages say which tables there are and under
- * which subsection; each table's file gives its headnote, column heads, row labels, footnotes and source note.
+ * which heading of the website (`web_group`); each table's file gives its headnote, column heads, row labels, footnotes and source note.
  *
  *   node --env-file=server/.env server/seed/load-statistical-abstract.js [--dry-run] [--json out.json]
  *
  * Re-running replaces every row. A table whose file is missing or unreadable is stored from its page alone, with
  * `read_error` saying why. The report compares each section's tables with the range the book's contents give
- * (seed/data/structures/statistical-abstract.json).
+ * (seed/data/taxonomies/statistical-abstract.json).
  */
 
 import fs from 'fs';
@@ -24,22 +24,22 @@ const arg = name => {
 const DRY_RUN = process.argv.includes('--dry-run');
 const JSON_OUT = arg('--json');
 
-const book = JSON.parse(fs.readFileSync(new URL('./data/structures/statistical-abstract.json', import.meta.url), 'utf8'));
+const book = JSON.parse(fs.readFileSync(new URL('./data/taxonomies/statistical-abstract.json', import.meta.url), 'utf8'));
 const bookSection = new Map(book.categories.map(c => [Number(c.code), c]));
 
 const { sections } = readSavedPages();
 const tables = [];
 const problems = [];
 for (const s of sections) {
-  for (const sub of s.subsections) {
+  for (const sub of s.groups) {
     for (const t of sub.tables) {
-      // A few tables are listed under two subsections (587, 868); the first in book order keeps them.
+      // A few tables are listed under two of the website's headings (587, 868); the first in book order keeps them.
       if (tables.some(x => x.number === t.number && x.suffix === t.suffix)) {
         problems.push(`${t.number}${t.suffix}: listed again under "${sub.name}"; kept under the first`);
         continue;
       }
       const file = mirrorFile(t.url);
-      const row = { id: `${t.number}${t.suffix}`, number: t.number, suffix: t.suffix, section: s.number, subsection: sub.position, title: t.title, url: t.url, path: path.relative(DATA_DIR, file).split(path.sep).join('/') };
+      const row = { id: `${t.number}${t.suffix}`, number: t.number, suffix: t.suffix, section: s.number, web_group: sub.name ?? s.name, title: t.title, url: t.url, path: path.relative(DATA_DIR, file).split(path.sep).join('/') };
       if (!fs.existsSync(file)) row.read_error = 'not downloaded';
       else {
         try {
@@ -63,7 +63,7 @@ for (const s of sections) {
 }
 
 // Report: per section, tables on the page against the book's range.
-console.log(`${sections.length} sections, ${sections.reduce((n, s) => n + s.subsections.length, 0)} subsections, ${tables.length} tables`);
+console.log(`${sections.length} sections, ${sections.reduce((n, s) => n + s.groups.length, 0)} groups, ${tables.length} tables`);
 for (const s of sections) {
   const mine = tables.filter(t => t.section === s.number);
   const range = bookSection.get(s.number)?.tables;
@@ -80,7 +80,7 @@ if (problems.length > 40) console.log(`  … ${problems.length - 40} more`);
 if (JSON_OUT) fs.writeFileSync(JSON_OUT, JSON.stringify({ sections, tables }, null, 1));
 if (DRY_RUN) process.exit(0);
 
-const COLUMNS = ['id', 'number', 'suffix', 'section', 'subsection', 'title', 'url', 'path', 'file_title', 'description', 'headnote',
+const COLUMNS = ['id', 'number', 'suffix', 'section', 'web_group', 'title', 'url', 'path', 'file_title', 'description', 'headnote',
   'column_heads', 'stub', 'symbols', 'footnotes', 'notes', 'source', 'more_info', 'released', 'first_year', 'last_year',
   'year_count', 'by_state', 'row_count', 'column_count', 'read_error'];
 const JSONB = new Set(['column_heads', 'stub']);
@@ -88,15 +88,12 @@ const JSONB = new Set(['column_heads', 'stub']);
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 const client = await pool.connect();
 try {
+  await client.query('DROP TABLE IF EXISTS statab_tables');
   await client.query(SCHEMA);
-  await client.query('ALTER TABLE statab_tables ADD COLUMN IF NOT EXISTS year_count INT, ADD COLUMN IF NOT EXISTS by_state BOOLEAN');
   await client.query('BEGIN');
   await client.query('DELETE FROM statab_sections');
   for (const s of sections) {
     await client.query('INSERT INTO statab_sections (number, slug, name, url) VALUES ($1, $2, $3, $4)', [s.number, s.slug, s.name, s.url]);
-    for (const sub of s.subsections) {
-      await client.query('INSERT INTO statab_subsections (section, position, name) VALUES ($1, $2, $3)', [s.number, sub.position, sub.name ?? s.name]);
-    }
   }
   for (let i = 0; i < tables.length; i += 200) {
     const { sql, params } = valuesClause(tables.slice(i, i + 200).map(t => COLUMNS.map(c => (JSONB.has(c) && t[c] != null ? JSON.stringify(t[c]) : t[c] ?? null))));

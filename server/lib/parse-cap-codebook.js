@@ -1,8 +1,8 @@
 /**
  * The Comparative Agendas Project's Master Topics Codebook page (comparativeagendas.net/pages/master-codebook)
- * → a category structure (server/seed/data/structures/, shown on the Structure page): major topics, each with
+ * → a taxonomy (server/seed/data/taxonomies/, shown on the Taxonomies page): major topics, each with
  * its subtopics, as the page prints them. Licensed CC BY-NC-SA 4.0 (sources.json, `cap-master-codebook`), so the
- * structure file carries the same licence.
+ * taxonomy file carries the same licence.
  *
  *   { id, name, basis, levels, source, licence, categories: [{ id, code, name, children: [{ id, code, name,
  *     description, see_also?, note? }] }] }
@@ -54,8 +54,8 @@ export function parseCapCodebook(html) {
   return { version, date, topics };
 }
 
-/** The structure file for the Structure page, from a parse and where the page came from. */
-export function capStructure({ version, date, topics }, { url, fetched }) {
+/** The taxonomy file for the Taxonomies page, from a parse and where the page came from. */
+export function capTaxonomy({ version, date, topics }, { url, fetched }) {
   const subtopics = topics.reduce((n, t) => n + t.children.length, 0);
   return {
     id: 'comparative-agendas',
@@ -67,7 +67,7 @@ export function capStructure({ version, date, topics }, { url, fetched }) {
       citation: 'Jones, Bryan D., Frank R. Baumgartner, Sean M. Theriault, Derek A. Epp, Shruti Khandekar, Daniel Little. 2025. Policy Agendas Project: Codebook.',
       url,
       read: fetched,
-      dataset: 'cap-master-codebook',
+      program: 'cap-master-codebook',
       note: `The codebook says 220 subtopics; the page lists ${subtopics}.`,
     },
     licence: 'CC BY-NC-SA 4.0 (© Comparative Agendas Project). This file is derived from the codebook and shared under the same licence.',

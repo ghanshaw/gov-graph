@@ -2,7 +2,7 @@
 
 ## Status
 Phase 2 (2026-10-13): every section page and table file fetched and read into `statab_*` tables. The source
-registry is `features/data-sources`; the book's own contents are a category structure (`features/category-breakdowns`).
+registry is `features/data-sources`; the book's own contents are a category structure (`features/taxonomies`).
 
 ## Goal
 Use the **Statistical Abstract of the United States, 2012** (131st edition, the last the Census Bureau published;
@@ -31,7 +31,7 @@ it ended the program on October 1, 2011) as the foundation for all the data GovG
 
 ## Where a series sits (`placement`)
 > Superseded 2026-10-13: placement is now the **measure's**, per structure, with `table` or `judgement`; see
-> `features/category-breakdowns` (Measures and placements). The table below is kept for the reasoning.
+> `features/taxonomies` (Measures and placements). The table below is kept for the reasoning.
 
 | Value | Meaning | Recorded with it |
 |---|---|---|
@@ -62,7 +62,7 @@ Phase 2's downloads go through `recordFetch` and become files of the `statistica
 - Read each table (`server/lib/statab.js`, test `statab.test.js` against copies in `server/references/statab-*`):
   number, title, headnote, column heads, row labels with depth, symbols, footnotes, notes, source note, "For more
   information" links, release date, years named (range and count), whether the rows are the states.
-- Store as `statab_sections`, `statab_subsections` (as the web pages group the tables), `statab_tables`
+- Store as `statab_sections` and `statab_tables` (the website's heading as `web_group`)
   (`server/seed/load-statistical-abstract.js [--dry-run] [--json out.json]`).
 
 What the pages and files showed (2026-10-13):
@@ -87,7 +87,7 @@ What the pages and files showed (2026-10-13):
 
 ### Phase 4 — the catalogue in the Abstract's order
 - Give every current series its subsection and `placement`.
-- The timeline's catalogue (`DatasetSearch.jsx`) groups by section → subsection instead of the Economy tabs, with
+- The timeline's catalogue (`SeriesSearch.jsx`) groups by section → subsection instead of the Economy tabs, with
   the wanted tables shown as not yet here.
 
 ### Phase 5 — collecting, section by section
@@ -98,7 +98,7 @@ What the pages and files showed (2026-10-13):
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
-  `features/dataset-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
+  `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
   rebuild them as sections? Leaning: keep the tabs for now.
 - **Snapshot tables.** Many tables are one year broken down by something ("Arrests by Sex and Age: 2009"). Their
   publishers usually print a new one each year. Show them as series of yearly snapshots by place or group, or as
@@ -111,23 +111,23 @@ What the pages and files showed (2026-10-13):
 ## Done
 - [x] Discussed and agreed the approach (2026-10-13)
 - [x] Downloaded the 2012 edition's PDF (2026-10-13)
-- [x] Section pages and all 1,396 table files fetched, read and stored (`statab_sections`, `statab_subsections`,
-  `statab_tables`) (2026-10-13)
+- [x] Section pages and all 1,396 table files fetched, read and stored (`statab_sections`, `statab_tables`) (2026-10-13)
 - [x] `server/lib/xls.js`: RK numbers with the top bit set (negative doubles) no longer throw (2026-10-13)
-- [x] Page for the book's structure (first `/abstract`, nav "Abstract"; now the Structure page, `/structure`): the book's structure as its contents print it, 30 sections, 147 subsections,
-  table ranges, printed page numbers and the appendices, with a find field. Data now in `server/seed/data/structures/statistical-abstract.json`,
+- [x] Page for the book's structure (first `/abstract`, nav "Abstract"; now the Structure page, `/taxonomies`): the book's structure as its contents print it, 30 sections, 147 subsections,
+  table ranges, printed page numbers and the appendices, with a find field. Data now in `server/seed/data/taxonomies/statistical-abstract.json`,
   read from the PDF's contents pages (vii–x); not tied to GovGraph's data and no database tables (user, 2026-10-13).
   The downloaded PDF prints Education's pages twice and ends at page 876 (no appendices), so the page gives printed
   page numbers and does not link into it (2026-10-13)
 - [x] A second view on `/abstract`, "Categories" (`?view=categories`): the same subjects as nested, folding categories
   with no section numbers, tables, pages or appendices. Category breakdowns are their own concept
-  (see `features/category-breakdowns`, which now tracks the Structure page) (user, 2026-10-13)
+  (see `features/taxonomies`, which now tracks the Structure page) (user, 2026-10-13)
 
 ## Todo
 - [x] Phase 1: source registry built and loaded (`features/data-sources`, 2026-10-13)
 - [x] Phase 2: fetch and read the section pages and table files (2026-10-13)
-- [ ] Map web subsections to the book's subsections (by the tables' printed pages, from the section PDFs)
-- [ ] Show the tables somewhere (on `/sources/statistical-abstract`, or under each category on `/structure`)
+- [ ] Map each table to the book's subsection (by its printed page, from the section PDFs): the evidence for placements
+- [x] Tables are evidence, never shown as data (user, 2026-10-13): no page of their own
+- [x] `statab_subsections` dropped for a `web_group` column: the website's headings are not the book's subsections (2026-10-13)
 - [ ] Phase 3: source notes → datasets; coverage report
 - [ ] Phase 4: placement for every current series; catalogue by section (the catalogue's Build tab is by section since
   2026-10-13, the 27 measures placed by judgement in `placements.json`; Phase 4 turns them into `table`)

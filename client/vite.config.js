@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  // Hand-written data shared with the server (category structures) lives in server/seed/data.
+  // Hand-written data shared with the server (taxonomies) lives in server/seed/data.
   resolve: {
     alias: { '@data': fileURLToPath(new URL('../server/seed/data', import.meta.url)) },
   },

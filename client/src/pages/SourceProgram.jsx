@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
-import { GET_SOURCE_DATASET, GET_SOURCE_FILES } from '../queries';
+import { GET_SOURCE_PROGRAM, GET_SOURCE_FILES } from '../queries';
 import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
 import { RailGroup, Fact } from '../components/Rail';
@@ -16,7 +16,7 @@ const external = (href, label) => <a href={href} target="_blank" rel="noopener n
 
 // The files of one folder, fetched when the folder is opened.
 function FolderFiles({ slug, folder }) {
-  const { data, loading } = useQuery(GET_SOURCE_FILES, { variables: { dataset: slug, folder, limit: 1000 } });
+  const { data, loading } = useQuery(GET_SOURCE_FILES, { variables: { program: slug, folder, limit: 1000 } });
   if (loading) return <tr><td colSpan={4} className="meta">Loading…</td></tr>;
   return (data?.sourceFiles ?? []).map(f => (
     <tr key={f.path} className="file-row">
@@ -31,13 +31,13 @@ function FolderFiles({ slug, folder }) {
   ));
 }
 
-// One dataset: its publishers and their history, terms, how it is fetched, where it stands against the
+// One program: its publishers and their history, terms, how it is fetched, where it stands against the
 // Statistical Abstract, the series made from it and the files downloaded, by folder.
-export default function SourceDataset() {
+export default function SourceProgram() {
   const { slug } = useParams();
-  const { data, loading, error } = useQuery(GET_SOURCE_DATASET, { variables: { slug } });
+  const { data, loading, error } = useQuery(GET_SOURCE_PROGRAM, { variables: { slug } });
   const [open, setOpen] = useState(() => new Set());
-  const d = data?.sourceDataset;
+  const d = data?.sourceProgram;
   const access = data?.sourceVocabulary?.access ?? {};
   const crumbs = <Crumbs items={[{ label: 'Sources', to: '/sources' }, { label: d?.name ?? slug }]} />;
 
@@ -46,7 +46,7 @@ export default function SourceDataset() {
       <PageLayout head={crumbs}>
         {loading && <Loading />}
         {error && <div className="error">Failed to load: {error.message}</div>}
-        {!loading && !error && <div className="state">No dataset {slug}.</div>}
+        {!loading && !error && <div className="state">No program {slug}.</div>}
       </PageLayout>
     );
   }
@@ -62,7 +62,7 @@ export default function SourceDataset() {
   const head = (
     <>
       {crumbs}
-      <span className="eyebrow">Dataset · {d.kindLabel}</span>
+      <span className="eyebrow">{d.kindLabel.replace(/s$/, '')}</span>
       <h1 className="doc-title">{d.name}</h1>
       <p className="doc-subtitle">{d.description}</p>
       <dl className="facts">

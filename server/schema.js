@@ -375,7 +375,7 @@ export const typeDefs = `#graphql
   }
 
   # Where the data comes from (seed/data/sources.json; server/sources.js). An organization publishes
-  # datasets; a dataset's files are what was downloaded into the data folder.
+  # programs; a program's files are what was downloaded into the data folder.
   type SourceOrganization {
     slug: String!
     name: String!
@@ -389,7 +389,7 @@ export const typeDefs = `#graphql
     notes: String
   }
 
-  type DatasetOrganization {
+  type ProgramOrganization {
     role: String!          # publisher | producer | distributor | former-publisher
     organization: SourceOrganization!
   }
@@ -426,7 +426,7 @@ export const typeDefs = `#graphql
     fetchedAt: String
   }
 
-  type DatasetSeries {
+  type ProgramSeries {
     slug: String!
     name: String!
     frequency: String!
@@ -435,7 +435,7 @@ export const typeDefs = `#graphql
     lastDate: String
   }
 
-  type SourceDataset {
+  type SourceProgram {
     slug: String!
     name: String!
     kind: String!          # statistics | documents
@@ -460,14 +460,14 @@ export const typeDefs = `#graphql
     outsideAbstract: String
     paths: [String!]!
     notes: String
-    organizations: [DatasetOrganization!]!
+    organizations: [ProgramOrganization!]!
     lineage: [SourceLineage!]
     fileCount: Int!
     fileBytes: Float!
     lastModified: String
     seriesCount: Int!
     folders(limit: Int): [SourceFolder!]!
-    series(limit: Int): [DatasetSeries!]!
+    series(limit: Int): [ProgramSeries!]!
   }
 
   # A report of an investigation (reports; seed/data/reports.json): a commission's, a congressional
@@ -724,12 +724,12 @@ export const typeDefs = `#graphql
     report(slug: String!): Report
     reportPart(slug: String!, partId: String!): JSON
 
-    # Where the data comes from: every dataset (in the order of sources.json), one dataset, and the
-    # labels of the registry's values ({ organizationKinds, datasetKinds, licences, access, statuses }).
-    sourceDatasets: [SourceDataset!]!
-    sourceDataset(slug: String!): SourceDataset
-    # A dataset's files, in path order; with folder, only those directly in it.
-    sourceFiles(dataset: String!, folder: String, limit: Int): [SourceFile!]!
+    # Where the data comes from: every program (in the order of sources.json), one program, and the
+    # labels of the registry's values ({ organizationKinds, programKinds, licences, access, statuses }).
+    sourcePrograms: [SourceProgram!]!
+    sourceProgram(slug: String!): SourceProgram
+    # A program's files, in path order; with folder, only those directly in it.
+    sourceFiles(program: String!, folder: String, limit: Int): [SourceFile!]!
     sourceVocabulary: JSON
 
     economicSeriesList: [EconomicSeries!]!

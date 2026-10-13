@@ -10,7 +10,7 @@
     "title": "Statistical Abstract of the United States: 2012 (131st edition), U.S. Census Bureau",
     "url": "https://www.census.gov/library/publications/2011/compendia/statab/131ed.html",
     "read": "2026-10-13",
-    "dataset": "statistical-abstract",
+    "program": "statistical-abstract",
     "note": "Read from 2012-statab.pdf in the data folder: the contents (pages vii–x), and each section’s opening paragraph as its description. A section’s code is its number; the book does not number subsections. Page numbers are as printed. That PDF prints Education twice and ends at page 876."
   },
   "categories": [

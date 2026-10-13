@@ -5,7 +5,7 @@
 //
 // Labels follow the reader's idea of the thing, not each publisher's exact definition: BEA's
 // "personal current taxes" and OMB's "individual income taxes" are both individual income taxes,
-// and the description says how each differs. Series stored apart are separate datasets, never
+// and the description says how each differs. Series stored apart are separate series, never
 // joined: two that share every dimension (the daily deposits before and after February 2023) are
 // told apart by the years they cover.
 

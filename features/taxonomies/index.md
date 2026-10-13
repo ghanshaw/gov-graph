@@ -1,11 +1,15 @@
-# Category breakdowns
+# Taxonomies
+
+Renamed 2026-10-13 from "Category breakdowns" / the Structure page, to follow `GLOSSARY.md`: a *taxonomy* is an
+official hierarchy of categories; *structure* below, in older entries, means the same.
 
 ## Status
-In use (2026-10-13). The **Structure** page (`/structure`, nav "Structure") shows two structures as nested
-categories: the Statistical Abstract (also as the book) and the Comparative Agendas Project's topics. Each is stored
-as a JSON file. Other schemes surveyed below. The timeline catalogue's **Build** tab now reaches measures through
-either structure (`StructureTree.jsx`), with the 27 measures placed in both by `server/seed/data/placements.json`,
-every placement a `judgement` for now; checked in Chrome at desktop width (2026-10-13).
+In use (2026-10-13). The **Taxonomies** page (`/taxonomies`, nav "Taxonomies"; `/structure` and `/abstract` redirect)
+shows two taxonomies as nested categories: the Statistical Abstract (also as the book) and the Comparative Agendas
+Project's topics. Each is stored as a JSON file, and loaded into `categories` / `category_items`
+(`server/seed/load-taxonomies.js`). Category ids are frozen (`keepIds`). Other schemes surveyed below. The timeline
+catalogue's **Build** tab reaches measures through either taxonomy (`TaxonomyTree.jsx`), with the 27 measures placed
+in both by `server/seed/data/placements.json`, every placement a `judgement` for now.
 
 ## Goal
 Ways of sorting everything GovGraph holds (datasets, series, documents) into nested subjects. A breakdown is a
@@ -19,22 +23,22 @@ numbers, tables or pages. Several breakdowns can exist side by side, and the rea
 - No appendices in the Categories view (user, 2026-10-13).
 
 ## How it is built
-- **Data:** one JSON file per structure in `server/seed/data/structures/`, next to the other hand-written data:
+- **Data:** one JSON file per structure in `server/seed/data/taxonomies/`, next to the other hand-written data:
   `{ id, name, basis, levels, source, categories }`; a category is `{ id, name, children }` plus whatever its scheme
   gives. Decided 2026-10-13 (user asked whether to store them as data): JSON files now, no database tables until
   series or documents are placed in categories and need joining.
   - `statistical-abstract.json`: 30 sections (`code` = the section number, `description`, `tables` [first, last],
     `page`) → 147 subsections (`page` only), plus `appendices` and `index_page`. Built by
-    `server/seed/build-abstract-structure.js` from the book's PDF: the contents (pp. vii–x), and each section's
+    `server/seed/build-abstract-taxonomy.js` from the book's PDF: the contents (pp. vii–x), and each section's
     opening paragraph ("This section presents …") as its description. The book neither numbers nor describes
     subsections, so they have no code or description (not invented).
   - `comparative-agendas.json`: 21 major topics → 213 subtopics, with `code`, `description`, and `see_also` / `note`
     where printed; built by `server/seed/fetch-cap-codebook.js` from the Master Topics Codebook v1.1 page. The
     codebook says 220 subtopics; the page lists 213 (recorded in `source.note`). The parser handles the page's two
     irregular entries, 1612 ("Description;") and 2300 (description in a nested list).
-- **Client:** `client/src/structures.js` imports the files through the `@data` alias (`client/vite.config.js`, with
+- **Client:** `client/src/taxonomies.js` imports the files through the `@data` alias (`client/vite.config.js`, with
   `server.fs.allow: ['..']`). The server can read the same files when placements need them.
-- **Page:** `client/src/pages/Structure.jsx`. Rail: Structure (one radio per file), Show as (Categories / The book,
+- **Page:** `client/src/pages/Taxonomies.jsx`. Rail: Structure (one radio per file), Show as (Categories / The book,
   only for a structure with `appendices`), Find, Codes and Descriptions (when the structure has them; both off by default), counts per level, source.
   URL `?s=<id>&as=book`, defaults left out. `/abstract` redirects. Category tree with elbow connectors (`.category-*`,
   `--branch`); the book layout `.abstract-*`.
@@ -51,7 +55,7 @@ How data is put into a structure (agreed in discussion, 2026-10-13).
   them (they are rebuilt by script, and CAP's carries its licence); what we write is a **placement**: this measure sits
   in this category of this structure, and why.
 - **A measure is the leaf** of every structure: category → subcategory → measure, then the measure's Build choices
-  (`features/dataset-dimensions`). Design: `design/timeline-data/build-structures/wide-tree-1.html` (D.1).
+  (`features/series-dimensions`). Design: `design/timeline-data/build-structures/wide-tree-1.html` (D.1).
 
 ### A placement
 | Field | Example |
@@ -69,7 +73,7 @@ Abstract but in no table counts as `table` if its dataset's tables are in that s
 Built so far (2026-10-13): `placements.json` uses `basis` `table` or `judgement`, plus `{ left_out: true, reason }`
 shown as "Not in this structure". The fuller vocabulary under "Who places what" (`publisher`, `published-crosswalk`,
 `crosswalk`) and its "Not placed" bucket are not built; adding a basis is a change to `BASES` in
-`server/lib/placements.js`.
+`server/lib/taxonomies.js`.
 
 - One place per measure per structure, as the Abstract plan already says. If a measure's datasets want two places
   (tariff revenue: a tax, and foreign trade), split the measure rather than cross-list it.
@@ -195,7 +199,7 @@ Checked 2026-10-13:
 - **Library of Congress Classification** (H Social sciences, J Political science, K Law, …) and **Dewey Decimal**:
   deep, but built for shelving books, not data.
 - **Faceted classification** (Ranganathan): independent facets (subject, place, time, population) combined, not one
-  tree. The idea behind the timeline's Build mode (`features/dataset-dimensions`).
+  tree. The idea behind the timeline's Build mode (`features/series-dimensions`).
 - **SKOS** (W3C Simple Knowledge Organization System): not a scheme but the standard format for any of these:
   concepts with broader / narrower, several schemes, and mappings between them (exact match, broad match). Matches
   the shape of the structure files, and CAP, EuroVoc and LCSH are commonly published in it.
@@ -217,11 +221,11 @@ Checked 2026-10-13:
 
 ## Done
 - [x] Categories view of the Abstract (2026-10-13)
-- [x] Page renamed Structure (`/structure`); structures stored as JSON files (2026-10-13)
+- [x] Page renamed Structure (`/taxonomies`); structures stored as JSON files (2026-10-13)
 - [x] Comparative Agendas Project topics added as a second structure, with codes and descriptions (2026-10-13)
 - [x] Codes hidden by default, shown with a "Codes" checkbox (user, 2026-10-13)
 - [x] Codes and descriptions for the Statistical Abstract: section numbers, and each section's opening paragraph from
-  the book; generation moved from scratch scripts into `server/seed/build-abstract-structure.js` (user, 2026-10-13)
+  the book; generation moved from scratch scripts into `server/seed/build-abstract-taxonomy.js` (user, 2026-10-13)
 - [x] CAP licence checked: CC BY-NC-SA 4.0 (comparativeagendas.net/pages/Copyright-and-Legal, 2026-10-13). Attribution,
   non-commercial only, derivatives under the same licence; the structure file says so (`licence`). Registered in
   `sources.json`: organization `comparative-agendas-project` (academic), dataset `cap-master-codebook` of the new kind
@@ -232,16 +236,30 @@ Checked 2026-10-13:
 - [x] Survey of alternative schemes (2026-10-13)
 - [x] Measures as a flat list of our own, placed in each structure; written up above (user, 2026-10-13)
 - [x] `server/seed/data/placements.json` (27 measures × 2 structures, all `judgement` with a reason), checked by
-  `server/lib/placements.js` / `placements.test.js` (2026-10-13)
-- [x] Build tab by structure (design D.1): `StructureTree.jsx` (switch, filter over names, CAP subtopic descriptions,
+  `server/lib/taxonomies.js` / `taxonomies.test.js` (2026-10-13)
+- [x] Build tab by structure (design D.1): `TaxonomyTree.jsx` (switch, filter over names, CAP subtopic descriptions,
   measures and dataset names; "Only with data"; fold all / open all; "Not in this structure" last), `withMeasures` in
-  `client/src/structures.js`, the path and placement reason above the measure's choices in `DatasetBuilder.jsx`, a
+  `client/src/taxonomies.js`, the path and placement reason above the measure's choices in `SeriesBuilder.jsx`, a
   select grouped by top-level category below 860px (2026-10-13)
 - [x] Build-by-structure designs D, E, F and D.1 (`design/timeline-data/build-structures/`); D chosen, D.1 adds the
   measure as a third level opening the app's Build choices (2026-10-13)
 - [x] Placement model written up: who places what, crosswalks, documents (user, 2026-10-13)
 
+## Done (2026-10-13, glossary renames)
+- [x] Structure → Taxonomy everywhere: page `/taxonomies`, `Taxonomies.jsx`, `TaxonomyTree.jsx`, `client/src/taxonomies.js`,
+  `server/seed/data/taxonomies/`, `build-abstract-taxonomy.js`, `server/lib/taxonomies.js` (was `placements.js`), this
+  folder (was `category-breakdowns`) (user, 2026-10-13)
+- [x] Category ids frozen: `keepIds` / `writeTaxonomy` in `server/lib/taxonomies.js`, used by both builders; matched by
+  code, then name, then position within the parent; renames keep the id; dropping one needs `--allow-removing`; tested
+- [x] `placements.json` per taxonomy is `{ measures, series }`: a measure is placed, its series follow it, and a series
+  is placed apart only where it differs, with its evidence (user, 2026-10-13). None placed apart yet: the customs-duty
+  series were the example, but the Abstract prints customs duties in no table (Table 475 has them inside "Other").
+- [x] `categories` and `category_items` in the database (`server/seed/load-taxonomies.js`): 411 categories, 54 placements
+
 ## Todo
+- [ ] Show a series placed apart under its own category in the Build tree (none exist yet)
+- [ ] Read placements from the database instead of the JSON files once something other than measures is placed
+  (documents: CAP has already coded bills and orders by topic)
 - [ ] Review the 27 placements (doubtful: consumer spending, fuel prices, mortgage rate, every CAP one); turn the
   Abstract's into `table` with table numbers once Phase 2 of `features/statistical-abstract` reads the tables
 - [ ] Build mode at phone width: the tree is hidden below 860px and the select there has no structure switch

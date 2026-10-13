@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { STRUCTURES } from '../structures';
+import { TAXONOMIES } from '../taxonomies';
 
-// Build mode's left column (design D.1 in design/timeline-data/build-structures): a category structure, the
+// Build mode's left column (design D.1 in design/timeline-data/build-structures): a taxonomy, the
 // Statistical Abstract or CAP's topics, nested as printed, with GovGraph's measures as its leaves. Categories and
 // subcategories fold; one with no measures beneath is grey, or hidden with "Only with data". The filter matches
-// category names (and CAP's subtopic descriptions), measures and the names of their datasets; a measure listed only for a
-// dataset name shows the names that matched. Measures a structure leaves out are listed last.
+// category names (and CAP's subtopic descriptions), measures and the names of their series; a measure listed only for a
+// series name shows the names that matched. Measures a taxonomy leaves out are listed last.
 
 const words = q => q.toLowerCase().split(/\s+/).filter(Boolean);
 const has = (text, ws) => ws.every(w => text.toLowerCase().includes(w));
@@ -21,11 +21,11 @@ function Counts({ n, on }) {
 }
 
 /**
- * `tree`: withMeasures(structure, …). `label(key)`, `size(key)` (datasets), `onCount(key)` (datasets on the
- * timeline), `names(key)` (dataset names, for the filter). `selected` and `onSelect(key)`: the measure chosen.
- * `structureId` and `onStructure(id)`: the structure shown.
+ * `tree`: withMeasures(taxonomy, …). `label(key)`, `size(key)` (series), `onCount(key)` (series on the
+ * timeline), `names(key)` (series names, for the filter). `selected` and `onSelect(key)`: the measure chosen.
+ * `taxonomyId` and `onTaxonomy(id)`: the taxonomy shown.
  */
-export default function StructureTree({ tree, label, size, onCount, names, selected, onSelect, structureId, onStructure }) {
+export default function TaxonomyTree({ tree, label, size, onCount, names, selected, onSelect, taxonomyId, onTaxonomy }) {
   const [query, setQuery] = useState('');
   const [onlyData, setOnlyData] = useState(false);
   const [closed, setClosed] = useState(new Set());
@@ -35,7 +35,7 @@ export default function StructureTree({ tree, label, size, onCount, names, selec
   const total = node => node.measures.reduce((n, k) => n + size(k), 0) + node.children.reduce((n, c) => n + total(c), 0);
   const totalOn = node => node.measures.reduce((n, k) => n + onCount(k), 0) + node.children.reduce((n, c) => n + totalOn(c), 0);
 
-  // A node as shown: its measures (with the dataset names that matched) and its children, or null when filtered out.
+  // A node as shown: its measures (with the series names that matched) and its children, or null when filtered out.
   const shown = (node, above) => {
     if (onlyData && !total(node)) return null;
     // Descriptions count only at the lowest level (CAP's subtopics): a section's opening paragraph mentions too much.
@@ -103,16 +103,16 @@ export default function StructureTree({ tree, label, size, onCount, names, selec
   };
 
   return (
-    <nav className="structure-tree" aria-label="Categories">
+    <nav className="taxonomy-tree" aria-label="Categories">
       <div className="st-controls">
-        <span className="st-structures" role="group" aria-label="Structure">
-          {STRUCTURES.map(s => (
-            <button key={s.id} type="button" className={s.id === structureId ? 'on' : undefined} aria-pressed={s.id === structureId}
-              onClick={() => { onStructure(s.id); setClosed(new Set()); }}>{s.id === 'comparative-agendas' ? 'Policy topics (CAP)' : s.name}</button>
+        <span className="st-taxonomies" role="group" aria-label="Taxonomy">
+          {TAXONOMIES.map(s => (
+            <button key={s.id} type="button" className={s.id === taxonomyId ? 'on' : undefined} aria-pressed={s.id === taxonomyId}
+              onClick={() => { onTaxonomy(s.id); setClosed(new Set()); }}>{s.id === 'comparative-agendas' ? 'Policy topics (CAP)' : s.name}</button>
           ))}
         </span>
-        <input type="search" className="st-find" value={query} aria-label="Filter categories, measures and datasets"
-          placeholder="Filter categories, measures and datasets…" onChange={e => setQuery(e.target.value)}
+        <input type="search" className="st-find" value={query} aria-label="Filter categories, measures and series"
+          placeholder="Filter categories, measures and series…" onChange={e => setQuery(e.target.value)}
           onKeyDown={e => { if (e.key === 'Escape') { e.stopPropagation(); setQuery(''); } }} />
         <div className="st-row">
           <label className="st-only"><input type="checkbox" checked={onlyData} onChange={e => setOnlyData(e.target.checked)} />
@@ -129,7 +129,7 @@ export default function StructureTree({ tree, label, size, onCount, names, selec
           {roots.map(branch)}
           {leftOut.length > 0 && (
             <li className="st-left-out">
-              <span className="category-name leaf"><span className="st-name">Not in this structure</span></span>
+              <span className="category-name leaf"><span className="st-name">Not in this taxonomy</span></span>
               <ul className="category-tree">{leftOut.map(leaf)}</ul>
             </li>
           )}

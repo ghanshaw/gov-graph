@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { scaleOf, scaleName, laneScales, laneVerdict } from '../lanes';
-import { FrequencyBadge } from './DatasetSearch';
+import { FrequencyBadge } from './SeriesSearch';
 
 // The panel beside the timeline: the lanes, top to bottom, each a chart, with the series on it; then
 // the context (events, presidencies, periods), each with how many fall in the years shown.
@@ -55,7 +55,7 @@ export default function LanePanel({ lanes, bySlug, colorOf, startYear, endYear, 
     <aside className="lane-panel" data-testid="lane-panel">
       <section className="lane-section">
         <h4>Lanes, top to bottom</h4>
-        {!lanes.length && <p className="lane-empty">No data on the timeline yet. Search above, or browse the datasets, and tick what you want to see.</p>}
+        {!lanes.length && <p className="lane-empty">No data on the timeline yet. Search above, or browse the series, and tick what you want to see.</p>}
         {lanes.map((lane, index) => {
           const scales = laneScales(lane, bySlug);
           const sideOf = scale => (lane.items.find(i => scaleOf(bySlug.get(i.slug)) === scale)?.axis === 'right' ? 'right' : 'left');
@@ -116,7 +116,7 @@ export default function LanePanel({ lanes, bySlug, colorOf, startYear, endYear, 
           <div className={over?.lane === 'new' ? 'new-lane drop-ok' : 'new-lane'} data-testid="new-lane"
             onDragOver={e => { if (dragging) { e.preventDefault(); if (over?.lane !== 'new') setOver({ lane: 'new', verdict: 'ok' }); } }}
             onDragLeave={() => setOver(null)} onDrop={e => { e.preventDefault(); drop('new'); }}>
-            + New lane: drop a dataset here
+            + New lane: drop a series here
           </div>
         )}
       </section>

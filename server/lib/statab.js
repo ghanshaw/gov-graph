@@ -1,6 +1,6 @@
 // The Statistical Abstract of the United States, 2012 (131st edition), as the Census Bureau left it online
 // (features/statistical-abstract, Phase 2): the index page, one page per section listing its tables under
-// subsection headings, and every table as a binary Excel file (12sNNNN.xls). Read here; fetched by
+// headings, and every table as a binary Excel file (12sNNNN.xls). Read here; fetched by
 // seed/fetch-statistical-abstract.js and stored by seed/load-statistical-abstract.js.
 
 import fs from 'fs';
@@ -46,22 +46,22 @@ export function filesLinked(html) {
 const TABLE_FILE = /\/tables\/12s(\d{4})([a-z]*)\.xlsx?$/i;
 
 /**
- * A section page → { number, name, subsections: [{ name, position, tables: [{ number, suffix, title, url }] }],
- * files }. Subsections are listed alphabetically on the page; `position` is their order in the book, by their
+ * A section page → { number, name, groups: [{ name, position, tables: [{ number, suffix, title, url }] }],
+ * files }. Groups are listed alphabetically on the page; `position` is their order in the book, by their
  * first table.
  */
 export function parseSectionPage(html) {
   const tokens = [...html.matchAll(/<h[1-3][^>]*class="[^"]*cmp-title__text[^"]*"[^>]*>([\s\S]*?)<\/h[1-3]>|<a[^>]*class="[^"]*uscb-list-attachment__title[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>|<a[^>]*href="([^"]+)"[^>]*class="[^"]*uscb-list-attachment__title[^"]*"[^>]*>([\s\S]*?)<\/a>/g)];
   let heading = null;
   let current = null;
-  const subsections = [];
+  const groups = [];
   for (const t of tokens) {
     if (t[1] !== undefined) {
       const text = decode(t[1]);
       const section = text.match(/^Section (\d+)\.\s*(.+)$/);
       if (section) { heading ??= { number: Number(section[1]), name: section[2] }; current = null; continue; }
       current = { name: text, tables: [] };
-      subsections.push(current);
+      groups.push(current);
       continue;
     }
     const href = t[2] ?? t[4];
@@ -70,14 +70,14 @@ export function parseSectionPage(html) {
     const file = url.match(TABLE_FILE);
     if (!file) continue;
     const m = label.match(/^(\d+)([A-Za-z]*)\s*[-–]\s*(.+)$/);
-    if (!current) { current = { name: null, tables: [] }; subsections.push(current); }
+    if (!current) { current = { name: null, tables: [] }; groups.push(current); }
     current.tables.push({ number: Number(file[1]), suffix: file[2].toLowerCase(), title: m ? m[3] : label, url });
   }
   if (!heading) throw new Error('no "Section N." heading on the page');
-  const withTables = subsections.filter(s => s.tables.length);
+  const withTables = groups.filter(s => s.tables.length);
   const first = s => Math.min(...s.tables.map(t => t.number));
   withTables.sort((a, b) => first(a) - first(b)).forEach((s, i) => { s.position = i + 1; });
-  return { ...heading, subsections: withTables, files: filesLinked(html) };
+  return { ...heading, groups: withTables, files: filesLinked(html) };
 }
 
 // ---------------------------------------------------------------------------
@@ -219,9 +219,10 @@ export function readSavedPages() {
   return { index, sections };
 }
 
-// One row per section, per subsection as the web pages group the tables (not the book's contents, which group
-// them differently: structures/statistical-abstract.json), and per table. A table's `title` is the web page's
-// link text; what its file says is in the other columns (null where the file could not be read: `read_error`).
+// One row per section and per table. Tables are evidence, never shown as data (GLOSSARY.md): what to collect (the
+// source note) and where its series belong (the book's subsection). `web_group` is the heading the Census website lists
+// a table under, which is not the book's subsection (taxonomies/statistical-abstract.json). A table's `title` is the web
+// page's link text; what its file says is in the other columns (null where it could not be read: `read_error`).
 export const SCHEMA = `
 CREATE TABLE IF NOT EXISTS statab_sections (
   number        INT PRIMARY KEY,
@@ -229,18 +230,12 @@ CREATE TABLE IF NOT EXISTS statab_sections (
   name          TEXT NOT NULL,
   url           TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS statab_subsections (
-  section       INT NOT NULL REFERENCES statab_sections(number) ON DELETE CASCADE,
-  position      INT NOT NULL,
-  name          TEXT NOT NULL,
-  PRIMARY KEY (section, position)
-);
 CREATE TABLE IF NOT EXISTS statab_tables (
   id            TEXT PRIMARY KEY,
   number        INT NOT NULL,
   suffix        TEXT NOT NULL DEFAULT '',
   section       INT NOT NULL REFERENCES statab_sections(number) ON DELETE CASCADE,
-  subsection    INT NOT NULL,
+  web_group     TEXT NOT NULL,
   title         TEXT NOT NULL,
   url           TEXT NOT NULL,
   path          TEXT NOT NULL,
@@ -261,8 +256,7 @@ CREATE TABLE IF NOT EXISTS statab_tables (
   by_state      BOOLEAN,
   row_count     INT,
   column_count  INT,
-  read_error    TEXT,
-  FOREIGN KEY (section, subsection) REFERENCES statab_subsections(section, position) ON DELETE CASCADE
+  read_error    TEXT
 );
 CREATE INDEX IF NOT EXISTS statab_tables_section ON statab_tables (section, number);
 `;

@@ -1,11 +1,11 @@
-// The options of one measure as a tree, for DatasetBuilder (concept A in design/timeline-data/builder):
+// The options of one measure as a tree, for SeriesBuilder (concept A in design/timeline-data/builder):
 // each choice opens beneath it only what exists for it, so an option that does not apply is never on
 // screen ("Dollars of the day" lives under "An amount" only; GDP's growth rate is published only
 // adjusted for inflation). The dimensions come from server/lib/series-dimensions.js.
 //
 // Levels follow the dimensions in order: how it is measured, the measure's breakdowns (sex, race, age and
 // education together as Demographics), dollars, how often, seasonal adjustment, year, years covered,
-// source. A dimension is a level only where it splits datasets the levels before it leave together;
+// source. A dimension is a level only where it splits series the levels before it leave together;
 // one the whole measure shares, or one the levels before it settle (a group's years), is shown after the
 // tree instead, source last. Under a choice, a level with one option is chosen for you.
 
@@ -99,7 +99,7 @@ function levelsFor(vocab, measure, series) {
       if (values[0] !== null && values[0] !== '|||') after.push({ level, shared: true });
       continue;
     }
-    // Does it split datasets the levels so far leave together?
+    // Does it split series the levels so far leave together?
     const groups = new Map();
     for (const s of series) {
       const key = levels.map(l => l.valueOf(s)).join(SEP);

@@ -2,17 +2,17 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { GET_SERIES_DIMENSIONS } from '../queries';
 import { buildTree, withoutPath, yearsOf } from '../dimensions';
-import { PLACEMENTS, STRUCTURES, withMeasures } from '../structures';
-import StructureTree from './StructureTree';
+import { PLACEMENTS, TAXONOMIES, withMeasures } from '../taxonomies';
+import TaxonomyTree from './TaxonomyTree';
 
 // The catalogue's Build mode (concept A in design/timeline-data/builder): choose a measure from a category
-// structure (StructureTree: the Statistical Abstract or CAP's topics, the measures as leaves), then its options
+// taxonomy (TaxonomyTree: the Statistical Abstract or CAP's topics, the measures as leaves), then its options
 // as a tree. Choosing an option opens beneath it only what exists for it, so nothing on screen leads nowhere;
 // an option alone under its parent is chosen for you. A click chooses, its × takes it out (with what is
-// beneath it), and several options may be open at once. The datasets the choices reach go on the timeline,
-// and change as the choices do. What every dataset shares, then years, then source close the panel. A measure
-// with one dataset is one button, its details in a tooltip; nothing goes on until it is clicked.
-const ONE = 'dataset';
+// beneath it), and several options may be open at once. The series the choices reach go on the timeline,
+// and change as the choices do. What every series shares, then years, then source close the panel. A measure
+// with one series is one button, its details in a tooltip; nothing goes on until it is clicked.
+const ONE = 'series';
 
 // One option: a square button, with an × once chosen.
 function Choice({ v, onPick, onUnpick }) {
@@ -83,11 +83,11 @@ function Node({ node, onPick, onUnpick }) {
   );
 }
 
-/** Props as DatasetSearch's: `bySlug`, `isOn(slugs)`, `onSwap(remove, add)`. */
-export default function DatasetBuilder({ bySlug, isOn, onSwap }) {
+/** Props as SeriesSearch's: `bySlug`, `isOn(slugs)`, `onSwap(remove, add)`. */
+export default function SeriesBuilder({ bySlug, isOn, onSwap }) {
   const { data, loading, error } = useQuery(GET_SERIES_DIMENSIONS);
   const [measure, setMeasure] = useState(null);
-  const [structureId, setStructureId] = useState(STRUCTURES[0].id);
+  const [taxonomyId, setTaxonomyId] = useState(TAXONOMIES[0].id);
   // Choices are kept per measure, so going back to one finds them as they were.
   const [pickedBy, setPickedBy] = useState({});
   const vocab = data?.seriesDimensionVocabulary;
@@ -103,9 +103,9 @@ export default function DatasetBuilder({ bySlug, isOn, onSwap }) {
     return groups;
   }, [data, bySlug]);
   const series = useMemo(() => (measure ? byMeasure.get(measure) ?? [] : []), [byMeasure, measure]);
-  const structure = STRUCTURES.find(s => s.id === structureId);
+  const taxonomy = TAXONOMIES.find(s => s.id === taxonomyId);
   const keys = useMemo(() => Object.keys(data?.seriesDimensionVocabulary?.measures ?? {}).filter(key => byMeasure.has(key)), [data, byMeasure]);
-  const categories = useMemo(() => withMeasures(structure, keys), [structure, keys]);
+  const categories = useMemo(() => withMeasures(taxonomy, keys), [taxonomy, keys]);
   const tree = useMemo(() => (vocab && measure ? buildTree(vocab, measure, series, picked) : null), [vocab, measure, series, picked]);
 
   const target = !tree ? [] : tree.automatic ? (picked.has(ONE) ? tree.matches : []) : tree.matches;
@@ -141,16 +141,16 @@ export default function DatasetBuilder({ bySlug, isOn, onSwap }) {
     walk(c);
     return { name: c.name, keys: all };
   }).filter(g => g.keys.length);
-  if (categories.leftOut.length) groups.push({ name: 'Not in this structure', keys: categories.leftOut });
+  if (categories.leftOut.length) groups.push({ name: 'Not in this taxonomy', keys: categories.leftOut });
   const path = measure ? categories.pathOf.get(measure) : null;
-  const placement = measure ? PLACEMENTS[structureId]?.[measure] : null;
+  const placement = measure ? PLACEMENTS[taxonomyId]?.measures?.[measure] : null;
 
   return (
     <div className="catalog-body build-body">
-      <StructureTree tree={categories} label={label} size={key => byMeasure.get(key)?.length ?? 0} onCount={onCount}
+      <TaxonomyTree tree={categories} label={label} size={key => byMeasure.get(key)?.length ?? 0} onCount={onCount}
         names={key => (byMeasure.get(key) ?? []).map(s => s.name)} selected={measure} onSelect={setMeasure}
-        structureId={structureId} onStructure={setStructureId} />
-      <div className="catalog-list builder" data-testid="dataset-builder">
+        taxonomyId={taxonomyId} onTaxonomy={setTaxonomyId} />
+      <div className="catalog-list builder" data-testid="series-builder">
         <select className="measure-select" aria-label="Measure" value={measure ?? ''} onChange={e => setMeasure(e.target.value || null)}>
           <option value="">Choose what to measure…</option>
           {groups.map(g => (
@@ -161,22 +161,22 @@ export default function DatasetBuilder({ bySlug, isOn, onSwap }) {
           <p className="catalog-empty">Choose a category on the left and what to measure in it, then narrow it down: how it is measured, which part of it, how often.</p>
         ) : (
           <>
-            <p className="builder-path">{path ? path.join(' › ') : `Not in the ${structure.name}`}</p>
+            <p className="builder-path">{path ? path.join(' › ') : `Not in the ${taxonomy.name}`}</p>
             <div className="builder-head">
               <h3>{vocab.measures[measure].label}</h3>
               {picked.size > 0 && <button type="button" className="clear" onClick={() => setPicked(() => new Set())}>Clear choices</button>}
             </div>
             {placement && (
-              // Why it sits here: the structure's own tables, or GovGraph's reason.
+              // Why it sits here: the taxonomy's own tables, or GovGraph's reason.
               <p className="builder-placement">
-                {placement.left_out ? <><b>Not in this structure.</b> {placement.reason}</>
-                  : placement.basis === 'table' ? `${structure.name} tables ${placement.tables.join(', ')}.`
+                {placement.left_out ? <><b>Not in this taxonomy.</b> {placement.reason}</>
+                  : placement.basis === 'table' ? `${taxonomy.name} tables ${placement.tables.join(', ')}.`
                     : <><b>Placed by GovGraph.</b> {placement.reason}</>}
               </p>
             )}
             {tree.automatic ? (
-              // One dataset: a button to put it on, what it is in a tooltip.
-              <div className="one-dataset">
+              // One series: a button to put it on, what it is in a tooltip.
+              <div className="one-series">
                 <Choice v={{ label: name(tree.matches[0]), path: ONE, on: picked.has(ONE) }} onPick={pick} onUnpick={unpick} />
                 <span className="one-details" role="tooltip">
                   {tree.after.map(a => <span key={a.label}><span className="facet-label">{a.label}</span>{a.values.join(', ')}</span>)}

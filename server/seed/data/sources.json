@@ -1,5 +1,5 @@
 {
-  "about": "Every source GovGraph uses: organizations (who publishes), their history (lineage), and datasets (what they publish, under what terms, how we get it). Entered by hand; loaded by server/seed/load-sources.js; checked by server/lib/sources.test.js. Files are not listed here: they are found in the data folder and matched to a dataset by `paths` (prefixes of their path in the data folder). Federal works are public domain under 17 U.S.C. 105; any other licence was read on the publisher's site on the date in `checked`.",
+  "about": "Every source GovGraph uses: organizations (who publishes), their history (lineage), and programs and collections (what they publish, under what terms, how we get it; GLOSSARY.md). Entered by hand; loaded by server/seed/load-sources.js; checked by server/lib/sources.test.js. Files are not listed here: they are found in the data folder and matched to a dataset by `paths` (prefixes of their path in the data folder). Federal works are public domain under 17 U.S.C. 105; any other licence was read on the publisher's site on the date in `checked`.",
   "organizations": [
     { "slug": "us-congress", "name": "United States Congress", "short_name": "Congress", "kind": "federal", "branch": "legislative", "url": "https://www.congress.gov" },
     { "slug": "us-house-clerk", "name": "Office of the Clerk, U.S. House of Representatives", "short_name": "House Clerk", "kind": "federal", "branch": "legislative", "parent": "us-congress", "url": "https://clerk.house.gov" },
@@ -63,7 +63,7 @@
     { "from": "national-commission-on-terrorist-attacks", "to": null, "date": "2004-08-21", "kind": "abolished", "citation": "Pub. L. 107-306, sec. 610", "notes": "Closed 30 days after its report, as its statute required. Its website is kept by the National Archives." }
   ],
 
-  "datasets": [
+  "programs": [
     {
       "slug": "statistical-abstract", "name": "Statistical Abstract of the United States",
       "organizations": [{ "org": "census-bureau", "role": "publisher" }], "kind": "statistics",

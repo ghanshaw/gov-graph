@@ -69,8 +69,8 @@ The live database has moved past the pattern below. Tables: `executive_documents
 `legislative_documents`, `legislative_document_sections`, `bill_actions`, `roll_calls`, `member_votes`,
 `congresses`, `people`, `person_roles`, `bill_sponsors`, `bill_relationships`, `bill_titles` (see Search under Bill Text), `proposals`, `economic_series` / `economic_observations`
 (see Economic Data), `periods` (see Timeline), `reports` / `report_parts` (see Reports), the source registry
-`source_organizations`, `source_lineage`, `source_datasets`, `source_dataset_organizations`, `source_files` (see Data Sources),
-the Statistical Abstract's `statab_sections`, `statab_subsections`, `statab_tables` (see Statistical Abstract), the U.S. Code tables `usc_release_points`,
+`source_organizations`, `source_lineage`, `source_programs`, `source_program_organizations`, `source_files` (see Data Sources),
+the Statistical Abstract's `statab_sections`, `statab_tables` (see Statistical Abstract), `categories`, `category_items` (see Taxonomies), the U.S. Code tables `usc_release_points`,
 `usc_titles`, `usc_nodes`, `usc_section_versions`, `usc_source_credits` (see U.S. Code below), and the
 case-graph tables `cg_cases`, `cg_case_relationships`, `cg_scdb_cases`, `cg_data_sources`.
 There is no `documents` or `document_relationships` table, and `server/seed/schema.sql`
@@ -410,7 +410,7 @@ Tracked in `features/us-code/index.md` (Phase 2: classify amends / repeals; Phas
 Census Bureau files, kept as published in the data folder at their www2.census.gov paths, and
 charted on **Demographic Data** (`/demographics`, `pages/Demographics.jsx`; `/population` redirects)
 the way Economic Data charts its series. This replaced the first "files only, nothing in the
-database" arrangement (user, 2026-10-11). Every dataset goes back as far as the Bureau publishes it.
+database" arrangement (user, 2026-10-11). Every series goes back as far as the Bureau publishes it.
 
 - Series: `server/lib/population/series.js` reads the files into measures × places and
   `server/seed/load-demographic-series.js [--measure …] [--level nation,state,district] [--dry-run]`
@@ -460,7 +460,7 @@ every stored executive order and memorandum (`executive_documents`, correction n
 law (a bill's first "Became Public Law" action), report of an investigation (`reports`), Supreme Court decision (`court_decisions`) and FOMC target
 change (from the `fed-target-*` economic series), each with a
 `label` and an in-app `href`. It shows what is loaded, nothing fetched live. Horizontal only (vertical was
-dropped 2026-10-11). Layout: a search field across the top (`DatasetSearch.jsx`) opens a catalogue of every
+dropped 2026-10-11). Layout: a search field across the top (`SeriesSearch.jsx`) opens a catalogue of every
 economic series by subject (the Economy tabs, with each tab's `search` words, "in the news" line, headline
 series and "not here yet" notes; unemployment's published breakdowns are rows of their own); below it the
 chart, with the year range (`YearRange.jsx`: typed years, presets, a track lined up with the chart) and
@@ -514,7 +514,7 @@ distillate, gasoline, jet fuel; EIA's four-week averages and monthly) from the E
 persons, monthly, from the BLS API (October 2025 was not collected, so it has no value), and their
 published breakdowns (rate and count for 43 groups by sex, race and ethnicity, age, education and their
 published combinations; `UNEMPLOYMENT_GROUPS`, slugs `unemployment-rate--black-women`), read from the
-downloaded `ln` survey file (`ln.data.1.AllData`) and offered as datasets of their own in the timeline's catalogue; GDP, real
+downloaded `ln` survey file (`ln.data.1.AllData`) and offered as series of their own in the timeline's catalogue; GDP, real
 GDP and real growth, quarterly from 1947, from BEA's flat files (`NipaDataQ.txt`, no key); federal
 debt (total and held by the public), daily from 1993, from Treasury's Debt to the Penny (no key);
 the CPI and core CPI indexes (from 1913 and 1957), read from the BLS `cu` survey files (`bls-bulk`
@@ -571,8 +571,8 @@ the subjects of the timeline's catalogue; a group's publisher is the bracketed e
 Dimensions: every series is labelled with what it measures, the form it is printed in and the breakdowns
 that apply (`server/lib/series-dimensions.js`, test `series-dimensions.test.js`), for a composable picker on the
 timeline. A new series must be labelled there or the test fails. Served as `EconomicSeries.dimensions` and
-`seriesDimensionVocabulary`; the catalogue's Build mode (`DatasetBuilder.jsx`, `buildTree` in `client/src/dimensions.js`: the options as a tree, each choice opening what exists for it; sex, race, age and education as one Demographics level; click chooses, × takes out; the datasets reached go on the timeline)
-narrows a measure by them; measures are reached through a category structure (see Placements under Statistical Abstract). Tracked in `features/dataset-dimensions/index.md`.
+`seriesDimensionVocabulary`; the catalogue's Build mode (`SeriesBuilder.jsx`, `buildTree` in `client/src/dimensions.js`: the options as a tree, each choice opening what exists for it; sex, race, age and education as one Demographics level; click chooses, × takes out; the series reached go on the timeline)
+narrows a measure by them; measures are reached through a taxonomy (see Taxonomies). Tracked in `features/series-dimensions/index.md`.
 
 Names: every series is shown by its stored `economic_series.name`, everywhere (the Economy page, the
 timeline, About the data; `useSeriesList.js`); `ECONOMY_TABS` names only pairs. Names follow
@@ -583,30 +583,40 @@ apart, the publisher in brackets only when two print the same measure. They are 
 the loader refuses names that break the rules. After renaming, `load-economic-series.js --names-only`
 updates names and descriptions without reading any file (renamed 2026-10-11).
 
+## Glossary
+
+`GLOSSARY.md` defines the words for data, in code and on screen (agreed 2026-10-13): **publisher → program (or
+collection, for documents) → file → series**; a series has one **measure** and one **category** in each **taxonomy**.
+Avoid "dataset" (ambiguous: publishers use it for whole collections; say series, program or file), "source" as a level,
+and "structure" for a taxonomy. Readers see "series" wherever a date-and-value line is meant.
+
 ## Data Sources
 
-Every dataset GovGraph uses, at `/sources` and `/sources/<dataset>` (`DataSources.jsx`, `SourceDataset.jsx`;
-queries in `server/sources.js`). Organizations (kind, branch, parent), their lineage (renamed, merged,
-transferred, split, abolished, with the act as a `bill:` / `fr:` reference) and datasets (publishers and their
-roles, licence, how fetched, status, whether the 2012 Statistical Abstract cites it) are written by hand in
-`server/seed/data/sources.json`; `server/lib/sources.js` has the vocabularies, checks and schema. A dataset owns
-its files by path prefix in the data folder (`paths`); a series belongs to the dataset of its file, or by
-`series_sources` for demographic series. Every new series and every new data folder must match a dataset
-(`sources.test.js`, and the loader reports files that match none).
+Every program (statistics) and collection (documents) GovGraph uses, at `/sources` and `/sources/<program>`
+(`DataSources.jsx`, `SourceProgram.jsx`; queries in `server/sources.js`). Organizations (kind, branch, parent), their
+lineage (renamed, merged, transferred, split, abolished, with the act as a `bill:` / `fr:` reference) and programs
+(publishers and their roles, licence, how fetched, status, whether the 2012 Statistical Abstract cites it) are written
+by hand in `server/seed/data/sources.json` (`organizations`, `lineage`, `programs`); `server/lib/sources.js` has the
+vocabularies, checks and schema (`source_organizations`, `source_lineage`, `source_programs`,
+`source_program_organizations`, `source_files.program`, `economic_series.program`; renamed from `…dataset…` on
+2026-10-13). A program owns its files by path prefix in the data folder (`paths`); a series belongs to the program of
+its file, or by `series_sources` for demographic series. Every new series and every new data folder must match a
+program (`sources.test.js`, and the loader reports files that match none).
 
     node --env-file=server/.env server/seed/load-sources.js [--dry-run] [--no-files]
 
-- Dataset kinds: `statistics`, `documents`, `classification` (a scheme for sorting other data, such as CAP's codebook).
+- Program kinds: `statistics` (a program), `documents` (a collection), `classification` (a scheme for sorting other
+  data, such as CAP's codebook).
 - Licences: `public-domain` (federal works, 17 U.S.C. 105, or CC0), `open-licence`, `free-with-terms`,
   `licensed`, `unchecked`. Anything not federal is read on the publisher's site and dated (`checked`).
   Licensed data is listed, not collected (user, 2026-10-13).
 - Access, most preferred first: bulk, file, API, API with key, web page, Internet Archive. Bulk downloads are
   preferred over API keys (user, 2026-10-13). A contact address goes in the User-Agent only where the publisher
   requires one (BLS) (user, 2026-10-13).
-- A dataset the Statistical Abstract does not cite has `in_abstract: false` and says why (`outside_abstract`).
+- A program the Statistical Abstract does not cite has `in_abstract: false` and says why (`outside_abstract`).
 - The University of Michigan's consumer sentiment and Freddie Mac's mortgage rates are kept for now, although
   their terms forbid republishing (user, 2026-10-13); both are recorded as `free-with-terms` with the limits quoted.
-- The list page has a search field (every word must appear in a dataset's name, description, notes or its
+- The list page has a search field (every word must appear in a program's name, description, notes or its
   organizations' names) that combines with the rail's filters; it is not kept in the URL.
 - Every downloader calls `recordFetch(file, url, { archive })` (`lib/data-dir.js`), which appends to
   `<data dir>/fetch-log.jsonl`; the loader reads it into `source_files` with each file's sha-256.
@@ -618,54 +628,64 @@ Tracked in `features/data-sources/index.md`.
 The **Statistical Abstract of the United States, 2012** (131st edition, the last from the Census Bureau; ProQuest
 continues it under licence) is the foundation of all data collection (user, 2026-10-13):
 
-- **Shopping list.** Every table (about 1,400 in 30 sections) has a source note naming its publisher. GovGraph
+- **Shopping list.** Every table (1,396 online in 30 sections) has a source note naming its publisher. GovGraph
   collects that publisher's current, full data, not the Abstract's 2011 numbers. Every section is in scope,
   including Puerto Rico and the Island Areas, International Statistics, and tables by state or country.
-- **Organisation.** The timeline catalogue's Build mode follows the Abstract's order, section → subsection, used
-  as is (see Placements below).
+- **Organisation.** The Abstract is a taxonomy: sections → subsections, as the book's contents print them, used as is.
+  Its tables say where series belong; they are evidence, never shown as data (user, 2026-10-13). One place per series.
 - The whole book is in the data folder (`www2.census.gov/library/publications/2011/compendia/statab/131ed/2012-statab.pdf`).
   Section pages are `census.gov/library/publications/2011/compendia/statab/131ed/<slug>.html` (for example
-  `construction-housing.html`); each lists its subsections (`<h3>`, alphabetical on the page, so book order comes
-  from table numbers) with every table as `…/131ed/tables/12sNNNN.xls` ("973 - Price Indexes of New One-Family
-  Houses Sold, by Region").
+  `construction-housing.html`); each lists its tables under headings of its own (`<h3>`, alphabetical, and not the
+  book's subsections: Construction and Housing has 8 on the web, 4 in the book) as `…/131ed/tables/12sNNNN.xls`
+  ("973 - Price Indexes of New One-Family Houses Sold, by Region").
 
-The Abstract as Census left it online (Phase 2): the section pages and every table file are in the data folder
-(pages under `census.gov/…/131ed/`, files under `www2.census.gov/…/131ed/tables/`), read by `server/lib/statab.js`
-(test `statab.test.js`) into `statab_sections`, `statab_subsections` (the web pages' grouping, which is not the book's)
-and `statab_tables` (headnote, column heads, row labels, footnotes, source note, years, whether by state; `read_error`
-where a file could not be read).
+The Abstract as Census left it online (Phase 2, 2026-10-13): the section pages and every table file are in the data
+folder (pages under `census.gov/…/131ed/`, files under `www2.census.gov/…/131ed/tables/`; 1,442 files, 148 MB), read
+by `server/lib/statab.js` (test `statab.test.js`) into `statab_sections` and `statab_tables` (`web_group`: the
+website's heading; headnote, column heads, row labels with depth, symbols, footnotes, source note, "for more
+information" links, release date, years named and how many, whether by state; `read_error` where a file could not be
+read). Files follow one layout (a screen-reader line naming the column-head rows, "Table N. Title", the headnote in
+brackets, heads, body, symbols, "FOOTNOTES:", "Source:", "For more information:", "Internet release date:"); seven are
+.xlsx under the .xls name. 1,389 of 1,396 source notes read; the loader lists the rest.
 
     node server/seed/fetch-statistical-abstract.js [--only <section slugs>] [--pages-only] [--refresh-pages] [--dry-run]
     node --env-file=server/.env server/seed/load-statistical-abstract.js [--dry-run] [--json out.json]
 
-The page **Structure** (`/structure`, `pages/Structure.jsx`; `/abstract` redirects) shows the category structures
-GovGraph's data can be organised by, as nested categories: the Statistical Abstract (also shown as the book: sections,
-table ranges, printed pages, appendices) and the Comparative Agendas Project's topics (codes, descriptions). Each
-structure is a JSON file in `server/seed/data/structures/` (`{ id, name, basis, levels, source, categories }`, a
-category `{ id, name, children }` plus its scheme's fields), imported by the client through the `@data` alias in
-`client/vite.config.js` (`client/src/structures.js`). No database tables. The Abstract's file is built from the book's PDF by
-`server/seed/build-abstract-structure.js` (contents; section numbers as codes; each section's opening paragraph as its
-description; subsections have neither). CAP's file is rebuilt by `server/seed/fetch-cap-codebook.js`
-(saves the codebook and its licence page to the data folder; parser `server/lib/parse-cap-codebook.js`, with a test); CC BY-NC-SA 4.0,
-so the derived file carries the same licence. Codes are hidden unless "Codes" is ticked. The downloaded Abstract PDF repeats
-Education's pages and stops at page 876. Tracked in `features/category-breakdowns/index.md`.
+## Taxonomies
 
-**Placements** (2026-10-13): the measures (`MEASURES` in `server/lib/series-dimensions.js`) are GovGraph's own flat
-list (user: no grouping level of our own), placed in each structure by `server/seed/data/placements.json`
-(`{ [structure id]: { [measure]: { category, basis: 'table', tables } | { category, basis: 'judgement', reason } |
-{ left_out: true, reason } } }`). The structure files are never edited for this. A placement may point at any level;
-one place per measure per structure. All 27 start as `judgement`: the Abstract's tables are not read yet, and CAP sorts
-documents, not statistics. `server/lib/placements.test.js` fails when a measure is neither placed nor left out in a
-structure, a category id does not exist, or a basis lacks its tables or reason. A new measure needs a placement in
-every structure.
+The page **Taxonomies** (`/taxonomies`, `pages/Taxonomies.jsx`; `/structure` and `/abstract` redirect) shows the
+official taxonomies GovGraph's series are placed in, as nested categories: the Statistical Abstract (also shown as
+the book: sections, table ranges, printed pages, appendices) and the Comparative Agendas Project's topics (codes,
+descriptions). Each taxonomy is a JSON file in `server/seed/data/taxonomies/` (`{ id, name, basis, levels, source,
+categories }`, a category `{ id, name, children }` plus its scheme's fields), imported by the client through the
+`@data` alias in `client/vite.config.js` (`client/src/taxonomies.js`). The Abstract's file is built from the book's
+PDF by `server/seed/build-abstract-taxonomy.js` (contents; section numbers as codes; each section's opening paragraph as
+its description; subsections have neither). CAP's file is rebuilt by `server/seed/fetch-cap-codebook.js` (saves the
+codebook and its licence page to the data folder; parser `server/lib/parse-cap-codebook.js`, with a test); CC BY-NC-SA
+4.0, so the derived file carries the same licence. Codes are hidden unless "Codes" is ticked. The downloaded Abstract
+PDF repeats Education's pages and stops at page 876. Tracked in `features/taxonomies/index.md`.
 
-The timeline catalogue's **Build** tab (`DatasetBuilder.jsx`, left column `StructureTree.jsx`; design D.1 in
-`design/timeline-data/build-structures/`) is a structure (Statistical Abstract or Policy topics (CAP), switchable)
-nested down to the measures as leaves (`withMeasures` in `client/src/structures.js`), with a filter over category
-names, CAP's subtopic descriptions, measures and dataset names, "Only with data", and "Not in this structure" last.
+**Category ids never change once made** (user, 2026-10-13), even if a name does. Both builders write through
+`writeTaxonomy` (`server/lib/taxonomies.js`), which keeps the file's existing ids (`keepIds`: matched within the same
+parent by code, then name, then position), reports renamed and added categories, and refuses to drop one unless
+`--allow-removing`. CAP's ids are its codes.
+
+**Placements** (`server/seed/data/placements.json`, checked by `server/lib/taxonomies.test.js`): per taxonomy,
+`measures` places each measure (`MEASURES` in `server/lib/series-dimensions.js`, GovGraph's own flat list) and its
+series follow it; `series` places a series apart from its measure, only where it differs (none yet). A placement is
+`{ category, basis: 'table', tables }`, `{ category, basis: 'judgement', reason }` or `{ left_out: true, reason }`; the
+taxonomy files are never edited for this. All 27 measures are `judgement` until Phase 4 of
+`features/statistical-abstract` reads the tables (Phase 2 is done). A new measure needs a placement in every taxonomy.
+Stored in `categories` (taxonomy, id, parent, position, depth, name, code, description) and `category_items` (taxonomy,
+item `measure:<key>` | `series:<slug>`, category, left_out, basis, tables, reason) by
+`server/seed/load-taxonomies.js [--dry-run]`; the client still reads the JSON files.
+
+The timeline catalogue's **Build** tab (`SeriesBuilder.jsx`, left column `TaxonomyTree.jsx`; design D.1 in
+`design/timeline-data/build-structures/`) is a taxonomy (Statistical Abstract or Policy topics (CAP), switchable)
+nested down to the measures as leaves (`withMeasures` in `client/src/taxonomies.js`), with a filter over category
+names, CAP's subtopic descriptions, measures and series names, "Only with data", and "Not in this taxonomy" last.
 Choosing a measure opens its choices as before, headed by its path and why it sits there. Below 860px the tree gives
-way to a select grouped by top-level category. Tracked in `features/category-breakdowns/index.md`; table-based
-placements wait for Phase 2 of `features/statistical-abstract/index.md`.
+way to a select grouped by top-level category. A series placed apart is not yet shown apart in the tree.
 
 ## PDFs
 

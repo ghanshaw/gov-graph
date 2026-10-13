@@ -190,7 +190,7 @@ export function sourceLink(series) {
 }
 
 // The economic series offered, by subject: the tabs of the Economic Data page (Economy.jsx) and the
-// subjects of the timeline's catalogue (DatasetSearch.jsx). Series are economic_series slugs
+// subjects of the timeline's catalogue (SeriesSearch.jsx). Series are economic_series slugs
 // (seed/load-economic-series.js); each is shown by its stored name. A tab lists its series in the
 // order offered; the first is the default. A series may name a `group`, a heading it is listed under
 // (Oil: Prices, Demand). A pair (`compare`) is two series offered as one choice, named here. `note` is

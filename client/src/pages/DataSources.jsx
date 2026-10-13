@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
-import { GET_SOURCE_DATASETS } from '../queries';
+import { GET_SOURCE_PROGRAMS } from '../queries';
 import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
 import { RailGroup, RadioOptions, Fact } from '../components/Rail';
@@ -9,23 +9,23 @@ import Loading from '../components/Loading';
 import SearchBox from '../components/SearchBox';
 import { bytes, LICENCE_CHIP, accessChip, ABSTRACT_OPTIONS, publishers } from '../sources';
 
-// Every dataset GovGraph uses (seed/data/sources.json): who publishes it, its terms, how it is fetched, and
-// what was downloaded. Statistics first, then documents, each in the file's order.
+// Every program (statistics) and collection (documents) GovGraph uses (seed/data/sources.json): who publishes it,
+// its terms, how it is fetched, and what was downloaded. Programs first, then collections, each in the file's order.
 export default function DataSources() {
-  const { data, loading, error } = useQuery(GET_SOURCE_DATASETS);
+  const { data, loading, error } = useQuery(GET_SOURCE_PROGRAMS);
   const [filters, setFilters] = useState({ publisher: null, licence: null, access: null, abstract: null });
   const [search, setSearch] = useState('');
-  const all = data?.sourceDatasets ?? [];
+  const all = data?.sourcePrograms ?? [];
   const vocabulary = data?.sourceVocabulary;
 
-  // Words typed in the search field: a dataset matches when every word is in its name, description, notes or
+  // Words typed in the search field: a program matches when every word is in its name, description, notes or
   // its organizations' names.
   const words = search.toLowerCase().split(/\s+/).filter(Boolean);
   const text = d => [d.name, d.slug, d.description, d.notes, d.outsideAbstract,
     ...d.organizations.flatMap(({ organization: o }) => [o.name, o.shortName, o.parentName])].filter(Boolean).join(' ').toLowerCase();
   const matches = d => words.every(w => text(d).includes(w));
 
-  // Each filter's test; a dataset shows when it matches the search and passes every filter that is set.
+  // Each filter's test; a program shows when it matches the search and passes every filter that is set.
   const tests = {
     publisher: v => d => publishers(d).some(o => o.kind === v),
     licence: v => d => d.licence === v,
@@ -35,7 +35,7 @@ export default function DataSources() {
   const passes = (d, except) => matches(d) && Object.entries(filters).every(([key, v]) => key === except || v == null || tests[key](v)(d));
   const shown = all.filter(d => passes(d));
 
-  // A filter's options with how many datasets each would show, given the other filters; only those in use.
+  // A filter's options with how many programs each would show, given the other filters; only those in use.
   const options = (key, labels) => {
     const rest = all.filter(d => passes(d, key));
     const list = Object.entries(labels)
@@ -52,7 +52,7 @@ export default function DataSources() {
   const rail = vocabulary && (
     <>
       <RailGroup title="Collected">
-        <Fact label="Datasets">{all.length}</Fact>
+        <Fact label="Programs">{all.length}</Fact>
         <Fact label="Publishers">{organizations}</Fact>
         <Fact label="Files">{files.toLocaleString()}</Fact>
         <Fact label="On disk">{bytes(size)}</Fact>
@@ -74,21 +74,21 @@ export default function DataSources() {
     </>
   );
 
-  const groups = vocabulary ? Object.entries(vocabulary.datasetKinds).map(([kind, label]) => [kind, label, shown.filter(d => d.kind === kind)]) : [];
+  const groups = vocabulary ? Object.entries(vocabulary.programKinds).map(([kind, label]) => [kind, label, shown.filter(d => d.kind === kind)]) : [];
 
   return (
     <PageLayout rail={rail}>
       <Crumbs items={[{ label: 'Sources' }]} />
       <div className="page-head">
         <h1 className="page-title">
-          Data Sources <small>{shown.length === all.length ? `${all.length} datasets` : `${shown.length} of ${all.length} datasets`}</small>
+          Data Sources <small>{shown.length === all.length ? `${all.length} programs and collections` : `${shown.length} of ${all.length}`}</small>
         </h1>
-        <SearchBox value={search} onChange={setSearch} placeholder="Dataset, publisher, subject…" />
+        <SearchBox value={search} onChange={setSearch} placeholder="Program, publisher, subject…" />
       </div>
       <p className="lede">
-        Every dataset GovGraph uses: who publishes it, what its terms allow, how it is fetched, and each file
+        Every program (statistics) and collection (documents) GovGraph uses: who publishes it, what its terms allow, how it is fetched, and each file
         downloaded. Federal works are public domain; other publishers' terms were read on their sites. The 2012
-        Statistical Abstract of the United States is the list of what to collect; datasets it does not cite say why
+        Statistical Abstract of the United States is the list of what to collect; those it does not cite say why
         they are here.
       </p>
 
@@ -101,7 +101,7 @@ export default function DataSources() {
           <table className="records">
             <thead>
               <tr>
-                <th>Dataset</th>
+                <th>{label.replace(/s$/, '')}</th>
                 <th className="wide-only">Terms</th>
                 <th className="wide-only">Fetched by</th>
                 <th className="date">Files</th>
@@ -139,7 +139,7 @@ export default function DataSources() {
         </section>
       ))}
       {!loading && all.length > 0 && shown.length === 0 && (
-        <div className="state">No dataset matches {words.length ? `“${search.trim()}”` : 'these filters'}.</div>
+        <div className="state">Nothing matches {words.length ? `“${search.trim()}”` : 'these filters'}.</div>
       )}
     </PageLayout>
   );

@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client/react';
 import { GET_TIMELINE_EVENTS, GET_PRESIDENTIAL_TERMS, GET_PERIODS } from '../queries';
 import TimelineChart from '../components/TimelineChart';
 import YearRange from '../components/YearRange';
-import DatasetSearch from '../components/DatasetSearch';
+import SeriesSearch from '../components/SeriesSearch';
 import LanePanel from '../components/LanePanel';
 import Loading from '../components/Loading';
 import AboutData from '../components/AboutData';
@@ -180,7 +180,7 @@ export default function Timeline() {
   // Removing a pair removes both of its series in one change.
   const withoutSlugs = slugs => lanes.map(l => ({ ...l, items: l.items.filter(i => !slugs.includes(i.slug)) })).filter(l => l.items.length);
   const removeSlugs = slugs => commit(withoutSlugs(slugs));
-  // The catalogue's Build mode swaps the datasets its choices name in one change.
+  // The catalogue's Build mode swaps the series its choices name in one change.
   const swapSlugs = (remove, add) => (add.length ? addSlugs(add, withoutSlugs(remove)) : removeSlugs(remove));
   const isOn = slugs => slugs.every(slug => items.some(i => i.slug === slug));
   const landing = slugs => {
@@ -253,7 +253,7 @@ export default function Timeline() {
         What the President, Congress, the Supreme Court and the Fed did, against presidential terms, recessions and emergencies, and the economic data you choose. What each layer is and where it comes from is set out below the chart.
       </p>
 
-      <DatasetSearch bySlug={bySlug} isOn={isOn} landing={landing} onToggle={toggleRow} onSwap={swapSlugs} />
+      <SeriesSearch bySlug={bySlug} isOn={isOn} landing={landing} onToggle={toggleRow} onSwap={swapSlugs} />
 
       <div className="timeline-body">
         <div className="timeline-main">

@@ -8,7 +8,7 @@ A composable timeline: the reader picks a measure (federal revenue, tariffs), th
 (an amount, a share of GDP, a rate), how often, the breakdowns that apply (which tax, which group of
 workers), and last a source when more than one dataset still matches. Only combinations that exist are
 offered; values ruled out by other choices are greyed with the reason. It sits beside the search catalogue on
-`/timeline` (`DatasetSearch.jsx`), which stays.
+`/timeline` (`SeriesSearch.jsx`), which stays.
 
 ## Decisions
 - Labelling comes first, before any UI (2026-10-12).
@@ -56,7 +56,7 @@ offered; values ruled out by other choices are greyed with the reason. It sits b
 
 ## Done
 - [x] Served: `EconomicSeries.dimensions` (from the code, not stored) and `seriesDimensionVocabulary` (2026-10-12)
-- [x] Build mode in the catalogue (`DatasetBuilder.jsx`, facets in `client/src/dimensions.js`): measures on the left,
+- [x] Build mode in the catalogue (`SeriesBuilder.jsx`, facets in `client/src/dimensions.js`): measures on the left,
   a row per dimension that tells datasets apart, values that lead nowhere dashed (still clickable: the choices
   that conflict are dropped), forms no publisher prints struck through with the reason, kinds in a tree on a
   line of their own, the datasets left listed to tick. Breakdowns of people start at "Everyone". Dollars,

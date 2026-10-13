@@ -13,7 +13,7 @@ const NAV = [
   { to: '/economy', label: 'Economic Data' },
   { to: '/corpus', label: 'Corpus' },
   { to: '/case-graph', label: 'Case Graph' },
-  { to: '/structure', label: 'Structure' },
+  { to: '/taxonomies', label: 'Taxonomies' },
   { to: '/sources', label: 'Sources' },
   { to: '/tags', label: 'Tags' },
 ];

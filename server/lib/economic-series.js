@@ -121,7 +121,7 @@ export const IRS_TABLE_24 = 'https://www.irs.gov/pub/irs-soi/histabb.xls';
 // Breakdowns: the same measure for a group of people, each a series BLS publishes (seasonally adjusted,
 // from the downloaded `ln` survey). A rate and a count share the id after the prefix
 // (LNS14000008 = rate, LNS13000008 = count, Black women). `breakdown` names the group by dimension;
-// each is a dataset of its own on the timeline. A combination BLS does not publish (Asian men) has no series.
+// each is a series of its own on the timeline. A combination BLS does not publish (Asian men) has no series.
 const UNEMPLOYMENT_MEASURES = [
   { of: 'unemployment-rate', prefix: 'LNS14', name: 'Unemployment rate', unit: '%', title: who => `Unemployment Rate for ${who}` },
   { of: 'unemployed-persons', prefix: 'LNS13', name: 'Unemployed persons', unit: 'thousands', title: who => `Number of Unemployed ${who}` },
@@ -1356,6 +1356,6 @@ export const SCHEMA = `
   ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS place TEXT;
   CREATE INDEX IF NOT EXISTS economic_series_measure ON economic_series (measure);
 
-  -- The dataset it comes from (source_datasets; seed/data/sources.json, lib/sources.js).
-  ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS dataset TEXT;
+  -- The program it comes from (source_programs; seed/data/sources.json, lib/sources.js).
+  ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS program TEXT;
 `;

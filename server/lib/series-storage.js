@@ -5,9 +5,9 @@
 import { valuesClause } from './data-dir.js';
 import { readSources, seriesMatcher } from './sources.js';
 
-// Each series' dataset (seed/data/sources.json), matched by its file or its source.
-let datasetMatcher;
-const datasetOf = s => (datasetMatcher ??= seriesMatcher(readSources().datasets))(s);
+// Each series' program (seed/data/sources.json), matched by its file or its source.
+let programMatcher;
+const programOf = s => (programMatcher ??= seriesMatcher(readSources().programs))(s);
 
 const BATCH = 2000;
 
@@ -18,16 +18,16 @@ const BATCH = 2000;
 export async function storeSeries(client, s, observations, title = null) {
   const { rows: [{ id }] } = await client.query(
     `INSERT INTO economic_series (slug, source, source_id, route, frequency, name, description, category, unit, first_date, last_date,
-                                  publisher_title, publisher_title_from, measure, place, dataset, loaded_at)
+                                  publisher_title, publisher_title_from, measure, place, program, loaded_at)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, now())
      ON CONFLICT (slug) DO UPDATE SET source = $2, source_id = $3, route = $4, frequency = $5, name = $6,
        description = $7, category = $8, unit = $9, first_date = $10, last_date = $11,
-       publisher_title = $12, publisher_title_from = $13, measure = $14, place = $15, dataset = $16, loaded_at = now()
+       publisher_title = $12, publisher_title_from = $13, measure = $14, place = $15, program = $16, loaded_at = now()
      RETURNING id`,
     // The description is ours; the publisher's title is read from its files.
     [s.slug, s.source, s.source_id, s.route ?? null, s.frequency, s.name, s.description, s.category, s.unit,
       observations[0]?.[0] ?? null, observations.at(-1)?.[0] ?? null, title?.title ?? null, title?.from ?? null,
-      s.measure ?? null, s.place ?? null, datasetOf(s)],
+      s.measure ?? null, s.place ?? null, programOf(s)],
   );
   await client.query('DELETE FROM economic_observations WHERE series_id = $1', [id]);
   for (let i = 0; i < observations.length; i += BATCH) {
@@ -47,16 +47,16 @@ export async function storeSeriesMany(client, list, { batch = 400, obsBatch = 50
     const chunk = list.slice(i, i + batch);
     const { sql, params } = valuesClause(chunk.map(({ s, observations }) => [
       s.slug, s.source, s.source_id, s.route ?? null, s.frequency, s.name, s.description, s.category, s.unit,
-      observations[0]?.[0] ?? null, observations.at(-1)?.[0] ?? null, s.measure ?? null, s.place ?? null, datasetOf(s),
+      observations[0]?.[0] ?? null, observations.at(-1)?.[0] ?? null, s.measure ?? null, s.place ?? null, programOf(s),
     ]));
     const { rows } = await client.query(
       `INSERT INTO economic_series (slug, source, source_id, route, frequency, name, description, category, unit,
-                                    first_date, last_date, measure, place, dataset)
+                                    first_date, last_date, measure, place, program)
        VALUES ${sql}
        ON CONFLICT (slug) DO UPDATE SET source = EXCLUDED.source, source_id = EXCLUDED.source_id, route = EXCLUDED.route,
          frequency = EXCLUDED.frequency, name = EXCLUDED.name, description = EXCLUDED.description,
          category = EXCLUDED.category, unit = EXCLUDED.unit, first_date = EXCLUDED.first_date, last_date = EXCLUDED.last_date,
-         measure = EXCLUDED.measure, place = EXCLUDED.place, dataset = EXCLUDED.dataset, loaded_at = now()
+         measure = EXCLUDED.measure, place = EXCLUDED.place, program = EXCLUDED.program, loaded_at = now()
        RETURNING id, slug`,
       params,
     );

@@ -117,8 +117,8 @@ for (const slug of slugs) {
   const html = await page(pageUrl(slug));
   if (index.sections.includes(slug)) {
     const s = parseSectionPage(html);
-    const tables = s.subsections.reduce((n, x) => n + x.tables.length, 0);
-    console.log(`  Section ${s.number}. ${s.name}: ${s.subsections.length} subsections, ${tables} tables`);
+    const tables = s.groups.reduce((n, x) => n + x.tables.length, 0);
+    console.log(`  Section ${s.number}. ${s.name}: ${s.groups.length} groups, ${tables} tables`);
   }
   files.push(...filesLinked(html));
 }

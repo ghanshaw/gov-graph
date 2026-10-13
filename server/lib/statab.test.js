@@ -6,17 +6,17 @@ import { parseSectionPage, parseIndexPage, readTableFile } from './statab.js';
 const REF = new URL('../references/', import.meta.url);
 const ref = name => new URL(name, REF).pathname;
 
-test('a section page: subsections in book order, tables under them', () => {
+test('a section page: groups in book order, tables under them', () => {
   const s = parseSectionPage(fs.readFileSync(ref('statab-construction-housing.html'), 'utf8'));
   assert.equal(s.number, 20);
   assert.equal(s.name, 'Construction and Housing');
-  assert.deepEqual(s.subsections.map(x => x.name), [
+  assert.deepEqual(s.groups.map(x => x.name), [
     'Construction Industry', 'Construction Indices And Value', 'Authorizations, Starts And Completions', 'Housing Sales',
     'Housing Units And Characteristics', 'Homeownership And Housing Costs', 'Housing And Neighborhood Quality', 'Commercial Offices',
   ]);
-  assert.deepEqual(s.subsections.map(x => x.position), [1, 2, 3, 4, 5, 6, 7, 8]);
-  assert.equal(s.subsections.reduce((n, x) => n + x.tables.length, 0), 44);
-  const sales = s.subsections.find(x => x.name === 'Housing Sales');
+  assert.deepEqual(s.groups.map(x => x.position), [1, 2, 3, 4, 5, 6, 7, 8]);
+  assert.equal(s.groups.reduce((n, x) => n + x.tables.length, 0), 44);
+  const sales = s.groups.find(x => x.name === 'Housing Sales');
   assert.deepEqual(sales.tables.find(t => t.number === 973), {
     number: 973, suffix: '', title: 'Price Indexes of New One-Family Houses Sold, by Region',
     url: 'https://www2.census.gov/library/publications/2011/compendia/statab/131ed/tables/12s0973.xls',

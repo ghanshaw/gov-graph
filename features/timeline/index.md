@@ -66,7 +66,7 @@ enacted laws and Supreme Court decisions, each linking to its page in the app.
   recessions, no coverage bars), each in two naming conventions; naming rules in `design/timeline-data/NAMING.md`
 - [x] Round 3 (2026-10-11): AC.1 (`ac-1.html`) combines A.1.1 and C.1.1, search across the top
 - [x] The timeline is AC.1 (2026-10-11): search and catalogue of every series across the top
-  (`DatasetSearch.jsx`, Economy tabs as subjects with news words, headline series, "not here yet"; unemployment
+  (`SeriesSearch.jsx`, Economy tabs as subjects with news words, headline series, "not here yet"; unemployment
   breakdowns as rows), lanes of series under the events (`TimelineChart.jsx`, replacing `HorizontalTimeline.jsx`;
   up to two scales a lane, drag between lanes, hide, reorder, quarterly and yearly values as steps), the lane
   panel with context counts (`LanePanel.jsx`), a year range with typed years and presets (`YearRange.jsx`),

@@ -1008,7 +1008,7 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .timeline-main .timeline-card { margin-top: 0; }
 @media (max-width: 1000px) { .timeline-body { grid-template-columns: minmax(0, 1fr); row-gap: 20px; } }
 
-/* Search field and catalogue (DatasetSearch.jsx) */
+/* Search field and catalogue (SeriesSearch.jsx) */
 .finder-field { display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 6px 0 14px; border: 1.5px solid var(--rule); border-radius: 10px; background: var(--bg); color: var(--muted); }
 .finder-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
 .finder-field input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 16px; color: var(--text); }
@@ -1030,7 +1030,7 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .catalog-filters .modes { display: inline-flex; padding: 2px; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg); }
 .catalog-filters .modes button { border: 0; border-radius: 6px; padding: 3px 12px; background: none; font: inherit; font-size: 12.5px; font-weight: 500; color: var(--muted); cursor: pointer; }
 .catalog-filters .modes button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-/* Build mode (DatasetBuilder.jsx) */
+/* Build mode (SeriesBuilder.jsx) */
 .builder-head { display: flex; align-items: baseline; gap: 12px; padding-top: 12px; }
 .builder-head h3 { margin: 0; font-size: 15px; }
 .builder-head .clear { border: 0; background: none; padding: 0; font: inherit; font-size: 12.5px; color: var(--accent); cursor: pointer; }
@@ -1062,25 +1062,25 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .catalog-subject h3 { margin: 0; font-size: 15px; }
 .catalog-subject .heard { margin: 1px 0 4px; font-size: 12.5px; color: var(--muted); }
 .catalog-subject h4 { margin: 10px 0 2px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
-.dataset { display: grid; grid-template-columns: 16px minmax(200px, 1.1fr) minmax(0, 1.4fr) auto; gap: 3px 12px; align-items: center; width: 100%; padding: 6px 8px; border: 0; border-radius: 6px; background: none; font: inherit; text-align: left; color: var(--text); cursor: pointer; }
-.dataset:hover { background: var(--panel); }
-.dataset .tick { display: grid; place-items: center; width: 15px; height: 15px; border: 1.5px solid #c9ced6; border-radius: 4px; font-size: 10px; color: var(--bg); }
-.dataset.on .tick { background: var(--accent); border-color: var(--accent); }
-.dataset .name { font-size: 13.5px; font-weight: 500; line-height: 1.35; }
-.dataset .name em { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 3px; background: var(--accent-soft); font-style: normal; font-size: 10px; font-weight: 600; line-height: 1.6; color: var(--accent); white-space: nowrap; vertical-align: 1px; }
-.dataset .why { font-size: 12px; line-height: 1.4; color: var(--muted); }
-.dataset .meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); white-space: nowrap; }
-.dataset .lands { font-size: 11.5px; }
-.dataset .lands.new { color: var(--warn); }
-.dataset mark { background: #fff3b0; color: inherit; border-radius: 2px; }
+.catalog-series { display: grid; grid-template-columns: 16px minmax(200px, 1.1fr) minmax(0, 1.4fr) auto; gap: 3px 12px; align-items: center; width: 100%; padding: 6px 8px; border: 0; border-radius: 6px; background: none; font: inherit; text-align: left; color: var(--text); cursor: pointer; }
+.catalog-series:hover { background: var(--panel); }
+.catalog-series .tick { display: grid; place-items: center; width: 15px; height: 15px; border: 1.5px solid #c9ced6; border-radius: 4px; font-size: 10px; color: var(--bg); }
+.catalog-series.on .tick { background: var(--accent); border-color: var(--accent); }
+.catalog-series .name { font-size: 13.5px; font-weight: 500; line-height: 1.35; }
+.catalog-series .name em { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 3px; background: var(--accent-soft); font-style: normal; font-size: 10px; font-weight: 600; line-height: 1.6; color: var(--accent); white-space: nowrap; vertical-align: 1px; }
+.catalog-series .why { font-size: 12px; line-height: 1.4; color: var(--muted); }
+.catalog-series .meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.catalog-series .lands { font-size: 11.5px; }
+.catalog-series .lands.new { color: var(--warn); }
+.catalog-series mark { background: #fff3b0; color: inherit; border-radius: 2px; }
 .catalog-missing { margin: 8px 0 0; padding: 6px 10px; border-radius: 6px; background: var(--warn-soft); font-size: 12.5px; color: #7a3e06; }
 .catalog-empty { padding: 30px 0; text-align: center; color: var(--muted); }
 @media (max-width: 860px) {
   .catalog-body { grid-template-columns: minmax(0, 1fr); }
   .catalog-nav { display: none; }
-  .dataset { grid-template-columns: 16px minmax(0, 1fr); }
-  .dataset .tick { align-self: start; margin-top: 2px; }
-  .dataset .why, .dataset .meta { grid-column: 2; }
+  .catalog-series { grid-template-columns: 16px minmax(0, 1fr); }
+  .catalog-series .tick { align-self: start; margin-top: 2px; }
+  .catalog-series .why, .catalog-series .meta { grid-column: 2; }
 }
 
 /* How often a series is published: one or two letters, warmer as they get coarser. */
@@ -1183,7 +1183,7 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .builder-status .chosen small { font-family: var(--mono); font-size: 11px; color: var(--muted); font-weight: 400; }
 .builder-alike { margin-top: 14px; }
 .builder-alike .hint { margin: 0 0 4px; font-size: 12px; color: var(--muted); }
-/* Build mode as a tree (DatasetBuilder.jsx): each option opens what exists for it, indented beneath */
+/* Build mode as a tree (SeriesBuilder.jsx): each option opens what exists for it, indented beneath */
 .tree { display: grid; gap: 10px; margin-top: 10px; }
 .tree-level { display: grid; gap: 2px; }
 .tree-label { margin: 0 0 4px; font-size: 12px; color: var(--muted); }
@@ -1211,14 +1211,14 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .in-use-pop button:hover { background: var(--panel); }
 .in-use-pop .x { color: var(--muted); }
 .in-use-pop button:hover .x { color: var(--accent); }
-/* A measure with one dataset (DatasetBuilder.jsx): one button, its details on hover */
-.one-dataset { position: relative; display: inline-block; margin-top: 12px; }
-.one-dataset::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 8px; }
+/* A measure with one series (SeriesBuilder.jsx): one button, its details on hover */
+.one-series { position: relative; display: inline-block; margin-top: 12px; }
+.one-series::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 8px; }
 .one-details { display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: max-content; max-width: 420px; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg); box-shadow: 0 10px 30px rgba(16, 24, 40, 0.14); font-size: 12.5px; color: #475467; }
 .one-details > span { display: grid; grid-template-columns: 130px auto; gap: 10px; padding: 1px 0; }
-.one-dataset:hover .one-details, .one-dataset:focus-within .one-details { display: grid; }
+.one-series:hover .one-details, .one-series:focus-within .one-details { display: grid; }
 
-/* ── Data sources (pages/DataSources.jsx, SourceDataset.jsx) ─────────────── */
+/* ── Data sources (pages/DataSources.jsx, SourceProgram.jsx) ─────────────── */
 .records td.date .sub { display: block; margin-top: 3px; font-size: 11.5px; }
 .records td.title .source-flag { color: var(--warn); }
 .section-title small { margin-left: 8px; font-weight: 500; letter-spacing: 0; text-transform: none; }
@@ -1284,14 +1284,14 @@ ul.category-tree.top > li > .category-description.coded { margin-left: 64px; }
 .category-description i { font-style: italic; }
 .category-count { margin-left: auto; font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--muted); }
 
-/* Build mode by structure (StructureTree.jsx): the Structure page's tree in the catalogue's left column,
+/* Build mode by taxonomy (TaxonomyTree.jsx): the Taxonomies page's tree in the catalogue's left column,
    down to the measures, which are its leaves. */
 .catalog-body.build-body { grid-template-columns: 400px minmax(0, 1fr); height: 560px; }
-.structure-tree { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--rule); }
+.taxonomy-tree { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--rule); }
 .st-controls { display: grid; gap: 8px; padding: 12px 14px 10px; border-bottom: 1px solid var(--rule); }
-.st-structures { display: flex; padding: 2px; border: 1px solid var(--rule); border-radius: 7px; }
-.st-structures button { border: 0; border-radius: 5px; padding: 3px 10px; background: none; font: inherit; font-size: 12.5px; color: var(--muted); cursor: pointer; white-space: nowrap; }
-.st-structures button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.st-taxonomies { display: flex; padding: 2px; border: 1px solid var(--rule); border-radius: 7px; }
+.st-taxonomies button { border: 0; border-radius: 5px; padding: 3px 10px; background: none; font: inherit; font-size: 12.5px; color: var(--muted); cursor: pointer; white-space: nowrap; }
+.st-taxonomies button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 .st-find { width: 100%; height: 32px; padding: 0 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--bg); font: inherit; font-size: 13.5px; color: var(--text); }
 .st-find:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .st-row { display: flex; justify-content: space-between; align-items: center; }
@@ -1301,20 +1301,20 @@ ul.category-tree.top > li > .category-description.coded { margin-left: 64px; }
 .st-fold button { border: 0; background: none; padding: 0 4px; font: inherit; font-size: 15px; color: var(--accent); cursor: pointer; }
 .st-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 12px 14px; scrollbar-width: none; }
 .st-scroll::-webkit-scrollbar { display: none; }
-.structure-tree ul.category-tree.top > li { border-bottom: 0; padding: 0; }
-.structure-tree ul.category-tree.top > li > .category-name { font-size: 14px; padding: 6px 0; }
-.structure-tree ul.category-tree ul.category-tree { margin: 0 0 4px 4px; }
-.structure-tree .category-name { gap: 6px; padding: 4px 0; font-size: 13.5px; }
-.structure-tree .st-name { flex: 1; min-width: 0; }
-.structure-tree .st-end { display: inline-flex; flex: none; gap: 6px; align-items: baseline; font-weight: 400; }
-.structure-tree .st-end b { font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
-.structure-tree .st-empty > .category-name { color: #a3aab5; font-weight: 400; }
-.structure-tree .st-empty > .category-name::before { color: #c9ced6; }
+.taxonomy-tree ul.category-tree.top > li { border-bottom: 0; padding: 0; }
+.taxonomy-tree ul.category-tree.top > li > .category-name { font-size: 14px; padding: 6px 0; }
+.taxonomy-tree ul.category-tree ul.category-tree { margin: 0 0 4px 4px; }
+.taxonomy-tree .category-name { gap: 6px; padding: 4px 0; font-size: 13.5px; }
+.taxonomy-tree .st-name { flex: 1; min-width: 0; }
+.taxonomy-tree .st-end { display: inline-flex; flex: none; gap: 6px; align-items: baseline; font-weight: 400; }
+.taxonomy-tree .st-end b { font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
+.taxonomy-tree .st-empty > .category-name { color: #a3aab5; font-weight: 400; }
+.taxonomy-tree .st-empty > .category-name::before { color: #c9ced6; }
 .st-leaf > button { display: flex; align-items: baseline; gap: 6px; width: 100%; padding: 4px 8px 4px 6px; border: 0; border-radius: 5px; background: none; font: inherit; font-size: 13.5px; text-align: left; color: var(--text); cursor: pointer; }
 .st-leaf > button:hover { background: var(--panel); }
 .st-leaf.on > button { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 .st-hits { display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 8px 4px 6px; font-size: 12px; color: var(--muted); }
-.structure-tree mark, .builder-path mark { background: #fff3b0; color: inherit; border-radius: 1px; }
+.taxonomy-tree mark, .builder-path mark { background: #fff3b0; color: inherit; border-radius: 1px; }
 .st-left-out { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--rule); }
 .st-left-out > .category-name { color: var(--muted); }
 .builder-path { margin: 12px 0 0; font-size: 12.5px; color: var(--muted); }
@@ -1323,5 +1323,5 @@ ul.category-tree.top > li > .category-description.coded { margin-left: 64px; }
 .builder-placement b { font-weight: 500; color: #475467; }
 @media (max-width: 860px) {
   .catalog-body.build-body { grid-template-columns: minmax(0, 1fr); height: auto; max-height: 560px; }
-  .structure-tree { display: none; }
+  .taxonomy-tree { display: none; }
 }
