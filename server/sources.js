@@ -44,7 +44,7 @@ const labelled = d => ({
 });
 
 export const sourceQueries = {
-  // The labels of every value the registry uses (lib/sources.js), for the page's filters.
+  // The labels of every value the sources use (lib/sources.js), for the page's filters.
   sourceVocabulary: () => ({ organizationKinds: ORGANIZATION_KINDS, programKinds: PROGRAM_KINDS, licences: LICENCES, access: ACCESS, statuses: STATUSES }),
 
   // Every program in the order of sources.json, with its organizations and counts.

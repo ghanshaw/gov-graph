@@ -725,7 +725,7 @@ export const typeDefs = `#graphql
     reportPart(slug: String!, partId: String!): JSON
 
     # Where the data comes from: every program (in the order of sources.json), one program, and the
-    # labels of the registry's values ({ organizationKinds, programKinds, licences, access, statuses }).
+    # labels of the sources' values ({ organizationKinds, programKinds, licences, access, statuses }).
     sourcePrograms: [SourceProgram!]!
     sourceProgram(slug: String!): SourceProgram
     # A program's files, in path order; with folder, only those directly in it.

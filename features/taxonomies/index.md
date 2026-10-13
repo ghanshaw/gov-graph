@@ -6,8 +6,8 @@ official hierarchy of categories; *structure* below, in older entries, means the
 ## Status
 In use (2026-10-13). The **Taxonomies** page (`/taxonomies`, nav "Taxonomies"; `/structure` and `/abstract` redirect)
 shows two taxonomies as nested categories: the Statistical Abstract (also as the book) and the Comparative Agendas
-Project's topics. Each is stored as a JSON file, and loaded into `categories` / `category_items`
-(`server/seed/load-taxonomies.js`). Category ids are frozen (`keepIds`). Other schemes surveyed below. The timeline
+Project's topics. Each is stored as a JSON file, as are the placements; none of it is in the database (user,
+2026-10-13). Category ids are frozen (`keepIds`). Other schemes surveyed below. The timeline
 catalogue's **Build** tab reaches measures through either taxonomy (`TaxonomyTree.jsx`), with the 27 measures placed
 in both by `server/seed/data/placements.json`, every placement a `judgement` for now.
 
@@ -254,12 +254,14 @@ Checked 2026-10-13:
 - [x] `placements.json` per taxonomy is `{ measures, series }`: a measure is placed, its series follow it, and a series
   is placed apart only where it differs, with its evidence (user, 2026-10-13). None placed apart yet: the customs-duty
   series were the example, but the Abstract prints customs duties in no table (Table 475 has them inside "Other").
-- [x] `categories` and `category_items` in the database (`server/seed/load-taxonomies.js`): 411 categories, 54 placements
+- [x] `categories` and `category_items` were put in the database, then dropped the same day: nothing queried them, and
+  the files are the one copy (user, 2026-10-13). A `table` placement in the Abstract is checked against
+  `statistical-abstract-tables.json` (the table exists and is printed in that category)
 
 ## Todo
 - [ ] Show a series placed apart under its own category in the Build tree (none exist yet)
-- [ ] Read placements from the database instead of the JSON files once something other than measures is placed
-  (documents: CAP has already coded bills and orders by topic)
+- [ ] Put taxonomies and placements in the database only when something must query them (documents: CAP has already
+  coded bills and orders by topic)
 - [ ] Review the 27 placements (doubtful: consumer spending, fuel prices, mortgage rate, every CAP one); turn the
   Abstract's into `table` with table numbers once Phase 2 of `features/statistical-abstract` reads the tables
 - [ ] Build mode at phone width: the tree is hidden below 860px and the select there has no structure switch

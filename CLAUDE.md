@@ -68,9 +68,9 @@ The live database has moved past the pattern below. Tables: `executive_documents
 `corpus`, `corpus_tags` (empty, unused), `tags`, `item_tags`, `court_decisions`, `court_votes`, `cases`, `case_opinions`, `courts`, `legislation`,
 `legislative_documents`, `legislative_document_sections`, `bill_actions`, `roll_calls`, `member_votes`,
 `congresses`, `people`, `person_roles`, `bill_sponsors`, `bill_relationships`, `bill_titles` (see Search under Bill Text), `proposals`, `economic_series` / `economic_observations`
-(see Economic Data), `periods` (see Timeline), `reports` / `report_parts` (see Reports), the source registry
+(see Economic Data), `periods` (see Timeline), `reports` / `report_parts` (see Reports), the sources
 `source_organizations`, `source_lineage`, `source_programs`, `source_program_organizations`, `source_files` (see Data Sources),
-the Statistical Abstract's `statab_sections`, `statab_tables` (see Statistical Abstract), `categories`, `category_items` (see Taxonomies), the U.S. Code tables `usc_release_points`,
+the U.S. Code tables `usc_release_points`,
 `usc_titles`, `usc_nodes`, `usc_section_versions`, `usc_source_credits` (see U.S. Code below), and the
 case-graph tables `cg_cases`, `cg_case_relationships`, `cg_scdb_cases`, `cg_data_sources`.
 There is no `documents` or `document_relationships` table, and `server/seed/schema.sql`
@@ -587,7 +587,8 @@ updates names and descriptions without reading any file (renamed 2026-10-11).
 
 `GLOSSARY.md` defines the words for data, in code and on screen (agreed 2026-10-13): **publisher → program (or
 collection, for documents) → file → series**; a series has one **measure** and one **category** in each **taxonomy**.
-Avoid "dataset" (ambiguous: publishers use it for whole collections; say series, program or file), "source" as a level,
+The whole list of publishers and programs is the **sources** (`sources.json`, `/sources`). Avoid "dataset" (ambiguous:
+publishers use it for whole collections; say series, program or file), "registry", "source" as a level,
 and "structure" for a taxonomy. Readers see "series" wherever a date-and-value line is meant.
 
 ## Data Sources
@@ -639,17 +640,20 @@ continues it under licence) is the foundation of all data collection (user, 2026
   book's subsections: Construction and Housing has 8 on the web, 4 in the book) as `…/131ed/tables/12sNNNN.xls`
   ("973 - Price Indexes of New One-Family Houses Sold, by Region").
 
-The Abstract as Census left it online (Phase 2, 2026-10-13): the section pages and every table file are in the data
-folder (pages under `census.gov/…/131ed/`, files under `www2.census.gov/…/131ed/tables/`; 1,442 files, 148 MB), read
-by `server/lib/statab.js` (test `statab.test.js`) into `statab_sections` and `statab_tables` (`web_group`: the
-website's heading; headnote, column heads, row labels with depth, symbols, footnotes, source note, "for more
-information" links, release date, years named and how many, whether by state; `read_error` where a file could not be
-read). Files follow one layout (a screen-reader line naming the column-head rows, "Table N. Title", the headnote in
+The Abstract as Census left it online (Phase 2, 2026-10-13): the section pages, every table file and the section
+PDFs are in the data folder (pages under `census.gov/…/131ed/`, files under `www2.census.gov/…/131ed/tables/`; 1,442
+files, 148 MB), read by `server/lib/statab.js` (test `statab.test.js`). The tables are evidence only, so they are kept
+in a file, not the database (user, 2026-10-13): `server/seed/data/statistical-abstract-tables.json`, one line per table
+(all 1,406: `id`, `section`, `category` = the book's subsection by printed page, or the section before its first
+subsection; `page`; `title` as printed; `online` (10 are printed but not linked); `url`; `source` = the source note;
+`notes` where a file is odd). Built by `server/seed/build-abstract-tables.js` from the files; never edited by hand.
+Table files follow one layout (a screen-reader line naming the column-head rows, "Table N. Title", the headnote in
 brackets, heads, body, symbols, "FOOTNOTES:", "Source:", "For more information:", "Internet release date:"); seven are
-.xlsx under the .xls name. 1,389 of 1,396 source notes read; the loader lists the rest.
+.xlsx under the .xls name. Section PDFs print the page number in the foot (sometimes on the credit line) and headings
+as "Table 961.", "Table. 553." or a bare "1158.". 1,389 source notes read; 17 tables carry notes.
 
     node server/seed/fetch-statistical-abstract.js [--only <section slugs>] [--pages-only] [--refresh-pages] [--dry-run]
-    node --env-file=server/.env server/seed/load-statistical-abstract.js [--dry-run] [--json out.json]
+    node server/seed/build-abstract-tables.js [--dry-run]
 
 ## Taxonomies
 
@@ -676,9 +680,9 @@ series follow it; `series` places a series apart from its measure, only where it
 `{ category, basis: 'table', tables }`, `{ category, basis: 'judgement', reason }` or `{ left_out: true, reason }`; the
 taxonomy files are never edited for this. All 27 measures are `judgement` until Phase 4 of
 `features/statistical-abstract` reads the tables (Phase 2 is done). A new measure needs a placement in every taxonomy.
-Stored in `categories` (taxonomy, id, parent, position, depth, name, code, description) and `category_items` (taxonomy,
-item `measure:<key>` | `series:<slug>`, category, left_out, basis, tables, reason) by
-`server/seed/load-taxonomies.js [--dry-run]`; the client still reads the JSON files.
+A `table` placement in the Abstract must cite tables printed in its category (checked against
+`statistical-abstract-tables.json`). Nothing about taxonomies or placements is in the database: the files are the only
+copy, until something needs to query them (user, 2026-10-13).
 
 The timeline catalogue's **Build** tab (`SeriesBuilder.jsx`, left column `TaxonomyTree.jsx`; design D.1 in
 `design/timeline-data/build-structures/`) is a taxonomy (Statistical Abstract or Policy topics (CAP), switchable)

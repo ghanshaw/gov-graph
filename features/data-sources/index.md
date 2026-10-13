@@ -1,11 +1,11 @@
 # Data Sources
 
-Renamed 2026-10-13 to follow `GLOSSARY.md`: the registry's middle level is a **program** (statistics) or
+Renamed 2026-10-13 to follow `GLOSSARY.md`: the middle level of the sources is a **program** (statistics) or
 **collection** (documents), stored in `source_programs`; "dataset" in older entries below means the same. A *series* is
 one date-and-value line (`economic_series`).
 
 ## Status
-In progress (2026-10-13). The registry is built and loaded: 44 organizations, 8 lineage entries, 43 datasets,
+In progress (2026-10-13). The sources are recorded and loaded: 44 organizations, 8 lineage entries, 43 datasets,
 22,797 files (4.3 GB) and all 51,406 economic and demographic series linked to a dataset. `/sources` and
 `/sources/:slug` read it. Not yet: moving off API keys, folding in the Demographics Source Files tab.
 
@@ -23,7 +23,7 @@ with a history.
 - A dataset the Statistical Abstract never cites is flagged, with the reason it was added (user, 2026-10-13).
 - A contact address goes in a fetch's User-Agent only for publishers that require one (BLS:
   `BLS_CONTACT_EMAIL`) (user, 2026-10-13). The dataset records whether it is required.
-- This registry comes before collecting anything from the Statistical Abstract (2026-10-13).
+- Recording the sources comes before collecting anything from the Statistical Abstract (2026-10-13).
 
 ## The model
 
@@ -103,7 +103,7 @@ here. The Abstract's coverage report (`features/statistical-abstract`, Phase 3) 
 - `server/lib/sources.js`: vocabularies, `checkSources`, `pathMatcher`, `seriesMatcher`, `urlFromPath`, schema
   (`source_organizations`, `source_lineage`, `source_programs`, `source_program_organizations`, `source_files`,
   `economic_series.dataset`). Test `sources.test.js`: the file is sound, every series has a dataset.
-- `server/seed/load-sources.js [--dry-run] [--no-files]`: stores the registry, scans the data folder (sha-256,
+- `server/seed/load-sources.js [--dry-run] [--no-files]`: stores the sources, scans the data folder (sha-256,
   kept until a file's size or time changes; first run about 50 s, then about 40 s), links series. Reports files
   that match no dataset.
 - Fetch log: `recordFetch(file, url, { archive })` (`lib/data-dir.js`) appends to `<data dir>/fetch-log.jsonl`;

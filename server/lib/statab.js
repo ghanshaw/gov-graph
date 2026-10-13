@@ -1,7 +1,7 @@
 // The Statistical Abstract of the United States, 2012 (131st edition), as the Census Bureau left it online
 // (features/statistical-abstract, Phase 2): the index page, one page per section listing its tables under
 // headings, and every table as a binary Excel file (12sNNNN.xls). Read here; fetched by
-// seed/fetch-statistical-abstract.js and stored by seed/load-statistical-abstract.js.
+// seed/fetch-statistical-abstract.js and written to a file by seed/build-abstract-tables.js.
 
 import fs from 'fs';
 import path from 'path';
@@ -208,6 +208,67 @@ export function readTableFile(file) {
   return readTableRows(zip ? readXlsx(file) : readXls(file));
 }
 
+// ---------------------------------------------------------------------------
+// A section's PDF: the printed pages, each with its page number in the running foot ("Construction and Housing 603",
+// "604 Construction and Housing"), and every table's heading ("Table 961. Construction—Establishments, …"). Gives each
+// table its printed page, which places it in the book's subsections (their pages come from the contents), and lists
+// tables the website does not (966 and 967 are printed, not linked).
+
+/** The section's own PDF among the files its page links (not a single table's, such as 12s0697.pdf). */
+export const sectionPdf = files => files.find(f => /\/tables\/[a-z]+\.pdf$/.test(f)) ?? null;
+
+/** The printed page number in a page's foot, or null. */
+function printedPage(lines) {
+  for (const l of lines.slice(-4).reverse()) {
+    // The credit line is sometimes set on the same line ("792 Foreign Commerce and Aid U.S. Census Bureau, …").
+    const text = l.text.replace(/\s*U\.S\. Census Bureau, Statistical Abstract of the United States.*$/i, '').trim();
+    const m = text.match(/^(\d{1,4})\s+\D/) ?? text.match(/\D\s+(\d{1,4})$/);
+    if (m) return Number(m[1]);
+  }
+  return null;
+}
+
+/**
+ * A section PDF's pages (pdf-lines.js, extractPdfLines) → its tables: [{ number, suffix, title, page }], in
+ * print order. A heading runs on over the lines below it until the headnote ("[") or a line in another type size.
+ * Headings are "Table 961. …", sometimes "Table. 553. …", or the bare number ("1158. …") where "Table" was set apart;
+ * a bare number counts only inside the section's `range` of table numbers ([first, last], from the contents).
+ */
+export function readSectionPdfLines(pages, range = null) {
+  const tables = [];
+  for (const p of pages) {
+    const page = printedPage(p.lines);
+    p.lines.forEach((l, i) => {
+      let m = l.text.match(/^Table\.?\s*(\d+)([A-Za-z]?)\.\s+(.*)$/);
+      if (!m && range) {
+        m = l.text.match(/^(\d{1,4})([A-Za-z]?)\.\s+([A-Z].*)$/);
+        if (m && (Number(m[1]) < range[0] || Number(m[1]) > range[1])) m = null;
+      }
+      if (!m) return;
+      let title = m[3].trim();
+      for (let j = i + 1; j < Math.min(p.lines.length, i + 3); j++) {
+        const next = p.lines[j];
+        if (next.size !== l.size || /^\[|^Table\s+\d/.test(next.text)) break;
+        title += ` ${next.text.trim()}`;
+      }
+      // A table continued onto another page is printed again ("—Con."); its first page is kept.
+      if (tables.some(t => t.number === Number(m[1]) && t.suffix === m[2].toLowerCase())) return;
+      tables.push({ number: Number(m[1]), suffix: m[2].toLowerCase(), title: title.replace(/\s+/g, ' '), page });
+    });
+  }
+  return tables;
+}
+
+/**
+ * Where a printed page falls in a section of the book's taxonomy (taxonomies/statistical-abstract.json): the last
+ * subsection starting on or before it, or the section itself for the pages before its first subsection.
+ */
+export function categoryAt(section, page) {
+  let at = section.id;
+  for (const sub of section.children ?? []) if (page != null && sub.page <= page) at = sub.id;
+  return at;
+}
+
 /** Every saved page (index, then sections in the index's order) → parsed; missing pages are skipped. */
 export function readSavedPages() {
   const indexFile = mirrorFile(INDEX_URL);
@@ -218,45 +279,3 @@ export function readSavedPages() {
     .map(slug => ({ slug, url: pageUrl(slug), ...parseSectionPage(fs.readFileSync(pageFile(slug), 'utf8')) }));
   return { index, sections };
 }
-
-// One row per section and per table. Tables are evidence, never shown as data (GLOSSARY.md): what to collect (the
-// source note) and where its series belong (the book's subsection). `web_group` is the heading the Census website lists
-// a table under, which is not the book's subsection (taxonomies/statistical-abstract.json). A table's `title` is the web
-// page's link text; what its file says is in the other columns (null where it could not be read: `read_error`).
-export const SCHEMA = `
-CREATE TABLE IF NOT EXISTS statab_sections (
-  number        INT PRIMARY KEY,
-  slug          TEXT NOT NULL UNIQUE,
-  name          TEXT NOT NULL,
-  url           TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS statab_tables (
-  id            TEXT PRIMARY KEY,
-  number        INT NOT NULL,
-  suffix        TEXT NOT NULL DEFAULT '',
-  section       INT NOT NULL REFERENCES statab_sections(number) ON DELETE CASCADE,
-  web_group     TEXT NOT NULL,
-  title         TEXT NOT NULL,
-  url           TEXT NOT NULL,
-  path          TEXT NOT NULL,
-  file_title    TEXT,
-  description   TEXT,
-  headnote      TEXT,
-  column_heads  JSONB,
-  stub          JSONB,
-  symbols       TEXT[],
-  footnotes     TEXT[],
-  notes         TEXT[],
-  source        TEXT,
-  more_info     TEXT[],
-  released      TEXT,
-  first_year    INT,
-  last_year     INT,
-  year_count    INT,
-  by_state      BOOLEAN,
-  row_count     INT,
-  column_count  INT,
-  read_error    TEXT
-);
-CREATE INDEX IF NOT EXISTS statab_tables_section ON statab_tables (section, number);
-`;

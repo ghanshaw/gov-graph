@@ -1,8 +1,9 @@
 # Statistical Abstract
 
 ## Status
-Phase 2 (2026-10-13): every section page and table file fetched and read into `statab_*` tables. The source
-registry is `features/data-sources`; the book's own contents are a category structure (`features/taxonomies`).
+Phase 2 done (2026-10-13): every section page, table file and section PDF fetched; every table's printed page and
+subsection, title and source note in `server/seed/data/statistical-abstract-tables.json` (not the database). The source
+sources (publishers and programs) are `features/data-sources`; the book's own contents are a category structure (`features/taxonomies`).
 
 ## Goal
 Use the **Statistical Abstract of the United States, 2012** (131st edition, the last the Census Bureau published;
@@ -25,7 +26,7 @@ it ended the program on October 1, 2011) as the foundation for all the data GovG
   A dataset the Abstract never cites is flagged on the sources page (`features/data-sources`).
 - Tables whose source is licensed are listed with a link to the publisher and not collected, for now
   (user, 2026-10-13).
-- The source registry (`features/data-sources`) is built first (2026-10-13).
+- The sources (`features/data-sources`) are recorded first (2026-10-13).
 - The Economic Data rules stand: series as their publishers print them, nothing computed, separate files never
   joined.
 
@@ -49,7 +50,7 @@ and that a `judgement` has its reason, the way `series-names.test.js` checks nam
 - [x] `2012-statab.pdf` (32 MB) in the data folder under
   `www2.census.gov/library/publications/2011/compendia/statab/131ed/` (2026-10-13)
 
-### Phase 1 — source registry (`features/data-sources`) — done 2026-10-13
+### Phase 1 — sources (`features/data-sources`) — done 2026-10-13
 Organizations, datasets, files and licences for everything already used, before anything new is collected.
 Phase 2's downloads go through `recordFetch` and become files of the `statistical-abstract` dataset.
 
@@ -62,8 +63,13 @@ Phase 2's downloads go through `recordFetch` and become files of the `statistica
 - Read each table (`server/lib/statab.js`, test `statab.test.js` against copies in `server/references/statab-*`):
   number, title, headnote, column heads, row labels with depth, symbols, footnotes, notes, source note, "For more
   information" links, release date, years named (range and count), whether the rows are the states.
-- Store as `statab_sections` and `statab_tables` (the website's heading as `web_group`)
-  (`server/seed/load-statistical-abstract.js [--dry-run] [--json out.json]`).
+- Write `server/seed/data/statistical-abstract-tables.json` (`server/seed/build-abstract-tables.js [--dry-run]`): one
+  line per table with its section, printed page, category in the book's taxonomy, title, whether the website links it,
+  and its source note. Tables are evidence, so not in the database (user, 2026-10-13).
+- Each section's PDF gives every table's printed page; the book's subsections start at the pages the contents give,
+  so a table belongs to the last subsection starting on or before its page, or to the section itself before the
+  first. The PDFs also hold the 10 tables the website does not link: 298, 697, 867, 966, 967, 1025, 1029, 1033, 1254,
+  1400 (1,406 in all, as the contents say).
 
 What the pages and files showed (2026-10-13):
 - Each table file has the same layout: a description for screen readers naming the column-head rows ("column headers
@@ -78,7 +84,7 @@ What the pages and files showed (2026-10-13):
   loader; the page's number is kept).
 
 ### Phase 3 — from source notes to datasets
-- Read each source note into publisher(s) and publication. Group into datasets in the registry, reviewed by
+- Read each source note into publisher(s) and publication. Group into programs in the sources (`sources.json`), reviewed by
   hand (expect a few hundred distinct publications).
 - For each dataset: kind of publisher, licence, status today (active, renamed, moved to another agency,
   discontinued) with its successor, and how to get it (bulk file first).
@@ -111,7 +117,7 @@ What the pages and files showed (2026-10-13):
 ## Done
 - [x] Discussed and agreed the approach (2026-10-13)
 - [x] Downloaded the 2012 edition's PDF (2026-10-13)
-- [x] Section pages and all 1,396 table files fetched, read and stored (`statab_sections`, `statab_tables`) (2026-10-13)
+- [x] Section pages and all 1,396 table files fetched and read (2026-10-13)
 - [x] `server/lib/xls.js`: RK numbers with the top bit set (negative doubles) no longer throw (2026-10-13)
 - [x] Page for the book's structure (first `/abstract`, nav "Abstract"; now the Structure page, `/taxonomies`): the book's structure as its contents print it, 30 sections, 147 subsections,
   table ranges, printed page numbers and the appendices, with a find field. Data now in `server/seed/data/taxonomies/statistical-abstract.json`,
@@ -123,11 +129,12 @@ What the pages and files showed (2026-10-13):
   (see `features/taxonomies`, which now tracks the Structure page) (user, 2026-10-13)
 
 ## Todo
-- [x] Phase 1: source registry built and loaded (`features/data-sources`, 2026-10-13)
+- [x] Phase 1: sources recorded and loaded (`features/data-sources`, 2026-10-13)
 - [x] Phase 2: fetch and read the section pages and table files (2026-10-13)
-- [ ] Map each table to the book's subsection (by its printed page, from the section PDFs): the evidence for placements
 - [x] Tables are evidence, never shown as data (user, 2026-10-13): no page of their own
-- [x] `statab_subsections` dropped for a `web_group` column: the website's headings are not the book's subsections (2026-10-13)
+- [x] The website's headings are not the book's subsections; not kept (2026-10-13)
+- [x] Every table mapped to the book's subsection by its printed page, from the section PDFs; written with its source
+  note to `statistical-abstract-tables.json`; the `statab_*` tables dropped from the database (user, 2026-10-13)
 - [ ] Phase 3: source notes → datasets; coverage report
 - [ ] Phase 4: placement for every current series; catalogue by section (the catalogue's Build tab is by section since
   2026-10-13, the 27 measures placed by judgement in `placements.json`; Phase 4 turns them into `table`)

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Load the source registry: organizations, lineage and programs from seed/data/sources.json, every
+ * Load the sources: organizations, lineage and programs from seed/data/sources.json, every
  * file in the data folder (matched to a program by its path), and each economic series' program.
  *
  * The file is the original; re-running replaces the tables' rows with it. Files are hashed (sha-256)
@@ -112,7 +112,7 @@ async function storeFiles(client, files) {
   }
 }
 
-async function storeRegistry(client, { organizations, lineage, programs }) {
+async function storeSources(client, { organizations, lineage, programs }) {
   await client.query('DELETE FROM source_program_organizations');
   await client.query('DELETE FROM source_lineage');
   await client.query('DELETE FROM source_programs WHERE NOT (slug = ANY($1))', [programs.map(d => d.slug)]);
@@ -180,7 +180,7 @@ async function run() {
     await client.query(SERIES_SCHEMA);
     await client.query(SCHEMA);
     await client.query('BEGIN');
-    await storeRegistry(client, sources);
+    await storeSources(client, sources);
     if (FILES) await storeFiles(client, files);
     const missing = await storeSeriesPrograms(client, programs);
     await client.query('COMMIT');

@@ -1,13 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { placementProblems, placementOf, readPlacements, readTaxonomies, keepIds, categoryIds } from './taxonomies.js';
+import { placementProblems, placementOf, readPlacements, readTaxonomies, readAbstractTables, keepIds, categoryIds } from './taxonomies.js';
 import { MEASURES, seriesDimensions } from './series-dimensions.js';
 import { SERIES } from './economic-series.js';
 
 const seriesMeasure = new Map(SERIES.map(s => [s.slug, seriesDimensions(s).measure]));
 
 test('every measure is placed, or left out on purpose, in every taxonomy; series placed apart are sound', () => {
-  assert.deepEqual(placementProblems(readPlacements(), readTaxonomies(), MEASURES, seriesMeasure), []);
+  assert.deepEqual(placementProblems(readPlacements(), readTaxonomies(), MEASURES, seriesMeasure, readAbstractTables()), []);
 });
 
 test('every taxonomy has unique category ids', () => {
@@ -58,6 +58,27 @@ test('wrong placements are caught', () => {
     's: series nowhere: unknown series',
     'other: unknown taxonomy',
   ]);
+});
+
+test('a table cited as evidence must exist and be printed in that category', () => {
+  const abstract = { id: 'statistical-abstract', categories: [{ id: 'a', name: 'A', children: [{ id: 'a/b', name: 'B' }, { id: 'a/c', name: 'C' }] }] };
+  const tables = new Map([['670', { category: 'a/b' }], ['671', { category: 'a/c' }]]);
+  assert.deepEqual(placementProblems({ 'statistical-abstract': { measures: {
+    gdp: { category: 'a/b', basis: 'table', tables: [670, 671, 9999] },
+    deaths: { category: 'a', basis: 'table', tables: [671] },
+    sentiment: { left_out: true, reason: 'Not here.' },
+  } } }, [abstract], measures, series, tables), [
+    'statistical-abstract: gdp: Table 671 is printed under a/c',
+    'statistical-abstract: gdp: no Table 9999',
+  ]);
+});
+
+test('every Abstract table has a page and a category in the Abstract', () => {
+  const abstract = readTaxonomies().find(t => t.id === 'statistical-abstract');
+  const ids = categoryIds(abstract);
+  const tables = [...readAbstractTables().values()];
+  assert.equal(tables.length, 1406);
+  assert.deepEqual(tables.filter(t => t.page == null || !ids.has(t.category)).map(t => t.id), []);
 });
 
 test('a series sits where its measure does unless placed apart', () => {

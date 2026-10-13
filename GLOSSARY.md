@@ -9,6 +9,7 @@ and one **category** in each **taxonomy**.
 
 | Term | Meaning | Example | In GovGraph |
 |---|---|---|---|
+| **Sources** | The list of everyone whose data GovGraph uses (governments, international bodies, universities, industry) and what each publishes: publishers, their history, programs and collections, terms, how each is fetched, the files downloaded | the Sources page | `server/seed/data/sources.json` (written by hand), the `source_*` tables, `/sources` |
 | **Publisher** | The organization that puts the numbers or documents out. FRED calls this the *source*. | BEA, BLS, the Census Bureau, Freddie Mac, GPO | `source_organizations`, with kind (federal, international, academic, …), parent and lineage |
 | **Program** | The ongoing survey or accounting system that produces statistics | the Current Population Survey; the National Income and Product Accounts; the Consumer Price Index; Debt to the Penny | `source_programs` (kind `statistics`), `/sources/<program>` |
 | **Collection** | A program's counterpart for documents: a body of documents published together | the Federal Register; govinfo's bill status files; Supreme Court slip opinions; the U.S. Code | `source_programs` too (kind `documents`); govinfo's own word |
@@ -28,13 +29,13 @@ and one **category** in each **taxonomy**.
 
 | Term | Meaning | Example | In GovGraph |
 |---|---|---|---|
-| **Taxonomy** | An official hierarchy of categories, used as published | the Statistical Abstract; the Comparative Agendas Project's topics | `server/seed/data/taxonomies/<id>.json`, the `categories` table, `/taxonomies` |
-| **Category** | Any node of a taxonomy, at any level. "Construction and Housing → Home sales" is a path through two categories, parent to child | Construction and Housing; Home sales; CAP 1803 Exports | `categories`. Its id never changes once made, even if its name does |
+| **Taxonomy** | An official hierarchy of categories, used as published | the Statistical Abstract; the Comparative Agendas Project's topics | `server/seed/data/taxonomies/<id>.json`, `/taxonomies` |
+| **Category** | Any node of a taxonomy, at any level. "Construction and Housing → Home sales" is a path through two categories, parent to child | Construction and Housing; Home sales; CAP 1803 Exports | a node in its taxonomy's file. Its id never changes once made, even if its name does |
 | **Section** | A top-level category of the Statistical Abstract: one of its 30 numbered chapters | 20. Construction and Housing | the category's `code` is the section number |
 | **Subsection** | A category inside an Abstract section, as the book's contents list it (not as the Census website groups tables); where series are placed | Home sales | no code: the book does not number them |
-| **Placement** | Where a series sits in a taxonomy, and how that was decided | GDP → Gross domestic product, by Table 670 | `category_items`. A measure is placed, its series follow it, and a series is placed apart only where it differs |
+| **Placement** | Where a series sits in a taxonomy, and how that was decided | GDP → Gross domestic product, by Table 670 | `server/seed/data/placements.json`. A measure is placed, its series follow it, and a series is placed apart only where it differs |
 | **Evidence** | Why a placement is where it is: `table` (an Abstract table printing the series, by number) or `judgement` (a sentence saying why) | "Table 670"; "Paid out through the Treasury; no Abstract table holds them" | `basis`, `tables`, `reason` on a placement |
-| **Table** | A printed grid: slices of series for chosen years. The Abstract's tables are evidence and the shopping list, never shown as data | Abstract Table 973; NIPA Table 1.1.6; OMB Historical Table 1.1 | `statab_tables` |
+| **Table** | A printed grid: slices of series for chosen years. The Abstract's tables are evidence and the shopping list, never shown as data | Abstract Table 973; NIPA Table 1.1.6; OMB Historical Table 1.1 | `server/seed/data/statistical-abstract-tables.json` (number, page, category, source note) |
 
 The Comparative Agendas Project calls its levels *major topic* and *subtopic*; each taxonomy keeps its own level names
 (`levels` in its file), and *category* is the word for any of them.
@@ -44,5 +45,8 @@ The Comparative Agendas Project calls its levels *major topic* and *subtopic*; e
 - **Dataset**: publishers use it for whole collections (data.gov, the Census API's `acs/acs1`), so it is ambiguous.
   Say *series* for one measured thing over time, *program* or *collection* for what a publisher runs, *file* for a
   download.
-- **Source**: already means a table's source note and the Sources page. Not a level; say *publisher* or *program*.
+- **Source** (one): not a level. Say *publisher* or *program*. *Sources* (plural) is the whole list, above.
+- **Source note**: the line under a printed table naming where its numbers came from ("Source: U.S. Census Bureau,
+  New Residential Sales"). It points to a program; it is not one.
+- **Registry**: suggests something was registered or made official. Say *sources*.
 - **Structure** (for a taxonomy): too general. A document's parsed `structure` (sections → items) is unrelated.

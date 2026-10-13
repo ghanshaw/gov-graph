@@ -1,4 +1,4 @@
-// Printing the source registry (pages/DataSources.jsx, SourceProgram.jsx).
+// Printing the sources (pages/DataSources.jsx, SourceProgram.jsx).
 
 /** 31959786 → "32.0 MB" */
 export function bytes(n) {
