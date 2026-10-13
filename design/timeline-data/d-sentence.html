@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline data · D · Sentence builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+  /* The request, written out: every underlined phrase can be changed. */
+  .sentence { font-size: 24px; line-height: 1.75; letter-spacing: -.012em; font-weight: 500; margin: 6px 0 4px; max-width: 1100px; }
+  .tok { border: 0; background: none; padding: 0 2px; font: inherit; color: var(--tc, var(--accent)); border-bottom: 2px solid color-mix(in srgb, var(--tc, var(--accent)) 45%, transparent); border-radius: 2px; }
+  .tok:hover, .tok.open { background: color-mix(in srgb, var(--tc, var(--accent)) 9%, transparent); }
+  .tok.off { color: var(--muted); text-decoration: line-through; border-bottom-style: dashed; }
+  .tok sup { font: 600 10px var(--mono); vertical-align: 6px; margin-left: 2px; opacity: .7; }
+  .tok.add { color: var(--muted); border-bottom: 2px dashed #c9ced6; font-weight: 500; }
+  .hint { color: var(--muted); font-size: 13px; margin: 10px 0 18px; }
+
+  .pop { position: absolute; z-index: 30; width: 380px; background: #fff; border: 1px solid var(--rule); border-radius: 10px; box-shadow: 0 16px 40px rgba(16, 24, 40, .16); padding: 10px; font-size: 13.5px; }
+  .pop h5 { margin: 6px 4px 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .pop input { width: 100%; height: 34px; border: 1.5px solid var(--rule); border-radius: 7px; padding: 0 10px; outline: 0; margin-bottom: 4px; }
+  .pop input:focus { border-color: var(--accent); }
+  .pop .o { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border: 0; background: none; padding: 5px 6px; border-radius: 6px; }
+  .pop .o:hover { background: var(--panel); }
+  .pop .o small { margin-left: auto; color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+  .pop .row { display: flex; gap: 6px; flex-wrap: wrap; padding: 4px; }
+  .pop .about { color: var(--muted); font-size: 12.5px; padding: 2px 6px 6px; border-bottom: 1px solid var(--rule); margin-bottom: 4px; }
+  .pop .scroll { max-height: 300px; overflow: auto; }
+
+  .stories { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin: 6px 0 22px; }
+  .story { text-align: left; border: 1px solid var(--rule); background: #fff; border-radius: 10px; padding: 10px 12px; }
+  .story:hover { border-color: var(--accent); }
+  .story.on { border-color: var(--accent); background: var(--accent-soft); }
+  .story b { display: block; font-size: 14px; margin-bottom: 3px; }
+  .story span { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 6px; }
+  .bar { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
+  .bar .btn { font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">Gov<b>Graph</b></span>
+  <nav class="nav"><span>Executive</span><span>Congress</span><span>Supreme Court</span><span>U.S. Code</span><span class="on">Timeline</span><span>Economy</span></nav>
+  <span class="variant-tag"><a href="index.html">Design variants</a> · D · Sentence builder</span>
+</div>
+<main class="page">
+  <p class="label">Timeline</p>
+  <div class="sentence" id="sentence"></div>
+  <p class="hint">Click any underlined words to change them. The sentence is the page’s address too: copy it to share exactly this view.</p>
+
+  <p class="label">Starting points</p>
+  <div class="stories" id="stories"></div>
+
+  <div class="bar"><button class="btn" id="copy">Copy link to this view</button><span class="muted" id="copied" style="font-size:12.5px"></span></div>
+  <div id="chart"></div>
+</main>
+<div class="pop" id="pop" hidden></div>
+
+<script src="shared/data.js"></script>
+<script src="shared/catalog.js"></script>
+<script src="shared/chart.js"></script>
+<script>
+const { h } = GG;
+const colors = GG.colorKeeper();
+// How each series reads inside a sentence. Anything not listed reads as its name.
+const PHRASES = {
+  'unemployment-rate': 'the unemployment rate', 'unemployment-u6': 'the broad unemployment rate (U-6)', 'unemployed-persons': 'the number of people unemployed',
+  'fed-funds': 'the Fed’s interest rate', 'mortgage-rate': 'mortgage rates', 'treasury-10y': 'the 10-year Treasury yield', 'treasury-2y': 'the 2-year Treasury yield',
+  'gasoline-retail': 'gas prices', 'diesel-retail': 'diesel prices', 'wti-spot': 'the price of oil (WTI)', 'brent-spot': 'the world oil price (Brent)',
+  cpi: 'consumer prices (CPI)', 'cpi-core': 'core consumer prices', 'pce-price': 'the Fed’s price measure (PCE)', 'pce-price-core': 'core PCE prices',
+  'mts-customs-duties': 'tariff money collected', 'usitc-duties-ratio-total': 'the average tariff rate', 'trade-balance-monthly': 'the trade deficit',
+  'debt-total': 'the national debt', 'debt-public': 'debt held by the public', 'omb-surplus-gdp': 'the deficit as a share of GDP', 'mts-deficit': 'the monthly deficit',
+  'cbo-tax-rate--highest': 'the tax rate of the top fifth', 'cbo-tax-rate--middle': 'the tax rate of the middle fifth', 'cbo-tax-rate--lowest': 'the tax rate of the bottom fifth',
+  'irs-top-rate': 'the top income tax rate', 'omb-receipts-gdp': 'tax revenue as a share of GDP', 'mts-total-receipts': 'monthly tax revenue',
+  'gdp-growth': 'economic growth', 'sentiment': 'consumer sentiment', 'home-price': 'new-home prices', 'hoam-share': 'the cost of owning a home',
+};
+const GROUP_PHRASE = { 'unemployment-rate--black': 'for Black workers', 'unemployment-rate--hispanic': 'for Hispanic workers', 'unemployment-rate--white': 'for white workers',
+  'unemployment-rate--asian': 'for Asian workers', 'unemployment-rate--women': 'for women', 'unemployment-rate--men': 'for men', 'unemployment-rate--16-19': 'for teenagers',
+  'unemployment-rate--bachelors': 'for college graduates', 'unemployment-rate--black-women': 'for Black women' };
+const phrase = slug => PHRASES[slug] ?? GROUP_PHRASE[slug] ?? GG.series(slug).name.replace(/ \((monthly|daily)\)/, '').toLowerCase();
+const MARKS = { recessions: 'recessions', fomc: 'Fed rate decisions', 'tax-laws': 'tax laws', relief: 'relief laws', 'tariff-actions': 'tariff orders', presidents: 'presidents' };
+
+const STORIES = [
+  { title: 'Did tariffs bring in money?', text: 'Tariff money collected each month and the average tariff rate, with the 2025 tariff orders.', lines: ['mts-customs-duties', 'usitc-duties-ratio-total'], marks: ['tariff-actions'], from: 2015 },
+  { title: 'Inflation and the Fed', text: 'The Fed’s own price measure, its interest rate, and every rate decision.', lines: ['pce-price', 'fed-funds'], marks: ['fomc', 'recessions'], from: 2015 },
+  { title: 'Who pays federal taxes?', text: 'Average tax rates of the top, middle and bottom fifth, and the laws that changed them.', lines: ['cbo-tax-rate--highest', 'cbo-tax-rate--middle', 'cbo-tax-rate--lowest'], marks: ['tax-laws'], from: 1980 },
+  { title: 'Gas prices by president', text: 'What drivers paid and what a barrel cost, under each president since Clinton.', lines: ['gasoline-retail', 'wti-spot'], marks: ['presidents'], from: 1993 },
+  { title: 'Who loses jobs in a recession', text: 'The jobless rate for everyone, Black workers and Hispanic workers, through each recession.', lines: ['unemployment-rate', 'unemployment-rate--black', 'unemployment-rate--hispanic'], marks: ['recessions'], from: 1990 },
+  { title: 'Debt, deficits and relief', text: 'The national debt and the yearly deficit, with relief and tax laws marked.', lines: ['debt-total', 'omb-surplus-gdp'], marks: ['relief', 'tax-laws'], from: 1993 },
+];
+
+const state = { lines: [], marks: new Set(), from: 1990, story: 4 };
+function load(i) {
+  const s = STORIES[i];
+  state.lines.forEach(l => colors.free(l.slug));
+  state.lines = s.lines.map(slug => ({ slug, on: true, band: slug === 'fed-funds' ? ['fed-target-lower', 'fed-target-upper'] : undefined }));
+  state.marks = new Set(s.marks); state.from = s.from; state.story = i;
+  draw();
+}
+
+const pop = document.getElementById('pop');
+let openTok = null;
+function openPop(tok, html, after) {
+  document.querySelectorAll('.tok.open').forEach(t => t.classList.remove('open'));
+  tok.classList.add('open'); openTok = tok.dataset.key;
+  pop.innerHTML = html; pop.hidden = false;
+  const r = tok.getBoundingClientRect();
+  pop.style.left = `${Math.min(window.scrollX + r.left, window.scrollX + document.documentElement.clientWidth - 396)}px`;
+  pop.style.top = `${window.scrollY + r.bottom + 6}px`;
+  after?.();
+}
+function closePop() { pop.hidden = true; openTok = null; document.querySelectorAll('.tok.open').forEach(t => t.classList.remove('open')); }
+document.addEventListener('mousedown', e => { if (!pop.contains(e.target) && !e.target.closest('.tok')) closePop(); });
+document.addEventListener('keydown', e => e.key === 'Escape' && closePop());
+
+const topicOf = slug => GG_TOPICS.find(t => t.intents.some(i => i.series.some(s => s.slug === slug)));
+const opt = (slug, extra = '') => { const s = GG.series(slug); return `<button class="o" data-pick="${slug}">${phrase(slug)} ${GG.freqBadge(slug)}<small>${extra || `${s.sourceName}, ${new Date(s.first).getUTCFullYear()}–`}</small></button>`; };
+
+function seriesPop(tok) {
+  const slug = tok.dataset.slug, s = GG.series(slug), t = topicOf(slug), l = state.lines.find(x => x.slug === slug);
+  const siblings = t ? t.intents.flatMap(i => i.series).filter(x => x.slug !== slug && !state.lines.some(l => l.slug === x.slug)) : [];
+  const groups = siblings.filter(x => GROUP_PHRASE[x.slug]), others = siblings.filter(x => !GROUP_PHRASE[x.slug]);
+  openPop(tok, `
+    <div class="about"><b style="color:var(--text)">${s.name.replace(/ \((monthly|daily)\)/, '')}</b> · ${GG.FREQ[s.frequency].name.toLowerCase()}${s.shown ? `, shown as ${s.shown}` : ''} · ${s.sourceName}<br>${s.description?.split('. ')[0] ?? ''}.</div>
+    <div class="row"><button class="btn" data-act="toggle">${l.on ? 'Hide for now' : 'Show again'}</button><button class="btn" data-act="remove">Remove</button></div>
+    ${groups.length ? `<h5>Add a group beside it</h5><div class="row">${groups.map(g => `<button class="btn" data-add="${g.slug}">${g.short}</button>`).join('')}</div>` : ''}
+    ${others.length ? `<h5>Swap for</h5><div class="scroll">${others.map(o => opt(o.slug, o.role)).join('')}</div>` : ''}`);
+  pop.onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.act === 'toggle') l.on = !l.on;
+    if (b.dataset.act === 'remove') { state.lines = state.lines.filter(x => x !== l); colors.free(slug); }
+    if (b.dataset.add) state.lines.push({ slug: b.dataset.add, on: true });
+    if (b.dataset.pick) { colors.free(slug); Object.assign(l, { slug: b.dataset.pick, on: true, band: b.dataset.pick === 'fed-funds' ? ['fed-target-lower', 'fed-target-upper'] : undefined }); }
+    state.story = null; closePop(); draw();
+  };
+}
+function addPop(tok) {
+  const list = q => {
+    const topics = q ? GG.searchTopics(q) : GG_TOPICS;
+    const seen = new Set(state.lines.map(l => l.slug));
+    const fresh = list => list.filter(s => !seen.has(s.slug) && !GROUP_PHRASE[s.slug]);
+    return (q
+      ? topics.slice(0, 2).flatMap(t => t.intents.map(i => fresh(i.series).length ? `<h5>${t.label} · ${i.label}</h5>${fresh(i.series).map(s => opt(s.slug, s.role)).join('')}` : ''))
+      : topics.map(t => `<h5>${t.label}</h5>${fresh(t.intents.flatMap(i => i.series)).slice(0, 3).map(s => opt(s.slug, s.role)).join('')}`)).join('')
+      + (q ? GG.searchSeries(q).filter(s => !seen.has(s.slug) && !topics.slice(0, 2).some(t => t.intents.some(i => i.series.some(x => x.slug === s.slug)))).slice(0, 5).map(s => opt(s.slug)).join('') : '');
+  };
+  openPop(tok, `<input id="pq" placeholder="jobs, taxes, gas, the Fed…" autocomplete="off"><div class="scroll" id="pl">${list('')}</div>`, () => {
+    const pq = document.getElementById('pq'); pq.focus();
+    pq.oninput = () => document.getElementById('pl').innerHTML = list(pq.value.trim());
+  });
+  pop.onclick = e => { const b = e.target.closest('[data-pick]'); if (!b) return; state.lines.push({ slug: b.dataset.pick, on: true, band: b.dataset.pick === 'fed-funds' ? ['fed-target-lower', 'fed-target-upper'] : undefined }); state.story = null; closePop(); draw(); };
+}
+function yearPop(tok) {
+  openPop(tok, `<h5>From</h5><div class="row">${[1980, 1990, 1993, 2000, 2008, 2015, 2020, 2025].map(y => `<button class="btn${y === state.from ? ' on' : ''}" data-y="${y}">${y}</button>`).join('')}</div>`);
+  pop.onclick = e => { const b = e.target.closest('[data-y]'); if (b) { state.from = +b.dataset.y; closePop(); draw(); } };
+}
+function marksPop(tok) {
+  openPop(tok, `<h5>Mark on the timeline</h5><div class="row">${Object.entries(MARKS).map(([k, v]) => `<button class="btn${state.marks.has(k) ? ' on' : ''}" data-m="${k}">${v}</button>`).join('')}</div>`);
+  pop.onclick = e => { const b = e.target.closest('[data-m]'); if (!b) return; state.marks.has(b.dataset.m) ? state.marks.delete(b.dataset.m) : state.marks.add(b.dataset.m); b.classList.toggle('on'); draw(false); };
+}
+
+// Group-level phrases attach to the series they break down: "the unemployment rate for everyone, for Black workers and for Hispanic workers".
+const list = parts => parts.length < 2 ? parts.join('') : `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}`;
+function sentence() {
+  const tok = (l) => `<button class="tok${l.on ? '' : ' off'}" data-key="s:${l.slug}" data-slug="${l.slug}" style="--tc:${colors.get(l.slug)}">${phrase(l.slug)}<sup>${GG.series(l.slug).freq.code}</sup></button>`;
+  const base = state.lines.filter(l => !GROUP_PHRASE[l.slug]), groups = state.lines.filter(l => GROUP_PHRASE[l.slug]);
+  const parts = base.map(l => l.slug === 'unemployment-rate' && groups.length ? `${tok(l)} for everyone, ${list(groups.map(tok))}` : tok(l));
+  if (!base.some(l => l.slug === 'unemployment-rate') && groups.length) parts.push(`the unemployment rate ${list(groups.map(tok))}`);
+  const marks = [...state.marks];
+  return `Show ${parts.length ? list(parts) : ''} <button class="tok add" data-key="add">+ something${parts.length ? ' else' : ''}</button>
+    since <button class="tok" data-key="year">${state.from}</button>,
+    marking <button class="tok${marks.length ? '' : ' add'}" data-key="marks">${marks.length ? list(marks.map(m => MARKS[m])) : 'nothing'}</button>.`;
+}
+document.getElementById('sentence').addEventListener('click', e => {
+  const t = e.target.closest('.tok'); if (!t) return;
+  if (openTok === t.dataset.key) { closePop(); return; }
+  if (t.dataset.slug) seriesPop(t); else if (t.dataset.key === 'add') addPop(t); else if (t.dataset.key === 'year') yearPop(t); else marksPop(t);
+});
+document.getElementById('stories').addEventListener('click', e => { const b = e.target.closest('[data-story]'); if (b) load(+b.dataset.story); });
+document.getElementById('copy').onclick = () => {
+  const url = `${location.pathname}?show=${state.lines.map(l => l.slug).join(',')}&since=${state.from}&mark=${[...state.marks].join(',')}`;
+  document.getElementById('copied').textContent = url;
+};
+
+function draw(withSentence = true) {
+  if (withSentence) document.getElementById('sentence').innerHTML = sentence();
+  document.getElementById('stories').innerHTML = STORIES.map((s, i) => `<button class="story${state.story === i ? ' on' : ''}" data-story="${i}"><b>${s.title}</b><span>${s.text}</span></button>`).join('');
+  const shown = state.lines.filter(l => l.on).map(l => ({ ...l, color: colors.get(l.slug), label: phrase(l.slug).replace(/^the /, '').replace(/^./, c => c.toUpperCase()) }));
+  const chart = document.getElementById('chart');
+  if (!shown.length) { chart.innerHTML = '<p class="muted" style="padding:40px 0;text-align:center">Add something to the sentence to draw it.</p>'; return; }
+  const panels = GG.groupPanels(shown, 'subject').map(p => ({ ...p, title: `${p.title}` }));
+  GG.render(chart, {
+    panels, from: Date.UTC(state.from, 0, 1), to: Date.UTC(2026, 9, 11), panelHeight: 170,
+    context: { presidents: state.marks.has('presidents'), recessions: state.marks.has('recessions') },
+    events: GG.eventsFor([...state.marks].filter(m => !['recessions', 'presidents'].includes(m))),
+  });
+}
+const params = new URLSearchParams(location.search);
+if (params.get('show')) {
+  state.lines = params.get('show').split(',').filter(GG.series).map(slug => ({ slug, on: true }));
+  state.from = +(params.get('since') ?? 1993); state.marks = new Set((params.get('mark') ?? '').split(',').filter(Boolean)); state.story = null; draw();
+} else load(params.has('story') ? +params.get('story') : 4);
+window.addEventListener('resize', () => draw());
+</script>
+</body>
+</html>

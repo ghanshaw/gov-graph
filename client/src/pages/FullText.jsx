@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client/react';
 import { GET_EXECUTIVE_ORDER, GET_EXECUTIVE_ORDER_TEXT } from '../queries';
 import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
+import Loading from '../components/Loading';
 
 export default function FullText() {
   const { slug, docType, number } = useParams();
@@ -27,7 +28,7 @@ export default function FullText() {
 
   return (
     <PageLayout head={head}>
-      {loading && <div className="state">Loading…</div>}
+      {loading && <Loading />}
 
       {error && <div className="error">Error: {error.message}</div>}
 

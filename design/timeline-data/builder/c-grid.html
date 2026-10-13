@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build mode C: grid</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="builder.css">
+<style>
+  .grid-wrap { overflow-x: auto; }
+  table.combos { border-collapse: separate; border-spacing: 4px; margin-left: -4px; }
+  .combos th { font-weight: 500; font-size: 12.5px; text-align: left; vertical-align: bottom; padding: 2px 6px; color: #475467; }
+  .combos thead th { min-width: 150px; }
+  .combos thead th small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 400; }
+  .combos th button, .combos td button { width: 100%; text-align: left; }
+  .combos th button { border: 0; background: none; padding: 2px 0; font-size: 12.5px; font-weight: 600; color: var(--text); }
+  .combos th button:hover { color: var(--accent); }
+  .combos tbody th button { font-weight: 500; }
+  .cell { display: flex; justify-content: space-between; gap: 10px; align-items: center; min-height: 32px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 4px; background: #fff; font-size: 12px; color: var(--muted); }
+  .cell:hover { border-color: #c9ced6; color: var(--text); }
+  .cell .tick { width: 14px; height: 14px; border: 1.5px solid #c9ced6; border-radius: 3px; display: grid; place-items: center; font-size: 10px; color: #fff; }
+  .cell.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .cell.on .tick { background: var(--accent); border-color: var(--accent); }
+  .cell .yrs { font-family: var(--mono); font-size: 11px; }
+  .none { display: flex; align-items: center; min-height: 32px; padding: 4px 10px; border: 1px dashed var(--rule); border-radius: 4px; font-size: 11.5px; color: #b0b6c0;
+    background: repeating-linear-gradient(135deg, #fff 0 6px, #f7f8fa 6px 7px); }
+  .axis { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+import { frame, onTimeline, closing } from './data.js';
+
+// C: the datasets themselves, laid out by what tells them apart. Columns are the combinations of every dimension
+// but the last that exist ("A rate · official (U-3)"); rows are the last dimension; a cell is one dataset, or
+// marked "not published". Nothing can be clicked that does not exist, and nothing switches: a click ticks a
+// cell, a column or row heading ticks what it holds.
+const on = new Set();
+let last = null;
+
+function render(box, ex) {
+  if (last !== ex) { on.clear(); last = ex; }
+  const { dims, datasets } = ex;
+  const rowDim = dims.at(-1);
+  const colDims = dims.slice(0, -1);
+  const colKey = d => colDims.map(c => d[c.key]).join('|');
+  const cols = [...new Map(datasets.map(d => [colKey(d), d])).values()];
+  const rows = Object.keys(rowDim.values).filter(v => datasets.some(d => d[rowDim.key] === v));
+  const at = (col, v) => datasets.find(d => colKey(d) === colKey(col) && d[rowDim.key] === v);
+  const head = col => {
+    const [first, ...rest] = colDims;
+    return `${first.values[col[first.key]]}${rest.map(c => `<small>${c.values[col[c.key]]}</small>`).join('')}`;
+  };
+  const toggleAll = list => {
+    const all = list.every(d => on.has(d.slug));
+    for (const d of list) if (all) on.delete(d.slug); else on.add(d.slug);
+  };
+
+  const chosen = datasets.filter(d => on.has(d.slug));
+  box.innerHTML = `
+    <h3>${ex.measure}</h3>
+    <p class="axis">Measured as ${colDims.length > 1 ? `· ${colDims.slice(1).map(c => c.label.toLowerCase()).join(' · ')}` : ''} across, ${rowDim.label.toLowerCase()} down. Tick any cells; a heading ticks its column or row.</p>
+    <div class="grid-wrap"><table class="combos">
+      <thead><tr><th></th>${cols.map((c, i) => `<th><button data-col="${i}">${head(c)}</button></th>`).join('')}</tr></thead>
+      <tbody>${rows.map(v => `<tr><th><button data-row="${v}">${rowDim.values[v]}</button></th>${cols.map(c => {
+        const d = at(c, v);
+        if (!d) return '<td><span class="none">not published</span></td>';
+        return `<td><button class="cell${on.has(d.slug) ? ' on' : ''}" data-s="${d.slug}" title="${d.name}"><span class="tick">${on.has(d.slug) ? '✓' : ''}</span><span class="yrs">${d.years}</span></button></td>`;
+      }).join('')}</tr>`).join('')}</tbody>
+    </table></div>
+    ${closing(ex, chosen)}
+    ${onTimeline(chosen)}`;
+  box.querySelectorAll('[data-s]').forEach(b => b.addEventListener('click', () => { toggleAll([datasets.find(d => d.slug === b.dataset.s)]); render(box, ex); }));
+  box.querySelectorAll('[data-col]').forEach(b => b.addEventListener('click', () => { toggleAll(rows.map(v => at(cols[b.dataset.col], v)).filter(Boolean)); render(box, ex); }));
+  box.querySelectorAll('[data-row]').forEach(b => b.addEventListener('click', () => { toggleAll(cols.map(c => at(c, b.dataset.row)).filter(Boolean)); render(box, ex); }));
+}
+
+frame(document.getElementById('app'), {
+  concept: 'C',
+  title: 'Grid: every combination, the gaps marked',
+  note: 'The datasets are laid out by what tells them apart: how the measure is given across the top, its last breakdown down the side. A cell is one dataset, with its years; combinations no one publishes are marked, not hidden, so nothing has to switch. Rows and columns tick in one click.',
+  render,
+});
+</script>
+</body>
+</html>

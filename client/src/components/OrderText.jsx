@@ -1,3 +1,5 @@
+import { renderSpans } from './spans';
+
 const CITATION_GROUPS = [
   { label: 'Executive orders', types: ['executive_order'] },
   { label: 'Statutes', types: ['usc', 'public_law', 'statute'] },
@@ -6,49 +8,85 @@ const CITATION_GROUPS = [
   { label: 'Other', types: ['link'] },
 ];
 
-// Item text is stored plain, with spans marking character ranges (citations, emphasis,
-// deadlines, defined terms). Overlapping spans are not expected; a later one is dropped.
-// `from` skips a leading part of the text that is rendered separately (a list marker).
-function renderSpans(text, spans = [], from = 0) {
-  const out = [];
-  let pos = from;
-  [...spans].sort((a, b) => a.start - b.start).forEach((span, i) => {
-    if (span.start < pos) return;
-    if (span.start > pos) out.push(text.slice(pos, span.start));
-    const inner = text.slice(span.start, span.end);
-    if (span.type === 'citation') {
-      out.push(
-        <a key={i} className="cite" href={span.href} target="_blank" rel="noopener noreferrer">{inner}</a>
-      );
-    } else if (span.type === 'emphasis') {
-      out.push(<em key={i}>{inner}</em>);
-    } else if (span.type === 'deadline') {
-      out.push(<span key={i} className="deadline">{inner}</span>);
-    } else if (span.type === 'defined_term') {
-      out.push(<dfn key={i}>{inner}</dfn>);
-    } else {
-      out.push(inner);
-    }
-    pos = span.end;
-  });
-  if (pos < text.length) out.push(text.slice(pos));
-  return out;
+// A table printed in the document (bills): header rows, then body rows.
+function ItemTable({ item }) {
+  return (
+    <table className="doc-table" style={item.level > 0 ? { '--level': item.level + 1 } : undefined}>
+      {item.head?.length > 0 && (
+        <thead>{item.head.map((row, r) => <tr key={r}>{row.map((cell, c) => <th key={c}>{cell}</th>)}</tr>)}</thead>
+      )}
+      <tbody>{item.rows.map((row, r) => <tr key={r}>{row.map((cell, c) => <td key={c}>{cell}</td>)}</tr>)}</tbody>
+    </table>
+  );
+}
+
+// A table of contents printed in the document (bills). Entries link to the headings they name.
+function ItemToc({ item }) {
+  return (
+    <ol className="doc-toc">
+      {item.entries.map((entry, i) => (
+        <li key={i} className={entry.kind === 'section' ? undefined : 'container'} style={{ '--depth': entry.depth }}>
+          {entry.target ? <a href={`#${entry.target}`}>{entry.text}</a> : entry.text}
+        </li>
+      ))}
+    </ol>
+  );
 }
 
 function Item({ item, sectionId }) {
-  if (!item.marker) return <p>{renderSpans(item.text, item.spans)}</p>;
+  if (item.type === 'table') return <ItemTable item={item} />;
+  if (item.type === 'toc') return <ItemToc item={item} />;
+  if (item.bullet) return <p className="bullet">{renderSpans(item.text, item.spans)}</p>;
+  // A heading printed inside a note or quotation (U.S. Code): a section of another law set out in full.
+  if (item.subheading) return <p className="sub-heading">{renderSpans(item.text, item.spans)}</p>;
+  // `changed` (bills): text a reported version strikes out or inserts.
+  const changed = item.changed ? ` changed-${item.changed}` : '';
+  // Reports: one of the body's recommendations, set apart as the report prints it in bold.
+  if (item.recommendation) {
+    return (
+      <p className="recommendation" id={item.anchor}>
+        <span className="item-heading">Recommendation:</span> {renderSpans(item.text, item.spans)}
+      </p>
+    );
+  }
+  // Reports: a heading that opens the paragraph ("Boston: American 11 and United 175. Atta and …").
+  if (item.run_in) {
+    return <p><span className="item-heading">{item.run_in}</span> {renderSpans(item.text, item.spans)}</p>;
+  }
+  // Reports: a paragraph printed as lines (lists of witnesses).
+  if (item.lines) return <p className="lines">{renderSpans(item.text, item.spans)}</p>;
+  if (!item.marker) {
+    // Text that resumes after sub-items sits at the depth of the provision it continues.
+    return (
+      <p
+        // `align` (court opinions): a closing line set to the right, "It is so ordered."
+        className={`${item.continuation ? 'continuation' : ''}${item.align === 'right' ? ' closing-line' : ''}${changed}`.trim() || undefined}
+        style={item.continuation && item.level > 0 ? { '--level': item.level } : undefined}
+      >
+        {renderSpans(item.text, item.spans)}
+      </p>
+    );
+  }
   return (
     <div
-      className="item"
-      // Only first-level markers are unique within a section.
-      id={item.level === 1 ? `${sectionId}-${item.marker.replace(/\.$/, '')}` : undefined}
+      className={`item${changed}`}
+      // The U.S. Code gives every provision its own address ("b-1"); elsewhere only
+      // first-level markers are unique within a section.
+      id={item.anchor ?? (item.level === 1 ? `${sectionId}-${item.marker.replace(/\.$/, '')}` : undefined)}
       // Indentation per level is set in index.css (.eo-doc .item).
       style={item.level > 1 ? { '--level': item.level } : undefined}
     >
       {/* Numbered lists keep their period ("1."); every other marker is printed in parentheses. */}
       <span className="marker">{item.marker.endsWith('.') ? item.marker : `(${item.marker})`}</span>
       {/* "(c)(i) …" in the source: (c) has no text of its own */}
-      <p>{renderSpans(item.text, item.spans)}</p>
+      <p>
+        {/* Bills give sub-items their own headings: "(a) In general.—The Secretary…". The
+            U.S. Code prints the heading as a line of its own (`heading_break`). */}
+        {item.heading && (item.heading_break
+          ? <span className="item-heading line">{item.heading}</span>
+          : <span className="item-heading">{item.heading}.{item.text ? '—' : ''}</span>)}
+        {renderSpans(item.text, item.spans)}
+      </p>
     </div>
   );
 }
@@ -60,6 +98,8 @@ function QuotedBlock({ items, after }) {
   return (
     <blockquote className={afterItem ? 'quoted after-item' : 'quoted'} style={afterItem ? { '--level': after.level } : undefined}>
       {items.map((item, i) => {
+        if (item.type === 'table') return <ItemTable key={i} item={{ ...item, level: 0 }} />;
+        if (item.type === 'toc') return <ItemToc key={i} item={item} />;
         const style = item.quote_level > 1 ? { marginLeft: `${(item.quote_level - 1) * 24}px` } : undefined;
         // The marker is part of the quoted text ("“(i) Open …", "1. The contractor …");
         // it is set in its own column so the lines of the item align.
@@ -78,7 +118,7 @@ function QuotedBlock({ items, after }) {
   );
 }
 
-function SectionItems({ items, sectionId }) {
+export function SectionItems({ items, sectionId }) {
   const out = [];
   for (let i = 0; i < items.length; i++) {
     if (!items[i].quoted) {
@@ -97,6 +137,8 @@ export default function OrderText({ structure }) {
     preamble = [], sections = [], signature, citations = [],
     publication, source, govinfo, end_matter: endMatter, attachments = [],
   } = structure;
+  // "order" in the labels below, unless this is another kind of document.
+  const kind = structure.doc_type === 'memorandum' ? 'memorandum' : 'order';
 
   const citationGroups = CITATION_GROUPS
     .map(group => ({ ...group, items: citations.filter(c => group.types.includes(c.type)) }))
@@ -138,7 +180,7 @@ export default function OrderText({ structure }) {
 
       {citationGroups.length > 0 && (
         <div className="panel">
-          <h3>Cited in this order</h3>
+          <h3>Cited in this {kind}</h3>
           {citationGroups.map(group => (
             <div key={group.label}>
               <h4>{group.label}</h4>
@@ -155,7 +197,7 @@ export default function OrderText({ structure }) {
       {source?.html_url && (
         <footer className="source">
           {source.name === 'govinfo'
-            ? 'Text from the Compilation of Presidential Documents (the Federal Register has no structured text for this order); see Federal Register document'
+            ? 'Text from the Compilation of Presidential Documents (the Federal Register has no structured text for this document); see Federal Register document'
             : 'Text from the Federal Register, document'}{' '}
           <a href={source.html_url} target="_blank" rel="noopener noreferrer">
             {publication?.document_number ?? 'source'}

@@ -8,6 +8,7 @@ import SearchBox from '../components/SearchBox';
 import { RailGroup, RadioOptions, YearFacet, Fact } from '../components/Rail';
 import OrderTable from '../components/OrderTable';
 import Pagination from '../components/Pagination';
+import Loading from '../components/Loading';
 
 const PER_PAGE = 20;
 
@@ -155,7 +156,7 @@ export default function ExecutiveOrders() {
         <SearchBox value={searchInput} onChange={handleSearch} placeholder="Search by title or number…" autoFocus />
       </div>
 
-      {loading && <div className="state">Loading records…</div>}
+      {loading && <Loading label="Loading records…" />}
 
       {error && <div className="error">Failed to load data: {error.message}</div>}
 

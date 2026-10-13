@@ -1,0 +1,7 @@
+/* AC.1: search across the top (a-1.css), chart and lanes below (c-1.css). Only what the two don't settle. */
+.page { max-width: none; }
+.finder-field .kbd { margin-right: 2px; }
+.catalog { margin-bottom: 4px; box-shadow: 0 10px 30px rgba(16, 24, 40, .08); }
+.layout { margin-top: 14px; }
+.layers { top: 12px; }
+.sec h4 small { text-transform: none; letter-spacing: 0; font-weight: 400; }

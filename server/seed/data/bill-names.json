@@ -1,0 +1,15 @@
+{
+  "about": "Names in common use for bills that no publisher records as a title. Entered by hand; stored in bill_titles with source 'govgraph' and kind 'common' by load-bill-names.js. Add a name only when Congress.gov's titles (popular, short, official) do not already contain it.",
+  "names": [
+    {
+      "bill": "116-HRES-109",
+      "name": "Green New Deal",
+      "note": "Its only titles are the official ones (\"Recognizing the duty of the Federal Government to create a Green New Deal.\"); it has no short or popular title. Known as the Green New Deal resolution."
+    },
+    {
+      "bill": "116-SRES-59",
+      "name": "Green New Deal",
+      "note": "The Senate's version of H.Res. 109 (116th), with the same official title and no short or popular title."
+    }
+  ]
+}

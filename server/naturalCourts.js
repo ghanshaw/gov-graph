@@ -117,3 +117,7 @@ export const NATURAL_COURTS = [
     description: 'John Roberts became Chief Justice, replacing William Rehnquist.',
   },
 ];
+
+/** The natural court sitting on a date (ISO), by slug. */
+export const naturalCourtOn = date =>
+  NATURAL_COURTS.find(c => c.startDate <= date && (!c.endDate || date <= c.endDate))?.slug ?? null;

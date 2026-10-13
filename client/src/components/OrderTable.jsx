@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { shortDate } from '../dates';
 
 const PRESIDENT_DISPLAY = {
   'barack-obama': 'Obama',
@@ -12,6 +13,8 @@ const PRESIDENT_DISPLAY = {
 // is optional and adds the year's total to its separator.
 export default function OrderTable({ orders, slugFor, docType, showPresident = false, newestFirst = true, counts }) {
   const columns = showPresident ? 4 : 3;
+  // Memoranda have no number of their own; they are cited by Federal Register page ("82 FR 7629").
+  const numbered = orders.some(order => order.number);
   const rows = [];
   let lastYear;
 
@@ -30,16 +33,16 @@ export default function OrderTable({ orders, slugFor, docType, showPresident = f
     }
     const slug = slugFor(order);
     rows.push(
-      <tr key={order.number || order.url || order.title}>
-        <td className="no">{order.number ?? '—'}</td>
+      <tr key={order.number || order.documentNumber || order.title}>
+        <td className="no nowrap">{order.number ?? order.citation ?? '—'}</td>
         <td className="title">
-          {/* Documents without an order number (memoranda) have no page here. */}
+          {/* Documents without an order number (memoranda) are addressed by Federal Register document number. */}
           {order.number
             ? <Link to={`/${slug}/${docType}/eo/${order.number}`}>{order.title}</Link>
-            : <a href={order.url} target="_blank" rel="noopener noreferrer">{order.title}</a>}
+            : <Link to={`/${slug}/${docType}/doc/${order.documentNumber}`}>{order.title}</Link>}
         </td>
         {showPresident && <td className="meta nowrap wide-only">{PRESIDENT_DISPLAY[slug] || slug}</td>}
-        <td className="date">{order.dateSigned ?? ''}</td>
+        <td className="date">{shortDate(order.dateSigned)}</td>
       </tr>
     );
   });
@@ -48,7 +51,7 @@ export default function OrderTable({ orders, slugFor, docType, showPresident = f
     <table className="records">
       <thead>
         <tr>
-          <th>No.</th>
+          <th>{numbered || orders.length === 0 ? 'No.' : 'Citation'}</th>
           <th>Title</th>
           {showPresident && <th className="wide-only">President</th>}
           <th className={newestFirst ? 'date sorted' : 'date sorted asc'}>Signed</th>

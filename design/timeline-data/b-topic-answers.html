@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline data · B · Topic answers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+  .ask { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .ask-field { flex: 1 1 360px; display: flex; align-items: center; gap: 8px; border: 1.5px solid var(--rule); border-radius: 10px; height: 44px; padding: 0 12px; }
+  .ask-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .ask-field input { flex: 1; border: 0; outline: 0; font-size: 15.5px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { border: 1px solid var(--rule); background: #fff; border-radius: 999px; padding: 4px 12px; font-size: 13px; }
+  .pill.on { background: var(--text); color: #fff; border-color: var(--text); }
+  .pill .n { font: 600 11px var(--mono); color: var(--accent); margin-left: 4px; }
+  .pill.on .n { color: #9fe3da; }
+
+  /* The answer sheet: what the word can mean, laid out as cards. */
+  .sheet { border: 1px solid var(--rule); border-radius: 12px; background: var(--panel); padding: 16px 18px 18px; margin-bottom: 18px; }
+  .sheet-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .sheet-head h2 { margin: 0; font-size: 19px; letter-spacing: -.01em; }
+  .sheet-head .btn { margin-left: auto; }
+  .sheet .heard { margin: 4px 0 12px; color: #475467; font-size: 13px; }
+  .sheet .heard b { font-weight: 600; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .card { background: #fff; border: 1px solid var(--rule); border-radius: 10px; padding: 12px 12px 8px; }
+  .card h3 { margin: 0 0 6px; font-size: 13.5px; }
+  .card .note { font-size: 12px; color: var(--muted); margin: -4px 0 6px; }
+  .row { display: grid; grid-template-columns: 34px 1fr; gap: 8px; align-items: center; padding: 6px 2px; border-top: 1px solid #f0f2f5; cursor: pointer; }
+  .row:first-of-type { border-top: 0; }
+  .row:hover { background: #fafbfc; }
+  .switch { width: 30px; height: 18px; border-radius: 999px; background: #d0d5dd; position: relative; transition: background .15s; }
+  .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: left .15s; }
+  .row.on .switch { background: var(--c, var(--accent)); }
+  .row.on .switch::after { left: 14px; }
+  .row b { font-weight: 600; font-size: 13.5px; display: block; line-height: 1.3; }
+  .row b .star { color: var(--accent); font-size: 11px; font-weight: 600; margin-left: 6px; }
+  .row span.d { display: block; font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .row .right { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .row .right svg { margin-right: 2px; }
+  .chipset { display: flex; flex-wrap: wrap; gap: 6px; }
+  .gchip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--rule); background: #fff; border-radius: 999px; padding: 3px 11px; font-size: 13px; }
+  .gchip:hover { border-color: #c9ced6; }
+  .gchip.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 10%, #fff); font-weight: 500; }
+  .gchip i { width: 8px; height: 8px; border-radius: 2px; background: var(--c); }
+  .card.events .row b { font-weight: 500; }
+  .card.warn { background: var(--warn-soft); border-color: #f5d9b0; font-size: 12.5px; color: #7a3e06; }
+  .card.warn h3 { color: #7a3e06; }
+  .card.warn p { margin: 0 0 6px; }
+  .related { margin-top: 12px; font-size: 13px; color: var(--muted); }
+  .related button { border: 0; background: none; color: var(--accent); font-weight: 600; padding: 0 4px; }
+
+  /* Under the sheet: what is on the chart, as the rail, and the charts. */
+  .work { display: grid; grid-template-columns: 250px 1fr; gap: 24px; }
+  .onchart h4 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .group { border-left: 2px solid var(--rule); padding: 2px 0 2px 10px; margin-bottom: 14px; }
+  .group-title { font-size: 11.5px; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+  .item { display: grid; grid-template-columns: 12px 1fr auto auto; gap: 7px; align-items: center; font-size: 13px; padding: 3px 0; }
+  .item i { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+  .item.off { color: var(--muted); }
+  .item.off i { background: none; border: 1.5px solid var(--c); }
+  .item button { border: 0; background: none; color: var(--muted); padding: 0 3px; font-size: 13px; }
+  .item button:hover { color: var(--text); }
+  .marked { font-size: 13px; }
+  .marked span { display: inline-flex; gap: 4px; align-items: center; border: 1px solid var(--rule); border-radius: 999px; padding: 1px 4px 1px 9px; margin: 0 4px 4px 0; }
+  .marked button { border: 0; background: none; color: var(--muted); }
+  .controls { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-bottom: 6px; align-items: center; }
+  .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; }
+  .seg button { border: 0; background: #fff; padding: 3px 9px; font-size: 12.5px; }
+  .seg button + button { border-left: 1px solid var(--rule); }
+  .seg button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  @media (max-width: 900px) { .work { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">Gov<b>Graph</b></span>
+  <nav class="nav"><span>Executive</span><span>Congress</span><span>Supreme Court</span><span>U.S. Code</span><span class="on">Timeline</span><span>Economy</span></nav>
+  <span class="variant-tag"><a href="index.html">Design variants</a> · B · Topic answers</span>
+</div>
+<main class="page">
+  <h1>Timeline</h1>
+  <p class="lede">Ask about a subject the way the news talks about it. GovGraph shows what the word can mean and the published numbers for each; switch on the ones you want.</p>
+
+  <div class="ask">
+    <label class="ask-field">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" placeholder="What do you want to see? “tax the rich”, “jobs report”, “gas prices”…" autocomplete="off">
+    </label>
+    <div class="pills" id="pills"></div>
+  </div>
+
+  <section class="sheet" id="sheet"></section>
+
+  <div class="work">
+    <aside class="onchart" id="onchart"></aside>
+    <div>
+      <div class="controls">
+        <span>Years <span class="seg" id="range"><button data-v="1980" class="on">1980–</button><button data-v="1993">1993–</button><button data-v="2015">2015–</button></span></span>
+        <span>Share a chart when <span class="seg" id="rule"><button data-v="unit">measured alike</button><button data-v="subject" class="on">alike and same subject</button></span></span>
+      </div>
+      <div id="chart"></div>
+    </div>
+  </div>
+</main>
+
+<script src="shared/data.js"></script>
+<script src="shared/catalog.js"></script>
+<script src="shared/chart.js"></script>
+<script>
+const { h } = GG;
+const colors = GG.colorKeeper();
+const clean = name => name.replace(/ \((monthly|daily)\)/, '');
+const state = {
+  topic: 'taxes', sheetOpen: true, rule: 'subject', from: 1980,
+  lines: ['omb-receipts-gdp', 'omb-individual-gdp', 'omb-corporate-gdp', 'irs-top-rate', 'cbo-tax-rate--highest', 'cbo-tax-rate--middle'].map(slug => ({ slug, on: true })),
+  marks: new Set(['tax-laws', 'recessions']),
+};
+const has = slug => state.lines.find(l => l.slug === slug);
+const countIn = t => t.intents.flatMap(i => i.series).filter(s => has(s.slug)).length;
+
+function pills() {
+  document.getElementById('pills').innerHTML = GG_TOPICS.map(t => {
+    const n = countIn(t);
+    return `<button class="pill${t.id === state.topic ? ' on' : ''}" data-topic="${t.id}">${t.label}${n ? `<span class="n">${n}</span>` : ''}</button>`;
+  }).join('');
+}
+document.getElementById('pills').onclick = e => { const b = e.target.closest('[data-topic]'); if (b) { state.topic = b.dataset.topic; state.sheetOpen = true; draw(); } };
+document.getElementById('q').addEventListener('input', e => {
+  const t = GG.searchTopics(e.target.value)[0];
+  if (t && t.id !== state.topic) { state.topic = t.id; state.sheetOpen = true; draw(); }
+});
+
+function sheet() {
+  const el = document.getElementById('sheet');
+  const t = GG.topic(state.topic);
+  if (!state.sheetOpen) {
+    el.innerHTML = `<div class="sheet-head"><h2>${t.label}</h2><span class="muted" style="font-size:13px">${countIn(t)} of ${t.intents.flatMap(i => i.series).length} on the chart</span><button class="btn" data-sheet>Show choices</button></div>`;
+    return;
+  }
+  const row = (s, t) => {
+    const series = GG.series(s.slug), l = has(s.slug);
+    return `<div class="row${l?.on ? ' on' : ''}" data-slug="${s.slug}" style="${l ? `--c:${colors.get(s.slug)}` : ''}">
+      <span class="switch"></span>
+      <span><b>${s.role === 'Headline' ? clean(series.name) : s.role}${s.slug === t.headline ? '<span class="star">★ in the news</span>' : ''}</b><span class="d">${s.why}</span>
+      <span class="right">${GG.sparkline(s.slug, 90, 18)}${GG.freqBadge(s.slug)} ${new Date(series.first).getUTCFullYear()}–${new Date(series.last).getUTCFullYear()} · ${series.sourceName}</span></span>
+    </div>`;
+  };
+  // A long list of breakdowns (unemployment by group) reads better as buttons, as BreakdownBar does in the app.
+  const chips = list => `<div class="chipset">${list.map(s => { const l = has(s.slug); return `<button class="gchip${l?.on ? ' on' : ''}" data-slug="${s.slug}" title="${s.role}: ${s.why}" style="${l ? `--c:${colors.get(s.slug)}` : ''}">${l ? '<i></i>' : ''}${s.short}</button>`; }).join('')}</div><p class="note" style="margin-top:6px">${GG.freqBadge(list[0].slug)} monthly · BLS · each a published series</p>`;
+  const events = (t.events ?? []).map(set => {
+    const n = set === 'recessions' ? GG_CONTEXT.recessions.length : GG.eventsFor([set]).length;
+    return `<div class="row${state.marks.has(set) ? ' on' : ''}" data-mark="${set}"><span class="switch"></span><span><b>${GG_CONTEXT.eventSets[set]}</b><span class="d">${n} on the timeline</span></span></div>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="sheet-head"><h2>${t.label}</h2><span class="muted" style="font-size:13px">can mean ${t.intents.length} things</span><button class="btn" data-sheet>Hide choices</button></div>
+    <p class="heard"><b>As heard:</b> ${t.heard}</p>
+    <div class="cards">
+      ${t.intents.map(i => `<div class="card"><h3>${i.label}</h3>${i.note ? `<p class="note">${i.note}</p>` : ''}${i.series.length > 4 ? chips(i.series) : i.series.map(s => row(s, t)).join('')}</div>`).join('')}
+      ${events ? `<div class="card events"><h3>Mark on the timeline</h3>${events}</div>` : ''}
+      ${t.missing ? `<div class="card warn"><h3>Not here yet</h3>${t.missing.map(m => `<p>${m}</p>`).join('')}</div>` : ''}
+    </div>
+    ${t.related ? `<p class="related">Often looked at with${t.related.map(r => `<button data-topic="${r}">${GG.topic(r).label}</button>`).join(',')}</p>` : ''}`;
+}
+document.getElementById('sheet').onclick = e => {
+  if (e.target.closest('[data-sheet]')) { state.sheetOpen = !state.sheetOpen; draw(); return; }
+  const r = e.target.closest('[data-topic]'); if (r) { state.topic = r.dataset.topic; draw(); return; }
+  const m = e.target.closest('[data-mark]'); if (m) { state.marks.has(m.dataset.mark) ? state.marks.delete(m.dataset.mark) : state.marks.add(m.dataset.mark); draw(); return; }
+  const row = e.target.closest('[data-slug]'); if (!row) return;
+  const slug = row.dataset.slug, l = has(slug);
+  if (l) { state.lines = state.lines.filter(x => x !== l); colors.free(slug); }
+  else { const spec = GG.topic(state.topic).intents.flatMap(i => i.series).find(s => s.slug === slug); state.lines.push({ slug, on: true, band: spec?.band }); }
+  draw();
+};
+
+function draw() {
+  pills(); sheet();
+  const lines = state.lines.map(l => ({ ...l, color: colors.get(l.slug) }));
+  const shown = lines.filter(l => l.on);
+  const panels = GG.groupPanels(shown, state.rule);
+  const groups = GG.groupPanels(lines, state.rule);
+  const side = document.getElementById('onchart');
+  side.innerHTML = `<h4>On the chart</h4>` + groups.map(g => {
+    const n = panels.findIndex(p => p.key === g.key);
+    const subject = state.rule === 'subject' ? ` · ${GG.series(g.lines[0].slug).category.replace('-', ' ')}` : '';
+    return `<div class="group"><div class="group-title">${n >= 0 ? `Chart ${n + 1}` : 'Hidden'} · ${g.title}${subject}</div>${g.lines.map(l => {
+      const s = GG.series(l.slug);
+      return `<div class="item${l.on ? '' : ' off'}" style="--c:${l.color}"><i></i><span>${clean(s.name)}</span>${GG.freqBadge(l.slug)}<span><button data-eye="${l.slug}" title="${l.on ? 'Hide' : 'Show'}">${l.on ? '◉' : '○'}</button><button data-x="${l.slug}" title="Remove">×</button></span></div>`;
+    }).join('')}</div>`;
+  }).join('') + (state.marks.size ? `<h4>Marked</h4><div class="marked">${[...state.marks].map(m => `<span>${GG_CONTEXT.eventSets[m]}<button data-unmark="${m}">×</button></span>`).join('')}</div>` : '')
+    + (lines.length ? '' : '<p class="muted" style="font-size:13px">Nothing yet. Switch on a series in the cards above.</p>');
+  const chart = document.getElementById('chart');
+  if (!shown.length) { chart.innerHTML = ''; return; }
+  GG.render(chart, {
+    panels, from: Date.UTC(state.from, 0, 1), to: Date.UTC(2026, 9, 11), panelHeight: 140,
+    context: { presidents: true, recessions: state.marks.has('recessions') }, events: GG.eventsFor([...state.marks].filter(m => m !== 'recessions')),
+  });
+}
+document.getElementById('onchart').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.eye) { const l = has(b.dataset.eye); l.on = !l.on; }
+  if (b.dataset.x) { state.lines = state.lines.filter(l => l.slug !== b.dataset.x); colors.free(b.dataset.x); }
+  if (b.dataset.unmark) state.marks.delete(b.dataset.unmark);
+  draw();
+};
+for (const [id, key, cast] of [['rule', 'rule', String], ['range', 'from', Number]]) {
+  document.getElementById(id).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    state[key] = cast(b.dataset.v);
+    document.querySelectorAll(`#${id} button`).forEach(x => x.classList.toggle('on', x === b));
+    draw();
+  });
+}
+const preset = new URLSearchParams(location.search).get('topic');
+if (preset && GG.topic(preset)) state.topic = preset;
+window.addEventListener('resize', draw);
+draw();
+</script>
+</body>
+</html>

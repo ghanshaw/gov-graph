@@ -37,8 +37,8 @@ The previous look is recorded in `design/navy/`.
 - [ ] Tagging was not exercised (it writes to the database); see `features/record-management`
       for the `entity_tags` problem
 - [ ] `design/navy/capture.sh` could be re-run into `design/dark-teal/` for a matching record
-- [ ] Lint: `midY` unused in `DAGGraph.jsx`, set-state-in-effect in `Timeline.jsx` (both
-      older than the redesign)
+- [ ] Lint: `midY` unused in `DAGGraph.jsx` (older than the redesign; the set-state-in-effect in
+      `Timeline.jsx` went with the timeline rework, 2026-10-04)
 
 ## Decisions / Notes
 - Styling lives in classes in `client/src/index.css`, not inline `style` props; hover is CSS.

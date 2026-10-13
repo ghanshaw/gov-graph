@@ -40,8 +40,13 @@ search and year filtering. Individual orders have detail and full-text views.
 - [x] The two Trump terms are told apart by signing date in the list query (the Federal Register has one identifier for both); each term's page no longer lists the other's orders
 
 - [x] Order page buttons in the order Show/Hide full text, Show/Hide PDF, PDF ↗, Federal Register ↗, GovInfo ↗ (govinfo link from `structure.govinfo.details_url`, shown when present); the full text is shown by default
+- [x] Presidential memoranda (Federal Register set): 584 loaded as `doc_type = 'memorandum'` rows with `structure` and `source_html` (Obama 257, Trump 45 133, Biden 160, Trump 47 34). Fetch and load scripts take `--type memorandum` (data in `server/seed/data/fr-memoranda-<president>.json`). The parser keeps the addressee line (`addressee`), turns bulleted lists into `bullet: true` items, and puts a memorandum with no numbered sections into one unnumbered section
+- [x] Memoranda have no number: page at `/:slug/memoranda/doc/:documentNumber` (Federal Register document number), GraphQL `presidentialDocument(documentNumber)`, PDF pass-through `/pdf/doc/:documentNumber`. Same page as orders: formatted text, Show PDF, PDF ↗. List rows and timeline rows link there
 
 ## Todo
+- [ ] Memoranda that exist only on govinfo (roughly as many again as the Federal Register set): fetch from the Compilation of Presidential Documents and parse through the plain-text fallback
+- [ ] Tags on memoranda (the tag panel is keyed by order number, so it is hidden on memorandum pages)
+- [ ] govinfo subjects and references for memoranda (the `govinfo` block is only built for executive orders)
 - [ ] Structured text for Bush (291 orders in the database, 2001–2009): add him to the fetch script's president list and run the loader
 - [ ] Amending orders that restate whole sections without quotation marks produce repeated section numbers (13545, 13637, 13719, 13824, 14032, 14048, 14327)
 - [ ] Republished orders (R1-…, e.g. 13719, 14388) are skipped; the stored text is the original printing

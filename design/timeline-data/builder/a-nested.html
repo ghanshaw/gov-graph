@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build mode A: nested</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="builder.css">
+<style>
+  .tree { display: grid; gap: 6px; }
+  .level-label { font-size: 12px; color: var(--muted); margin: 0 0 4px; }
+  .node { display: grid; gap: 6px; }
+  .node > .head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+  .node > .head .hint { font-size: 12px; color: #98a2b3; }
+  .children { margin-left: 11px; padding: 4px 0 6px 16px; border-left: 1px solid var(--rule); display: grid; gap: 8px; }
+  .children.on { border-left-color: var(--accent); }
+  .siblings { display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; }
+  .branches { display: grid; gap: 10px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+import { frame, onTimeline, closing } from './data.js';
+
+// A: the options are a tree in the order of the dimensions. Choosing a value opens what exists under it, so
+// an option that does not apply is never on screen to click: "Dollars of the day" lives under "An amount" only.
+// A level with one option under its parent is chosen for you. Several values may be open at once.
+const picked = new Set();   // paths: "amount", "amount/real"
+let last = null;
+
+function render(box, ex) {
+  if (last !== ex) { picked.clear(); last = ex; }
+  const { dims, datasets } = ex;
+  const chosen = [];
+  const waiting = [];
+
+  // Values of dimension `depth` among the datasets under `path`.
+  function level(depth, ds, path) {
+    const dim = dims[depth];
+    const values = Object.keys(dim.values).filter(v => ds.some(d => d[dim.key] === v));
+    const only = values.length === 1;
+    const open = values.filter(v => only || picked.has(`${path}${v}`));
+    if (!open.length) waiting.push(dim.label.toLowerCase());
+    const preview = (v, under) => {
+      // What lies under a closed value, so the reader sees why it differs before opening it.
+      const next = dims[depth + 1];
+      if (!next) return '';
+      const kinds = [...new Set(under.map(d => next.values[d[next.key]]))];
+      return `<span class="hint">${kinds.length === 1 ? `only ${kinds[0].toLowerCase()}` : kinds.join(' · ')}</span>`;
+    };
+    const button = v => {
+      const p = `${path}${v}`;
+      if (only) return `<span class="opt auto" title="The only one published here">${dim.values[v]}</span>`;
+      return `<button class="opt${picked.has(p) ? ' on' : ''}" data-p="${p}">${dim.values[v]}${picked.has(p) ? '<span class="x" data-x="' + p + '">×</span>' : ''}</button>`;
+    };
+    const branches = values.map(v => {
+      const under = ds.filter(d => d[dim.key] === v);
+      const isOpen = open.includes(v);
+      if (isOpen && !dims[depth + 1]) chosen.push(...under);
+      const kids = isOpen && dims[depth + 1] ? level(depth + 1, under, `${path}${v}/`) : '';
+      return { v, under, isOpen, kids };
+    });
+    // The last level reads as one line of options; earlier levels as branches, each with what is under it.
+    if (!dims[depth + 1]) {
+      return `<div><p class="level-label">${dim.label}</p><div class="siblings">${values.map(button).join('')}</div></div>`;
+    }
+    return `<div><p class="level-label">${dim.label}</p><div class="branches">${branches.map(b => `
+      <div class="node">
+        <div class="head">${button(b.v)}${b.isOpen ? '' : preview(b.v, b.under)}</div>
+        ${b.kids ? `<div class="children on">${b.kids}</div>` : ''}
+      </div>`).join('')}</div></div>`;
+  }
+
+  const tree = level(0, datasets, '');
+  box.innerHTML = `
+    <h3>${ex.measure}</h3>
+    <div class="tree">${tree}</div>
+    ${closing(ex, chosen)}
+    ${onTimeline(chosen, waiting.length && !chosen.length ? `Choose ${[...new Set(waiting)].join(' and ')} to put it on the timeline.` : null)}`;
+  box.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', e => {
+    const x = e.target.dataset.x;
+    if (x) {
+      // Taking a value out closes everything under it.
+      for (const p of [...picked]) if (p === x || p.startsWith(`${x}/`)) picked.delete(p);
+    } else picked.add(b.dataset.p);
+    render(box, ex);
+  }));
+}
+
+frame(document.getElementById('app'), {
+  concept: 'A',
+  title: 'Nested: each option under the one it depends on',
+  note: 'Choosing how a measure is given opens the options that exist for it, indented beneath. Options that do not apply are never shown to click; an option alone under its parent is chosen for you. What every dataset shares closes the panel, then years, then source.',
+  render,
+});
+</script>
+</body>
+</html>

@@ -130,6 +130,42 @@ test('numbered lists are items; inside an open quotation they stay part of the q
   assert.deepEqual(sections[0].items.filter(i => i.quoted).map(i => i.quote_level), [0, 1, 1]);
 });
 
+test('a memorandum keeps its addressee, and bulleted lists become items', () => {
+  const html = `
+    <p>Memorandum of June 3, 2013</p>
+    <h1 id="h-1">Delegation of Functions</h1>
+    <h1 id="h-2">Memorandum for the Secretary of State</h1>
+    <p id="p-1" data-page="100">By the authority vested in me as President, I hereby delegate to you the following functions:</p>
+    <ul class="bullets">
+      <li id="p-2" data-page="100">Section 1244(c)(1) to the Secretary of State;</li>
+      <li id="p-3" data-page="100">Section 1244(f) to the Secretary of the Treasury.</li>
+    </ul>
+    <p id="p-4" data-page="100">You are authorized and directed to publish this memorandum in the <em>Federal Register</em>.</p>
+    <div class="signature"><p class="signature-place">THE WHITE HOUSE,</p><p class="signature-date">Washington, June 3, 2013</p></div>`;
+  const memo = parseExecutiveOrder(html, {
+    document_number: '2013-00001', title: 'Delegation of Functions', doc_type: 'memorandum',
+    president: { slug: 'barack-obama', name: 'Barack Obama' },
+  });
+
+  assert.equal(memo.doc_type, 'memorandum');
+  assert.equal(memo.number, null);
+  assert.equal(memo.addressee, 'Memorandum for the Secretary of State');
+  assert.equal(memo.subheading, undefined);
+  // No numbered sections: the whole text is one unnumbered section, not a preamble.
+  assert.deepEqual(memo.preamble, []);
+  assert.equal(memo.sections.length, 1);
+  assert.equal(memo.sections[0].number, null);
+  assert.deepEqual(
+    memo.sections[0].items.map(i => [i.bullet ?? false, i.marker, i.text.slice(0, 24)]),
+    [
+      [false, null, 'By the authority vested '],
+      [true, null, 'Section 1244(c)(1) to th'],
+      [true, null, 'Section 1244(f) to the S'],
+      [false, null, 'You are authorized and d'],
+    ]
+  );
+});
+
 test('notices are told apart from ordinary document numbers', () => {
   assert.equal(isNotice('C1-2009-31418'), true);
   assert.equal(isNotice('R1-2016-03141'), true);

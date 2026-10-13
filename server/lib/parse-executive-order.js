@@ -1,5 +1,5 @@
 /**
- * Federal Register full-text HTML for an executive order → structured form
+ * Federal Register full-text HTML for an executive order or presidential memorandum → structured form
  * (preamble, sections → items → spans, signature, end matter, citations).
  *
  * The shape follows server/references/eo-13636.json. The Federal Register markup is flat
@@ -240,18 +240,20 @@ function paragraphs(html) {
   const endStart = html.indexOf('<div class="end-matter">');
 
   const out = [];
-  for (const m of html.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/g)) {
-    const attrs = m[1];
+  // Bulleted lists (<ul class="bullets"><li id="p-3">) appear in a few memoranda.
+  for (const m of html.matchAll(/<(p|li)\b([^>]*)>([\s\S]*?)<\/\1>/g)) {
+    const attrs = m[2];
     const region =
       endStart !== -1 && m.index > endStart ? 'end'
         : signatures.some(([start, end]) => m.index > start && m.index < end) ? 'signature'
           : 'body';
     out.push({
       region,
+      bullet: m[1] === 'li',
       cls: /class="([^"]*)"/.exec(attrs)?.[1] ?? '',
       id: /\bid="([^"]*)"/.exec(attrs)?.[1] ?? null,
       page: Number(/data-page="(\d+)"/.exec(attrs)?.[1]) || null,
-      src: m[2]
+      src: m[3]
         .replace(/<span class="printed-page-inline[\s\S]*?<\/span>\s*<span class="printed-page-details[\s\S]*?<\/span>/g, ' ')
         .replace(/<svg[\s\S]*?<\/svg>/g, '')
         .replace(/\s+/g, ' ')
@@ -265,7 +267,8 @@ function paragraphs(html) {
  * @param {string} html  Federal Register full-text HTML (body_html_url)
  * @param {object} meta  Federal Register API record: document_number, executive_order_number,
  *                       title, signing_date, publication_date, citation, volume, start_page,
- *                       end_page, html_url, body_html_url, pdf_url, president { slug, name }
+ *                       end_page, html_url, body_html_url, pdf_url, president { slug, name },
+ *                       doc_type ('executive_order' by default, or 'memorandum')
  */
 export function parseExecutiveOrder(html, meta) {
   const preamble = [];
@@ -352,19 +355,19 @@ export function parseExecutiveOrder(html, meta) {
 
     // Leading markers. "(c)(i) text" opens (c) with no text of its own, then (i).
     const markers = [];
-    for (let m; (m = MARKER.exec(src)); ) {
+    for (let m; !block.bullet && (m = MARKER.exec(src)); ) {
       markers.push(m[1]);
       src = src.slice(m[0].length);
     }
     // A numbered list item, unless it continues a quotation that is still open.
-    const numbered = markers.length === 0 && !quoteOpen ? NUMBERED.exec(src) : null;
+    const numbered = markers.length === 0 && !quoteOpen && !block.bullet ? NUMBERED.exec(src) : null;
     if (numbered) {
       markers.push(numbered[1]);
       src = src.slice(numbered[0].length);
     }
 
     if (!section) {
-      if (markers.length === 0 && !enacted) {
+      if (markers.length === 0 && !block.bullet && !enacted) {
         const paragraph = { page: block.page, ...inline(src) };
         preamble.push(paragraph);
         if (ENACTING.test(paragraph.text)) enacted = true;
@@ -378,6 +381,13 @@ export function parseExecutiveOrder(html, meta) {
     const definitions = /definition/i.test(section.title ?? '') || /^As used in|following definitions/i.test(section.items[0]?.text ?? '');
     if (markers.length === 0) {
       const item = { marker: null, level: 0, page: block.page, ...inline(src, { definitions }) };
+      if (block.bullet) {
+        item.bullet = true;
+        quoteStack = [];
+        quoteOpen = false;
+        section.items.push(item);
+        continue;
+      }
       let quote = quotedProvision(item.text);
       // Until the quotation closes, its paragraphs belong to it even without an opening mark
       // of their own (a contract clause followed by "1. …", "2. …").
@@ -414,6 +424,26 @@ export function parseExecutiveOrder(html, meta) {
     });
   }
 
+  // A memorandum written as plain paragraphs has no formal opening to set apart:
+  // all of its text goes in the one unnumbered section.
+  const docType = meta.doc_type ?? 'executive_order';
+  if (docType !== 'executive_order' && !sections.some(s => s.number != null) && preamble.length > 0) {
+    if (sections.length === 0) sections.push({ number: null, title: null, id: uniqueId('sec-0'), items: [] });
+    sections[0].items.unshift(...preamble.splice(0).map(({ page, ...rest }) => ({ marker: null, level: 0, page, ...rest })));
+  }
+
+  // Headings other than the title: a memorandum's "Memorandum for the Secretary of …" line.
+  const normalize = text => text.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  // The Federal Register brackets words it supplied in a list of addressees ("State[,] the …").
+  const headings = [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)]
+    .map(m => stripTags(m[1]).replace(/\[([^\]]*)\]/g, '$1'))
+    .filter(text => text && normalize(text) !== normalize(meta.title ?? ''));
+  const addressee = headings.find(text => /^Memorandum (for|to) /i.test(text)) ?? null;
+  // The Federal Register's title sometimes differs from the printed heading by a word or two;
+  // only a heading that says something else is kept.
+  const sameStart = text => normalize(text).slice(0, 25) === normalize(meta.title ?? '').slice(0, 25);
+  const subheading = headings.find(text => text !== addressee && !sameStart(text)) ?? null;
+
   // Citations, each with the provisions that cite it: "1" (unmarked text), "4(c)", "5(a)(i)".
   const citations = [];
   const collect = (spans, address) => {
@@ -439,9 +469,11 @@ export function parseExecutiveOrder(html, meta) {
   }
 
   return {
-    doc_type: 'executive_order',
+    doc_type: docType,
     number: meta.executive_order_number ? String(meta.executive_order_number) : null,
     title: meta.title,
+    ...(addressee ? { addressee } : {}),
+    ...(subheading ? { subheading } : {}),
     president: meta.president ?? null,
     signed_date: meta.signing_date ?? null,
     publication: {

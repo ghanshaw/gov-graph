@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client/react';
-import { GET_EXECUTIVE_ORDER } from '../queries';
+import { GET_EXECUTIVE_ORDER, GET_PRESIDENTIAL_DOCUMENT } from '../queries';
 import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
 import { RailGroup, RadioOptions, Fact } from '../components/Rail';
 import TagPanel from '../components/TagPanel';
 import OrderText from '../components/OrderText';
 import OrderOutline from '../components/OrderOutline';
+import Loading from '../components/Loading';
 
 const PRESIDENT_NAMES = {
   'barack-obama':    'Barack Obama',
@@ -20,6 +21,12 @@ function formatDate(iso) {
   if (!iso) return null;
   return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
+
+// Wording per document type. The route's :docType is 'executive-orders' or 'memoranda'.
+const DOC_TYPES = {
+  'executive-orders': { plural: 'Executive Orders', singular: 'Executive Order', noun: 'order' },
+  'memoranda': { plural: 'Presidential Memoranda', singular: 'Presidential Memorandum', noun: 'memorandum' },
+};
 
 // The stored text opens with "Administration of …" and "Executive Order N—Title",
 // which this page already shows in its header.
@@ -40,16 +47,21 @@ function orderFacts(structure) {
   const pages = publication?.start_page && publication?.end_page
     ? publication.end_page - publication.start_page + 1
     : new Set(items.map(item => item.page).filter(Boolean)).size;
-  return { sections: sections.length, deadlines, citations: citations.length, pages };
+  // A document written as plain paragraphs is stored as one unnumbered section.
+  return { sections: sections.filter(s => s.number != null).length, deadlines, citations: citations.length, pages };
 }
 
 export default function Detail() {
-  const { slug, docType, number } = useParams();
-  const { data, loading, error } = useQuery(GET_EXECUTIVE_ORDER, {
-    variables: { number },
-  });
+  // Executive orders are addressed by number (/eo/14160); documents without one, such as
+  // memoranda, by Federal Register document number (/doc/2017-01503).
+  const { slug, docType, number, documentNumber } = useParams();
+  const type = DOC_TYPES[docType] ?? DOC_TYPES['executive-orders'];
+  const { data, loading, error } = useQuery(
+    number ? GET_EXECUTIVE_ORDER : GET_PRESIDENTIAL_DOCUMENT,
+    { variables: number ? { number } : { documentNumber } }
+  );
 
-  const order = data?.executiveOrder;
+  const order = number ? data?.executiveOrder : data?.presidentialDocument;
   const structure = order?.structure;
   const hasText = Boolean(structure || order?.body);
 
@@ -67,17 +79,17 @@ export default function Detail() {
     <Crumbs items={[
       { label: 'Presidents', to: '/' },
       { label: PRESIDENT_NAMES[slug] ?? slug, to: `/${slug}` },
-      { label: 'Executive Orders', to: `/${slug}/${docType}` },
-      { label: number },
+      { label: type.plural, to: `/${slug}/${docType}` },
+      { label: number ?? documentNumber },
     ]} />
   );
 
   if (!order) {
     return (
       <PageLayout head={crumbs}>
-        {loading && <div className="state">Loading…</div>}
+        {loading && <Loading />}
         {error && <div className="error">Error: {error.message}</div>}
-        {!loading && !error && <div className="state">Executive Order not found.</div>}
+        {!loading && !error && <div className="state">{type.singular} not found.</div>}
       </PageLayout>
     );
   }
@@ -100,8 +112,12 @@ export default function Detail() {
   const head = (
     <>
       {crumbs}
-      <span className="eyebrow">Executive Order {order.number}</span>
+      <span className="eyebrow">{order.number ? `${type.singular} ${order.number}` : type.singular}</span>
       <h1 className="doc-title">{order.title}</h1>
+      {/* "Memorandum for the Secretary of …", or another printed heading that is not the title */}
+      {(structure?.addressee || structure?.subheading) && (
+        <p className="doc-addressee">{[structure.subheading, structure.addressee].filter(Boolean).join(' · ')}</p>
+      )}
 
       <dl className="facts">
         {order.dateSigned && <div><dt>Signed</dt><dd>{formatDate(order.dateSigned)}</dd></div>}
@@ -146,7 +162,7 @@ export default function Detail() {
             GovInfo ↗
           </a>
         )}
-        {order.bodyHtmlUrl && !hasText && (
+        {order.bodyHtmlUrl && !hasText && order.number && (
           <Link className="btn" to={`/${slug}/${docType}/eo/${order.number}/text`}>Full Text</Link>
         )}
       </div>
@@ -157,7 +173,7 @@ export default function Detail() {
     <>
       {showText && numbered.length > 0 && <OrderOutline sections={numbered} />}
       {facts && (
-        <RailGroup title="In this order">
+        <RailGroup title={`In this ${type.noun}`}>
           <Fact label="Sections">{facts.sections}</Fact>
           <Fact label="Deadlines">{facts.deadlines}</Fact>
           <Fact label="Documents cited">{facts.citations}</Fact>
@@ -208,8 +224,8 @@ export default function Detail() {
         <iframe
           id="eo-pdf"
           className="pdf-frame"
-          title={`Executive Order ${order.number} (PDF)`}
-          src={`/pdf/eo/${order.number}#navpanes=0&view=FitH`}
+          title={`${type.singular} ${order.number ?? order.documentNumber} (PDF)`}
+          src={`${order.number ? `/pdf/eo/${order.number}` : `/pdf/doc/${order.documentNumber}`}#navpanes=0&view=FitH`}
         />
       )}
 
@@ -228,7 +244,7 @@ export default function Detail() {
         </div>
       )}
 
-      <TagPanel entityType="executive_order" entityId={order.number} />
+      {order.documentNumber && <TagPanel itemRef={`fr:${order.documentNumber}`} />}
     </PageLayout>
   );
 }

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build mode B: cascade</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="builder.css">
+<style>
+  .sentence { margin: -4px 0 12px; font-size: 13.5px; color: #475467; }
+  .sentence b { color: var(--text); font-weight: 600; }
+  .row.main .label { color: var(--text); font-weight: 600; }
+  .row.main { padding-bottom: 10px; margin-bottom: 4px; border-bottom: 1px solid var(--rule); }
+  .opt .tag { font-size: 10.5px; font-weight: 500; color: #98a2b3; margin-left: 2px; }
+  .opt.on .tag, .opt.auto .tag { color: inherit; opacity: .75; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+import { frame, onTimeline, closing } from './data.js';
+
+// B: flat rows in a fixed order, read top down, the main one set apart. Each row offers only what exists with
+// the choices above it, so a click never changes a row above. Under each set of choices above, a row with one
+// option is chosen for you ("auto"); a value that exists for only some of them says which ("rate only").
+const picks = {};          // dim → Set of values
+let last = null;
+
+function render(box, ex) {
+  if (last !== ex) { for (const k of Object.keys(picks)) delete picks[k]; last = ex; }
+  const { dims, datasets } = ex;
+  const main = dims[0];
+  let prefixes = [datasets];   // the datasets under each combination of the choices above
+  const waiting = [];
+  const rows = dims.map((dim, depth) => {
+    const chosen = picks[dim.key] ?? new Set();
+    const state = {};          // value → { exists: prefixes it is in, autoIn: prefixes where it is the only one, mains }
+    const next = [];
+    const valuesOf = ds => [...new Set(ds.map(d => d[dim.key]))];
+    for (const ds of prefixes) {
+      const values = valuesOf(ds);
+      for (const v of values) {
+        const st = state[v] ??= { exists: 0, autoIn: 0, mains: new Set() };
+        st.exists++;
+        if (values.length === 1) st.autoIn++;
+        for (const d of ds) if (d[dim.key] === v) st.mains.add(d[main.key]);
+      }
+    }
+    // Shared, so chosen for you: the only option under one choice above that the others have too
+    // (rate and number of people: the number is only official (U-3), so U-3 is taken for both).
+    const shared = new Set(Object.keys(state).filter(v => state[v].autoIn > 0 && state[v].exists === prefixes.length));
+    for (const ds of prefixes) {
+      const values = valuesOf(ds);
+      const take = values.length === 1 ? values : values.filter(v => chosen.has(v) || shared.has(v));
+      if (!take.length) waiting.push(dim.label.toLowerCase());
+      for (const v of take) next.push(ds.filter(d => d[dim.key] === v));
+    }
+    prefixes = next;
+    // The main values in play in this row; an option found under only some of them says which.
+    const inPlay = new Set(Object.values(state).flatMap(st => [...st.mains]));
+    const short = m => main.values[m].replace(/^An? /, '').toLowerCase();
+    const opts = Object.keys(dim.values).map(v => {
+      const st = state[v];
+      if (!st) {
+        if (!datasets.some(d => d[dim.key] === v)) return '';
+        // In the measure, but not with the choices above: locked, saying what it needs.
+        const needs = [...new Set(datasets.filter(d => d[dim.key] === v).map(d => short(d[main.key])))];
+        return `<span class="opt locked" title="Not published with your choices above">${dim.values[v]}<span class="tag">${needs.join(', ')} only</span></span>`;
+      }
+      const tag = depth > 0 && inPlay.size > 1 && st.mains.size < inPlay.size
+        ? `<span class="tag">${[...st.mains].map(short).join(', ')} only</span>` : '';
+      if (chosen.has(v)) return `<button class="opt on" data-d="${dim.key}" data-v="${v}">${dim.values[v]}${tag}<span class="x" data-x="1">×</span></button>`;
+      if (st.autoIn === st.exists || shared.has(v)) return `<span class="opt auto" title="The only one published with your choices above">${dim.values[v]}${tag}</span>`;
+      return `<button class="opt" data-d="${dim.key}" data-v="${v}">${dim.values[v]}${tag}</button>`;
+    }).join('');
+    return `<div class="row${depth === 0 ? ' main' : ''}"><span class="label">${dim.label}</span><span class="opts">${opts}</span></div>`;
+  });
+
+  const chosen = prefixes.flat();
+  const done = !waiting.length;
+  const phrase = (picks[main.key]?.size ? [...picks[main.key]].map(v => main.values[v].toLowerCase()).join(' and ') : '…');
+  box.innerHTML = `
+    <h3>${ex.measure}</h3>
+    <p class="sentence"><b>${ex.measure}</b> ${main.phrase} <b>${phrase}</b></p>
+    ${rows.join('')}
+    ${closing(ex, done ? chosen : [])}
+    ${onTimeline(done ? chosen : [], done ? null : `Choose ${[...new Set(waiting)].join(' and ')} to put it on the timeline.`)}`;
+  box.querySelectorAll('button[data-d]').forEach(b => b.addEventListener('click', e => {
+    const set = picks[b.dataset.d] ??= new Set();
+    if (e.target.dataset.x) set.delete(b.dataset.v); else set.add(b.dataset.v);
+    // Rows below keep only what still exists with the rows above.
+    render(box, ex);
+  }));
+}
+
+frame(document.getElementById('app'), {
+  concept: 'B',
+  title: 'Cascade: rows in order, each offering only what exists above it',
+  note: 'The main row comes first and is set apart; it reads as a phrase (“GDP as a growth rate”). Each row below offers only what exists with the rows above, so a click never changes an earlier row. Where only one option exists for a choice above, it is chosen for you, and for the other choices too when they share it; an option that exists for only part of what you chose says so (“amount only”).',
+  render,
+});
+</script>
+</body>
+</html>

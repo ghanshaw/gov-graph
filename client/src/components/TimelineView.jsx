@@ -21,8 +21,12 @@ export default function TimelineView({ orders, slug, docType, newestFirst = fals
           </div>
 
           {byYear[year].map(order => (
-            <Link key={order.number || order.title} to={`/${slug}/${docType}/eo/${order.number}`} className="tl-row">
-              <span className="no">{order.number}</span>
+            <Link
+              key={order.number || order.documentNumber || order.title}
+              to={order.number ? `/${slug}/${docType}/eo/${order.number}` : `/${slug}/${docType}/doc/${order.documentNumber}`}
+              className={order.number ? 'tl-row' : 'tl-row cited'}
+            >
+              <span className="no">{order.number ?? order.citation}</span>
               <span className="title">{order.title}</span>
               {order.dateSigned && (
                 <span className="date">

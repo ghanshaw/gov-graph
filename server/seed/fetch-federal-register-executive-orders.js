@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Fetch executive orders from the Federal Register API → seed/data/fr-eos-<president>.json
+ * Fetch executive orders (or presidential memoranda) from the Federal Register API
+ *   → seed/data/fr-eos-<president>.json  /  seed/data/fr-memoranda-<president>.json
  *
  * Each record carries the publication metadata and the raw full-text HTML, which
  * load-executive-order-structure.js parses into the structured form. No database
@@ -11,6 +12,8 @@
  *   node server/seed/fetch-federal-register-executive-orders.js --president donald-trump     (first term)
  *   node server/seed/fetch-federal-register-executive-orders.js --president joseph-biden
  *   node server/seed/fetch-federal-register-executive-orders.js --president donald-trump-47
+ *
+ * Add `--type memorandum` for presidential memoranda (default: executive_order).
  *
  * Safe to re-run — HTML already in the output file is kept, so only new orders are downloaded.
  */
@@ -36,12 +39,20 @@ if (!PRESIDENT) {
   process.exit(1);
 }
 
+const TYPES = { executive_order: 'eos', memorandum: 'memoranda' };
+const typeFlag = process.argv.indexOf('--type');
+const DOC_TYPE = typeFlag === -1 ? 'executive_order' : process.argv[typeFlag + 1];
+if (!TYPES[DOC_TYPE]) {
+  console.error(`Unknown --type "${DOC_TYPE}". Use: ${Object.keys(TYPES).join(' | ')}`);
+  process.exit(1);
+}
+
 const BASE_URL = 'https://www.federalregister.gov/api/v1/documents';
 const DELAY_MS = 250;
 const MAX_RETRIES = 4;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const OUT_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', `fr-eos-${SLUG}.json`);
+const OUT_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data', `fr-${TYPES[DOC_TYPE]}-${SLUG}.json`);
 
 const FIELDS = [
   'document_number', 'executive_order_number', 'title', 'signing_date', 'publication_date',
@@ -67,7 +78,7 @@ async function listOrders() {
   let totalPages = 1;
   while (page <= totalPages) {
     const params = new URLSearchParams({
-      'conditions[presidential_document_type]': 'executive_order',
+      'conditions[presidential_document_type]': DOC_TYPE,
       'conditions[president]': PRESIDENT.apiSlug,
       per_page: 100,
       page,
@@ -91,7 +102,7 @@ async function run() {
   const previous = fs.existsSync(OUT_FILE) ? JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')) : [];
   const htmlByDocument = new Map(previous.filter(o => o.html).map(o => [o.document_number, o.html]));
 
-  console.log(`Listing executive orders for ${PRESIDENT.name}...`);
+  console.log(`Listing ${DOC_TYPE} documents for ${PRESIDENT.name}...`);
   const listed = await listOrders();
 
   console.log(`\nFetching full text for ${listed.length} documents (${htmlByDocument.size} already on disk)...`);
@@ -108,7 +119,7 @@ async function run() {
         console.error(`  ${doc.document_number} (EO ${doc.executive_order_number}): ${err.message}`);
       }
     }
-    orders.push({ ...doc, president: { slug: SLUG, name: PRESIDENT.name }, html });
+    orders.push({ ...doc, doc_type: DOC_TYPE, president: { slug: SLUG, name: PRESIDENT.name }, html });
     if ((i + 1) % 50 === 0 || i + 1 === listed.length) console.log(`  ${i + 1}/${listed.length}`);
   }
 

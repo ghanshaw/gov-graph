@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline data variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 18px; }
+  .v { display: block; border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; color: inherit; text-decoration: none; background: #fff; }
+  .v:hover { border-color: var(--accent); }
+  .v img { display: block; width: 100%; height: 190px; object-fit: cover; object-position: top; border-bottom: 1px solid var(--rule); }
+  .v div { padding: 12px 14px 14px; }
+  .v b { font-size: 15px; }
+  .v b span { font: 600 12px var(--mono); color: var(--accent); margin-right: 6px; }
+  .v p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+  ul { color: #344054; max-width: 860px; padding-left: 18px; }
+  li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="topbar"><span class="brand">Gov<b>Graph</b></span><span class="variant-tag">design/timeline-data</span></div>
+<main class="page">
+  <h1>Timeline data: choosing and combining series</h1>
+  <p class="lede">Every variant draws real series from the database (59, pulled 2026-10-11) with the same rules, so they differ only in how you find, name and arrange them. The reasoning, rules and a recommendation are in <code>README.md</code>.</p>
+  <ul>
+    <li><b>Search starts from news words.</b> “taxes”, “jobs report”, “tax the rich”, “liberation day” lead to a topic, its meanings, and the one series the news usually means.</li>
+    <li><b>Charts form themselves.</b> Series measured alike share a chart; others stack on the same dates; the page says why.</li>
+    <li><b>On, hidden, removed.</b> Hidden series stay in view, struck through, keeping their colour.</li>
+    <li><b>Frequency is visible.</b> D / W / M / Q / Y / FY badges; yearly and quarterly values drawn as levels across their period; each value printed with its own period.</li>
+  </ul>
+  <h2 style="font-size:17px;margin:26px 0 2px">Round 3: AC.1</h2>
+  <p class="lede" style="margin-bottom:0">A.1.1 and C.1.1 combined: the search and catalogue across the top, the chart and lanes below. Names read as a phrase.</p>
+  <div class="grid">
+    <a class="v" href="ac-1.html"><img src="screenshots/ac-1.png" alt=""><div><b><span>AC.1</span>Search, catalogue and lanes</b><p>Search at the top opens the catalogue of every dataset; ticking one puts it in the lane it fits, said beside it (“→ lane 3”).</p></div></a>
+    <a class="v" href="ac-1.html?q=taxes"><img src="screenshots/ac-1-taxes.png" alt=""><div><b><span>AC.1</span>… searching “taxes”</b><p>The catalogue open over the page, filtered; Done or Esc closes it.</p></div></a>
+  </div>
+  <h2 style="font-size:17px;margin:26px 0 2px">Build mode: three ways to choose by dimension (2026-10-13)</h2>
+  <p class="lede" style="margin-bottom:0">Choosing in Build mode should never switch an earlier choice back and forth. Each concept runs on the real GDP and unemployment datasets (switch on the left). All three close with what every dataset shares, then years, then source.</p>
+  <ul>
+    <li><a href="builder/a-nested.html"><b>A. Nested</b></a> — each option indented under the one it depends on; options that don't apply are never on screen. Label: “Measured as”.</li>
+    <li><a href="builder/b-cascade.html"><b>B. Cascade</b></a> — flat rows read top down; each offers only what exists above it; shared single options chosen for you; partial ones say “rate only”. Reads as a phrase: “GDP as a growth rate”.</li>
+    <li><a href="builder/c-grid.html"><b>C. Grid</b></a> — the datasets as a table of combinations, the gaps marked “not published”; tick cells, rows or columns.</li>
+  </ul>
+  <h2 style="font-size:17px;margin:26px 0 2px">Round 2: A.1 and C.1</h2>
+  <p class="lede" style="margin-bottom:0">A as a catalogue of every dataset, C with its lanes reworked: no sparklines or coverage bars, a year range, recessions labelled and hatched instead of grey. Each comes in two naming conventions (<code>NAMING.md</code>): <b>.1.1 reads as a phrase</b> (“Monthly Individual Income Taxes”), <b>.1.2 measure: detail</b> (“Individual Income Taxes: Monthly”). The switch at the top right of each page flips between them.</p>
+  <div class="grid">
+    <a class="v" href="a-1-1.html"><img src="screenshots/a-1-1.png" alt=""><div><b><span>A.1.1</span>Catalogue · phrase names</b><p>Search over a catalogue of all datasets by subject and meaning, filters by frequency; tray; year range.</p></div></a>
+    <a class="v" href="a-1-2.html?q=taxes"><img src="screenshots/a-1-2-taxes.png" alt=""><div><b><span>A.1.2</span>Catalogue · measure: detail</b><p>The same page, names measure-first. Opened on a search for “taxes”.</p></div></a>
+    <a class="v" href="c-1-1.html"><img src="screenshots/c-1-1.png" alt=""><div><b><span>C.1.1</span>Layers and lanes · phrase names</b><p>Lanes say their scales, can be reordered, and say when a dataset doesn’t cover the years shown; context with counts.</p></div></a>
+    <a class="v" href="c-1-2.html?q=taxes"><img src="screenshots/c-1-2-taxes.png" alt=""><div><b><span>C.1.2</span>Layers and lanes · measure: detail</b><p>The same page, names measure-first. Search results grouped by meaning.</p></div></a>
+  </div>
+  <h2 style="font-size:17px;margin:30px 0 2px">Round 1</h2>
+  <div class="grid">
+    <a class="v" href="a-search-and-tray.html"><img src="screenshots/a-tray.png" alt=""><div><b><span>A</span>Search and tray</b><p>A search field across the top opening a panel of answers; chips bundled per chart. Closest to the brief.</p></div></a>
+    <a class="v" href="a-search-and-tray.html?q=taxes"><img src="screenshots/a-search-taxes.png" alt=""><div><b><span>A</span>… searching “taxes”</b><p>Each meaning with its series, sparkline, frequency, and whether it joins a chart or starts one.</p></div></a>
+    <a class="v" href="b-topic-answers.html"><img src="screenshots/b-taxes.png" alt=""><div><b><span>B</span>Topic answers</b><p>Meaning first: an answer sheet of cards per topic, “Not here yet”, events to mark; a rail grouped per chart.</p></div></a>
+    <a class="v" href="c-layers-and-lanes.html"><img src="screenshots/c-lanes.png" alt=""><div><b><span>C</span>Layers and lanes</b><p>A layer panel: drag a series between lanes; second scale or refusal shown as you drag; coverage bars.</p></div></a>
+    <a class="v" href="d-sentence.html"><img src="screenshots/d-recession.png" alt=""><div><b><span>D</span>Sentence builder</b><p>The view written as a sentence with editable phrases, and starting points that load a whole question.</p></div></a>
+  </div>
+</main>
+</body>
+</html>

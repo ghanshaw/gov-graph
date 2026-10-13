@@ -1,0 +1,224 @@
+{
+  "about": "Reports of investigations: commissions, congressional inquiries, special counsels (server/seed/fetch-reports.js, load-reports.js). Entered by hand: who issued each report, when, what created the body that wrote it, and the laws that followed it, each as a citation, a date and, where the document can be stored in this database, a reference ('bill:<legislation source_id>' or 'fr:<Federal Register document number>') that becomes an in-app link once it is loaded. Part titles are govinfo's granule titles; the text is read from the publisher's HTML.",
+  "reports": [
+    {
+      "slug": "9-11-commission",
+      "kind": "commission",
+      "title": "The 9/11 Commission Report: Final Report of the National Commission on Terrorist Attacks Upon the United States",
+      "short_title": "The 9/11 Commission Report",
+      "issuer": "National Commission on Terrorist Attacks Upon the United States",
+      "issuer_short": "9/11 Commission",
+      "date_issued": "2004-07-22",
+      "source_id": "GPO-911REPORT",
+      "govinfo_url": "https://www.govinfo.gov/app/details/GPO-911REPORT",
+      "source_url": "https://9-11commission.gov/report/",
+      "text_from": "the Commission's own HTML edition, 9-11commission.gov/report (archived by the University of North Texas CyberCemetery)",
+      "pdf_from": "govinfo, GPO's official edition (package GPO-911REPORT)",
+      "related": [
+        {
+          "relation": "created_by",
+          "citation": "Pub. L. 107-306, title VI",
+          "title": "Intelligence Authorization Act for Fiscal Year 2003, title VI: National Commission on Terrorist Attacks Upon the United States",
+          "date": "2002-11-27",
+          "document": "bill:107-HR-4628",
+          "url": "https://www.congress.gov/bill/107th-congress/house-bill/4628"
+        },
+        {
+          "relation": "followed_by",
+          "citation": "Pub. L. 108-458",
+          "title": "Intelligence Reform and Terrorism Prevention Act of 2004",
+          "date": "2004-12-17",
+          "document": "bill:108-S-2845",
+          "url": "https://www.congress.gov/bill/108th-congress/senate-bill/2845",
+          "notes": "Created the Director of National Intelligence and the National Counterterrorism Center, both recommended in chapter 13."
+        },
+        {
+          "relation": "followed_by",
+          "citation": "Pub. L. 110-53",
+          "title": "Implementing Recommendations of the 9/11 Commission Act of 2007",
+          "date": "2007-08-03",
+          "document": "bill:110-HR-1",
+          "url": "https://www.congress.gov/bill/110th-congress/house-bill/1"
+        }
+      ],
+      "base_url": "https://9-11commission.gov/report/",
+      "notes_file": "911Report_Notes.htm",
+      "files": [
+        "index.htm",
+        "faqs.htm",
+        "911Report.pdf",
+        "911Report_Statement.pdf",
+        "911Report_FM.htm",
+        "911Report_FM.pdf",
+        "911Report_Notes.pdf"
+      ],
+      "parts": [
+        {
+          "id": "preface",
+          "kind": "preface",
+          "title": "Preface",
+          "file": "911Report_Pref.htm",
+          "pdf": "911Report_Pref.pdf",
+          "granule": "GPO-911REPORT-6"
+        },
+        {
+          "id": "ch1",
+          "kind": "chapter",
+          "number": "1",
+          "title": "\"We Have Some Planes\"",
+          "file": "911Report_Ch1.htm",
+          "pdf": "911Report_Ch1.pdf",
+          "granule": "GPO-911REPORT-7"
+        },
+        {
+          "id": "ch2",
+          "kind": "chapter",
+          "number": "2",
+          "title": "The Foundation of the New Terrorism",
+          "file": "911Report_Ch2.htm",
+          "pdf": "911Report_Ch2.pdf",
+          "granule": "GPO-911REPORT-8"
+        },
+        {
+          "id": "ch3",
+          "kind": "chapter",
+          "number": "3",
+          "title": "Counterterrorism Evolves",
+          "file": "911Report_Ch3.htm",
+          "pdf": "911Report_Ch3.pdf",
+          "granule": "GPO-911REPORT-9"
+        },
+        {
+          "id": "ch4",
+          "kind": "chapter",
+          "number": "4",
+          "title": "Responses to Al Qaeda's Initial Assaults",
+          "file": "911Report_Ch4.htm",
+          "pdf": "911Report_Ch4.pdf",
+          "granule": "GPO-911REPORT-10"
+        },
+        {
+          "id": "ch5",
+          "kind": "chapter",
+          "number": "5",
+          "title": "Al Qaeda Aims at the American Homeland",
+          "file": "911Report_Ch5.htm",
+          "pdf": "911Report_Ch5.pdf",
+          "granule": "GPO-911REPORT-11"
+        },
+        {
+          "id": "ch6",
+          "kind": "chapter",
+          "number": "6",
+          "title": "From Threat To Threat",
+          "file": "911Report_Ch6.htm",
+          "pdf": "911Report_Ch6.pdf",
+          "granule": "GPO-911REPORT-12"
+        },
+        {
+          "id": "ch7",
+          "kind": "chapter",
+          "number": "7",
+          "title": "The Attack Looms",
+          "file": "911Report_Ch7.htm",
+          "pdf": "911Report_Ch7.pdf",
+          "granule": "GPO-911REPORT-13"
+        },
+        {
+          "id": "ch8",
+          "kind": "chapter",
+          "number": "8",
+          "title": "\"The System Was Blinking Red\"",
+          "file": "911Report_Ch8.htm",
+          "pdf": "911Report_Ch8.pdf",
+          "granule": "GPO-911REPORT-14"
+        },
+        {
+          "id": "ch9",
+          "kind": "chapter",
+          "number": "9",
+          "title": "Heroism and Horror",
+          "file": "911Report_Ch9.htm",
+          "pdf": "911Report_Ch9.pdf",
+          "granule": "GPO-911REPORT-15"
+        },
+        {
+          "id": "ch10",
+          "kind": "chapter",
+          "number": "10",
+          "title": "Wartime",
+          "file": "911Report_Ch10.htm",
+          "pdf": "911Report_Ch10.pdf",
+          "granule": "GPO-911REPORT-16"
+        },
+        {
+          "id": "ch11",
+          "kind": "chapter",
+          "number": "11",
+          "title": "Foresight—and Hindsight",
+          "file": "911Report_Ch11.htm",
+          "pdf": "911Report_Ch11.pdf",
+          "granule": "GPO-911REPORT-17"
+        },
+        {
+          "id": "ch12",
+          "kind": "chapter",
+          "number": "12",
+          "title": "What To Do? A Global Strategy",
+          "file": "911Report_Ch12.htm",
+          "pdf": "911Report_Ch12.pdf",
+          "granule": "GPO-911REPORT-18"
+        },
+        {
+          "id": "ch13",
+          "kind": "chapter",
+          "number": "13",
+          "title": "How To Do It? A Different Way of Organizing the Government",
+          "file": "911Report_Ch13.htm",
+          "pdf": "911Report_Ch13.pdf",
+          "granule": "GPO-911REPORT-19"
+        },
+        {
+          "id": "app-a",
+          "kind": "appendix",
+          "number": "A",
+          "title": "Common Abbreviations",
+          "file": "911Report_App.htm",
+          "heading": "APPENDIX A",
+          "pdf": "911Report_App.pdf",
+          "granule": "GPO-911REPORT-20"
+        },
+        {
+          "id": "app-b",
+          "kind": "appendix",
+          "number": "B",
+          "title": "Table of Names",
+          "file": "911Report_App.htm",
+          "heading": "APPENDIX B",
+          "pdf": "911Report_App.pdf",
+          "granule": "GPO-911REPORT-21"
+        },
+        {
+          "id": "app-c",
+          "kind": "appendix",
+          "number": "C",
+          "title": "Commission Hearings",
+          "file": "911Report_App.htm",
+          "heading": "APPENDIX C",
+          "pdf": "911Report_App.pdf",
+          "granule": "GPO-911REPORT-22"
+        },
+        {
+          "id": "summary",
+          "kind": "summary",
+          "title": "Executive Summary",
+          "file": "911Report_Exec.htm",
+          "pdf": "911Report_Exec.pdf",
+          "granule": "GPO-911REPORT-24",
+          "note": "Published separately from the report.",
+          "title_headings": 2
+        }
+      ]
+    }
+  ]
+}

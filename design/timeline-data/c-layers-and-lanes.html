@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline data · C · Layers and lanes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+  .page { max-width: none; }
+  .layout { display: grid; grid-template-columns: 1fr 360px; gap: 22px; align-items: start; }
+  .chart-col { min-width: 0; }
+  .head-row { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; }
+  .seg button { border: 0; background: #fff; padding: 3px 9px; font-size: 12.5px; }
+  .seg button + button { border-left: 1px solid var(--rule); }
+  .seg button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+  /* The layer panel, as in a map or drawing program: search on top, then context, then lanes. */
+  .layers { position: sticky; top: 12px; border: 1px solid var(--rule); border-radius: 12px; background: #fff; max-height: calc(100vh - 24px); overflow: auto; }
+  .layers-search { position: sticky; top: 0; background: #fff; padding: 12px 12px 8px; border-bottom: 1px solid var(--rule); z-index: 2; }
+  .layers-search input { width: 100%; border: 1.5px solid var(--rule); border-radius: 8px; height: 36px; padding: 0 10px; outline: 0; }
+  .layers-search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .found { margin-top: 6px; }
+  .found button { display: grid; grid-template-columns: 18px 1fr auto; gap: 6px; align-items: center; width: 100%; text-align: left; border: 0; background: none; padding: 4px 4px; border-radius: 6px; font-size: 13px; }
+  .found button:hover { background: var(--panel); }
+  .found .plus { color: var(--accent); font-weight: 700; }
+  .found small { color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+  .found .topic-hint { font-size: 11.5px; color: var(--muted); padding: 4px 4px 2px; }
+  .sec { padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  .sec h4 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); display: flex; justify-content: space-between; }
+  .ctxrow { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 3px 0; }
+  .ctxrow .sw { width: 12px; height: 12px; border-radius: 3px; }
+
+  .lane { border: 1px solid var(--rule); border-radius: 9px; margin-bottom: 8px; transition: border-color .1s, background .1s; }
+  .lane.drop-ok { border-color: var(--accent); background: var(--accent-soft); }
+  .lane.drop-axis { border-color: var(--warn); background: var(--warn-soft); }
+  .lane.drop-no { border-color: #b42318; background: #fdecea; }
+  .lane-head { display: flex; align-items: center; gap: 6px; padding: 6px 8px 2px; font-size: 11.5px; font-weight: 600; color: var(--muted); }
+  .lane-head .units { margin-left: auto; font-weight: 500; }
+  .layer { display: grid; grid-template-columns: 12px 18px 10px 1fr auto; gap: 6px; align-items: center; padding: 4px 8px; font-size: 13px; cursor: grab; }
+  .layer:hover { background: var(--panel); }
+  .layer .grip { color: #c9ced6; font-size: 11px; letter-spacing: -2px; }
+  .layer .eye { border: 0; background: none; padding: 0; color: var(--muted); font-size: 13px; }
+  .layer .sw { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+  .layer.off { color: var(--muted); }
+  .layer.off .sw { background: none; border: 1.5px solid var(--c); }
+  .layer .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .layer .tail { display: flex; align-items: center; gap: 5px; }
+  .layer .axis { border: 1px solid var(--rule); background: #fff; border-radius: 4px; font: 600 10px var(--mono); padding: 0 4px; color: var(--muted); }
+  .layer .x { border: 0; background: none; color: var(--muted); padding: 0 2px; }
+  .layer .cov { grid-column: 4 / 6; margin-top: -2px; }
+  .newlane { border: 1.5px dashed var(--rule); border-radius: 9px; padding: 10px; text-align: center; color: var(--muted); font-size: 12.5px; }
+  .newlane.drop-ok { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 520px; }
+  .toast.show { opacity: 1; }
+  .legend-freq { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } .layers { position: static; max-height: none; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">Gov<b>Graph</b></span>
+  <nav class="nav"><span>Executive</span><span>Congress</span><span>Supreme Court</span><span>U.S. Code</span><span class="on">Timeline</span><span>Economy</span></nav>
+  <span class="variant-tag"><a href="index.html">Design variants</a> · C · Layers and lanes</span>
+</div>
+<main class="page">
+  <div class="layout">
+    <div class="chart-col">
+      <div class="head-row">
+        <h1>Timeline</h1>
+        <span class="muted" style="font-size:13px">Each lane is a chart. Drag a layer onto another lane to draw them together, or onto “New lane” to pull it apart.</span>
+      </div>
+      <div class="head-row">
+        <span class="muted" style="font-size:13px">Years <span class="seg" id="range"><button data-v="1990">1990–</button><button data-v="2000" class="on">2000–</button><button data-v="2015">2015–</button><button data-v="2020">2020–</button></span></span>
+      </div>
+      <div id="chart"></div>
+      <div class="legend-freq">How often each is published:
+        <span><abbr class="gg-freq f-D">D</abbr> daily</span><span><abbr class="gg-freq f-W">W</abbr> weekly</span><span><abbr class="gg-freq f-M">M</abbr> monthly</span>
+        <span><abbr class="gg-freq f-Q">Q</abbr> quarterly</span><span><abbr class="gg-freq f-Y">Y</abbr> yearly</span><span><abbr class="gg-freq f-FY">FY</abbr> fiscal year</span>
+        <span>· Quarterly and yearly values are drawn as levels across their period, not points.</span>
+      </div>
+    </div>
+
+    <aside class="layers" id="layers">
+      <div class="layers-search">
+        <input id="q" placeholder="Add a layer: search data…" autocomplete="off">
+        <div class="found" id="found"></div>
+      </div>
+      <div class="sec" id="ctx"></div>
+      <div class="sec" id="lanes"></div>
+    </aside>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="shared/data.js"></script>
+<script src="shared/catalog.js"></script>
+<script src="shared/chart.js"></script>
+<script>
+const { h } = GG;
+const colors = GG.colorKeeper();
+const clean = name => name.replace(/ \((monthly|daily)\)/, '');
+// What can share an axis: the unit, with dollars only alongside dollars over the same period.
+const axisUnit = slug => { const s = GG.series(slug); return s.unit === 'index' ? `index|${slug}` : s.dollars ? `$|${s.frequency}` : s.unit; };
+const unitName = u => u.startsWith('$|') ? `dollars, ${u.slice(2)}` : u.startsWith('index|') ? 'index' : GG.panelTitle({ unit: u, dollars: false }).toLowerCase();
+
+let laneSeq = 3;
+const state = {
+  from: 2000,
+  context: { presidents: true, recessions: true, fomc: true, 'tax-laws': false, 'tariff-actions': false, relief: false },
+  lanes: [
+    { id: 1, layers: [{ slug: 'fed-funds', on: true, band: ['fed-target-lower', 'fed-target-upper'] }, { slug: 'unemployment-rate', on: true }, { slug: 'mortgage-rate', on: true }] },
+    { id: 2, layers: [{ slug: 'cpi', on: true }, { slug: 'wti-spot', on: true, axis: 'right' }] },
+    { id: 3, layers: [{ slug: 'debt-total', on: true }] },
+  ],
+};
+const allLayers = () => state.lanes.flatMap(l => l.layers);
+const laneUnits = lane => [...new Set(lane.layers.map(l => axisUnit(l.slug)))];
+
+// Where a layer may go: 'ok' (same unit), 'axis' (a second unit, on the right), 'no' (a third unit).
+function verdict(lane, slug) {
+  const u = axisUnit(slug), units = laneUnits({ layers: lane.layers.filter(l => l.slug !== slug) });
+  if (!units.length || units.includes(u)) return 'ok';
+  return units.length === 1 ? 'axis' : 'no';
+}
+function place(slug, lane, extra = {}) {
+  const v = verdict(lane, slug);
+  if (v === 'no') { toast(`${clean(GG.series(slug).name)} is in ${unitName(axisUnit(slug))}; this lane already has two scales (${laneUnits(lane).map(unitName).join(' and ')}).`); return false; }
+  const layer = { slug, on: true, ...extra };
+  const units = laneUnits(lane);
+  layer.axis = v === 'axis' ? (lane.layers.some(l => l.axis === 'right') ? 'left' : 'right') : lane.layers.find(l => axisUnit(l.slug) === axisUnit(slug))?.axis;
+  lane.layers.push(layer);
+  if (v === 'axis') toast(`Drawn against a second scale on the right: ${unitName(axisUnit(slug))} beside ${unitName(units[0])}.`);
+  return true;
+}
+function remove(slug) {
+  for (const lane of state.lanes) lane.layers = lane.layers.filter(l => l.slug !== slug);
+  state.lanes = state.lanes.filter(l => l.layers.length);
+}
+function add(slug, band) {
+  if (allLayers().some(l => l.slug === slug)) return;
+  const lane = state.lanes.find(l => laneUnits(l).includes(axisUnit(slug)));
+  if (lane) place(slug, lane, { band });
+  else state.lanes.push({ id: ++laneSeq, layers: [{ slug, on: true, band }] });
+  draw();
+}
+
+let toastTimer;
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3200); }
+
+// ── Search ──
+const q = document.getElementById('q'), found = document.getElementById('found');
+function search() {
+  const text = q.value.trim();
+  if (!text) { found.innerHTML = '<div class="topic-hint">Try “jobs”, “taxes”, “oil”, “rates”.</div>'; return; }
+  const topic = GG.searchTopics(text)[0];
+  const fromTopic = topic ? topic.intents.flatMap(i => i.series) : [];
+  const plain = GG.searchSeries(text).filter(s => !fromTopic.some(f => f.slug === s.slug)).map(s => ({ slug: s.slug }));
+  const rows = [...fromTopic, ...plain].slice(0, 12);
+  found.innerHTML = (topic ? `<div class="topic-hint">${topic.label}: ${topic.heard.split(' (')[0]}</div>` : '') + rows.map(r => {
+    const s = GG.series(r.slug), on = allLayers().some(l => l.slug === r.slug);
+    const lane = state.lanes.findIndex(l => laneUnits(l).includes(axisUnit(r.slug)));
+    return `<button data-add="${r.slug}" ${r.band ? `data-band="${r.band}"` : ''} ${on ? 'disabled style="opacity:.45"' : ''}>
+      <span class="plus">${on ? '✓' : '+'}</span><span>${r.role && r.role !== 'Headline' ? `${r.role} · ` : ''}${clean(s.name)} ${GG.freqBadge(r.slug)}</span>
+      <small>${on ? 'on' : lane >= 0 ? `→ lane ${lane + 1}` : '→ new lane'}</small></button>`;
+  }).join('');
+}
+q.addEventListener('input', search);
+found.addEventListener('click', e => { const b = e.target.closest('[data-add]'); if (b) { add(b.dataset.add, b.dataset.band?.split(',')); search(); } });
+
+// ── Panel ──
+const from = () => Date.UTC(state.from, 0, 1), to = Date.UTC(2026, 9, 11);
+function drawLayers() {
+  const ctxNames = { presidents: ['Presidents', 'linear-gradient(90deg,var(--dem-soft) 50%,var(--rep-soft) 50%)'], recessions: ['Recessions', 'var(--recession-soft)'],
+    fomc: ['Fed rate decisions', 'var(--fed)'], 'tax-laws': ['Tax laws', 'var(--legislative)'], relief: ['Relief laws', 'var(--legislative)'], 'tariff-actions': ['Tariff orders', 'var(--executive)'] };
+  document.getElementById('ctx').innerHTML = '<h4>Context</h4>' + Object.entries(ctxNames).map(([k, [label, bg]]) =>
+    `<label class="ctxrow"><input type="checkbox" data-ctx="${k}" ${state.context[k] ? 'checked' : ''}><span class="sw" style="background:${bg}"></span>${label}</label>`).join('');
+  const lanes = document.getElementById('lanes');
+  lanes.innerHTML = '<h4><span>Lanes</span><span style="text-transform:none;letter-spacing:0;font-weight:400">top to bottom</span></h4>';
+  state.lanes.forEach((lane, i) => {
+    const el = h('div', 'lane'); el.dataset.lane = lane.id;
+    const units = laneUnits(lane);
+    el.innerHTML = `<div class="lane-head">Lane ${i + 1}<span class="units">${units.map((u, j) => `${unitName(u)}${units.length > 1 ? (lane.layers.find(l => axisUnit(l.slug) === u)?.axis === 'right' ? ' (right)' : ' (left)') : ''}`).join(' · ')}</span></div>`
+      + lane.layers.map(l => {
+        const s = GG.series(l.slug);
+        return `<div class="layer${l.on ? '' : ' off'}" draggable="true" data-slug="${l.slug}" style="--c:${colors.get(l.slug)}" title="${s.name} · ${s.sourceName}${s.shown ? ` · shown as ${s.shown}` : ''}">
+          <span class="grip">⋮⋮</span><button class="eye" data-eye="${l.slug}">${l.on ? '◉' : '○'}</button><span class="sw"></span>
+          <span class="nm">${clean(s.name)}</span>
+          <span class="tail">${GG.freqBadge(l.slug)}${units.length > 1 ? `<button class="axis" data-axis="${l.slug}" title="Switch scale side">${l.axis === 'right' ? 'R' : 'L'}</button>` : ''}<button class="x" data-x="${l.slug}">×</button></span>
+          <span class="cov">${GG.coverage(l.slug, from(), to, 250)}</span></div>`;
+      }).join('');
+    lanes.appendChild(el);
+  });
+  const nl = h('div', 'newlane', '+ New lane: drop a layer here'); nl.dataset.lane = 'new';
+  lanes.appendChild(nl);
+}
+
+let dragging = null;
+const layersEl = document.getElementById('layers');
+layersEl.addEventListener('dragstart', e => { const l = e.target.closest('.layer'); if (l) { dragging = l.dataset.slug; e.dataTransfer.effectAllowed = 'move'; } });
+layersEl.addEventListener('dragend', () => { dragging = null; document.querySelectorAll('.lane,.newlane').forEach(x => x.classList.remove('drop-ok', 'drop-axis', 'drop-no')); });
+layersEl.addEventListener('dragover', e => {
+  const t = e.target.closest('[data-lane]'); if (!t || !dragging) return;
+  e.preventDefault();
+  document.querySelectorAll('.lane,.newlane').forEach(x => x !== t && x.classList.remove('drop-ok', 'drop-axis', 'drop-no'));
+  if (t.dataset.lane === 'new') { t.classList.add('drop-ok'); return; }
+  const lane = state.lanes.find(l => String(l.id) === t.dataset.lane);
+  const v = lane.layers.some(l => l.slug === dragging) ? 'ok' : verdict(lane, dragging);
+  t.classList.add(`drop-${v}`);
+});
+layersEl.addEventListener('drop', e => {
+  const t = e.target.closest('[data-lane]'); if (!t || !dragging) return;
+  e.preventDefault();
+  const layer = allLayers().find(l => l.slug === dragging);
+  if (t.dataset.lane === 'new') { remove(dragging); state.lanes.push({ id: ++laneSeq, layers: [{ ...layer, axis: undefined }] }); }
+  else {
+    const lane = state.lanes.find(l => String(l.id) === t.dataset.lane);
+    if (!lane.layers.includes(layer) && verdict(lane, dragging) !== 'no') { remove(dragging); place(dragging, lane, { band: layer.band, on: layer.on }); }
+    else if (!lane.layers.includes(layer)) place(dragging, lane);
+  }
+  draw();
+});
+layersEl.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.eye) { const l = allLayers().find(x => x.slug === b.dataset.eye); l.on = !l.on; }
+  else if (b.dataset.x) { remove(b.dataset.x); colors.free(b.dataset.x); }
+  else if (b.dataset.axis) { const lane = state.lanes.find(l => l.layers.some(x => x.slug === b.dataset.axis)); lane.layers.forEach(l => { l.axis = l.axis === 'right' ? 'left' : 'right'; }); }
+  else return;
+  draw();
+});
+layersEl.addEventListener('change', e => { const k = e.target.dataset.ctx; if (k) { state.context[k] = e.target.checked; draw(); } });
+document.getElementById('range').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  state.from = +b.dataset.v; document.querySelectorAll('#range button').forEach(x => x.classList.toggle('on', x === b)); draw();
+});
+
+function draw() {
+  drawLayers();
+  const panels = state.lanes.map((lane, i) => ({
+    key: lane.id, title: `Lane ${i + 1} · ${laneUnits(lane).map(unitName).join(' and ')}`,
+    lines: lane.layers.filter(l => l.on).map(l => ({ ...l, color: colors.get(l.slug) })),
+  })).filter(p => p.lines.length);
+  const sets = ['fomc', 'tax-laws', 'relief', 'tariff-actions'].filter(k => state.context[k]);
+  GG.render(document.getElementById('chart'), {
+    panels, from: from(), to, panelHeight: 150,
+    context: { presidents: state.context.presidents, recessions: state.context.recessions }, events: GG.eventsFor(sets),
+  });
+}
+window.addEventListener('resize', draw);
+search(); draw();
+</script>
+</body>
+</html>

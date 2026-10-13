@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client/react';
 import { GET_NATURAL_COURTS } from '../queries';
 import PageLayout from '../components/PageLayout';
 import { RailGroup, Fact } from '../components/Rail';
+import Loading from '../components/Loading';
 
 function formatDateRange(startDate, endDate) {
   const fmt = d => new Date(d + 'T00:00:00').getFullYear();
@@ -25,7 +26,7 @@ export default function SupremeCourt() {
         {Object.entries(byChief).map(([chief, count]) => (
           <Fact key={chief} label={chief}>{count}</Fact>
         ))}
-        {courts.length === 0 && <p>{loading ? 'Loading…' : 'No courts.'}</p>}
+        {!loading && courts.length === 0 && <p>No courts.</p>}
       </RailGroup>
       <RailGroup title="Source">
         <p>Majority opinions from CourtListener.</p>
@@ -46,7 +47,7 @@ export default function SupremeCourt() {
         A natural court is the period during which no change in Court membership occurs. Browse majority opinions by court composition.
       </p>
 
-      {loading && <div className="state">Loading…</div>}
+      {loading && <Loading />}
 
       {courts.length > 0 && (
         <table className="records">

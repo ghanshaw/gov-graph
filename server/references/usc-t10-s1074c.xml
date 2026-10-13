@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="usctitle.css"?>
+<uscDoc xsi:schemaLocation="http://xml.house.gov/schemas/uslm/1.0 USLM-1.0.15.xsd" xml:lang="en" identifier="/us/usc/t10" xmlns="http://xml.house.gov/schemas/uslm/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<meta>
+  <dc:title>Title 10</dc:title>
+  <dc:type>USCTitle</dc:type>
+  <docNumber>10</docNumber>
+  <docPublicationName>Online@119-36</docPublicationName>
+  <property role="is-positive-law">yes</property>
+  <dc:publisher>OLRC</dc:publisher>
+  <dcterms:created>2025-08-11T12:08:59</dcterms:created>
+  <dc:creator>USCConverter 1.7.2</dc:creator>
+</meta>
+<main>
+<title identifier="/us/usc/t10"><num value="10">Title 10—</num><heading>ARMED FORCES</heading>
+<subtitle identifier="/us/usc/t10/stA"><num value="A">Subtitle A—</num><heading>General Military Law</heading>
+<part identifier="/us/usc/t10/stA/ptII"><num value="II">PART II—</num><heading>PERSONNEL</heading>
+<chapter identifier="/us/usc/t10/stA/ptII/ch55"><num value="55">CHAPTER 55—</num><heading>MEDICAL AND DENTAL CARE</heading>
+<section style="-uslm-lc:I80" id="id888361fb-76cd-11f0-8437-f8ad163dc8c2" identifier="/us/usc/t10/s1074c"><num value="1074c">§ 1074c.</num><heading> Medical care: authority to provide a wig</heading><content>
+<p style="-uslm-lc:I11" class="indent0">A person entitled to medical care under this chapter who has alopecia resulting from the treatment of a malignant disease may be furnished a wig if the person has not previously been furnished one at the expense of the United States.</p>
+</content><sourceCredit id="id888361fc-76cd-11f0-8437-f8ad163dc8c2">(Added <ref href="/us/pl/98/525/tXIV/s1401/e/2/A">Pub. L. 98–525, title XIV, § 1401(e)(2)(A)</ref>, <date date="1984-10-19">Oct. 19, 1984</date>, <ref href="/us/stat/98/2616">98 Stat. 2616</ref>, § 1074b; renumbered § 1074c, <ref href="/us/pl/102/190/dA/tVI/s640/a/1">Pub. L. 102–190, div. A, title VI, § 640(a)(1)</ref>, <date date="1991-12-05">Dec. 5, 1991</date>, <ref href="/us/stat/105/1385">105 Stat. 1385</ref>.)</sourceCredit>
+<notes type="uscNote" id="id888361fd-76cd-11f0-8437-f8ad163dc8c2">
+<note style="-uslm-lc:I74" role="crossHeading" topic="editorialNotes" id="id888361fe-76cd-11f0-8437-f8ad163dc8c2"><heading class="centered"><b>Editorial Notes</b></heading></note>
+<note style="-uslm-lc:I74" topic="priorProvisions" id="id888361ff-76cd-11f0-8437-f8ad163dc8c2"><heading class="centered smallCaps">Prior Provisions</heading><p>Provisions similar to those in this section were contained in the following appropriation acts:</p>
+<p style="-uslm-lc:I21" class="indent0"><ref href="/us/pl/98/473/tI/s101/h">Pub. L. 98–473, title I, § 101(h)</ref> [title VIII, § 8033], <date date="1984-10-12">Oct. 12, 1984</date>, <ref href="/us/stat/98/1904">98 Stat. 1904</ref>, 1929.</p>
+<p style="-uslm-lc:I21" class="indent0"><ref href="/us/pl/98/212/tVII/s739">Pub. L. 98–212, title VII, § 739</ref>, <date date="1983-12-08">Dec. 8, 1983</date>, <ref href="/us/stat/97/1445">97 Stat. 1445</ref>.</p>
+<p style="-uslm-lc:I21" class="indent0"><ref href="/us/pl/97/377/tI/s101/c/tVII/s742">Pub. L. 97–377, title I, § 101(c) [title VII, § 742]</ref>, <date date="1982-12-21">Dec. 21, 1982</date>, <ref href="/us/stat/96/1833">96 Stat. 1833</ref>, 1858.</p>
+<p style="-uslm-lc:I21" class="indent0"><ref href="/us/pl/97/114/tVII/s743">Pub. L. 97–114, title VII, § 743</ref>, <date date="1981-12-29">Dec. 29, 1981</date>, <ref href="/us/stat/95/1586">95 Stat. 1586</ref>.</p>
+<p style="-uslm-lc:I21" class="indent0"><ref href="/us/pl/96/527/tVII/s744">Pub. L. 96–527, title VII, § 744</ref>, <date date="1980-12-15">Dec. 15, 1980</date>, <ref href="/us/stat/94/3089">94 Stat. 3089</ref>.</p>
+</note>
+<note style="-uslm-lc:I74" topic="amendments" id="id88836200-76cd-11f0-8437-f8ad163dc8c2"><heading class="centered smallCaps">Amendments</heading><p style="-uslm-lc:I21" class="indent0">1991—<ref href="/us/pl/102/190">Pub. L. 102–190</ref> renumbered <ref href="/us/usc/t10/s1074b">section 1074b of this title</ref> as this section.</p>
+</note>
+<note style="-uslm-lc:I74" role="crossHeading" topic="statutoryNotes" id="id88836201-76cd-11f0-8437-f8ad163dc8c2"><heading class="centered"><b>Statutory Notes and Related Subsidiaries</b></heading></note>
+<note style="-uslm-lc:I74" topic="effectiveDate" id="id88836202-76cd-11f0-8437-f8ad163dc8c2"><heading class="centered smallCaps">Effective Date</heading><p style="-uslm-lc:I21" class="indent0">Section effective <date date="1985-10-01">Oct. 1, 1985</date>, see <ref href="/us/pl/98/525/s1404">section 1404 of Pub. L. 98–525</ref>, set out as a note under <ref href="/us/usc/t10/s520b">section 520b of this title</ref>.</p>
+</note>
+</notes>
+</section>
+<section status="repealed" style="-uslm-lc:I80" id="id87547e1e-76cd-11f0-8437-f8ad163dc8c2" identifier="/us/usc/t10/s115b"><num value="115b">[§ 115b.</num><heading> Repealed. <ref href="/us/pl/114/328/dA/tXI/s1102/a">Pub. L. 114–328, div. A, title XI, § 1102(a)</ref>, <date date="2016-12-23">Dec. 23, 2016</date>, <ref href="/us/stat/130/2444">130 Stat. 2444</ref>]</heading><notes type="uscNote" id="id87547e1f-76cd-11f0-8437-f8ad163dc8c2">
+<note topic="removalDescription" id="id87547e20-76cd-11f0-8437-f8ad163dc8c2">
+<p style="-uslm-lc:I21" class="indent0">Section, added <ref href="/us/pl/111/84/dA/tXI/s1108/a/1">Pub. L. 111–84, div. A, title XI, § 1108(a)(1)</ref>, <date date="2009-10-28">Oct. 28, 2009</date>, <ref href="/us/stat/123/2488">123 Stat. 2488</ref>; amended <ref href="/us/pl/112/81/dA/tIX/s935/a/1">Pub. L. 112–81, div. A, title IX, § 935(a)(1)</ref>, (b), (c), title X, § 1053, <date date="2011-12-31">Dec. 31, 2011</date>, <ref href="/us/stat/125/1545">125 Stat. 1545</ref>, 1582; <ref href="/us/pl/113/291/dA/tIX/s911">Pub. L. 113–291, div. A, title IX, § 911</ref>, <date date="2014-12-19">Dec. 19, 2014</date>, <ref href="/us/stat/128/3472">128 Stat. 3472</ref>; <ref href="/us/pl/114/92/dA/tVIII/s841/b">Pub. L. 114–92, div. A, title VIII, § 841(b)</ref>, <date date="2015-11-25">Nov. 25, 2015</date>, <ref href="/us/stat/129/914">129 Stat. 914</ref>, required Secretary of Defense to submit biennial strategic workforce plan.</p>
+</note>
+<note topic="removalDescription" id="id87547e21-76cd-11f0-8437-f8ad163dc8c2">
+<p style="-uslm-lc:I21" class="indent0">A prior section 115b was renumbered <ref href="/us/usc/t10/s10541">section 10541 of this title</ref>.</p>
+</note>
+</notes>
+</section>
+</chapter>
+</part>
+</subtitle>
+</title>
+</main>
+</uscDoc>

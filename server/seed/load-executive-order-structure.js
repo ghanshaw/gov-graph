@@ -11,6 +11,7 @@
  * Usage:
  *   node --env-file=server/.env server/seed/load-executive-order-structure.js --president barack-obama [--number 13636] [--dry-run]
  *   node --env-file=server/.env server/seed/load-executive-order-structure.js --president donald-trump-47
+ *   node --env-file=server/.env server/seed/load-executive-order-structure.js --president barack-obama --type memorandum
  *
  * Build the data file first with fetch-federal-register-executive-orders.js.
  *
@@ -34,6 +35,10 @@ const arg = name => {
 };
 const PRESIDENT = arg('--president');
 const ONLY_NUMBER = arg('--number');
+// 'executive_order' (default) or 'memorandum'. Memoranda have no number: they are
+// identified by their Federal Register document number alone.
+const DOC_TYPE = arg('--type') ?? 'executive_order';
+const FILE_PREFIX = { executive_order: 'fr-eos', memorandum: 'fr-memoranda' }[DOC_TYPE];
 
 const GOVINFO_FILES = {
   'barack-obama': 'govinfo-obama-eos.json',
@@ -42,14 +47,15 @@ const GOVINFO_FILES = {
   'donald-trump-47': 'govinfo-donald-trump-47-eos.json',
 };
 
-if (!PRESIDENT) {
-  console.error(`Usage: --president ${Object.keys(GOVINFO_FILES).join(' | ')} [--number N] [--dry-run]`);
+if (!PRESIDENT || !FILE_PREFIX) {
+  console.error(`Usage: --president ${Object.keys(GOVINFO_FILES).join(' | ')} [--type executive_order | memorandum] [--number N] [--dry-run]`);
   process.exit(1);
 }
 
 const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
-const DATA_FILE = path.join(DATA_DIR, `fr-eos-${PRESIDENT}.json`);
-const GOVINFO_FILE = GOVINFO_FILES[PRESIDENT] ? path.join(DATA_DIR, GOVINFO_FILES[PRESIDENT]) : null;
+const DATA_FILE = path.join(DATA_DIR, `${FILE_PREFIX}-${PRESIDENT}.json`);
+// The govinfo data files cover executive orders only.
+const GOVINFO_FILE = DOC_TYPE === 'executive_order' && GOVINFO_FILES[PRESIDENT] ? path.join(DATA_DIR, GOVINFO_FILES[PRESIDENT]) : null;
 
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -91,9 +97,9 @@ async function store(client, doc, structure) {
   const inserted = await client.query(
     `INSERT INTO executive_documents
        (doc_type, number, title, signed_date, source_id, source_url, structure, source_html)
-     VALUES ('executive_order', $1, $2, $3, $4, $5, $6, $7)
+     VALUES ($8, $1, $2, $3, $4, $5, $6, $7)
      RETURNING id`,
-    [structure.number, doc.title, date, doc.document_number, doc.html_url, JSON.stringify(structure), doc.html]
+    [structure.number, doc.title, date, doc.document_number, doc.html_url, JSON.stringify(structure), doc.html, DOC_TYPE]
   );
   await client.query(
     `INSERT INTO corpus (entity_type, entity_id, title, date, branch)
@@ -136,13 +142,14 @@ async function run() {
     for (const doc of docs) {
       // Corrections and republications share the order's number; unnumbered documents
       // are other presidential orders the Federal Register files under the same type.
-      if (isNotice(doc.document_number) || !doc.executive_order_number) { counts.notice++; continue; }
+      const unnumbered = DOC_TYPE === 'executive_order' && !doc.executive_order_number;
+      if (isNotice(doc.document_number) || unnumbered) { counts.notice++; continue; }
       const record = govinfo.get(String(doc.executive_order_number));
       // A few orders have no HTML at the Federal Register; fall back to govinfo's plain text.
       const fromGovinfo = !doc.html && Boolean(record?.body);
-      if (!doc.html && !fromGovinfo) { counts['no text']++; noText.push(doc.executive_order_number); continue; }
+      if (!doc.html && !fromGovinfo) { counts['no text']++; noText.push(doc.executive_order_number ?? doc.document_number); continue; }
 
-      const structure = parseExecutiveOrder(fromGovinfo ? govinfoTextToHtml(record.body) : doc.html, doc);
+      const structure = parseExecutiveOrder(fromGovinfo ? govinfoTextToHtml(record.body) : doc.html, { ...doc, doc_type: DOC_TYPE });
       if (fromGovinfo) { structure.source.name = 'govinfo'; fallbacks.push(doc.executive_order_number); }
       if (record) { structure.govinfo = govinfoBlock(record); withGovinfo++; }
       sections += structure.sections.length;

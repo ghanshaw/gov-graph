@@ -25,5 +25,4 @@ app.get('/health', (_, res) => res.json({ status: 'ok' }));
 
 app.listen(PORT, () => {
   console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
-  console.log(`CourtListener token: ${process.env.COURTLISTENER_TOKEN ? '✓ loaded' : '✗ missing'}`);
 });

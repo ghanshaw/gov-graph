@@ -5,6 +5,7 @@ import PageLayout from '../components/PageLayout';
 import { RailGroup, RadioOptions, Fact } from '../components/Rail';
 import DAGGraph from "../components/DAGGraph";
 import { GET_CASE_GRAPH } from "../queries";
+import Loading from '../components/Loading';
 
 // Same colours as TREATMENT_COLOR in components/DAGGraph.jsx.
 const LEGEND = [
@@ -76,7 +77,7 @@ export default function CaseGraph() {
       </div>
 
       <div className="graph-frame">
-        {loading && <div className="state">Loading graph…</div>}
+        {loading && <Loading label="Loading graph…" />}
         {error && <div className="error">{error.message}</div>}
         {data && <DAGGraph nodes={nodes} edges={edges} />}
       </div>

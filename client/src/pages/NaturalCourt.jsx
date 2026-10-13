@@ -8,13 +8,14 @@ import Crumbs from '../components/Crumbs';
 import SearchBox from '../components/SearchBox';
 import { RailGroup, RadioOptions, YearFacet } from '../components/Rail';
 import Pagination from '../components/Pagination';
+import Loading from '../components/Loading';
+import { shortDate } from '../dates';
 
 const PER_PAGE = 20;
 
 const SORTS = [
-  { value: 'dateFiled asc', label: 'Oldest first' },
   { value: 'dateFiled desc', label: 'Newest first' },
-  { value: 'citeCount desc', label: 'Most cited' },
+  { value: 'dateFiled asc', label: 'Oldest first' },
 ];
 
 const DIRECTION_LABEL = {
@@ -40,7 +41,7 @@ function CaseRow({ scotusCase, courtSlug }) {
         {voteDisplay && <span className="mono">{voteDisplay}</span>}
         {direction && ` ${direction}`}
       </td>
-      <td className="date">{scotusCase.dateFiled ?? ''}</td>
+      <td className="date">{shortDate(scotusCase.dateFiled)}</td>
     </tr>
   );
 }
@@ -50,7 +51,7 @@ export default function NaturalCourt() {
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useDebounce('', 400);
-  const [orderBy, setOrderBy] = useState('dateFiled asc');
+  const [orderBy, setOrderBy] = useState('dateFiled desc');
   const [selectedYear, setSelectedYear] = useState(null);
 
   const { data: courtsData } = useQuery(GET_NATURAL_COURTS);
@@ -140,13 +141,19 @@ export default function NaturalCourt() {
         <SearchBox value={searchInput} onChange={handleSearch} placeholder="Search cases…" />
       </div>
 
-      {loading && <div className="state">Loading records…</div>}
+      {loading && <Loading label="Loading records…" />}
 
       {error && <div className="error">Failed to load data: {error.message}</div>}
 
       {!loading && !error && (
         <>
-          {cases.length === 0 ? (
+          {data?.scotusCases && !data.scotusCases.loaded ? (
+            <div className="state">
+              The decisions of {court?.name ?? 'this Court'} have not been loaded yet.
+              Loaded so far: <Link to="/supreme-court/roberts-7">Roberts Court VII</Link> and{' '}
+              <Link to="/supreme-court/roberts-8">Roberts Court VIII</Link>.
+            </div>
+          ) : cases.length === 0 ? (
             <div className="state">No cases found.</div>
           ) : (
             <table className="records">
