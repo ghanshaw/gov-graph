@@ -253,7 +253,9 @@ export function readSectionPdfLines(pages, range = null) {
       }
       // A table continued onto another page is printed again ("—Con."); its first page is kept.
       if (tables.some(t => t.number === Number(m[1]) && t.suffix === m[2].toLowerCase())) return;
-      tables.push({ number: Number(m[1]), suffix: m[2].toLowerCase(), title: title.replace(/\s+/g, ' '), page });
+      // The headnote can be set on the heading's line ("…: 1975 to 2010[In quadrillion …").
+      title = title.split('[')[0];
+      tables.push({ number: Number(m[1]), suffix: m[2].toLowerCase(), title: title.replace(/\s+/g, ' ').trim(), page });
     });
   }
   return tables;

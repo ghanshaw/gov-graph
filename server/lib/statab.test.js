@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'fs';
-import { parseSectionPage, parseIndexPage, readTableFile } from './statab.js';
+import { parseSectionPage, parseIndexPage, readTableFile, readSectionPdfLines } from './statab.js';
 
 const REF = new URL('../references/', import.meta.url);
 const ref = name => new URL(name, REF).pathname;
@@ -59,4 +59,19 @@ test('a table file: nested row labels, no footnotes', () => {
   assert.deepEqual(t.footnotes, []);
   assert.match(t.source, /2009 American Community Survey, B09017/);
   assert.deepEqual(t.years, [2009, 2009]);
+});
+
+test('a section PDF: headings in their three forms, the printed page from the foot', () => {
+  const line = (text, size = 8) => ({ text, size });
+  const pages = [
+    { number: 1, lines: [line('Table 961. Construction—Establishments: 2007'), line('and 2008'), line('[In thousands]', 7), line('604 Construction and Housing', 7)] },
+    { number: 2, lines: [line('Table. 962. Materials: 1990 to 2010[1982 = 100]'), line('1158. Adult Internet Users: 2010'), line('[Percent]', 7), line('99. Not a table: outside the range', 7),
+      line('605 Construction and Housing U.S. Census Bureau, Statistical Abstract of the United States: 2012', 7)] },
+    { number: 3, lines: [line('Table 961. Construction—Establishments: 2007—Con.'), line('Construction and Housing 606', 7), line('U.S. Census Bureau, Statistical Abstract of the United States: 2012', 7)] },
+  ];
+  assert.deepEqual(readSectionPdfLines(pages, [961, 1200]), [
+    { number: 961, suffix: '', title: 'Construction—Establishments: 2007 and 2008', page: 604 },
+    { number: 962, suffix: '', title: 'Materials: 1990 to 2010', page: 605 },
+    { number: 1158, suffix: '', title: 'Adult Internet Users: 2010', page: 605 },
+  ]);
 });

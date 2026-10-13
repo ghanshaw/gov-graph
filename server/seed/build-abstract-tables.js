@@ -6,9 +6,11 @@
  *
  * - the section pages: which tables the website links, and their files;
  * - each table's file: its source note (lib/statab.js, readTableFile);
- * - each section's PDF: every table's printed page, and so its `category` in the book's taxonomy
- *   (taxonomies/statistical-abstract.json): the last subsection starting on or before the page, or the section itself
- *   before its first subsection. The PDF also lists tables the website does not link (`online: false`).
+ * - each section's PDF: every table's printed page, and the tables the website does not link (`online: false`).
+ *
+ * A table's `category` is its subsection in the Abstract's taxonomy (taxonomies/statistical-abstract.json): the website
+ * group it is listed under. A table the website does not link goes with the table printed before it (or after, at the
+ * start of a section), and says so in `notes`.
  *
  *   node server/seed/build-abstract-tables.js [--dry-run]
  *
@@ -19,7 +21,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { mirrorFile } from '../lib/data-dir.js';
-import { readSavedPages, readTableFile, sectionPdf, readSectionPdfLines, categoryAt } from '../lib/statab.js';
+import { readSavedPages, readTableFile, sectionPdf, readSectionPdfLines } from '../lib/statab.js';
 import { extractPdfLines } from '../lib/pdf-lines.js';
 
 const DATA = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
@@ -28,6 +30,7 @@ const DRY_RUN = process.argv.includes('--dry-run');
 
 const book = JSON.parse(fs.readFileSync(path.join(DATA, 'taxonomies', 'statistical-abstract.json'), 'utf8'));
 const bookSection = new Map(book.categories.map(c => [Number(c.code), c]));
+const slug = text => text.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const { sections } = readSavedPages();
 const tables = new Map();
@@ -39,7 +42,8 @@ for (const s of sections) {
     for (const t of group.tables) {
       const id = `${t.number}${t.suffix}`;
       if (tables.has(id)) continue; // listed under two of the website's headings (587, 868)
-      tables.set(id, { id, section: s.number, category: null, page: null, title: t.title, online: true, url: t.url, source: null });
+      const category = `${bookSection.get(s.number).id}/${slug(group.name ?? s.name)}`;
+      tables.set(id, { id, section: s.number, category, page: null, title: t.title, online: true, url: t.url, source: null });
       const file = mirrorFile(t.url);
       if (!fs.existsSync(file)) { note(id, 'file not downloaded'); continue; }
       try {
@@ -63,7 +67,7 @@ for (const s of sections) {
   for (const p of printed) {
     const id = `${p.number}${p.suffix}`;
     if (!tables.has(id)) tables.set(id, { id, section: s.number, category: null, page: null, title: p.title, online: false, url: null, source: null });
-    Object.assign(tables.get(id), { page: p.page, title: p.title, category: categoryAt(section, p.page) });
+    Object.assign(tables.get(id), { page: p.page, title: p.title });
   }
   for (const t of tables.values()) {
     if (t.section === s.number && !printed.some(p => `${p.number}${p.suffix}` === t.id)) note(t.id, 'not found in the section PDF');
@@ -71,13 +75,24 @@ for (const s of sections) {
 }
 
 const list = [...tables.values()].sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10) || a.id.localeCompare(b.id));
+// Tables printed but not linked: with the table printed before them in the section, else the one after.
+for (const [i, t] of list.entries()) {
+  if (t.online) continue;
+  const before = list.slice(0, i).reverse().find(x => x.section === t.section && x.online);
+  const after = list.slice(i + 1).find(x => x.section === t.section && x.online);
+  const beside = before ?? after;
+  t.category = beside.category;
+  note(t.id, `not on the website; placed with Table ${beside.id}`);
+}
+const ids = new Set(book.categories.flatMap(c => [c.id, ...c.children.map(x => x.id)]));
+for (const t of list) if (!ids.has(t.category)) throw new Error(`Table ${t.id}: ${t.category} is not in the taxonomy`);
 for (const t of list) if (!t.online) delete t.url;
 
 // Report: per section, tables per category of the book.
 for (const s of sections) {
   const section = bookSection.get(s.number);
   const mine = list.filter(t => t.section === s.number);
-  const counts = [section, ...section.children].map(c => [c === section ? '(section)' : c.name, mine.filter(t => t.category === c.id).length])
+  const counts = section.children.map(c => [c.name, mine.filter(t => t.category === c.id).length])
     .filter(([, n]) => n);
   const printedOnly = mine.filter(t => !t.online).map(t => t.id);
   console.log(`${String(s.number).padStart(2)}. ${s.name}: ${mine.length} tables${printedOnly.length ? ` (printed only: ${printedOnly.join(', ')})` : ''}`);
@@ -90,7 +105,7 @@ for (const t of noted) console.log(`  ${t.id}: ${t.notes.join('; ')}`);
 if (DRY_RUN) process.exit(0);
 // One table per line, so changes read well in git.
 const about = 'Every table of the Statistical Abstract of the United States, 2012, as evidence: where series belong (`category`, '
-  + 'the book\'s subsection by printed page; taxonomies/statistical-abstract.json) and what to collect (`source`, the table\'s '
+  + 'its subsection in taxonomies/statistical-abstract.json: the Census website group it is listed under) and what to collect (`source`, the table\'s '
   + 'source note). `online` false: printed in the book, not linked on the website. Built by server/seed/build-abstract-tables.js '
   + 'from the files in the data folder; never edited by hand. See GLOSSARY.md and features/statistical-abstract.';
 fs.writeFileSync(OUT, `{\n  "about": ${JSON.stringify(about)},\n  "tables": [\n${list.map(t => `    ${JSON.stringify(t)}`).join(',\n')}\n  ]\n}\n`);

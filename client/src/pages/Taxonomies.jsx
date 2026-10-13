@@ -33,9 +33,11 @@ const plural = level => `${level[0].toUpperCase()}${level.slice(1)}s`;
 // A taxonomy that prints its own layout (the Statistical Abstract's sections, tables and pages) can also be shown that way.
 const hasBook = taxonomy => Boolean(taxonomy.appendices);
 
-// The Statistical Abstract as its contents print it: numbered sections with their tables and pages, subsections, appendices.
+// The Statistical Abstract as its contents print it: numbered sections with their tables and pages, the topics listed
+// under each (`contents`, not the subsections, which are the website's groups), appendices.
 function BookView({ taxonomy, words, query }) {
-  const shown = filterTree(taxonomy.categories, words);
+  const printed = taxonomy.categories.map(c => ({ ...c, children: (c.contents ?? []).map(t => ({ id: `${c.id}#${t.name}`, ...t })) }));
+  const shown = filterTree(printed, words);
   const appendixRows = [
     ...taxonomy.appendices.flatMap(a => a.parts.map((part, i) => ({ ...part, num: i === 0 ? `App. ${a.number}` : '' }))),
     { num: '', title: 'Index', page: taxonomy.index_page },
@@ -43,7 +45,7 @@ function BookView({ taxonomy, words, query }) {
 
   return (
     <>
-      {shown.length === 0 && <div className="state">No section or subsection matches “{query}”.</div>}
+      {shown.length === 0 && <div className="state">No section or topic matches “{query}”.</div>}
       <ol className="abstract-outline">
         {shown.map(s => (
           <li key={s.id}>

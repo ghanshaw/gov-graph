@@ -258,8 +258,13 @@ Checked 2026-10-13:
   the files are the one copy (user, 2026-10-13). A `table` placement in the Abstract is checked against
   `statistical-abstract-tables.json` (the table exists and is printed in that category)
 
+- [x] The Abstract's subsections are the Census website's groups (206, every table in one), not the contents' topics,
+  which do not divide the tables; the contents kept for the book view (user, 2026-10-13)
+- [x] Abstract placements from the tables (statistical-abstract Phase 4): 15 measures by table, 12 by judgement, 3 series
+  placed apart (2026-10-13)
+
 ## Todo
-- [ ] Show a series placed apart under its own category in the Build tree (none exist yet)
+- [ ] Show a series placed apart under its own category in the Build tree (3 exist: the PCE price indexes, FHFA's index)
 - [ ] Put taxonomies and placements in the database only when something must query them (documents: CAP has already
   coded bills and orders by topic)
 - [ ] Review the 27 placements (doubtful: consumer spending, fuel prices, mortgage rate, every CAP one); turn the

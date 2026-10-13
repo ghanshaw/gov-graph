@@ -1,7 +1,7 @@
 {
   "id": "statistical-abstract",
   "name": "Statistical Abstract",
-  "basis": "Follows the sections and subsections of the Statistical Abstract of the United States, 2012.",
+  "basis": "Follows the sections of the Statistical Abstract of the United States, 2012, and the subsections the Census Bureau grouped its tables into online.",
   "levels": [
     "section",
     "subsection"
@@ -11,7 +11,8 @@
     "url": "https://www.census.gov/library/publications/2011/compendia/statab/131ed.html",
     "read": "2026-10-13",
     "program": "statistical-abstract",
-    "note": "Read from 2012-statab.pdf in the data folder: the contents (pages vii–x), and each section’s opening paragraph as its description. A section’s code is its number; the book does not number subsections. Page numbers are as printed. That PDF prints Education twice and ends at page 876."
+    "note": "Sections from 2012-statab.pdf in the data folder: the contents (pages vii–x), and each section’s opening paragraph as its description; a section’s code is its number. Subsections are the groups each section’s web page lists its tables under (census.gov/…/131ed/<section>.html), in the order of their first table; every online table is in one. The contents’ own topics, which do not divide the tables, are kept as `contents` with their printed pages. That PDF prints Education twice and ends at page 876.",
+    "pages": "https://www.census.gov/library/publications/2011/compendia/statab/131ed.html"
   },
   "categories": [
     {
@@ -24,51 +25,94 @@
         77
       ],
       "page": 1,
-      "children": [
+      "contents": [
         {
-          "id": "population/estimates-and-projections-by-age-sex-race-and-hispanic-origin",
           "name": "Estimates and projections by age, sex, race, and Hispanic origin",
           "page": 8
         },
         {
-          "id": "population/states-metropolitan-areas-cities",
           "name": "States, metropolitan areas, cities",
           "page": 18
         },
         {
-          "id": "population/mobility-status",
           "name": "Mobility status",
           "page": 37
         },
         {
-          "id": "population/profiles-of-elderly-racial-and-hispanic-origin-populations",
           "name": "Profiles of elderly, racial, and Hispanic-origin populations",
           "page": 39
         },
         {
-          "id": "population/native-and-foreign-born-populations",
           "name": "Native and foreign-born populations",
           "page": 43
         },
         {
-          "id": "population/immigration",
           "name": "Immigration",
           "page": 46
         },
         {
-          "id": "population/ancestry-languages",
           "name": "Ancestry, languages",
           "page": 50
         },
         {
-          "id": "population/marital-status-and-households",
           "name": "Marital status and households",
           "page": 52
         },
         {
-          "id": "population/religion",
           "name": "Religion",
           "page": 61
+        }
+      ],
+      "children": [
+        {
+          "id": "population/national-estimates-and-projections",
+          "name": "National Estimates And Projections",
+          "first_table": 1
+        },
+        {
+          "id": "population/estimates-and-projections-by-age-sex-race-ethnicity",
+          "name": "Estimates And Projections By Age, Sex, Race/Ethnicity",
+          "first_table": 5
+        },
+        {
+          "id": "population/estimates-and-projections-states-metropolitan-areas-cities",
+          "name": "Estimates And Projections--States, Metropolitan Areas, Cities",
+          "first_table": 13
+        },
+        {
+          "id": "population/migration",
+          "name": "Migration",
+          "first_table": 30
+        },
+        {
+          "id": "population/elderly-racial-and-hispanic-origin-population-profiles",
+          "name": "Elderly, Racial And Hispanic Origin Population Profiles",
+          "first_table": 34
+        },
+        {
+          "id": "population/native-and-foreign-born-populations",
+          "name": "Native And Foreign-Born Populations",
+          "first_table": 38
+        },
+        {
+          "id": "population/ancestry-language-spoken-at-home",
+          "name": "Ancestry, Language Spoken At Home",
+          "first_table": 52
+        },
+        {
+          "id": "population/marital-status-and-living-arrangements",
+          "name": "Marital Status And Living Arrangements",
+          "first_table": 56
+        },
+        {
+          "id": "population/households-families-group-quarters",
+          "name": "Households, Families, Group Quarters",
+          "first_table": 59
+        },
+        {
+          "id": "population/religion",
+          "name": "Religion",
+          "first_table": 75
         }
       ]
     },
@@ -82,26 +126,49 @@
         133
       ],
       "page": 63,
-      "children": [
+      "contents": [
         {
-          "id": "births-deaths-marriages-and-divorces/births",
           "name": "Births",
           "page": 65
         },
         {
-          "id": "births-deaths-marriages-and-divorces/life-expectancy",
           "name": "Life expectancy",
           "page": 77
         },
         {
-          "id": "births-deaths-marriages-and-divorces/deaths",
           "name": "Deaths",
           "page": 81
         },
         {
-          "id": "births-deaths-marriages-and-divorces/marriages-and-divorces",
           "name": "Marriages and divorces",
           "page": 96
+        }
+      ],
+      "children": [
+        {
+          "id": "births-deaths-marriages-and-divorces/births",
+          "name": "Births",
+          "first_table": 78
+        },
+        {
+          "id": "births-deaths-marriages-and-divorces/family-planning-abortions",
+          "name": "Family Planning, Abortions",
+          "first_table": 95
+        },
+        {
+          "id": "births-deaths-marriages-and-divorces/life-expectancy",
+          "name": "Life Expectancy",
+          "first_table": 104
+        },
+        {
+          "id": "births-deaths-marriages-and-divorces/deaths",
+          "name": "Deaths",
+          "first_table": 109
+        },
+        {
+          "id": "births-deaths-marriages-and-divorces/marriages-and-divorces",
+          "name": "Marriages And Divorces",
+          "first_table": 131
         }
       ]
     },
@@ -115,41 +182,76 @@
         218
       ],
       "page": 99,
-      "children": [
+      "contents": [
         {
-          "id": "health-and-nutrition/national-health-expenditure-accounts",
           "name": "National Health Expenditure Accounts",
           "page": 101
         },
         {
-          "id": "health-and-nutrition/medicare-medicaid-and-schip",
           "name": "Medicare, Medicaid, and SCHIP",
           "page": 106
         },
         {
-          "id": "health-and-nutrition/health-insurance",
           "name": "Health insurance",
           "page": 111
         },
         {
-          "id": "health-and-nutrition/employment",
           "name": "Employment",
           "page": 114
         },
         {
-          "id": "health-and-nutrition/hospitals",
           "name": "Hospitals",
           "page": 118
         },
         {
-          "id": "health-and-nutrition/health-measures",
           "name": "Health measures",
           "page": 123
         },
         {
-          "id": "health-and-nutrition/food-consumption-nutrition",
           "name": "Food consumption, nutrition",
           "page": 140
+        }
+      ],
+      "children": [
+        {
+          "id": "health-and-nutrition/health-expenditures",
+          "name": "Health Expenditures",
+          "first_table": 134
+        },
+        {
+          "id": "health-and-nutrition/medicare-medicaid",
+          "name": "Medicare, Medicaid",
+          "first_table": 144
+        },
+        {
+          "id": "health-and-nutrition/health-insurance",
+          "name": "Health Insurance",
+          "first_table": 154
+        },
+        {
+          "id": "health-and-nutrition/health-care-resources",
+          "name": "Health Care Resources",
+          "first_table": 160
+        },
+        {
+          "id": "health-and-nutrition/health-care-utilization",
+          "name": "Health Care Utilization",
+          "first_table": 166
+        },
+        {
+          "id": "health-and-nutrition/health-conditions-diseases",
+          "name": "Health Conditions, Diseases",
+          "first_table": 182
+        },
+        {
+          "id": "health-and-nutrition/health-risk-factors",
+          "name": "Health Risk Factors",
+          "first_table": 195
+        },
+        {
+          "id": "health-and-nutrition/food-consumption-and-nutrition",
+          "name": "Food Consumption And Nutrition",
+          "first_table": 214
         }
       ]
     },
@@ -163,26 +265,89 @@
         305
       ],
       "page": 143,
-      "children": [
+      "contents": [
         {
-          "id": "education/school-enrollment",
           "name": "School enrollment",
           "page": 145
         },
         {
-          "id": "education/educational-attainment",
           "name": "Educational attainment",
           "page": 151
         },
         {
-          "id": "education/technology-in-schools",
           "name": "Technology in schools",
           "page": 171
         },
         {
-          "id": "education/degrees-conferred",
           "name": "Degrees conferred",
           "page": 188
+        }
+      ],
+      "children": [
+        {
+          "id": "education/all-levels-of-education",
+          "name": "All Levels Of Education",
+          "first_table": 219
+        },
+        {
+          "id": "education/educational-attainment",
+          "name": "Educational Attainment",
+          "first_table": 229
+        },
+        {
+          "id": "education/elementary-and-secondary-education-special-topics",
+          "name": "Elementary And Secondary Education: Special Topics",
+          "first_table": 234
+        },
+        {
+          "id": "education/elementary-and-secondary-education-schools-and-enrollment",
+          "name": "Elementary And Secondary Education: Schools And Enrollment",
+          "first_table": 237
+        },
+        {
+          "id": "education/school-choice",
+          "name": "School Choice",
+          "first_table": 238
+        },
+        {
+          "id": "education/elementary-and-secondary-education-summary",
+          "name": "Elementary And Secondary Education: Summary",
+          "first_table": 242
+        },
+        {
+          "id": "education/school-crime-and-safety",
+          "name": "School Crime And Safety",
+          "first_table": 247
+        },
+        {
+          "id": "education/elementary-and-secondary-education-staff-and-finances",
+          "name": "Elementary And Secondary Education: Staff And Finances",
+          "first_table": 254
+        },
+        {
+          "id": "education/elementary-and-secondary-education-technology-courses-and-test-scores",
+          "name": "Elementary And Secondary Education: Technology, Courses, And Test Scores",
+          "first_table": 264
+        },
+        {
+          "id": "education/elementary-and-secondary-education-completions-and-dropouts",
+          "name": "Elementary And Secondary Education: Completions And Dropouts",
+          "first_table": 270
+        },
+        {
+          "id": "education/higher-education-institutions-and-enrollment",
+          "name": "Higher Education: Institutions And Enrollment",
+          "first_table": 276
+        },
+        {
+          "id": "education/higher-education-finances-fees-and-staff",
+          "name": "Higher Education: Finances, Fees And Staff",
+          "first_table": 288
+        },
+        {
+          "id": "education/higher-education-degrees",
+          "name": "Higher Education: Degrees",
+          "first_table": 299
         }
       ]
     },
@@ -196,31 +361,68 @@
         357
       ],
       "page": 193,
-      "children": [
+      "contents": [
         {
-          "id": "law-enforcement-courts-and-prisons/crime-rates",
           "name": "Crime rates",
           "page": 196
         },
         {
-          "id": "law-enforcement-courts-and-prisons/crimes-and-arrests",
           "name": "Crimes and arrests",
           "page": 207
         },
         {
-          "id": "law-enforcement-courts-and-prisons/courts",
           "name": "Courts",
           "page": 209
         },
         {
-          "id": "law-enforcement-courts-and-prisons/juveniles-child-abuse",
           "name": "Juveniles, child abuse",
           "page": 214
         },
         {
-          "id": "law-enforcement-courts-and-prisons/prisoners-and-inmates",
           "name": "Prisoners and inmates",
           "page": 217
+        }
+      ],
+      "children": [
+        {
+          "id": "law-enforcement-courts-and-prisons/crimes-and-crime-rates",
+          "name": "Crimes And Crime Rates",
+          "first_table": 306
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/criminal-victimizations",
+          "name": "Criminal Victimizations",
+          "first_table": 315
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/arrests",
+          "name": "Arrests",
+          "first_table": 324
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/courts",
+          "name": "Courts",
+          "first_table": 331
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/juvenile-delinquency-child-abuse",
+          "name": "Juvenile Delinquency, Child Abuse",
+          "first_table": 340
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/criminal-justice-expenditures",
+          "name": "Criminal Justice Expenditures",
+          "first_table": 344
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/correctional-facilities-prisoners",
+          "name": "Correctional Facilities, Prisoners",
+          "first_table": 347
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/fire-losses",
+          "name": "Fire Losses",
+          "first_table": 354
         }
       ]
     },
@@ -234,26 +436,54 @@
         396
       ],
       "page": 221,
-      "children": [
+      "contents": [
         {
-          "id": "geography-and-environment/land-and-water",
           "name": "Land and water",
           "page": 223
         },
         {
-          "id": "geography-and-environment/air-quality",
           "name": "Air quality",
           "page": 229
         },
         {
-          "id": "geography-and-environment/municipal-hazardous-waste",
           "name": "Municipal hazardous waste",
           "page": 231
         },
         {
-          "id": "geography-and-environment/weather",
           "name": "Weather",
           "page": 236
+        }
+      ],
+      "children": [
+        {
+          "id": "geography-and-environment/land-land-use-and-earthquakes",
+          "name": "Land, Land Use, And Earthquakes",
+          "first_table": 358
+        },
+        {
+          "id": "geography-and-environment/water-water-use-and-quality",
+          "name": "Water, Water Use And Quality",
+          "first_table": 359
+        },
+        {
+          "id": "geography-and-environment/weather-events-and-climate",
+          "name": "Weather Events And Climate",
+          "first_table": 362
+        },
+        {
+          "id": "geography-and-environment/air-quality",
+          "name": "Air Quality",
+          "first_table": 372
+        },
+        {
+          "id": "geography-and-environment/solid-waste-hazardous-waste-and-superfund",
+          "name": "Solid Waste, Hazardous Waste, And Superfund",
+          "first_table": 377
+        },
+        {
+          "id": "geography-and-environment/environmental-industry-threatened-and-endangered-species",
+          "name": "Environmental Industry; Threatened And Endangered Species",
+          "first_table": 380
         }
       ]
     },
@@ -267,16 +497,46 @@
         427
       ],
       "page": 243,
-      "children": [
+      "contents": [
         {
-          "id": "elections/vote-results",
           "name": "Vote results",
           "page": 248
         },
         {
-          "id": "elections/campaign-finances",
           "name": "Campaign finances",
           "page": 263
+        }
+      ],
+      "children": [
+        {
+          "id": "elections/voting-age-population-and-voter-participation",
+          "name": "Voting-Age Population And Voter Participation",
+          "first_table": 397
+        },
+        {
+          "id": "elections/presidential",
+          "name": "Presidential",
+          "first_table": 402
+        },
+        {
+          "id": "elections/congressional",
+          "name": "Congressional",
+          "first_table": 407
+        },
+        {
+          "id": "elections/elected-public-officials-characteristics",
+          "name": "Elected Public Officials--Characteristics",
+          "first_table": 413
+        },
+        {
+          "id": "elections/gubernatorial-and-state-legislatures",
+          "name": "Gubernatorial And State Legislatures",
+          "first_table": 416
+        },
+        {
+          "id": "elections/campaign-finance",
+          "name": "Campaign Finance",
+          "first_table": 422
         }
       ]
     },
@@ -290,36 +550,67 @@
         468
       ],
       "page": 265,
-      "children": [
+      "contents": [
         {
-          "id": "state-and-local-government-finances-and-employment/governmental-units",
           "name": "Governmental units",
           "page": 267
         },
         {
-          "id": "state-and-local-government-finances-and-employment/aid-to-state-and-local-governments",
           "name": "Aid to state and local governments",
           "page": 268
         },
         {
-          "id": "state-and-local-government-finances-and-employment/state-and-local-governments",
           "name": "State and local governments",
           "page": 273
         },
         {
-          "id": "state-and-local-government-finances-and-employment/state-government-finances",
           "name": "State government finances",
           "page": 286
         },
         {
-          "id": "state-and-local-government-finances-and-employment/local-government-finances",
           "name": "Local government finances",
           "page": 292
         },
         {
-          "id": "state-and-local-government-finances-and-employment/employment-and-payroll",
           "name": "Employment and payroll",
           "page": 300
+        }
+      ],
+      "children": [
+        {
+          "id": "state-and-local-government-finances-and-employment/governmental-units",
+          "name": "Governmental Units",
+          "first_table": 428
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/receipts-expenditures-investment",
+          "name": "Receipts, Expenditures, Investment",
+          "first_table": 430
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/federal-aid-to-state-and-local-governments",
+          "name": "Federal Aid To State And Local Governments",
+          "first_table": 431
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/state-and-local-government-finances",
+          "name": "State And Local Government Finances",
+          "first_table": 435
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/state-government-finances",
+          "name": "State Government Finances",
+          "first_table": 444
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/local-government-finances",
+          "name": "Local Government Finances",
+          "first_table": 446
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/employment-and-payroll",
+          "name": "Employment And Payroll",
+          "first_table": 461
         }
       ]
     },
@@ -333,21 +624,40 @@
         502
       ],
       "page": 307,
-      "children": [
+      "contents": [
         {
-          "id": "federal-government-finances-and-employment/budget-receipts-outlays-debt",
           "name": "Budget receipts, outlays, debt",
           "page": 310
         },
         {
-          "id": "federal-government-finances-and-employment/income-taxes",
           "name": "Income taxes",
           "page": 317
         },
         {
-          "id": "federal-government-finances-and-employment/federal-employment-and-payroll",
           "name": "Federal employment and payroll",
           "page": 326
+        }
+      ],
+      "children": [
+        {
+          "id": "federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt",
+          "name": "Federal Budget--Receipts, Outlays, And Debt",
+          "first_table": 469
+        },
+        {
+          "id": "federal-government-finances-and-employment/federal-individual-income-tax-returns",
+          "name": "Federal Individual Income Tax Returns",
+          "first_table": 481
+        },
+        {
+          "id": "federal-government-finances-and-employment/federal-civilian-employment",
+          "name": "Federal Civilian Employment",
+          "first_table": 496
+        },
+        {
+          "id": "federal-government-finances-and-employment/federal-land",
+          "name": "Federal Land",
+          "first_table": 502
         }
       ]
     },
@@ -361,26 +671,44 @@
         537
       ],
       "page": 329,
-      "children": [
+      "contents": [
         {
-          "id": "national-security-and-veterans-affairs/national-defense-outlays-expenditures-personnel",
           "name": "National defense outlays, expenditures, personnel",
           "page": 332
         },
         {
-          "id": "national-security-and-veterans-affairs/military-manpower",
           "name": "Military manpower",
           "page": 334
         },
         {
-          "id": "national-security-and-veterans-affairs/veterans",
           "name": "Veterans",
           "page": 340
         },
         {
-          "id": "national-security-and-veterans-affairs/homeland-security",
           "name": "Homeland security",
           "page": 342
+        }
+      ],
+      "children": [
+        {
+          "id": "national-security-and-veterans-affairs/defense-outlays",
+          "name": "Defense Outlays",
+          "first_table": 503
+        },
+        {
+          "id": "national-security-and-veterans-affairs/military-personnel-and-expenditures",
+          "name": "Military Personnel And Expenditures",
+          "first_table": 505
+        },
+        {
+          "id": "national-security-and-veterans-affairs/veterans",
+          "name": "Veterans",
+          "first_table": 520
+        },
+        {
+          "id": "national-security-and-veterans-affairs/homeland-security",
+          "name": "Homeland Security",
+          "first_table": 525
         }
       ]
     },
@@ -394,26 +722,59 @@
         585
       ],
       "page": 347,
-      "children": [
+      "contents": [
         {
-          "id": "social-insurance-and-human-services/government-transfer-payments",
           "name": "Government transfer payments",
           "page": 351
         },
         {
-          "id": "social-insurance-and-human-services/social-security",
           "name": "Social security",
           "page": 354
         },
         {
-          "id": "social-insurance-and-human-services/public-aid-federal-food-programs",
           "name": "Public aid, federal food programs",
           "page": 364
         },
         {
-          "id": "social-insurance-and-human-services/child-care-child-support",
           "name": "Child care, child support",
           "page": 366
+        }
+      ],
+      "children": [
+        {
+          "id": "social-insurance-and-human-services/employee-benefits-government-transfer-payments-social-assistance",
+          "name": "Employee Benefits, Government Transfer Payments, Social Assistance",
+          "first_table": 538
+        },
+        {
+          "id": "social-insurance-and-human-services/social-security-retirement-plans",
+          "name": "Social Security, Retirement Plans",
+          "first_table": 544
+        },
+        {
+          "id": "social-insurance-and-human-services/unemployment-disability-workers-compensation",
+          "name": "Unemployment, Disability, Workers Compensation",
+          "first_table": 558
+        },
+        {
+          "id": "social-insurance-and-human-services/supplemental-security-income-temporary-assistance-to-needy-families",
+          "name": "Supplemental Security Income, Temporary Assistance To Needy Families",
+          "first_table": 563
+        },
+        {
+          "id": "social-insurance-and-human-services/child-support-head-start-child-care",
+          "name": "Child Support, Head Start, Child Care",
+          "first_table": 568
+        },
+        {
+          "id": "social-insurance-and-human-services/food-programs",
+          "name": "Food Programs",
+          "first_table": 570
+        },
+        {
+          "id": "social-insurance-and-human-services/philanthropy-nonprofit-organizations-volunteering",
+          "name": "Philanthropy, Nonprofit Organizations, Volunteering",
+          "first_table": 580
         }
       ]
     },
@@ -427,51 +788,99 @@
         666
       ],
       "page": 373,
-      "children": [
+      "contents": [
         {
-          "id": "labor-force-employment-and-earnings/labor-force-status",
           "name": "Labor force status",
           "page": 377
         },
         {
-          "id": "labor-force-employment-and-earnings/occupations",
           "name": "Occupations",
           "page": 393
         },
         {
-          "id": "labor-force-employment-and-earnings/projections",
           "name": "Projections",
           "page": 398
         },
         {
-          "id": "labor-force-employment-and-earnings/unemployment",
           "name": "Unemployment",
           "page": 401
         },
         {
-          "id": "labor-force-employment-and-earnings/establishments",
           "name": "Establishments",
           "page": 406
         },
         {
-          "id": "labor-force-employment-and-earnings/productivity",
           "name": "Productivity",
           "page": 416
         },
         {
-          "id": "labor-force-employment-and-earnings/benefits",
           "name": "Benefits",
           "page": 424
         },
         {
-          "id": "labor-force-employment-and-earnings/injuries",
           "name": "Injuries",
           "page": 426
         },
         {
-          "id": "labor-force-employment-and-earnings/union-membership",
           "name": "Union membership",
           "page": 429
+        }
+      ],
+      "children": [
+        {
+          "id": "labor-force-employment-and-earnings/labor-force-status",
+          "name": "Labor Force Status",
+          "first_table": 586
+        },
+        {
+          "id": "labor-force-employment-and-earnings/employment-projections",
+          "name": "Employment Projections",
+          "first_table": 618
+        },
+        {
+          "id": "labor-force-employment-and-earnings/employed-persons",
+          "name": "Employed Persons",
+          "first_table": 602
+        },
+        {
+          "id": "labor-force-employment-and-earnings/unemployed-persons",
+          "name": "Unemployed Persons",
+          "first_table": 622
+        },
+        {
+          "id": "labor-force-employment-and-earnings/employment-and-earnings-establishment-basis",
+          "name": "Employment And Earnings--Establishment Basis",
+          "first_table": 630
+        },
+        {
+          "id": "labor-force-employment-and-earnings/job-gains-and-losses",
+          "name": "Job Gains And Losses",
+          "first_table": 634
+        },
+        {
+          "id": "labor-force-employment-and-earnings/productivity",
+          "name": "Productivity",
+          "first_table": 639
+        },
+        {
+          "id": "labor-force-employment-and-earnings/compensation-wages-and-earnings",
+          "name": "Compensation, Wages And Earnings",
+          "first_table": 643
+        },
+        {
+          "id": "labor-force-employment-and-earnings/employment-benefits",
+          "name": "Employment Benefits",
+          "first_table": 654
+        },
+        {
+          "id": "labor-force-employment-and-earnings/injuries-and-fatalities",
+          "name": "Injuries And Fatalities",
+          "first_table": 657
+        },
+        {
+          "id": "labor-force-employment-and-earnings/work-stoppages-and-unions",
+          "name": "Work Stoppages And Unions",
+          "first_table": 663
         }
       ]
     },
@@ -485,41 +894,81 @@
         723
       ],
       "page": 431,
-      "children": [
+      "contents": [
         {
-          "id": "income-expenditures-poverty-and-wealth/gross-domestic-product",
           "name": "Gross domestic product",
           "page": 435
         },
         {
-          "id": "income-expenditures-poverty-and-wealth/personal-income",
           "name": "Personal income",
           "page": 443
         },
         {
-          "id": "income-expenditures-poverty-and-wealth/consumer-expenditures",
           "name": "Consumer expenditures",
           "page": 448
         },
         {
-          "id": "income-expenditures-poverty-and-wealth/money-income",
           "name": "Money income",
           "page": 452
         },
         {
-          "id": "income-expenditures-poverty-and-wealth/state-income-and-poverty",
           "name": "State income and poverty",
           "page": 460
         },
         {
-          "id": "income-expenditures-poverty-and-wealth/poverty-status",
           "name": "Poverty status",
           "page": 462
         },
         {
-          "id": "income-expenditures-poverty-and-wealth/wealth",
           "name": "Wealth",
           "page": 467
+        }
+      ],
+      "children": [
+        {
+          "id": "income-expenditures-poverty-and-wealth/gross-domestic-product-gdp",
+          "name": "Gross Domestic Product (GDP)",
+          "first_table": 667
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/personal-income",
+          "name": "Personal Income",
+          "first_table": 678
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/consumer-expenditures",
+          "name": "Consumer Expenditures",
+          "first_table": 684
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/household-income",
+          "name": "Household Income",
+          "first_table": 690
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/family-income",
+          "name": "Family Income",
+          "first_table": 695
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/income-for-persons",
+          "name": "Income For Persons",
+          "first_table": 701
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/income-and-poverty-state-and-local-data",
+          "name": "Income And Poverty--State And Local Data",
+          "first_table": 706
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/poverty",
+          "name": "Poverty",
+          "first_table": 710
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/wealth",
+          "name": "Wealth",
+          "first_table": 717
         }
       ]
     },
@@ -533,21 +982,45 @@
         743
       ],
       "page": 471,
-      "children": [
+      "contents": [
         {
-          "id": "prices/consumer-price-index",
           "name": "Consumer price index",
           "page": 474
         },
         {
-          "id": "prices/cost-of-living-index",
           "name": "Cost of living index",
           "page": 478
         },
         {
-          "id": "prices/producer-price-index",
           "name": "Producer price index",
           "page": 482
+        }
+      ],
+      "children": [
+        {
+          "id": "prices/consumer-price-indexes-cost-of-living-index",
+          "name": "Consumer Price Indexes, Cost Of Living Index",
+          "first_table": 724
+        },
+        {
+          "id": "prices/fuel-prices",
+          "name": "Fuel Prices",
+          "first_table": 730
+        },
+        {
+          "id": "prices/food-cost-and-prices",
+          "name": "Food Cost And Prices",
+          "first_table": 732
+        },
+        {
+          "id": "prices/producer-price-indexes",
+          "name": "Producer Price Indexes",
+          "first_table": 734
+        },
+        {
+          "id": "prices/price-indexes",
+          "name": "Price Indexes",
+          "first_table": 735
         }
       ]
     },
@@ -561,51 +1034,84 @@
         798
       ],
       "page": 489,
-      "children": [
+      "contents": [
         {
-          "id": "business-enterprise/sole-proprietors-partnerships-corporations",
           "name": "Sole proprietors, partnerships, corporations",
           "page": 491
         },
         {
-          "id": "business-enterprise/establishments-employees-payroll",
           "name": "Establishments, employees, payroll",
           "page": 499
         },
         {
-          "id": "business-enterprise/firms-births-deaths-expansions-and-contractions",
           "name": "Firms, births, deaths, expansions, and contractions",
           "page": 505
         },
         {
-          "id": "business-enterprise/women-and-minority-owned-businesses",
           "name": "Women- and minority-owned businesses",
           "page": 507
         },
         {
-          "id": "business-enterprise/bankruptcy-patents",
           "name": "Bankruptcy, patents",
           "page": 511
         },
         {
-          "id": "business-enterprise/investment-capital-expenditures",
           "name": "Investment, capital expenditures",
           "page": 514
         },
         {
-          "id": "business-enterprise/economic-indicators",
           "name": "Economic indicators",
           "page": 516
         },
         {
-          "id": "business-enterprise/corporate-profits",
           "name": "Corporate profits",
           "page": 518
         },
         {
-          "id": "business-enterprise/multinationals",
           "name": "Multinationals",
           "page": 519
+        }
+      ],
+      "children": [
+        {
+          "id": "business-enterprise/sole-proprietorships-partnerships-corporations",
+          "name": "Sole Proprietorships, Partnerships, Corporations",
+          "first_table": 744
+        },
+        {
+          "id": "business-enterprise/establishments-employees-payroll",
+          "name": "Establishments, Employees, Payroll",
+          "first_table": 756
+        },
+        {
+          "id": "business-enterprise/women-and-minority-owned-businesses",
+          "name": "Women And Minority-Owned Businesses",
+          "first_table": 767
+        },
+        {
+          "id": "business-enterprise/patents-trademarks-copyrights",
+          "name": "Patents, Trademarks, Copyrights",
+          "first_table": 778
+        },
+        {
+          "id": "business-enterprise/investment-capital-expenditures",
+          "name": "Investment, Capital Expenditures",
+          "first_table": 781
+        },
+        {
+          "id": "business-enterprise/economic-indicators",
+          "name": "Economic Indicators",
+          "first_table": 786
+        },
+        {
+          "id": "business-enterprise/profits",
+          "name": "Profits",
+          "first_table": 791
+        },
+        {
+          "id": "business-enterprise/multinational-companies",
+          "name": "Multinational Companies",
+          "first_table": 795
         }
       ]
     },
@@ -619,26 +1125,44 @@
         822
       ],
       "page": 521,
-      "children": [
+      "contents": [
         {
-          "id": "science-and-technology/randd-funds-outlays",
           "name": "R&D funds, outlays",
           "page": 522
         },
         {
-          "id": "science-and-technology/science-and-engineering-degrees",
           "name": "Science and engineering degrees",
           "page": 527
         },
         {
-          "id": "science-and-technology/science-and-engineering-employment",
           "name": "Science and engineering employment",
           "page": 530
         },
         {
-          "id": "science-and-technology/space-program",
           "name": "Space program",
           "page": 532
+        }
+      ],
+      "children": [
+        {
+          "id": "science-and-technology/expenditures-research-development",
+          "name": "Expenditures, Research Development",
+          "first_table": 799
+        },
+        {
+          "id": "science-and-technology/students-and-degrees-conferred",
+          "name": "Students And Degrees Conferred",
+          "first_table": 810
+        },
+        {
+          "id": "science-and-technology/employment",
+          "name": "Employment",
+          "first_table": 817
+        },
+        {
+          "id": "science-and-technology/space",
+          "name": "Space",
+          "first_table": 821
         }
       ]
     },
@@ -652,26 +1176,49 @@
         878
       ],
       "page": 533,
-      "children": [
+      "contents": [
         {
-          "id": "agriculture/farms-and-farmland",
           "name": "Farms and farmland",
           "page": 536
         },
         {
-          "id": "agriculture/farm-balance-sheet-income",
           "name": "Farm balance sheet, income",
           "page": 542
         },
         {
-          "id": "agriculture/agricultural-exports-and-imports",
           "name": "Agricultural exports and imports",
           "page": 546
         },
         {
-          "id": "agriculture/crops-livestock",
           "name": "Crops, livestock",
           "page": 549
+        }
+      ],
+      "children": [
+        {
+          "id": "agriculture/farms-and-farmland",
+          "name": "Farms And Farmland",
+          "first_table": 823
+        },
+        {
+          "id": "agriculture/farm-income-and-balance-sheet",
+          "name": "Farm Income And Balance Sheet",
+          "first_table": 830
+        },
+        {
+          "id": "agriculture/crops",
+          "name": "Crops",
+          "first_table": 834
+        },
+        {
+          "id": "agriculture/agricultural-exports-and-imports",
+          "name": "Agricultural Exports And Imports",
+          "first_table": 848
+        },
+        {
+          "id": "agriculture/meat-and-livestock",
+          "name": "Meat And Livestock",
+          "first_table": 869
         }
       ]
     },
@@ -685,21 +1232,50 @@
         922
       ],
       "page": 559,
-      "children": [
+      "contents": [
         {
-          "id": "forestry-fishing-and-mining/timber-lumber",
           "name": "Timber, lumber",
           "page": 562
         },
         {
-          "id": "forestry-fishing-and-mining/fishery",
           "name": "Fishery",
           "page": 568
         },
         {
-          "id": "forestry-fishing-and-mining/petroleum-natural-gas-coal",
           "name": "Petroleum, natural gas, coal",
           "page": 576
+        }
+      ],
+      "children": [
+        {
+          "id": "forestry-fishing-and-mining/natural-resource-related-industries",
+          "name": "Natural Resource-Related Industries",
+          "first_table": 879
+        },
+        {
+          "id": "forestry-fishing-and-mining/forest-land-and-timber-based-manufacturing",
+          "name": "Forest Land And Timber-Based Manufacturing",
+          "first_table": 881
+        },
+        {
+          "id": "forestry-fishing-and-mining/fisheries-aquaculture",
+          "name": "Fisheries, Aquaculture",
+          "first_table": 895
+        },
+        {
+          "id": "forestry-fishing-and-mining/mining-mineral-industries",
+          "name": "Mining, Mineral Industries",
+          "first_table": 901
+        },
+        {
+          "id": "forestry-fishing-and-mining/petroleum-industry-natural-gas",
+          "name": "Petroleum Industry, Natural Gas",
+          "first_table": 910
+        },
+        {
+          "id": "forestry-fishing-and-mining/coal",
+          "name": "Coal",
+          "first_table": 919
         }
       ]
     },
@@ -713,36 +1289,77 @@
         960
       ],
       "page": 581,
-      "children": [
+      "contents": [
         {
-          "id": "energy-and-utilities/energy-production-consumption",
           "name": "Energy production, consumption",
           "page": 584
         },
         {
-          "id": "energy-and-utilities/expenditures",
           "name": "Expenditures",
           "page": 586
         },
         {
-          "id": "energy-and-utilities/crude-oil",
           "name": "Crude oil",
           "page": 591
         },
         {
-          "id": "energy-and-utilities/nuclear",
           "name": "Nuclear",
           "page": 593
         },
         {
-          "id": "energy-and-utilities/electric-power",
           "name": "Electric power",
           "page": 594
         },
         {
-          "id": "energy-and-utilities/gas-utilities",
           "name": "Gas utilities",
           "page": 600
+        }
+      ],
+      "children": [
+        {
+          "id": "energy-and-utilities/utilities",
+          "name": "Utilities",
+          "first_table": 923
+        },
+        {
+          "id": "energy-and-utilities/production-consumption-trade",
+          "name": "Production, Consumption, Trade",
+          "first_table": 925
+        },
+        {
+          "id": "energy-and-utilities/prices-expenditures-sales",
+          "name": "Prices, Expenditures, Sales",
+          "first_table": 927
+        },
+        {
+          "id": "energy-and-utilities/solar-and-renewable-energy-emmisions",
+          "name": "Solar And Renewable Energy, Emmisions",
+          "first_table": 932
+        },
+        {
+          "id": "energy-and-utilities/crude-oil-petroleum",
+          "name": "Crude Oil, Petroleum",
+          "first_table": 937
+        },
+        {
+          "id": "energy-and-utilities/nuclear",
+          "name": "Nuclear",
+          "first_table": 941
+        },
+        {
+          "id": "energy-and-utilities/electricity",
+          "name": "Electricity",
+          "first_table": 945
+        },
+        {
+          "id": "energy-and-utilities/gas-utility",
+          "name": "Gas Utility",
+          "first_table": 955
+        },
+        {
+          "id": "energy-and-utilities/water-and-sewage-systems",
+          "name": "Water And Sewage Systems",
+          "first_table": 958
         }
       ]
     },
@@ -756,26 +1373,64 @@
         1006
       ],
       "page": 603,
-      "children": [
+      "contents": [
         {
-          "id": "construction-and-housing/construction-spending",
           "name": "Construction spending",
           "page": 605
         },
         {
-          "id": "construction-and-housing/home-sales",
           "name": "Home sales",
           "page": 611
         },
         {
-          "id": "construction-and-housing/homeownership",
           "name": "Homeownership",
           "page": 621
         },
         {
-          "id": "construction-and-housing/home-remodeling",
           "name": "Home remodeling",
           "page": 629
+        }
+      ],
+      "children": [
+        {
+          "id": "construction-and-housing/construction-industry",
+          "name": "Construction Industry",
+          "first_table": 961
+        },
+        {
+          "id": "construction-and-housing/construction-indices-and-value",
+          "name": "Construction Indices And Value",
+          "first_table": 962
+        },
+        {
+          "id": "construction-and-housing/authorizations-starts-and-completions",
+          "name": "Authorizations, Starts And Completions",
+          "first_table": 968
+        },
+        {
+          "id": "construction-and-housing/housing-sales",
+          "name": "Housing Sales",
+          "first_table": 973
+        },
+        {
+          "id": "construction-and-housing/housing-units-and-characteristics",
+          "name": "Housing Units And Characteristics",
+          "first_table": 982
+        },
+        {
+          "id": "construction-and-housing/homeownership-and-housing-costs",
+          "name": "Homeownership And Housing Costs",
+          "first_table": 992
+        },
+        {
+          "id": "construction-and-housing/housing-and-neighborhood-quality",
+          "name": "Housing And Neighborhood Quality",
+          "first_table": 1000
+        },
+        {
+          "id": "construction-and-housing/commercial-offices",
+          "name": "Commercial Offices",
+          "first_table": 1006
         }
       ]
     },
@@ -789,26 +1444,59 @@
         1041
       ],
       "page": 631,
-      "children": [
+      "contents": [
         {
-          "id": "manufactures/manufacturing-summary",
           "name": "Manufacturing summary",
           "page": 636
         },
         {
-          "id": "manufactures/hours-and-earnings-of-production-workers",
           "name": "Hours and earnings of production workers",
           "page": 637
         },
         {
-          "id": "manufactures/shipments-inventories-new-orders-and-finances",
           "name": "Shipments, inventories, new orders, and finances",
           "page": 641
         },
         {
-          "id": "manufactures/industry-reports-by-subject-and-subsector",
           "name": "Industry reports by subject and subsector",
           "page": 645
+        }
+      ],
+      "children": [
+        {
+          "id": "manufactures/manufactures-establishments-shipments-employees-payroll",
+          "name": "Manufactures--Establishments, Shipments, Employees, Payroll",
+          "first_table": 1007
+        },
+        {
+          "id": "manufactures/shipments-orders-inventories",
+          "name": "Shipments, Orders, Inventories",
+          "first_table": 1018
+        },
+        {
+          "id": "manufactures/finances",
+          "name": "Finances",
+          "first_table": 1022
+        },
+        {
+          "id": "manufactures/nondurable-goods-industries",
+          "name": "Nondurable Goods Industries",
+          "first_table": 1026
+        },
+        {
+          "id": "manufactures/steel-and-machine-tools",
+          "name": "Steel And Machine Tools",
+          "first_table": 1030
+        },
+        {
+          "id": "manufactures/semiconductors-computers-telecommunications-equipment",
+          "name": "Semiconductors, Computers, Telecommunications Equipment",
+          "first_table": 1031
+        },
+        {
+          "id": "manufactures/transportation-equipment-appliances",
+          "name": "Transportation Equipment, Appliances",
+          "first_table": 1035
         }
       ]
     },
@@ -822,16 +1510,41 @@
         1062
       ],
       "page": 653,
-      "children": [
+      "contents": [
         {
-          "id": "wholesale-and-retail-trade/wholesale-trade",
           "name": "Wholesale trade",
           "page": 655
         },
         {
-          "id": "wholesale-and-retail-trade/retail-trade",
           "name": "Retail trade",
           "page": 659
+        }
+      ],
+      "children": [
+        {
+          "id": "wholesale-and-retail-trade/establishments-sales-payroll-and-employees",
+          "name": "Establishments, Sales, Payroll And Employees",
+          "first_table": 1042
+        },
+        {
+          "id": "wholesale-and-retail-trade/wholesale-trade-sales",
+          "name": "Wholesale Trade Sales",
+          "first_table": 1043
+        },
+        {
+          "id": "wholesale-and-retail-trade/retail-trade-sales",
+          "name": "Retail Trade Sales",
+          "first_table": 1051
+        },
+        {
+          "id": "wholesale-and-retail-trade/online-retail-sales",
+          "name": "Online Retail Sales",
+          "first_table": 1055
+        },
+        {
+          "id": "wholesale-and-retail-trade/motor-vehicle-sales",
+          "name": "Motor Vehicle Sales",
+          "first_table": 1057
         }
       ]
     },
@@ -845,36 +1558,87 @@
         1127
       ],
       "page": 667,
-      "children": [
+      "contents": [
         {
-          "id": "transportation/transportation-system",
           "name": "Transportation system",
           "page": 674
         },
         {
-          "id": "transportation/air-transportation",
           "name": "Air transportation",
           "page": 677
         },
         {
-          "id": "transportation/port-traffic",
           "name": "Port traffic",
           "page": 683
         },
         {
-          "id": "transportation/motor-vehicle-registration",
           "name": "Motor vehicle registration",
           "page": 688
         },
         {
-          "id": "transportation/motor-vehicle-accidents",
           "name": "Motor vehicle accidents",
           "page": 693
         },
         {
-          "id": "transportation/transit-ridership-railroads",
           "name": "Transit ridership, railroads",
           "page": 699
+        }
+      ],
+      "children": [
+        {
+          "id": "transportation/all-modes-of-transportation",
+          "name": "All Modes Of Transportation",
+          "first_table": 1063
+        },
+        {
+          "id": "transportation/airline-operations-and-traffic",
+          "name": "Airline Operations And Traffic",
+          "first_table": 1073
+        },
+        {
+          "id": "transportation/air-transportation-fatalities-and-complaints",
+          "name": "Air Transportation Fatalities And Complaints",
+          "first_table": 1077
+        },
+        {
+          "id": "transportation/water-transportation",
+          "name": "Water Transportation",
+          "first_table": 1084
+        },
+        {
+          "id": "transportation/highway-infrastructure-and-use",
+          "name": "Highway Infrastructure And Use",
+          "first_table": 1088
+        },
+        {
+          "id": "transportation/highway-financing",
+          "name": "Highway Financing",
+          "first_table": 1091
+        },
+        {
+          "id": "transportation/motor-vehicle-registrations-alternative-fueled-vehicles",
+          "name": "Motor Vehicle Registrations, Alternative Fueled Vehicles",
+          "first_table": 1096
+        },
+        {
+          "id": "transportation/motor-vehicle-accidents-and-fatalities",
+          "name": "Motor Vehicle Accidents And Fatalities",
+          "first_table": 1103
+        },
+        {
+          "id": "transportation/urban-transit",
+          "name": "Urban Transit",
+          "first_table": 1115
+        },
+        {
+          "id": "transportation/trucks-railroads-pipelines",
+          "name": "Trucks, Railroads, Pipelines",
+          "first_table": 1120
+        },
+        {
+          "id": "transportation/u-s-postal-service",
+          "name": "U.S. Postal Service",
+          "first_table": 1126
         }
       ]
     },
@@ -888,41 +1652,71 @@
         1161
       ],
       "page": 707,
-      "children": [
+      "contents": [
         {
-          "id": "information-and-communications/information-industries",
           "name": "Information industries",
           "page": 709
         },
         {
-          "id": "information-and-communications/media-usage",
           "name": "Media usage",
           "page": 711
         },
         {
-          "id": "information-and-communications/newspapers",
           "name": "Newspapers",
           "page": 714
         },
         {
-          "id": "information-and-communications/books",
           "name": "Books",
           "page": 715
         },
         {
-          "id": "information-and-communications/recording-media",
           "name": "Recording media",
           "page": 716
         },
         {
-          "id": "information-and-communications/telecommunications",
           "name": "Telecommunications",
           "page": 719
         },
         {
-          "id": "information-and-communications/internet-access-and-use",
           "name": "Internet access and use",
           "page": 723
+        }
+      ],
+      "children": [
+        {
+          "id": "information-and-communications/information-sector-services-and-media-usage",
+          "name": "Information Sector Services & Media Usage",
+          "first_table": 1128
+        },
+        {
+          "id": "information-and-communications/publishing-industries",
+          "name": "Publishing Industries",
+          "first_table": 1134
+        },
+        {
+          "id": "information-and-communications/motion-picture-and-sound-recording-industries",
+          "name": "Motion Picture And Sound Recording Industries",
+          "first_table": 1139
+        },
+        {
+          "id": "information-and-communications/radio-and-tv-broadcasting-and-cable-tv",
+          "name": "Radio And Tv Broadcasting And Cable Tv",
+          "first_table": 1141
+        },
+        {
+          "id": "information-and-communications/internet-publishing-and-broadcasting-and-internet-usage",
+          "name": "Internet Publishing And Broadcasting And Internet Usage",
+          "first_table": 1144
+        },
+        {
+          "id": "information-and-communications/telecommunications",
+          "name": "Telecommunications",
+          "first_table": 1145
+        },
+        {
+          "id": "information-and-communications/internet-service-providers-data-processing-and-libraries",
+          "name": "Internet Service Providers, Data Processing, & Libraries",
+          "first_table": 1151
         }
       ]
     },
@@ -936,46 +1730,90 @@
         1227
       ],
       "page": 727,
-      "children": [
+      "contents": [
         {
-          "id": "banking-finance-and-insurance/establishments-receipts",
           "name": "Establishments, receipts",
           "page": 730
         },
         {
-          "id": "banking-finance-and-insurance/flow-of-funds-financial-assets-and-liabilities",
           "name": "Flow of funds, financial assets, and liabilities",
           "page": 731
         },
         {
-          "id": "banking-finance-and-insurance/financial-institutions",
           "name": "Financial institutions",
           "page": 735
         },
         {
-          "id": "banking-finance-and-insurance/payment-instruments-credit-and-debit-cards",
           "name": "Payment instruments, credit and debit cards",
           "page": 739
         },
         {
-          "id": "banking-finance-and-insurance/consumer-credit-mortgage-debt",
           "name": "Consumer credit, mortgage debt",
           "page": 741
         },
         {
-          "id": "banking-finance-and-insurance/money-stock-interest-rates",
           "name": "Money stock, interest rates",
           "page": 744
         },
         {
-          "id": "banking-finance-and-insurance/stocks-and-bonds-equity-ownership-mutual-funds",
           "name": "Stocks and bonds, equity ownership, mutual funds",
           "page": 746
         },
         {
-          "id": "banking-finance-and-insurance/insurance",
           "name": "Insurance",
           "page": 754
+        }
+      ],
+      "children": [
+        {
+          "id": "banking-finance-and-insurance/finance-and-insurance-industries",
+          "name": "Finance And Insurance Industries",
+          "first_table": 1162
+        },
+        {
+          "id": "banking-finance-and-insurance/financial-assets-and-liabilities",
+          "name": "Financial Assets And Liabilities",
+          "first_table": 1166
+        },
+        {
+          "id": "banking-finance-and-insurance/household-financial-assets-and-liabilities",
+          "name": "Household Financial Assets And Liabilities",
+          "first_table": 1169
+        },
+        {
+          "id": "banking-finance-and-insurance/banks-savings-institutions-credit-unions",
+          "name": "Banks, Savings Institutions, Credit Unions",
+          "first_table": 1176
+        },
+        {
+          "id": "banking-finance-and-insurance/payment-systems-consumer-credit-mortgage-debt",
+          "name": "Payment Systems, Consumer Credit, Mortgage Debt",
+          "first_table": 1184
+        },
+        {
+          "id": "banking-finance-and-insurance/money-stock-interest-rates-bond-yields",
+          "name": "Money Stock, Interest Rates, Bond Yields",
+          "first_table": 1196
+        },
+        {
+          "id": "banking-finance-and-insurance/stocks-and-bonds-equity-ownership",
+          "name": "Stocks And Bonds, Equity Ownership",
+          "first_table": 1199
+        },
+        {
+          "id": "banking-finance-and-insurance/mutual-funds-securities-industry",
+          "name": "Mutual Funds, Securities Industry",
+          "first_table": 1212
+        },
+        {
+          "id": "banking-finance-and-insurance/insurance",
+          "name": "Insurance",
+          "first_table": 1220
+        },
+        {
+          "id": "banking-finance-and-insurance/real-estate-rental-and-leasing",
+          "name": "Real Estate, Rental, And Leasing",
+          "first_table": 1225
         }
       ]
     },
@@ -989,36 +1827,57 @@
         1271
       ],
       "page": 757,
-      "children": [
+      "contents": [
         {
-          "id": "arts-recreation-and-travel/employees-establishments-and-payroll",
           "name": "Employees, establishments, and payroll",
           "page": 759
         },
         {
-          "id": "arts-recreation-and-travel/performing-arts",
           "name": "Performing arts",
           "page": 761
         },
         {
-          "id": "arts-recreation-and-travel/leisure-activities",
           "name": "Leisure activities",
           "page": 763
         },
         {
-          "id": "arts-recreation-and-travel/sports",
           "name": "Sports",
           "page": 766
         },
         {
-          "id": "arts-recreation-and-travel/parks-and-wildlife-activities",
           "name": "Parks and wildlife activities",
           "page": 771
         },
         {
-          "id": "arts-recreation-and-travel/travel",
           "name": "Travel",
           "page": 775
+        }
+      ],
+      "children": [
+        {
+          "id": "arts-recreation-and-travel/establishments-revenue-employees-and-payroll",
+          "name": "Establishments, Revenue, Employees, And Payroll",
+          "first_table": 1228
+        },
+        {
+          "id": "arts-recreation-and-travel/consumer-expenditures",
+          "name": "Consumer Expenditures",
+          "first_table": 1232
+        },
+        {
+          "id": "arts-recreation-and-travel/arts-activities",
+          "name": "Arts Activities",
+          "first_table": 1234
+        },
+        {
+          "id": "arts-recreation-and-travel/recreation-and-leisure-activities",
+          "name": "Recreation And Leisure Activities",
+          "first_table": 1240
+        },
+        {
+          "id": "arts-recreation-and-travel/travel-and-tourism",
+          "name": "Travel And Tourism",
+          "first_table": 1252
         }
       ]
     },
@@ -1032,16 +1891,21 @@
         1285
       ],
       "page": 779,
-      "children": [
+      "contents": [
         {
-          "id": "accommodation-food-services-and-other-services/professional-scientific-and-technical-services",
           "name": "Professional, scientific, and technical services",
           "page": 784
         },
         {
-          "id": "accommodation-food-services-and-other-services/administrative-and-support-and-waste-management",
           "name": "Administrative and support and waste management",
           "page": 786
+        }
+      ],
+      "children": [
+        {
+          "id": "accommodation-food-services-and-other-services/accommodation-food-services-and-other-services",
+          "name": "Accommodation, Food Services, and Other Services",
+          "first_table": 1272
         }
       ]
     },
@@ -1055,26 +1919,44 @@
         1312
       ],
       "page": 789,
-      "children": [
+      "contents": [
         {
-          "id": "foreign-commerce-and-aid/international-transactions",
           "name": "International transactions",
           "page": 792
         },
         {
-          "id": "foreign-commerce-and-aid/foreign-investments",
           "name": "Foreign investments",
           "page": 797
         },
         {
-          "id": "foreign-commerce-and-aid/foreign-grants-and-credits",
           "name": "Foreign grants and credits",
           "page": 801
         },
         {
-          "id": "foreign-commerce-and-aid/exports-and-imports",
           "name": "Exports and imports",
           "page": 804
+        }
+      ],
+      "children": [
+        {
+          "id": "foreign-commerce-and-aid/international-transactions",
+          "name": "International Transactions",
+          "first_table": 1286
+        },
+        {
+          "id": "foreign-commerce-and-aid/foreign-investment",
+          "name": "Foreign Investment",
+          "first_table": 1289
+        },
+        {
+          "id": "foreign-commerce-and-aid/foreign-aid",
+          "name": "Foreign Aid",
+          "first_table": 1297
+        },
+        {
+          "id": "foreign-commerce-and-aid/exports-and-imports",
+          "name": "Exports And Imports",
+          "first_table": 1300
         }
       ]
     },
@@ -1088,7 +1970,14 @@
         1328
       ],
       "page": 815,
-      "children": []
+      "contents": [],
+      "children": [
+        {
+          "id": "puerto-rico-and-the-island-areas/puerto-rico-and-the-island-areas",
+          "name": "Puerto Rico and the Island Areas",
+          "first_table": 1313
+        }
+      ]
     },
     {
       "id": "international-statistics",
@@ -1100,41 +1989,96 @@
         1406
       ],
       "page": 823,
-      "children": [
+      "contents": [
         {
-          "id": "international-statistics/world-maps",
           "name": "World maps",
           "page": 826
         },
         {
-          "id": "international-statistics/world-population-vital-statistics",
           "name": "World population, vital statistics",
           "page": 835
         },
         {
-          "id": "international-statistics/economic-measures",
           "name": "Economic measures",
           "page": 846
         },
         {
-          "id": "international-statistics/labor-force",
           "name": "Labor force",
           "page": 856
         },
         {
-          "id": "international-statistics/agriculture",
           "name": "Agriculture",
           "page": 859
         },
         {
-          "id": "international-statistics/energy",
           "name": "Energy",
           "page": 863
         },
         {
-          "id": "international-statistics/finance",
           "name": "Finance",
           "page": 869
+        }
+      ],
+      "children": [
+        {
+          "id": "international-statistics/population-households",
+          "name": "Population, Households",
+          "first_table": 1329
+        },
+        {
+          "id": "international-statistics/vital-statistics-health-education",
+          "name": "Vital Statistics, Health, Education",
+          "first_table": 1335
+        },
+        {
+          "id": "international-statistics/economy",
+          "name": "Economy",
+          "first_table": 1348
+        },
+        {
+          "id": "international-statistics/prices",
+          "name": "Prices",
+          "first_table": 1356
+        },
+        {
+          "id": "international-statistics/finance-and-expenditures",
+          "name": "Finance And Expenditures",
+          "first_table": 1359
+        },
+        {
+          "id": "international-statistics/government-receipts-expenditures-debt",
+          "name": "Government Receipts, Expenditures, Debt",
+          "first_table": 1360
+        },
+        {
+          "id": "international-statistics/labor-force",
+          "name": "Labor Force",
+          "first_table": 1365
+        },
+        {
+          "id": "international-statistics/agricultural-production-and-trade",
+          "name": "Agricultural Production And Trade",
+          "first_table": 1372
+        },
+        {
+          "id": "international-statistics/natural-resources-and-energy",
+          "name": "Natural Resources And Energy",
+          "first_table": 1379
+        },
+        {
+          "id": "international-statistics/climate-environment",
+          "name": "Climate, Environment",
+          "first_table": 1389
+        },
+        {
+          "id": "international-statistics/telecommunications-computers",
+          "name": "Telecommunications, Computers",
+          "first_table": 1391
+        },
+        {
+          "id": "international-statistics/foreign-commerce-and-aid-and-military",
+          "name": "Foreign Commerce And Aid And Military",
+          "first_table": 1399
         }
       ]
     }

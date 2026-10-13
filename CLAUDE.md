@@ -632,21 +632,23 @@ continues it under licence) is the foundation of all data collection (user, 2026
 - **Shopping list.** Every table (1,396 online in 30 sections) has a source note naming its publisher. GovGraph
   collects that publisher's current, full data, not the Abstract's 2011 numbers. Every section is in scope,
   including Puerto Rico and the Island Areas, International Statistics, and tables by state or country.
-- **Organisation.** The Abstract is a taxonomy: sections → subsections, as the book's contents print them, used as is.
-  Its tables say where series belong; they are evidence, never shown as data (user, 2026-10-13). One place per series.
+- **Organisation.** The Abstract is a taxonomy: its 30 sections, and as subsections the 206 groups the Census website
+  lists each section's tables under (every online table in exactly one; user, 2026-10-13). The book's contents only
+  point at selected topics and do not divide the tables (the mining tables have no entry), so they are kept for the
+  book view only (`contents`). Tables say where series belong; they are evidence, never shown as data. One place per series.
 - The whole book is in the data folder (`www2.census.gov/library/publications/2011/compendia/statab/131ed/2012-statab.pdf`).
   Section pages are `census.gov/library/publications/2011/compendia/statab/131ed/<slug>.html` (for example
-  `construction-housing.html`); each lists its tables under headings of its own (`<h3>`, alphabetical, and not the
-  book's subsections: Construction and Housing has 8 on the web, 4 in the book) as `…/131ed/tables/12sNNNN.xls`
-  ("973 - Price Indexes of New One-Family Houses Sold, by Region").
+  `construction-housing.html`); each lists its tables under its subsections (`<h3>`, alphabetical on the page, so
+  book order comes from the first table) as `…/131ed/tables/12sNNNN.xls` ("973 - Price Indexes of New One-Family
+  Houses Sold, by Region").
 
 The Abstract as Census left it online (Phase 2, 2026-10-13): the section pages, every table file and the section
 PDFs are in the data folder (pages under `census.gov/…/131ed/`, files under `www2.census.gov/…/131ed/tables/`; 1,442
 files, 148 MB), read by `server/lib/statab.js` (test `statab.test.js`). The tables are evidence only, so they are kept
 in a file, not the database (user, 2026-10-13): `server/seed/data/statistical-abstract-tables.json`, one line per table
-(all 1,406: `id`, `section`, `category` = the book's subsection by printed page, or the section before its first
-subsection; `page`; `title` as printed; `online` (10 are printed but not linked); `url`; `source` = the source note;
-`notes` where a file is odd). Built by `server/seed/build-abstract-tables.js` from the files; never edited by hand.
+(all 1,406: `id`, `section`, `category` = its subsection, the website group it is listed under (the 10 printed but
+not linked go with the table before them); `page` from the section PDF; `title` as printed; `online`; `url`;
+`source` = the source note; `notes` where a file is odd). Built by `server/seed/build-abstract-tables.js` from the files; never edited by hand.
 Table files follow one layout (a screen-reader line naming the column-head rows, "Table N. Title", the headnote in
 brackets, heads, body, symbols, "FOOTNOTES:", "Source:", "For more information:", "Internet release date:"); seven are
 .xlsx under the .xls name. Section PDFs print the page number in the foot (sometimes on the credit line) and headings
@@ -663,8 +665,9 @@ the book: sections, table ranges, printed pages, appendices) and the Comparative
 descriptions). Each taxonomy is a JSON file in `server/seed/data/taxonomies/` (`{ id, name, basis, levels, source,
 categories }`, a category `{ id, name, children }` plus its scheme's fields), imported by the client through the
 `@data` alias in `client/vite.config.js` (`client/src/taxonomies.js`). The Abstract's file is built from the book's
-PDF by `server/seed/build-abstract-taxonomy.js` (contents; section numbers as codes; each section's opening paragraph as
-its description; subsections have neither). CAP's file is rebuilt by `server/seed/fetch-cap-codebook.js` (saves the
+PDF and the saved section pages by `server/seed/build-abstract-taxonomy.js` (sections from the contents, with section
+numbers as codes and each section's opening paragraph as description; subsections from the website's groups; the
+contents' topics as `contents`, shown in the book view). CAP's file is rebuilt by `server/seed/fetch-cap-codebook.js` (saves the
 codebook and its licence page to the data folder; parser `server/lib/parse-cap-codebook.js`, with a test); CC BY-NC-SA
 4.0, so the derived file carries the same licence. Codes are hidden unless "Codes" is ticked. The downloaded Abstract
 PDF repeats Education's pages and stops at page 876. Tracked in `features/taxonomies/index.md`.
@@ -676,10 +679,12 @@ parent by code, then name, then position), reports renamed and added categories,
 
 **Placements** (`server/seed/data/placements.json`, checked by `server/lib/taxonomies.test.js`): per taxonomy,
 `measures` places each measure (`MEASURES` in `server/lib/series-dimensions.js`, GovGraph's own flat list) and its
-series follow it; `series` places a series apart from its measure, only where it differs (none yet). A placement is
+series follow it; `series` places a series apart from its measure, only where it differs. A placement is
 `{ category, basis: 'table', tables }`, `{ category, basis: 'judgement', reason }` or `{ left_out: true, reason }`; the
-taxonomy files are never edited for this. All 27 measures are `judgement` until Phase 4 of
-`features/statistical-abstract` reads the tables (Phase 2 is done). A new measure needs a placement in every taxonomy.
+taxonomy files are never edited for this. `table` means an Abstract table prints the series' own data from the same
+publisher; otherwise `judgement`, naming the nearest table. In the Abstract (Phase 4, 2026-10-13): 15 measures by
+table, 12 by judgement, and 3 series placed apart (the PCE price indexes, Table 739; FHFA's house price index, Table
+729). CAP's placements are all judgement. A new measure needs a placement in every taxonomy.
 A `table` placement in the Abstract must cite tables printed in its category (checked against
 `statistical-abstract-tables.json`). Nothing about taxonomies or placements is in the database: the files are the only
 copy, until something needs to query them (user, 2026-10-13).
@@ -689,7 +694,8 @@ The timeline catalogue's **Build** tab (`SeriesBuilder.jsx`, left column `Taxono
 nested down to the measures as leaves (`withMeasures` in `client/src/taxonomies.js`), with a filter over category
 names, CAP's subtopic descriptions, measures and series names, "Only with data", and "Not in this taxonomy" last.
 Choosing a measure opens its choices as before, headed by its path and why it sits there. Below 860px the tree gives
-way to a select grouped by top-level category. A series placed apart is not yet shown apart in the tree.
+way to a select grouped by top-level category. A series placed apart is not yet shown apart in the tree (it is listed
+with its measure).
 
 ## PDFs
 

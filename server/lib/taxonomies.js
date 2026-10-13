@@ -145,13 +145,18 @@ export function keepIds(previous, next) {
  * Write a rebuilt taxonomy to its file, keeping the ids of the categories already there (keepIds). Reports renamed and
  * added categories; refuses to drop one unless `allowRemoving`, since something may be placed in it (placements.json).
  */
-export function writeTaxonomy(file, next, { allowRemoving = false, dryRun = false } = {}) {
+export function writeTaxonomy(file, next, { allowRemoving = false, dryRun = false, newSubcategories = false } = {}) {
   const previous = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
-  const { taxonomy, renamed, added, removed } = keepIds(previous, next);
+  // newSubcategories: the levels below the top come from somewhere else now, so none of their ids is matched (by
+  // name or position) to the old ones; top-level ids are still kept. Needs allowRemoving.
+  const matchAgainst = previous && newSubcategories ? { ...previous, categories: previous.categories.map(c => ({ ...c, children: [] })) } : previous;
+  const result = keepIds(matchAgainst, next);
+  const { taxonomy, renamed, added } = result;
+  const removed = previous ? [...categoryIds(previous)].filter(id => !categoryIds(taxonomy).has(id)) : [];
   for (const r of renamed) console.log(`  renamed ${r.id}: "${r.from}" → "${r.to}" (id kept)`);
-  if (previous && added.length) console.log(`  added ${added.join(', ')}`);
+  if (previous && added.length) console.log(`  added ${added.length}: ${added.slice(0, 12).join(', ')}${added.length > 12 ? ', …' : ''}`);
   if (removed.length) {
-    console.log(`  no longer in the source: ${removed.join(', ')}`);
+    console.log(`  no longer in the source (${removed.length}): ${removed.slice(0, 12).join(', ')}${removed.length > 12 ? ', …' : ''}`);
     if (!allowRemoving) throw new Error('Category ids would be removed; re-run with --allow-removing once nothing is placed in them');
   }
   if (!dryRun) fs.writeFileSync(file, `${JSON.stringify(taxonomy, null, 2)}\n`);

@@ -1,9 +1,10 @@
 # Statistical Abstract
 
 ## Status
-Phase 2 done (2026-10-13): every section page, table file and section PDF fetched; every table's printed page and
-subsection, title and source note in `server/seed/data/statistical-abstract-tables.json` (not the database). The source
-sources (publishers and programs) are `features/data-sources`; the book's own contents are a category structure (`features/taxonomies`).
+Phases 0–2 done, Phase 4's placements done (2026-10-13). Every table's subsection, printed page, title and source note
+is in `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
+`placements.json`. Next: Phase 3 (source notes → programs). The sources (publishers and programs) are
+`features/data-sources`; the Abstract as a taxonomy is `features/taxonomies`.
 
 ## Goal
 Use the **Statistical Abstract of the United States, 2012** (131st edition, the last the Census Bureau published;
@@ -92,9 +93,23 @@ What the pages and files showed (2026-10-13):
   whether it is a time series, by place, or a single-year snapshot. Shown on the sources page and per section.
 
 ### Phase 4 — the catalogue in the Abstract's order
-- Give every current series its subsection and `placement`.
-- The timeline's catalogue (`SeriesSearch.jsx`) groups by section → subsection instead of the Economy tabs, with
-  the wanted tables shown as not yet here.
+- Give every current series its subsection and `placement`. Done 2026-10-13: 15 of the 27 measures by table, 12 by
+  judgement (the reason names the nearest table), and 3 series placed apart from their measure because the Abstract
+  prints them elsewhere: the PCE price indexes (Table 739, Price indexes, not with the CPI) and FHFA's house price
+  index (Table 729, with the price indexes by state, not Housing Sales).
+- `table` evidence means the table prints the series' own data from the same publisher. Where the Abstract prints the
+  measure from someone else, the placement is a judgement that says so: Table 1197's 30-year mortgage rate is
+  Bankrate's (copyright), not Freddie Mac's; Table 470's federal debt is OMB's, not Treasury's daily figure.
+- The catalogue's Build tab is the Abstract's sections and subsections (done before Phase 4).
+- Still to do: show a series placed apart under its own subsection in the Build tree; show wanted tables as not yet
+  here (needs Phase 3).
+
+**Subsections changed (user, 2026-10-13).** The book's contents list only selected topics per section, with the page
+each starts on; they do not divide the tables (Forestry, Fishing, and Mining lists Timber, Fishery, and Petroleum, so the
+mining tables 901–911 fell under Fishery). The subsections are now the groups the Census website lists each section's
+tables under: 206, every online table in exactly one, ordered by first table. The contents are kept as each section's
+`contents` for the page's book view. Old subsection ids were dropped (`build-abstract-taxonomy.js --new-subsections
+--allow-removing`, once).
 
 ### Phase 5 — collecting, section by section
 - One section at a time, in an order to be chosen. Per table: find the publisher's current file, fetch it,
@@ -136,6 +151,7 @@ What the pages and files showed (2026-10-13):
 - [x] Every table mapped to the book's subsection by its printed page, from the section PDFs; written with its source
   note to `statistical-abstract-tables.json`; the `statab_*` tables dropped from the database (user, 2026-10-13)
 - [ ] Phase 3: source notes → datasets; coverage report
-- [ ] Phase 4: placement for every current series; catalogue by section (the catalogue's Build tab is by section since
-  2026-10-13, the 27 measures placed by judgement in `placements.json`; Phase 4 turns them into `table`)
+- [x] Phase 4 placements: every measure placed from the tables, 3 series placed apart (2026-10-13)
+- [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
+- [ ] Phase 4 rest: series placed apart shown apart in the Build tree; wanted tables shown as not yet here (after Phase 3)
 - [ ] Phase 5: collect, section by section
