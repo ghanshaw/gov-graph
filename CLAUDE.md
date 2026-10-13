@@ -678,13 +678,18 @@ parent by code, then name, then position), reports renamed and added categories,
 `--allow-removing`. CAP's ids are its codes.
 
 **Placements** (`server/seed/data/placements.json`, checked by `server/lib/taxonomies.test.js`): per taxonomy,
-`measures` places each measure (`MEASURES` in `server/lib/series-dimensions.js`, GovGraph's own flat list) and its
-series follow it; `series` places a series apart from its measure, only where it differs. A placement is
-`{ category, basis: 'table', tables }`, `{ category, basis: 'judgement', reason }` or `{ left_out: true, reason }`; the
-taxonomy files are never edited for this. `table` means an Abstract table prints the series' own data from the same
-publisher; otherwise `judgement`, naming the nearest table. In the Abstract (Phase 4, 2026-10-13): 15 measures by
-table, 12 by judgement, and 3 series placed apart (the PCE price indexes, Table 739; FHFA's house price index, Table
-729). CAP's placements are all judgement. A new measure needs a placement in every taxonomy.
+`measures` places each measure (`MEASURES` in `server/lib/series-dimensions.js`, GovGraph's own flat list), and its
+series follow it. A measure is one thing measured in one place (user, 2026-10-13): where the Abstract prints a
+measure's series in two subsections they are two measures, which may share a name. A measure's key is its place and
+its name, never a publisher or series: its Abstract category id plus its name as a slug
+(`prices/consumer-price-indexes-cost-of-living-index/consumer-prices` for the CPI,
+`prices/price-indexes/consumer-prices` for the PCE index; tested against its Abstract placement, so moving a measure
+changes its key and every series' reference with it). In the Abstract no two measures of one name share a subsection; in CAP they may, and the Build tree shows them as one leaf (key `a+b`,
+`withMeasures` / `partsOf` in `client/src/taxonomies.js`). A placement is `{ category, basis: 'table', tables }`,
+`{ category, basis: 'judgement', reason }` or `{ left_out: true, reason }`; the taxonomy files are never edited for
+this. `table` means an Abstract table prints the measure's own data from the same publisher; otherwise `judgement`,
+naming the nearest table. In the Abstract (Phase 4, 2026-10-13): 17 of 29 measures by table, 12 by judgement. CAP's
+placements are all judgement. A new measure needs a placement in every taxonomy.
 A `table` placement in the Abstract must cite tables printed in its category (checked against
 `statistical-abstract-tables.json`). Nothing about taxonomies or placements is in the database: the files are the only
 copy, until something needs to query them (user, 2026-10-13).
@@ -694,8 +699,7 @@ The timeline catalogue's **Build** tab (`SeriesBuilder.jsx`, left column `Taxono
 nested down to the measures as leaves (`withMeasures` in `client/src/taxonomies.js`), with a filter over category
 names, CAP's subtopic descriptions, measures and series names, "Only with data", and "Not in this taxonomy" last.
 Choosing a measure opens its choices as before, headed by its path and why it sits there. Below 860px the tree gives
-way to a select grouped by top-level category. A series placed apart is not yet shown apart in the tree (it is listed
-with its measure).
+way to a select grouped by top-level category.
 
 ## PDFs
 

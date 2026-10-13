@@ -7,17 +7,19 @@ import placements from '@data/placements.json';
 
 export const TAXONOMIES = [statisticalAbstract, comparativeAgendas];
 
-// Where series sit in each taxonomy: { [taxonomy id]: { measures: { [measure]: placement }, series: { [slug]: placement } } },
-// a placement being { category, basis, tables | reason } or { left_out, reason }; checked by server/lib/taxonomies.test.js.
-// Build mode places measures; a series placed apart from its measure (`series`) is not shown apart yet.
+// Where measures sit in each taxonomy: { [taxonomy id]: { measures: { [measure]: placement } } }, a placement being
+// { category, basis, tables | reason } or { left_out, reason }; checked by server/lib/taxonomies.test.js.
 export const PLACEMENTS = placements;
 
 /**
  * A taxonomy down to the measures placed in it, for Build mode: categories as printed, each with the measures
- * placed at it (`measures`, in the order of `keys`). `keys`: the measures that have series. Returns
- * { categories, leftOut: measures not in this taxonomy, pathOf: measure → [category names above it] }.
+ * placed at it (`measures`, in the order of `keys`). `keys`: the measures that have series; `label(key)`: a measure's
+ * name. A measure is a name in a place (GLOSSARY.md), so measures of the same name in one category of a taxonomy other
+ * than the one that defines them (CAP's Interest Rates holds both "Consumer prices") are shown as one leaf, whose key
+ * joins theirs with "+" (`partsOf`). Returns { categories, leftOut: measures not in this taxonomy, pathOf: leaf →
+ * [category names above it] }.
  */
-export function withMeasures(taxonomy, keys) {
+export function withMeasures(taxonomy, keys, label = key => key) {
   const own = PLACEMENTS[taxonomy.id]?.measures ?? {};
   const at = new Map();
   const leftOut = [];
@@ -26,11 +28,21 @@ export function withMeasures(taxonomy, keys) {
     if (!p || p.left_out) leftOut.push(key);
     else at.set(p.category, [...(at.get(p.category) ?? []), key]);
   }
+  // Same name, same place: one leaf.
+  const leaves = list => {
+    const byName = new Map();
+    for (const key of list) byName.set(label(key), [...(byName.get(label(key)) ?? []), key]);
+    return [...byName.values()].map(parts => parts.join('+'));
+  };
   const pathOf = new Map();
   const walk = (cats, above) => (cats ?? []).map(c => {
     const path = [...above, c.name];
-    for (const key of at.get(c.id) ?? []) pathOf.set(key, path);
-    return { id: c.id, name: c.name, description: c.description ?? null, measures: at.get(c.id) ?? [], children: walk(c.children, path) };
+    const measures = leaves(at.get(c.id) ?? []);
+    for (const key of measures) pathOf.set(key, path);
+    return { id: c.id, name: c.name, description: c.description ?? null, measures, children: walk(c.children, path) };
   });
-  return { categories: walk(taxonomy.categories, []), leftOut, pathOf };
+  return { categories: walk(taxonomy.categories, []), leftOut: leaves(leftOut), pathOf };
 }
+
+/** The measures a leaf stands for: two keys joined by "+" → both. */
+export const partsOf = leaf => leaf.split('+');

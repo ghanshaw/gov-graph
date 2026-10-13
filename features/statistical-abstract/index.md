@@ -28,6 +28,7 @@ it ended the program on October 1, 2011) as the foundation for all the data GovG
 - Tables whose source is licensed are listed with a link to the publisher and not collected, for now
   (user, 2026-10-13).
 - The sources (`features/data-sources`) are recorded first (2026-10-13).
+- Every Census "Current Population Reports" series (P20, P25, P60, …) is one program (user, 2026-10-13).
 - The Economic Data rules stand: series as their publishers print them, nothing computed, separate files never
   joined.
 
@@ -93,16 +94,16 @@ What the pages and files showed (2026-10-13):
   whether it is a time series, by place, or a single-year snapshot. Shown on the sources page and per section.
 
 ### Phase 4 — the catalogue in the Abstract's order
-- Give every current series its subsection and `placement`. Done 2026-10-13: 15 of the 27 measures by table, 12 by
-  judgement (the reason names the nearest table), and 3 series placed apart from their measure because the Abstract
-  prints them elsewhere: the PCE price indexes (Table 739, Price indexes, not with the CPI) and FHFA's house price
-  index (Table 729, with the price indexes by state, not Housing Sales).
+- Give every current series its subsection and `placement`. Done 2026-10-13: 17 of 29 measures by table, 12 by
+  judgement (the reason names the nearest table). Where the Abstract prints a measure's series in two subsections they
+  became two measures of the same name (user: a measure is a unique path): Consumer prices (CPI, Table 725) and
+  Consumer prices (PCE, Table 739, Price Indexes); Home prices (Census, Housing Sales) and Home prices (FHFA, Table
+  729, with the price indexes by state). A measure's key is its place and name (`prices/price-indexes/consumer-prices`).
 - `table` evidence means the table prints the series' own data from the same publisher. Where the Abstract prints the
   measure from someone else, the placement is a judgement that says so: Table 1197's 30-year mortgage rate is
   Bankrate's (copyright), not Freddie Mac's; Table 470's federal debt is OMB's, not Treasury's daily figure.
 - The catalogue's Build tab is the Abstract's sections and subsections (done before Phase 4).
-- Still to do: show a series placed apart under its own subsection in the Build tree; show wanted tables as not yet
-  here (needs Phase 3).
+- Still to do: show wanted tables as not yet here (needs Phase 3).
 
 **Subsections changed (user, 2026-10-13).** The book's contents list only selected topics per section, with the page
 each starts on; they do not divide the tables (Forestry, Fishing, and Mining lists Timber, Fishery, and Petroleum, so the
@@ -151,7 +152,7 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
 - [x] Every table mapped to the book's subsection by its printed page, from the section PDFs; written with its source
   note to `statistical-abstract-tables.json`; the `statab_*` tables dropped from the database (user, 2026-10-13)
 - [ ] Phase 3: source notes → datasets; coverage report
-- [x] Phase 4 placements: every measure placed from the tables, 3 series placed apart (2026-10-13)
+- [x] Phase 4 placements: every measure placed from the tables; measures split where the Abstract splits them (2026-10-13)
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
-- [ ] Phase 4 rest: series placed apart shown apart in the Build tree; wanted tables shown as not yet here (after Phase 3)
+- [ ] Phase 4 rest: wanted tables shown as not yet here (after Phase 3)
 - [ ] Phase 5: collect, section by section

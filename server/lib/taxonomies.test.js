@@ -1,13 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { placementProblems, placementOf, readPlacements, readTaxonomies, readAbstractTables, keepIds, categoryIds } from './taxonomies.js';
-import { MEASURES, seriesDimensions } from './series-dimensions.js';
-import { SERIES } from './economic-series.js';
+import { placementProblems, readPlacements, readTaxonomies, readAbstractTables, keepIds, categoryIds } from './taxonomies.js';
+import { MEASURES } from './series-dimensions.js';
 
-const seriesMeasure = new Map(SERIES.map(s => [s.slug, seriesDimensions(s).measure]));
-
-test('every measure is placed, or left out on purpose, in every taxonomy; series placed apart are sound', () => {
-  assert.deepEqual(placementProblems(readPlacements(), readTaxonomies(), MEASURES, seriesMeasure, readAbstractTables()), []);
+test('every measure is placed, or left out on purpose, in every taxonomy, once in each Abstract subsection by name', () => {
+  assert.deepEqual(placementProblems(readPlacements(), readTaxonomies(), MEASURES, readAbstractTables()), []);
 });
 
 test('every taxonomy has unique category ids', () => {
@@ -20,56 +17,57 @@ test('every taxonomy has unique category ids', () => {
 });
 
 const taxonomy = { id: 's', categories: [{ id: 'a', name: 'A', children: [{ id: 'a/b', name: 'B' }] }] };
-const measures = { gdp: {}, deaths: {}, sentiment: {} };
-const series = new Map([['real-gdp', 'gdp'], ['covid-deaths', 'deaths']]);
+const measures = { gdp: { label: 'GDP' }, deaths: { label: 'Deaths' }, sentiment: { label: 'Sentiment' } }; // keys checked only in the Abstract
 
-test('placements may sit at either level, leave a measure out, or place a series apart', () => {
-  assert.deepEqual(placementProblems({ s: {
-    measures: {
-      gdp: { category: 'a/b', basis: 'table', tables: [670] },
-      deaths: { category: 'a', basis: 'judgement', reason: 'No subcategory fits.' },
-      sentiment: { left_out: true, reason: 'Not a subject of this scheme.' },
-    },
-    series: { 'covid-deaths': { category: 'a/b', basis: 'judgement', reason: 'An emergency, not the yearly count.' } },
-  } }, [taxonomy], measures, series), []);
+test('placements may sit at either level, or leave a measure out', () => {
+  assert.deepEqual(placementProblems({ s: { measures: {
+    gdp: { category: 'a/b', basis: 'table', tables: [670] },
+    deaths: { category: 'a', basis: 'judgement', reason: 'No subcategory fits.' },
+    sentiment: { left_out: true, reason: 'Not a subject of this scheme.' },
+  } } }, [taxonomy], measures), []);
 });
 
 test('wrong placements are caught', () => {
-  assert.deepEqual(placementProblems({ s: {
-    measures: {
-      gdp: { category: 'a/x', basis: 'table' },
-      deaths: { category: 'a/b', basis: 'judgement' },
-      unknown: { category: 'a', basis: 'guess' },
-    },
-    series: {
-      'real-gdp': { category: 'a/y', basis: 'judgement', reason: 'Why not.' },
-      'covid-deaths': { category: 'a/b', basis: 'judgement', reason: 'Same place.' },
-      nowhere: { category: 'a', basis: 'judgement', reason: '?' },
-    },
-  }, other: {} }, [taxonomy], measures, series), [
+  assert.deepEqual(placementProblems({ s: { measures: {
+    gdp: { category: 'a/x', basis: 'table' },
+    deaths: { category: 'a/b', basis: 'judgement' },
+    unknown: { category: 'a', basis: 'guess' },
+  } }, other: {} }, [taxonomy], measures), [
     's: sentiment is neither placed nor left out',
     's: gdp: unknown category a/x',
     's: gdp: table without table numbers',
     's: deaths: judgement without a reason',
     's: unknown: unknown measure',
     's: unknown: basis must be table or judgement',
-    's: series real-gdp: unknown category a/y',
-    's: series covid-deaths: sits where its measure does',
-    's: series nowhere: unknown series',
     'other: unknown taxonomy',
   ]);
+});
+
+test('a measure is a name in a place: its key is its Abstract category and its name', () => {
+  const abstract = { ...taxonomy, id: 'statistical-abstract' };
+  const twins = { 'a/consumer-prices': { label: 'Consumer prices' }, 'a/b/consumer-prices': { label: 'Consumer prices' } };
+  const placed = (x, y) => ({ measures: {
+    'a/consumer-prices': { category: x, basis: 'judgement', reason: '.' },
+    'a/b/consumer-prices': { category: y, basis: 'judgement', reason: '.' },
+  } });
+  assert.deepEqual(placementProblems({ 'statistical-abstract': placed('a', 'a/b') }, [abstract], twins), []);
+  assert.deepEqual(placementProblems({ 'statistical-abstract': placed('a/b', 'a/b') }, [abstract], twins), [
+    'statistical-abstract: a/consumer-prices: its key should be a/b/consumer-prices',
+    'statistical-abstract: a/consumer-prices and a/b/consumer-prices are both "Consumer prices" in a/b',
+  ]);
+  assert.deepEqual(placementProblems({ s: placed('a/b', 'a/b') }, [taxonomy], twins), []); // elsewhere: shown as one
 });
 
 test('a table cited as evidence must exist and be printed in that category', () => {
   const abstract = { id: 'statistical-abstract', categories: [{ id: 'a', name: 'A', children: [{ id: 'a/b', name: 'B' }, { id: 'a/c', name: 'C' }] }] };
   const tables = new Map([['670', { category: 'a/b' }], ['671', { category: 'a/c' }]]);
+  const keyed = { 'a/b/gdp': { label: 'GDP' }, 'a/deaths': { label: 'Deaths' } };
   assert.deepEqual(placementProblems({ 'statistical-abstract': { measures: {
-    gdp: { category: 'a/b', basis: 'table', tables: [670, 671, 9999] },
-    deaths: { category: 'a', basis: 'table', tables: [671] },
-    sentiment: { left_out: true, reason: 'Not here.' },
-  } } }, [abstract], measures, series, tables), [
-    'statistical-abstract: gdp: Table 671 is printed under a/c',
-    'statistical-abstract: gdp: no Table 9999',
+    'a/b/gdp': { category: 'a/b', basis: 'table', tables: [670, 671, 9999] },
+    'a/deaths': { category: 'a', basis: 'table', tables: [671] },
+  } } }, [abstract], keyed, tables), [
+    'statistical-abstract: a/b/gdp: Table 671 is printed under a/c',
+    'statistical-abstract: a/b/gdp: no Table 9999',
   ]);
 });
 
@@ -79,13 +77,6 @@ test('every Abstract table has a page and a category in the Abstract', () => {
   const tables = [...readAbstractTables().values()];
   assert.equal(tables.length, 1406);
   assert.deepEqual(tables.filter(t => t.page == null || !ids.has(t.category)).map(t => t.id), []);
-});
-
-test('a series sits where its measure does unless placed apart', () => {
-  const placements = { s: { measures: { gdp: { category: 'a' } }, series: { 'real-gdp': { category: 'a/b' } } } };
-  assert.equal(placementOf(placements, 's', 'real-gdp', 'gdp').category, 'a/b');
-  assert.equal(placementOf(placements, 's', 'nominal-gdp', 'gdp').category, 'a');
-  assert.equal(placementOf(placements, 's', 'x', 'unplaced'), null);
 });
 
 test('a rebuilt taxonomy keeps its category ids', () => {

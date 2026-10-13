@@ -264,7 +264,12 @@ Checked 2026-10-13:
   placed apart (2026-10-13)
 
 ## Todo
-- [ ] Show a series placed apart under its own category in the Build tree (3 exist: the PCE price indexes, FHFA's index)
+- [x] A measure is a name in a place (user, 2026-10-13): placing series apart from their measure is gone; a measure
+  whose series the Abstract prints in two subsections became two measures of the same name (Consumer prices: CPI and
+  PCE; Home prices: Census and FHFA). The Abstract allows one measure of a name per subsection (tested); in CAP, same-named
+  measures in one category are one leaf in the Build tree, whose choices cover both
+- [x] A measure's key is its Abstract category and its name (`prices/price-indexes/consumer-prices`), never a publisher
+  or series (user, 2026-10-13); checked against its placement
 - [ ] Put taxonomies and placements in the database only when something must query them (documents: CAP has already
   coded bills and orders by topic)
 - [ ] Review the 27 placements (doubtful: consumer spending, fuel prices, mortgage rate, every CAP one); turn the

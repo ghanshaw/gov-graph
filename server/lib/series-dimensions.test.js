@@ -33,7 +33,7 @@ test('frequency, year and publisher are read from the series', () => {
   const demand = seriesDimensions(SERIES.find(s => s.slug === 'demand-total-4wk'));
   assert.equal(demand.frequency, 'four-week');
   const group = seriesDimensions(SERIES.find(s => s.slug === 'unemployment-rate--black-women'));
-  assert.deepEqual([group.measure, group.form, group.race, group.sex], ['unemployment', 'rate', 'black', 'women']);
+  assert.deepEqual([group.measure, group.form, group.race, group.sex], ['labor-force-employment-and-earnings/unemployed-persons/unemployment', 'rate', 'black', 'women']);
 });
 
 test('a mislabelled series is caught', () => {

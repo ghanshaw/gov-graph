@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { GET_SERIES_DIMENSIONS } from '../queries';
 import { buildTree, withoutPath, yearsOf } from '../dimensions';
-import { PLACEMENTS, TAXONOMIES, withMeasures } from '../taxonomies';
+import { PLACEMENTS, TAXONOMIES, withMeasures, partsOf } from '../taxonomies';
 import TaxonomyTree from './TaxonomyTree';
 
 // The catalogue's Build mode (concept A in design/timeline-data/builder): choose a measure from a category
@@ -102,11 +102,19 @@ export default function SeriesBuilder({ bySlug, isOn, onSwap }) {
     }
     return groups;
   }, [data, bySlug]);
-  const series = useMemo(() => (measure ? byMeasure.get(measure) ?? [] : []), [byMeasure, measure]);
+  // A leaf of the tree is a measure, or several of the same name shown as one ('a+b'; taxonomies.js, withMeasures).
+  const seriesOf = useCallback(leaf => partsOf(leaf).flatMap(key => byMeasure.get(key) ?? []), [byMeasure]);
+  const series = useMemo(() => (measure ? seriesOf(measure) : []), [seriesOf, measure]);
   const taxonomy = TAXONOMIES.find(s => s.id === taxonomyId);
   const keys = useMemo(() => Object.keys(data?.seriesDimensionVocabulary?.measures ?? {}).filter(key => byMeasure.has(key)), [data, byMeasure]);
-  const categories = useMemo(() => withMeasures(taxonomy, keys), [taxonomy, keys]);
-  const tree = useMemo(() => (vocab && measure ? buildTree(vocab, measure, series, picked) : null), [vocab, measure, series, picked]);
+  const categories = useMemo(() => withMeasures(taxonomy, keys, key => vocab?.measures[key]?.label ?? key), [taxonomy, keys, vocab]);
+  // For a joined leaf, a measure of its own to build the choices from: the shared name and every dimension of its parts.
+  const leafVocab = useMemo(() => {
+    if (!vocab || !measure?.includes('+')) return vocab;
+    const parts = partsOf(measure).map(key => vocab.measures[key]);
+    return { ...vocab, measures: { ...vocab.measures, [measure]: { label: parts[0].label, dims: [...new Set(parts.flatMap(m => m.dims))] } } };
+  }, [vocab, measure]);
+  const tree = useMemo(() => (leafVocab && measure ? buildTree(leafVocab, measure, series, picked) : null), [leafVocab, measure, series, picked]);
 
   const target = !tree ? [] : tree.automatic ? (picked.has(ONE) ? tree.matches : []) : tree.matches;
   const targetKey = target.join(',');
@@ -128,11 +136,20 @@ export default function SeriesBuilder({ bySlug, isOn, onSwap }) {
   if (error) return <p className="catalog-empty">Could not load the dimensions: {error.message}</p>;
   if (loading || !vocab) return <p className="catalog-empty">Loading…</p>;
 
+  // Leaves differ between taxonomies (two measures shown as one in CAP, apart in the Abstract): keep the measure chosen
+  // where it is still a leaf, else its first part.
+  const switchTaxonomy = id => {
+    setTaxonomyId(id);
+    if (!measure) return;
+    const next = withMeasures(TAXONOMIES.find(t => t.id === id), keys, key => vocab.measures[key]?.label ?? key);
+    const leaves = new Set([...next.pathOf.keys(), ...next.leftOut]);
+    if (!leaves.has(measure)) setMeasure([...leaves].find(leaf => partsOf(leaf).includes(partsOf(measure)[0])) ?? null);
+  };
   const setPicked = change => setPickedBy(b => ({ ...b, [measure]: change(b[measure] ?? new Set()) }));
   const pick = path => setPicked(p => new Set(p).add(path));
   const unpick = path => setPicked(p => withoutPath(p, path));
-  const onCount = key => (byMeasure.get(key) ?? []).filter(s => isOn([s.slug])).length;
-  const label = key => vocab.measures[key]?.label ?? key;
+  const onCount = key => seriesOf(key).filter(s => isOn([s.slug])).length;
+  const label = key => vocab.measures[partsOf(key)[0]]?.label ?? key;
   const name = slug => bySlug.get(slug)?.name ?? slug;
   // On a narrow screen the tree gives way to a list: the measures under each top-level category.
   const groups = categories.categories.map(c => {
@@ -143,13 +160,13 @@ export default function SeriesBuilder({ bySlug, isOn, onSwap }) {
   }).filter(g => g.keys.length);
   if (categories.leftOut.length) groups.push({ name: 'Not in this taxonomy', keys: categories.leftOut });
   const path = measure ? categories.pathOf.get(measure) : null;
-  const placement = measure ? PLACEMENTS[taxonomyId]?.measures?.[measure] : null;
+  const placement = measure ? PLACEMENTS[taxonomyId]?.measures?.[partsOf(measure)[0]] : null;
 
   return (
     <div className="catalog-body build-body">
-      <TaxonomyTree tree={categories} label={label} size={key => byMeasure.get(key)?.length ?? 0} onCount={onCount}
-        names={key => (byMeasure.get(key) ?? []).map(s => s.name)} selected={measure} onSelect={setMeasure}
-        taxonomyId={taxonomyId} onTaxonomy={setTaxonomyId} />
+      <TaxonomyTree tree={categories} label={label} size={key => seriesOf(key).length} onCount={onCount}
+        names={key => seriesOf(key).map(s => s.name)} selected={measure} onSelect={setMeasure}
+        taxonomyId={taxonomyId} onTaxonomy={switchTaxonomy} />
       <div className="catalog-list builder" data-testid="series-builder">
         <select className="measure-select" aria-label="Measure" value={measure ?? ''} onChange={e => setMeasure(e.target.value || null)}>
           <option value="">Choose what to measure…</option>
@@ -163,7 +180,7 @@ export default function SeriesBuilder({ bySlug, isOn, onSwap }) {
           <>
             <p className="builder-path">{path ? path.join(' › ') : `Not in the ${taxonomy.name}`}</p>
             <div className="builder-head">
-              <h3>{vocab.measures[measure].label}</h3>
+              <h3>{label(measure)}</h3>
               {picked.size > 0 && <button type="button" className="clear" onClick={() => setPicked(() => new Set())}>Clear choices</button>}
             </div>
             {placement && (

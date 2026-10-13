@@ -1,7 +1,7 @@
 // Taxonomies (GLOSSARY.md) and where series sit in them (features/taxonomies, "Measures and placements").
 // The taxonomies stay as their publishers print them (seed/data/taxonomies/); the measures are GovGraph's own flat list
-// (MEASURES in series-dimensions.js); placements.json joins the two. A measure is placed, its series follow it, and a
-// series is placed apart only where it differs (`series`). The client imports the same files; nothing is in the database.
+// (MEASURES in series-dimensions.js); placements.json joins the two. A measure is one thing measured in one place: it is
+// placed once per taxonomy and its series follow it. The client imports the same files; nothing is in the database.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -58,11 +58,12 @@ function problemsOf(at, p, ids, tables) {
 
 /**
  * What is wrong with the placements: a taxonomy or measure missing or unknown, a category that does not exist, a basis
- * without its evidence (`table` needs table numbers, `judgement` and `left_out` a reason), a series placed apart that
- * does not exist or sits where its measure already does. `seriesMeasure`: slug → measure, for every series.
- * `abstractTables` (readAbstractTables): a `table` placement in the Abstract must cite tables printed in its category.
+ * without its evidence (`table` needs table numbers, `judgement` and `left_out` a reason), and in the taxonomy that
+ * defines measures (`unique`, the Abstract) a key that is not the measure's category and name, or two measures of the
+ * same name in one category: a measure is a name in a place. `abstractTables` (readAbstractTables): a `table` placement in the Abstract must cite tables printed in its
+ * category.
  */
-export function placementProblems(placements, taxonomies, measures, seriesMeasure = new Map(), abstractTables = null) {
+export function placementProblems(placements, taxonomies, measures, abstractTables = null, unique = 'statistical-abstract') {
   const problems = [];
   const known = new Set(Object.keys(measures));
   for (const taxonomy of taxonomies) {
@@ -76,23 +77,22 @@ export function placementProblems(placements, taxonomies, measures, seriesMeasur
       if (!known.has(key)) problems.push(`${taxonomy.id}: ${key}: unknown measure`);
       problems.push(...problemsOf(`${taxonomy.id}: ${key}`, p, ids, tables));
     }
-    for (const [slug, p] of Object.entries(own.series ?? {})) {
-      const at = `${taxonomy.id}: series ${slug}`;
-      if (!seriesMeasure.has(slug)) { problems.push(`${at}: unknown series`); continue; }
-      problems.push(...problemsOf(at, p, ids, tables));
-      const m = byMeasure[seriesMeasure.get(slug)];
-      if (m && (m.category ?? null) === (p.category ?? null) && !!m.left_out === !!p.left_out) problems.push(`${at}: sits where its measure does`);
+    if (taxonomy.id === unique) {
+      const seen = new Map();
+      for (const [key, p] of Object.entries(byMeasure)) {
+        if (p.left_out || !measures[key]) continue;
+        // A measure's key is its place and its name.
+        const expected = `${p.category}/${slugOf(measures[key].label)}`;
+        if (key !== expected) problems.push(`${taxonomy.id}: ${key}: its key should be ${expected}`);
+        const at = `${p.category}\n${measures[key].label}`;
+        if (seen.has(at)) problems.push(`${taxonomy.id}: ${seen.get(at)} and ${key} are both "${measures[key].label}" in ${p.category}`);
+        else seen.set(at, key);
+      }
     }
   }
   const taxonomyIds = new Set(taxonomies.map(s => s.id));
   for (const id of Object.keys(placements)) if (id !== 'about' && !taxonomyIds.has(id)) problems.push(`${id}: unknown taxonomy`);
   return problems;
-}
-
-/** Where one series sits in one taxonomy: its own placement, else its measure's. null when neither exists. */
-export function placementOf(placements, taxonomyId, slug, measure) {
-  const own = placements[taxonomyId] ?? {};
-  return own.series?.[slug] ?? own.measures?.[measure] ?? null;
 }
 
 const slugOf = text => text.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

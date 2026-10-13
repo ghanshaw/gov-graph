@@ -126,33 +126,38 @@ export const DIMENSIONS = {
 
 // Each measure and the breakdowns that apply to it. `form`, `adjustment` and `seasonal` apply to all.
 export const MEASURES = {
-  'crude-oil-price': { label: 'Crude oil price', dims: ['benchmark'] },
-  'fuel-price': { label: 'Fuel price at the pump', dims: ['fuel'] },
-  'oil-demand': { label: 'Oil demand', dims: ['product'] },
-  unemployment: { label: 'Unemployment', dims: ['definition', 'sex', 'race', 'age', 'education'] },
-  'consumer-prices': { label: 'Consumer prices', dims: ['price_index', 'scope'] },
-  'consumer-spending': { label: 'Consumer spending', dims: [] },
-  'consumer-sentiment': { label: 'Consumer sentiment', dims: [] },
-  'mortgage-rate': { label: 'Mortgage rate', dims: ['term'] },
-  'home-prices': { label: 'Home prices', dims: ['homes'] },
-  'home-affordability': { label: 'Home affordability', dims: [] },
-  homeownership: { label: 'Homeownership', dims: [] },
-  'household-income': { label: 'Household income', dims: [] },
-  'interest-rate': { label: 'Interest rates', dims: ['interest_rate', 'bound'] },
-  deaths: { label: 'Deaths', dims: ['cause'] },
-  gdp: { label: 'GDP', dims: [] },
-  'federal-debt': { label: 'Federal debt', dims: ['holder'] },
-  'federal-revenue': { label: 'Federal revenue', dims: ['revenue_source', 'flow', 'payment'] },
-  'tax-credit-payments': { label: 'Tax credit payments', dims: ['program'] },
-  'federal-spending': { label: 'Federal spending', dims: ['function'] },
-  'federal-budget-balance': { label: 'Federal budget balance', dims: ['sign'] },
-  'tax-rate': { label: 'Tax rates', dims: ['rate_kind', 'income_group'] },
-  'tax-share': { label: 'Share of federal taxes paid', dims: ['income_group'] },
-  'top-bracket-threshold': { label: 'Where the top tax rate starts', dims: [] },
-  'tariff-rate': { label: 'Average tariff rate', dims: ['base'] },
-  exports: { label: 'Exports', dims: ['goods_services'] },
-  imports: { label: 'Imports', dims: ['goods_services'] },
-  'trade-balance': { label: 'Trade balance', dims: ['goods_services'] },
+  'prices/fuel-prices/crude-oil-price': { label: 'Crude oil price', dims: ['benchmark'] },
+  'prices/fuel-prices/fuel-price-at-the-pump': { label: 'Fuel price at the pump', dims: ['fuel'] },
+  'energy-and-utilities/crude-oil-petroleum/oil-demand': { label: 'Oil demand', dims: ['product'] },
+  'labor-force-employment-and-earnings/unemployed-persons/unemployment': { label: 'Unemployment', dims: ['definition', 'sex', 'race', 'age', 'education'] },
+  // A measure is one thing measured in one place (GLOSSARY.md), keyed by that place: its Statistical Abstract category
+  // and its name. Where the Abstract prints a measure's series in two subsections they are two measures, which may share a
+  // name (Consumer prices: the CPI, and the PCE index under Price Indexes).
+  'prices/consumer-price-indexes-cost-of-living-index/consumer-prices': { label: 'Consumer prices', dims: ['price_index', 'scope'] },
+  'prices/price-indexes/consumer-prices': { label: 'Consumer prices', dims: ['price_index', 'scope'] },
+  'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending': { label: 'Consumer spending', dims: [] },
+  'business-enterprise/economic-indicators/consumer-sentiment': { label: 'Consumer sentiment', dims: [] },
+  'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/mortgage-rate': { label: 'Mortgage rate', dims: ['term'] },
+  'construction-and-housing/housing-sales/home-prices': { label: 'Home prices', dims: ['homes'] },
+  'prices/consumer-price-indexes-cost-of-living-index/home-prices': { label: 'Home prices', dims: ['homes'] },
+  'construction-and-housing/homeownership-and-housing-costs/home-affordability': { label: 'Home affordability', dims: [] },
+  'construction-and-housing/homeownership-and-housing-costs/homeownership': { label: 'Homeownership', dims: [] },
+  'income-expenditures-poverty-and-wealth/household-income/household-income': { label: 'Household income', dims: [] },
+  'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates': { label: 'Interest rates', dims: ['interest_rate', 'bound'] },
+  'births-deaths-marriages-and-divorces/deaths/deaths': { label: 'Deaths', dims: ['cause'] },
+  'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp': { label: 'GDP', dims: [] },
+  'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-debt': { label: 'Federal debt', dims: ['holder'] },
+  'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-revenue': { label: 'Federal revenue', dims: ['revenue_source', 'flow', 'payment'] },
+  'federal-government-finances-and-employment/federal-individual-income-tax-returns/tax-credit-payments': { label: 'Tax credit payments', dims: ['program'] },
+  'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-spending': { label: 'Federal spending', dims: ['function'] },
+  'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-budget-balance': { label: 'Federal budget balance', dims: ['sign'] },
+  'federal-government-finances-and-employment/federal-individual-income-tax-returns/tax-rates': { label: 'Tax rates', dims: ['rate_kind', 'income_group'] },
+  'federal-government-finances-and-employment/federal-individual-income-tax-returns/share-of-federal-taxes-paid': { label: 'Share of federal taxes paid', dims: ['income_group'] },
+  'federal-government-finances-and-employment/federal-individual-income-tax-returns/where-the-top-tax-rate-starts': { label: 'Where the top tax rate starts', dims: [] },
+  'foreign-commerce-and-aid/exports-and-imports/average-tariff-rate': { label: 'Average tariff rate', dims: ['base'] },
+  'foreign-commerce-and-aid/exports-and-imports/exports': { label: 'Exports', dims: ['goods_services'] },
+  'foreign-commerce-and-aid/exports-and-imports/imports': { label: 'Imports', dims: ['goods_services'] },
+  'foreign-commerce-and-aid/exports-and-imports/trade-balance': { label: 'Trade balance', dims: ['goods_services'] },
 };
 for (const [key, m] of Object.entries(MEASURES)) DIMENSIONS.measure.values[key] = V(m.label);
 
@@ -160,64 +165,65 @@ const COMMON = ['measure', 'form', 'adjustment', 'seasonal'];
 const DERIVED = ['frequency', 'year', 'publisher'];
 
 // The labels, by slug. Unemployment by group and CBO's tax rates and shares are read from their slugs below.
-const rev = (revenue_source, flow, more) => ({ measure: 'federal-revenue', form: 'level', revenue_source, flow, ...more });
-const share = (revenue_source, form) => ({ measure: 'federal-revenue', form, revenue_source, flow: 'net' });
-const spend = fn => ({ measure: 'federal-spending', form: 'level', function: fn, seasonal: 'nsa' });
-const trade = (measure, goods_services, more) => ({ measure, form: 'level', goods_services, ...more });
+const rev = (revenue_source, flow, more) => ({ measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-revenue', form: 'level', revenue_source, flow, ...more });
+const share = (revenue_source, form) => ({ measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-revenue', form, revenue_source, flow: 'net' });
+const spend = fn => ({ measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-spending', form: 'level', function: fn, seasonal: 'nsa' });
+// Trade measures sit in Foreign Commerce and Aid → Exports And Imports; `name` is the last part of the key.
+const trade = (name, goods_services, more) => ({ measure: `foreign-commerce-and-aid/exports-and-imports/${name}`, form: 'level', goods_services, ...more });
 const NSA = { seasonal: 'nsa' };
 const SAAR = { seasonal: 'saar' };
 const REAL = { adjustment: 'real' };
 
 const LABELS = {
-  'wti-spot': { measure: 'crude-oil-price', form: 'level', benchmark: 'wti' },
-  'brent-spot': { measure: 'crude-oil-price', form: 'level', benchmark: 'brent' },
-  'gasoline-retail': { measure: 'fuel-price', form: 'level', fuel: 'gasoline' },
-  'diesel-retail': { measure: 'fuel-price', form: 'level', fuel: 'diesel' },
-  'demand-total-4wk': { measure: 'oil-demand', form: 'level', product: 'all' },
-  'demand-distillate-4wk': { measure: 'oil-demand', form: 'level', product: 'distillate' },
-  'demand-gasoline-4wk': { measure: 'oil-demand', form: 'level', product: 'gasoline' },
-  'demand-jet-4wk': { measure: 'oil-demand', form: 'level', product: 'jet-fuel' },
-  'demand-total-monthly': { measure: 'oil-demand', form: 'level', product: 'all' },
-  'demand-distillate-monthly': { measure: 'oil-demand', form: 'level', product: 'distillate' },
-  'demand-gasoline-monthly': { measure: 'oil-demand', form: 'level', product: 'gasoline' },
-  'demand-jet-monthly': { measure: 'oil-demand', form: 'level', product: 'jet-fuel' },
+  'wti-spot': { measure: 'prices/fuel-prices/crude-oil-price', form: 'level', benchmark: 'wti' },
+  'brent-spot': { measure: 'prices/fuel-prices/crude-oil-price', form: 'level', benchmark: 'brent' },
+  'gasoline-retail': { measure: 'prices/fuel-prices/fuel-price-at-the-pump', form: 'level', fuel: 'gasoline' },
+  'diesel-retail': { measure: 'prices/fuel-prices/fuel-price-at-the-pump', form: 'level', fuel: 'diesel' },
+  'demand-total-4wk': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'all' },
+  'demand-distillate-4wk': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'distillate' },
+  'demand-gasoline-4wk': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'gasoline' },
+  'demand-jet-4wk': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'jet-fuel' },
+  'demand-total-monthly': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'all' },
+  'demand-distillate-monthly': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'distillate' },
+  'demand-gasoline-monthly': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'gasoline' },
+  'demand-jet-monthly': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'jet-fuel' },
 
-  'unemployment-rate': { measure: 'unemployment', form: 'rate', definition: 'u3', seasonal: 'sa' },
-  'unemployment-u6': { measure: 'unemployment', form: 'rate', definition: 'u6', seasonal: 'sa' },
-  'unemployed-persons': { measure: 'unemployment', form: 'level', definition: 'u3', seasonal: 'sa' },
+  'unemployment-rate': { measure: 'labor-force-employment-and-earnings/unemployed-persons/unemployment', form: 'rate', definition: 'u3', seasonal: 'sa' },
+  'unemployment-u6': { measure: 'labor-force-employment-and-earnings/unemployed-persons/unemployment', form: 'rate', definition: 'u6', seasonal: 'sa' },
+  'unemployed-persons': { measure: 'labor-force-employment-and-earnings/unemployed-persons/unemployment', form: 'level', definition: 'u3', seasonal: 'sa' },
 
-  cpi: { measure: 'consumer-prices', form: 'index', price_index: 'cpi', scope: 'all-items', ...NSA },
-  'cpi-core': { measure: 'consumer-prices', form: 'index', price_index: 'cpi', scope: 'core', ...NSA },
-  'pce-price': { measure: 'consumer-prices', form: 'index', price_index: 'pce', scope: 'all-items', seasonal: 'sa' },
-  'pce-price-core': { measure: 'consumer-prices', form: 'index', price_index: 'pce', scope: 'core', seasonal: 'sa' },
-  spending: { measure: 'consumer-spending', form: 'level', ...SAAR },
-  'spending-real': { measure: 'consumer-spending', form: 'level', ...REAL, ...SAAR },
-  sentiment: { measure: 'consumer-sentiment', form: 'index' },
+  cpi: { measure: 'prices/consumer-price-indexes-cost-of-living-index/consumer-prices', form: 'index', price_index: 'cpi', scope: 'all-items', ...NSA },
+  'cpi-core': { measure: 'prices/consumer-price-indexes-cost-of-living-index/consumer-prices', form: 'index', price_index: 'cpi', scope: 'core', ...NSA },
+  'pce-price': { measure: 'prices/price-indexes/consumer-prices', form: 'index', price_index: 'pce', scope: 'all-items', seasonal: 'sa' },
+  'pce-price-core': { measure: 'prices/price-indexes/consumer-prices', form: 'index', price_index: 'pce', scope: 'core', seasonal: 'sa' },
+  spending: { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending', form: 'level', ...SAAR },
+  'spending-real': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending', form: 'level', ...REAL, ...SAAR },
+  sentiment: { measure: 'business-enterprise/economic-indicators/consumer-sentiment', form: 'index' },
 
-  'mortgage-rate': { measure: 'mortgage-rate', form: 'rate', term: '30-year' },
-  'house-prices': { measure: 'home-prices', form: 'index', homes: 'existing', seasonal: 'sa' },
-  'home-price': { measure: 'home-prices', form: 'level', homes: 'new', ...NSA },
-  'hoam-share': { measure: 'home-affordability', form: 'share-of-income' },
-  'hoam-index': { measure: 'home-affordability', form: 'index' },
-  homeownership: { measure: 'homeownership', form: 'rate' },
-  'household-income': { measure: 'household-income', form: 'level' },
-  'household-income-real': { measure: 'household-income', form: 'level', ...REAL },
+  'mortgage-rate': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/mortgage-rate', form: 'rate', term: '30-year' },
+  'house-prices': { measure: 'prices/consumer-price-indexes-cost-of-living-index/home-prices', form: 'index', homes: 'existing', seasonal: 'sa' },
+  'home-price': { measure: 'construction-and-housing/housing-sales/home-prices', form: 'level', homes: 'new', ...NSA },
+  'hoam-share': { measure: 'construction-and-housing/homeownership-and-housing-costs/home-affordability', form: 'share-of-income' },
+  'hoam-index': { measure: 'construction-and-housing/homeownership-and-housing-costs/home-affordability', form: 'index' },
+  homeownership: { measure: 'construction-and-housing/homeownership-and-housing-costs/homeownership', form: 'rate' },
+  'household-income': { measure: 'income-expenditures-poverty-and-wealth/household-income/household-income', form: 'level' },
+  'household-income-real': { measure: 'income-expenditures-poverty-and-wealth/household-income/household-income', form: 'level', ...REAL },
 
-  'fed-funds': { measure: 'interest-rate', form: 'rate', interest_rate: 'federal-funds' },
-  'fed-target-lower': { measure: 'interest-rate', form: 'rate', interest_rate: 'federal-funds-target', bound: 'lower' },
-  'fed-target-upper': { measure: 'interest-rate', form: 'rate', interest_rate: 'federal-funds-target', bound: 'upper' },
-  'treasury-10y': { measure: 'interest-rate', form: 'rate', interest_rate: 'treasury-10y' },
-  'treasury-2y': { measure: 'interest-rate', form: 'rate', interest_rate: 'treasury-2y' },
-  'prime-rate': { measure: 'interest-rate', form: 'rate', interest_rate: 'prime' },
+  'fed-funds': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'federal-funds' },
+  'fed-target-lower': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'federal-funds-target', bound: 'lower' },
+  'fed-target-upper': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'federal-funds-target', bound: 'upper' },
+  'treasury-10y': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'treasury-10y' },
+  'treasury-2y': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'treasury-2y' },
+  'prime-rate': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'prime' },
 
-  'covid-deaths': { measure: 'deaths', form: 'level', cause: 'covid-19' },
-  'deaths-vs-expected': { measure: 'deaths', form: 'share-of-expected', cause: 'all-causes' },
+  'covid-deaths': { measure: 'births-deaths-marriages-and-divorces/deaths/deaths', form: 'level', cause: 'covid-19' },
+  'deaths-vs-expected': { measure: 'births-deaths-marriages-and-divorces/deaths/deaths', form: 'share-of-expected', cause: 'all-causes' },
 
-  gdp: { measure: 'gdp', form: 'level', ...SAAR },
-  'gdp-real': { measure: 'gdp', form: 'level', ...REAL, ...SAAR },
-  'gdp-growth': { measure: 'gdp', form: 'growth-rate', ...REAL, ...SAAR },
-  'debt-total': { measure: 'federal-debt', form: 'level', holder: 'all' },
-  'debt-public': { measure: 'federal-debt', form: 'level', holder: 'public' },
+  gdp: { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'level', ...SAAR },
+  'gdp-real': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'level', ...REAL, ...SAAR },
+  'gdp-growth': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'growth-rate', ...REAL, ...SAAR },
+  'debt-total': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-debt', form: 'level', holder: 'all' },
+  'debt-public': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-debt', form: 'level', holder: 'public' },
 
   // BEA, NIPA Table 3.2
   'federal-total-receipts': rev('all', 'net', SAAR),
@@ -231,7 +237,7 @@ const LABELS = {
   'federal-customs-duties': rev('customs', 'net', SAAR),
   'federal-customs-duties-annual': rev('customs', 'net'),
   'federal-total-expenditures': { ...spend('all'), ...SAAR },
-  'federal-net-borrowing': { measure: 'federal-budget-balance', form: 'level', sign: 'deficit-negative', ...SAAR },
+  'federal-net-borrowing': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-budget-balance', form: 'level', sign: 'deficit-negative', ...SAAR },
 
   // Monthly Treasury Statement
   'mts-total-receipts': rev('all', 'net', NSA),
@@ -278,7 +284,7 @@ const LABELS = {
   'mts-outlays-general-government': spend('general-government'),
   'mts-outlays-net-interest': spend('net-interest'),
   'mts-outlays-offsetting-receipts': spend('offsetting-receipts'),
-  'mts-deficit': { measure: 'federal-budget-balance', form: 'level', sign: 'deficit-positive', ...NSA },
+  'mts-deficit': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-budget-balance', form: 'level', sign: 'deficit-positive', ...NSA },
 
   // Daily Treasury Statement: deposits (Table II from February 14, 2023; Table IV before)
   'dts-withheld': rev('individual-income-and-payroll', 'deposits', { payment: 'withheld', ...NSA }),
@@ -305,16 +311,16 @@ const LABELS = {
   'dts-refunds-business': rev('business', 'refunds', NSA),
   'dts-old-refunds-individual': rev('individual-income', 'refunds', NSA),
   'dts-old-refunds-business': rev('business', 'refunds', NSA),
-  'dts-economic-impact-payments': { measure: 'tax-credit-payments', form: 'level', program: 'economic-impact-payments', ...NSA },
-  'dts-advance-child-tax-credit': { measure: 'tax-credit-payments', form: 'level', program: 'advance-child-tax-credit', ...NSA },
+  'dts-economic-impact-payments': { measure: 'federal-government-finances-and-employment/federal-individual-income-tax-returns/tax-credit-payments', form: 'level', program: 'economic-impact-payments', ...NSA },
+  'dts-advance-child-tax-credit': { measure: 'federal-government-finances-and-employment/federal-individual-income-tax-returns/tax-credit-payments', form: 'level', program: 'advance-child-tax-credit', ...NSA },
 
   // OMB Historical Tables, by fiscal year
   'omb-receipts': rev('all', 'net'),
   'omb-receipts-gdp': share('all', 'share-of-gdp'),
   'omb-outlays': spend('all'),
-  'omb-outlays-gdp': { measure: 'federal-spending', form: 'share-of-gdp', function: 'all' },
-  'omb-surplus': { measure: 'federal-budget-balance', form: 'level', sign: 'deficit-negative' },
-  'omb-surplus-gdp': { measure: 'federal-budget-balance', form: 'share-of-gdp', sign: 'deficit-negative' },
+  'omb-outlays-gdp': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-spending', form: 'share-of-gdp', function: 'all' },
+  'omb-surplus': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-budget-balance', form: 'level', sign: 'deficit-negative' },
+  'omb-surplus-gdp': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-budget-balance', form: 'share-of-gdp', sign: 'deficit-negative' },
   'omb-individual': rev('individual-income', 'net'),
   'omb-corporate': rev('corporate-income', 'net'),
   'omb-social-insurance': rev('payroll', 'net'),
@@ -343,14 +349,14 @@ const LABELS = {
   'omb-customs': rev('customs', 'net'),
 
   // IRS Statistics of Income, Table 23
-  'irs-top-rate': { measure: 'tax-rate', form: 'rate', rate_kind: 'top-statutory' },
-  'irs-bottom-rate': { measure: 'tax-rate', form: 'rate', rate_kind: 'bottom-statutory' },
-  'irs-top-bracket': { measure: 'top-bracket-threshold', form: 'level' },
+  'irs-top-rate': { measure: 'federal-government-finances-and-employment/federal-individual-income-tax-returns/tax-rates', form: 'rate', rate_kind: 'top-statutory' },
+  'irs-bottom-rate': { measure: 'federal-government-finances-and-employment/federal-individual-income-tax-returns/tax-rates', form: 'rate', rate_kind: 'bottom-statutory' },
+  'irs-top-bracket': { measure: 'federal-government-finances-and-employment/federal-individual-income-tax-returns/where-the-top-tax-rate-starts', form: 'level' },
 
   // USITC duties table. Whether "duties collected" is after refunds is not stated, so no `flow`.
-  'usitc-duties': { measure: 'federal-revenue', form: 'level', revenue_source: 'customs' },
-  'usitc-duties-ratio-total': { measure: 'tariff-rate', form: 'rate', base: 'all-imports' },
-  'usitc-duties-ratio-dutiable': { measure: 'tariff-rate', form: 'rate', base: 'dutiable-imports' },
+  'usitc-duties': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-revenue', form: 'level', revenue_source: 'customs' },
+  'usitc-duties-ratio-total': { measure: 'foreign-commerce-and-aid/exports-and-imports/average-tariff-rate', form: 'rate', base: 'all-imports' },
+  'usitc-duties-ratio-dutiable': { measure: 'foreign-commerce-and-aid/exports-and-imports/average-tariff-rate', form: 'rate', base: 'dutiable-imports' },
   'usitc-imports': trade('imports', 'goods'),
 
   // Trade: BEA (quarterly at annual rates, and yearly) and Census (FT-900, monthly and yearly)
@@ -381,13 +387,13 @@ const CBO_GROUPS = { all: 'all', lowest: 'lowest-quintile', second: 'second-quin
 function readLabels(s) {
   if (s.breakdown) {
     const { of, ages, ...dims } = s.breakdown;
-    return { measure: 'unemployment', form: of === 'unemployment-rate' ? 'rate' : 'level', definition: 'u3', seasonal: 'sa', ...dims };
+    return { measure: 'labor-force-employment-and-earnings/unemployed-persons/unemployment', form: of === 'unemployment-rate' ? 'rate' : 'level', definition: 'u3', seasonal: 'sa', ...dims };
   }
   const cbo = s.slug.match(/^cbo-tax-(rate|share)--(.+)$/);
   if (cbo) {
     const income_group = CBO_GROUPS[cbo[2]];
-    return cbo[1] === 'rate' ? { measure: 'tax-rate', form: 'rate', rate_kind: 'average', income_group }
-      : { measure: 'tax-share', form: 'share-of-total', income_group };
+    return cbo[1] === 'rate' ? { measure: 'federal-government-finances-and-employment/federal-individual-income-tax-returns/tax-rates', form: 'rate', rate_kind: 'average', income_group }
+      : { measure: 'federal-government-finances-and-employment/federal-individual-income-tax-returns/share-of-federal-taxes-paid', form: 'share-of-total', income_group };
   }
   return null;
 }
