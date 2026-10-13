@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build E: map, then focus</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../builder/builder.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script type="module">
+import { page, state, struct, tree, datasets, structureSwitch, searchBox, onlyDataBox, findSub, subTotals } from './frame.js';
+
+// E: Build opens on a map of the whole structure, across the full width of the catalogue, in columns. Choosing a
+// subsection folds the map into a left column that keeps only its category open, and the datasets take the rest.
+// "All sections" goes back to the map. The filter and the structure switch stay in one bar across the top.
+let scrollTo = false;
+page({
+  variant: 'E. Map, then focus',
+  title: 'the whole structure across the panel, then a column',
+  lede: 'Build opens on the whole structure, spread across the catalogue in columns, so all 30 sections and 147 subsections (or CAP’s 21 topics and 213 subtopics) are visible at once. Choosing a subsection folds the map into a column, with only its section open, and lists the datasets beside it.',
+  notes: `<h2>How it works</h2><ul>
+    <li><b>Two states.</b> The map (full width, three columns, everything open) for getting a sense of the whole; the focus (a 360px column and the datasets) once something is chosen.</li>
+    <li><b>The bar across the top</b> holds the structure switch, the filter and “Only with data” in both states. Filtering the map narrows it in place; filtering in focus narrows the column.</li>
+    <li><b>In focus,</b> only the chosen section is open; others can be opened from their headings. “← All sections” returns to the map.</li>
+    <li>Good: the best overview, uses the panel's full width, and the datasets get room once chosen. Weak: the layout changes under you when you choose; two states to learn.</li></ul>`,
+  render(el) {
+    const t = subTotals();
+    const bar = `<div class="e-bar">${structureSwitch()}${searchBox()}${onlyDataBox()}</div>`;
+    if (!state.selected) {
+      el.innerHTML = `${bar}<div class="e-map"><p class="stand-in">${t.cats} ${struct().levels[0]}s · ${t.subs} ${struct().levels[1]}s · ${t.withData} hold data. Choose one to see its datasets.</p>${tree()}</div>`;
+      return;
+    }
+        el.innerHTML = `${bar}<div class="e-focus"><div class="rail">${tree({ hitLimit: 2 })}</div>${datasets({ back: true })}</div>`;
+    // Just chosen: bring it into view in the column, without moving the page.
+    const rail = el.querySelector('.rail'), sel = rail.querySelector('.sel');
+    if (scrollTo && sel) rail.scrollTop = sel.offsetTop - rail.offsetTop - 120;
+    scrollTo = false;
+  },
+  // Choosing folds every other category, so the column opens on the chosen one; others open from their headings.
+  init: { select: () => { const { cat } = findSub(state.selected); struct().categories.forEach(c => c.id !== cat.id && state.closed.add(c.id)); state.closed.delete(cat.id); scrollTo = true; } },
+});
+</script>
+</body>
+</html>

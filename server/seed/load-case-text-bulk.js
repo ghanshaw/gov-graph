@@ -35,7 +35,7 @@ import axios from 'axios';
 import { extractPdfLines } from '../lib/pdf-lines.js';
 import { parseSlipOpinion, checkDecision } from '../lib/parse-slip-opinion.js';
 import { SCHEMA, readPdf, storeDecision, membersOn, retrying } from '../lib/decision-storage.js';
-import { DATA_DIR, mirrorFile } from '../lib/data-dir.js';
+import { DATA_DIR, mirrorFile, recordFetch } from '../lib/data-dir.js';
 
 const arg = name => {
   const i = process.argv.indexOf(name);
@@ -75,6 +75,7 @@ async function termList(term) {
     const { data } = await axios.get(url, { headers: browser, responseType: 'text' });
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, data);
+    recordFetch(file, url);
   }
   const html = fs.readFileSync(file, 'utf8');
   const rows = [];

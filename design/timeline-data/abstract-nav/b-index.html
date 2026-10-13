@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abstract nav B: section index</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../builder/builder.css">
+<link rel="stylesheet" href="abstract.css">
+</head>
+<body>
+<script type="module">
+import { SECTIONS, on, count, sectionCount, sectionOn, subCount, find, esc, frame, pane, onPaneClick } from './abstract-frame.js';
+
+// B: the rail holds only the 30 sections, one line each. Choosing one fills the panel with that section's
+// subsections in book order, each a row with its measures as cards; empty ones say they are not collected yet.
+// Choosing a measure turns the panel into the builder, with a way back to the section.
+const body = frame({
+  onMeasure: key => select(key),
+  option: 'Option B',
+  title: 'sections in the rail, the section’s index in the panel',
+  lede: 'The rail lists the 30 sections, those with data first. Choosing one fills the panel with its subsections in book order, each with its measures as cards; empty subsections are listed in grey. A measure opens the builder in the panel, with a link back to the section.',
+  notes: `<h2>How it works</h2><ul>
+    <li><b>Two steps.</b> Section in the rail, then subsection and measure in the panel. The rail stays one level, so long section names have room and nothing indents.</li>
+    <li><b>The section’s index shows the whole section,</b> filled and empty subsections alike, so what GovGraph has reads against what the book covers (“Construction spending: not collected yet”). Empty subsections fold to one line when there are more than three.</li>
+    <li><b>Sections with data first,</b> then “Not collected yet” with the rest, still in book order and still clickable.</li>
+    <li><b>“N on”</b> appears on the section in the rail and on the measure’s card, so what is on can be found from either level.</li>
+    <li>Good: room for the book’s wording, the gaps are visible per section, and it has a natural home for the coverage report (Phase 3). Weak: one more click to reach a measure; the measures of two sections can’t be seen at once.</li>
+    <li>The placements are a proposal for the mock; Phase 4 of <code>features/statistical-abstract</code> decides them.</li></ul>`,
+});
+
+let section = 9;
+let current = null;
+const unfolded = new Set();
+
+function secButton(s) {
+  const n = sectionOn(s), c = sectionCount(s);
+  return `<button class="sec${c ? '' : ' bare'}${s.n === section ? ' on' : ''}" data-sec="${s.n}">
+    <span class="num">${s.n}</span><span class="t">${esc(s.title)}</span>
+    <span class="end">${n ? `<span class="badge">${n} on</span>` : ''}${c ? `<span class="n">${c}</span>` : ''}</span></button>`;
+}
+
+function index(s) {
+  const filled = s.subsections.filter(u => subCount(u));
+  const empty = s.subsections.filter(u => !subCount(u));
+  const fold = empty.length > 3 && !unfolded.has(s.n);
+  const row = u => `<div class="part${subCount(u) ? '' : ' bare'}"><h4>${esc(u.title)}</h4>
+    ${u.measures.length ? `<div class="cards">${u.measures.map(m => `<button class="card${on[m.key] ? ' has-on' : ''}" data-m="${m.key}">${esc(m.label)}${m.judgement ? ' <span class="mark" title="Placed by GovGraph">◇</span>' : ''}${on[m.key] ? `<span class="badge">${on[m.key]} on</span>` : ''}<span class="n">${count(m)}</span></button>`).join('')}</div>`
+      : `<span class="wanted">Not collected yet</span>`}</div>`;
+  // Book order, except that a long run of empty subsections folds into one line at the end.
+  const rows = fold ? [...filled.map(row), `<div class="part bare"><h4>${empty.length} more subsections</h4><span class="wanted">${empty.map(u => esc(u.title)).join(' · ')}<br><button class="folded" data-unfold="${s.n}">Show in book order</button></span></div>`]
+    : s.subsections.map(row);
+  return `<div class="index">
+    <h3>Section ${s.n}. ${esc(s.title)}</h3>
+    <p class="meta"><span>Tables ${s.tables}</span><span>${s.subsections.length || 'No'} subsections</span><span>${filled.length ? `${filled.length} with data` : 'nothing collected yet'}</span></p>
+    ${s.subsections.length ? rows.join('') : `<p class="empty">The book prints this section without subsections. Nothing collected yet.</p>`}
+  </div>`;
+}
+
+// From the Structure tab: the measure's section in the rail, the measure in the builder.
+function select(key) { current = key; section = find(key).section.n; render(); }
+
+function render() {
+  const has = SECTIONS.filter(s => sectionCount(s)), rest = SECTIONS.filter(s => !sectionCount(s));
+  const s = SECTIONS.find(x => x.n === section);
+  body.innerHTML = `<nav class="secs" aria-label="Sections">
+      <p class="secs-label">With data · ${has.length}</p>${has.map(secButton).join('')}
+      <p class="secs-label later">Not collected yet · ${rest.length}</p>${rest.map(secButton).join('')}
+    </nav>${current ? pane(current, { back: true }) : index(s)}`;
+}
+
+body.addEventListener('click', e => {
+  if (onPaneClick(e, render)) return;
+  const t = e.target.closest('[data-sec],[data-m],[data-back],[data-unfold]');
+  if (!t) return;
+  if (t.dataset.m) current = t.dataset.m;
+  else if (t.dataset.back) current = null;
+  else if (t.dataset.unfold) unfolded.add(+t.dataset.unfold);
+  else { section = +t.dataset.sec; current = null; }
+  render();
+});
+const q = new URLSearchParams(location.search);
+if (q.get('s')) section = +q.get('s');
+if (q.get('m') && find(q.get('m'))) { current = q.get('m'); section = find(current).section.n; }
+render();
+</script>
+</body>
+</html>

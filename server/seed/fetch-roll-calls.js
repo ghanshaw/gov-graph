@@ -18,7 +18,7 @@
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import { BILL_TYPES, bulkFile, congressRange, openZip, mirrorFile, LEGISLATOR_FILES, DATA_DIR } from '../lib/data-dir.js';
+import { BILL_TYPES, bulkFile, congressRange, openZip, mirrorFile, LEGISLATOR_FILES, DATA_DIR, recordFetch } from '../lib/data-dir.js';
 import { parseBillStatus } from '../lib/parse-bill-status.js';
 
 const arg = name => {
@@ -45,6 +45,7 @@ async function download(url) {
   if (url.endsWith('.xml') && !/^\s*<\?xml/.test(data)) throw new Error('not an XML file');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, data);
+  recordFetch(file, url);
   await sleep(DELAY_MS);
   return 'downloaded';
 }

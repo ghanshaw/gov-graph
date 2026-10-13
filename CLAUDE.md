@@ -68,7 +68,8 @@ The live database has moved past the pattern below. Tables: `executive_documents
 `corpus`, `corpus_tags` (empty, unused), `tags`, `item_tags`, `court_decisions`, `court_votes`, `cases`, `case_opinions`, `courts`, `legislation`,
 `legislative_documents`, `legislative_document_sections`, `bill_actions`, `roll_calls`, `member_votes`,
 `congresses`, `people`, `person_roles`, `bill_sponsors`, `bill_relationships`, `bill_titles` (see Search under Bill Text), `proposals`, `economic_series` / `economic_observations`
-(see Economic Data), `periods` (see Timeline), `reports` / `report_parts` (see Reports), the U.S. Code tables `usc_release_points`,
+(see Economic Data), `periods` (see Timeline), `reports` / `report_parts` (see Reports), the source registry
+`source_organizations`, `source_lineage`, `source_datasets`, `source_dataset_organizations`, `source_files` (see Data Sources), the U.S. Code tables `usc_release_points`,
 `usc_titles`, `usc_nodes`, `usc_section_versions`, `usc_source_credits` (see U.S. Code below), and the
 case-graph tables `cg_cases`, `cg_case_relationships`, `cg_scdb_cases`, `cg_data_sources`.
 There is no `documents` or `document_relationships` table, and `server/seed/schema.sql`
@@ -570,7 +571,7 @@ Dimensions: every series is labelled with what it measures, the form it is print
 that apply (`server/lib/series-dimensions.js`, test `series-dimensions.test.js`), for a composable picker on the
 timeline. A new series must be labelled there or the test fails. Served as `EconomicSeries.dimensions` and
 `seriesDimensionVocabulary`; the catalogue's Build mode (`DatasetBuilder.jsx`, `buildTree` in `client/src/dimensions.js`: the options as a tree, each choice opening what exists for it; sex, race, age and education as one Demographics level; click chooses, × takes out; the datasets reached go on the timeline)
-narrows a measure by them. Tracked in `features/dataset-dimensions/index.md`.
+narrows a measure by them; measures are reached through a category structure (see Placements under Statistical Abstract). Tracked in `features/dataset-dimensions/index.md`.
 
 Names: every series is shown by its stored `economic_series.name`, everywhere (the Economy page, the
 timeline, About the data; `useSeriesList.js`); `ECONOMY_TABS` names only pairs. Names follow
@@ -580,6 +581,81 @@ apart, the publisher in brackets only when two print the same measure. They are 
 `server/lib/economic-series.js` and checked by `server/lib/series-names.js` (test: `series-names.test.js`);
 the loader refuses names that break the rules. After renaming, `load-economic-series.js --names-only`
 updates names and descriptions without reading any file (renamed 2026-10-11).
+
+## Data Sources
+
+Every dataset GovGraph uses, at `/sources` and `/sources/<dataset>` (`DataSources.jsx`, `SourceDataset.jsx`;
+queries in `server/sources.js`). Organizations (kind, branch, parent), their lineage (renamed, merged,
+transferred, split, abolished, with the act as a `bill:` / `fr:` reference) and datasets (publishers and their
+roles, licence, how fetched, status, whether the 2012 Statistical Abstract cites it) are written by hand in
+`server/seed/data/sources.json`; `server/lib/sources.js` has the vocabularies, checks and schema. A dataset owns
+its files by path prefix in the data folder (`paths`); a series belongs to the dataset of its file, or by
+`series_sources` for demographic series. Every new series and every new data folder must match a dataset
+(`sources.test.js`, and the loader reports files that match none).
+
+    node --env-file=server/.env server/seed/load-sources.js [--dry-run] [--no-files]
+
+- Dataset kinds: `statistics`, `documents`, `classification` (a scheme for sorting other data, such as CAP's codebook).
+- Licences: `public-domain` (federal works, 17 U.S.C. 105, or CC0), `open-licence`, `free-with-terms`,
+  `licensed`, `unchecked`. Anything not federal is read on the publisher's site and dated (`checked`).
+  Licensed data is listed, not collected (user, 2026-10-13).
+- Access, most preferred first: bulk, file, API, API with key, web page, Internet Archive. Bulk downloads are
+  preferred over API keys (user, 2026-10-13). A contact address goes in the User-Agent only where the publisher
+  requires one (BLS) (user, 2026-10-13).
+- A dataset the Statistical Abstract does not cite has `in_abstract: false` and says why (`outside_abstract`).
+- The University of Michigan's consumer sentiment and Freddie Mac's mortgage rates are kept for now, although
+  their terms forbid republishing (user, 2026-10-13); both are recorded as `free-with-terms` with the limits quoted.
+- The list page has a search field (every word must appear in a dataset's name, description, notes or its
+  organizations' names) that combines with the rail's filters; it is not kept in the URL.
+- Every downloader calls `recordFetch(file, url, { archive })` (`lib/data-dir.js`), which appends to
+  `<data dir>/fetch-log.jsonl`; the loader reads it into `source_files` with each file's sha-256.
+
+Tracked in `features/data-sources/index.md`.
+
+## Statistical Abstract
+
+The **Statistical Abstract of the United States, 2012** (131st edition, the last from the Census Bureau; ProQuest
+continues it under licence) is the foundation of all data collection (user, 2026-10-13):
+
+- **Shopping list.** Every table (about 1,400 in 30 sections) has a source note naming its publisher. GovGraph
+  collects that publisher's current, full data, not the Abstract's 2011 numbers. Every section is in scope,
+  including Puerto Rico and the Island Areas, International Statistics, and tables by state or country.
+- **Organisation.** The timeline catalogue's Build mode follows the Abstract's order, section → subsection, used
+  as is (see Placements below).
+- The whole book is in the data folder (`www2.census.gov/library/publications/2011/compendia/statab/131ed/2012-statab.pdf`).
+  Section pages are `census.gov/library/publications/2011/compendia/statab/131ed/<slug>.html` (for example
+  `construction-housing.html`); each lists its subsections (`<h3>`, alphabetical on the page, so book order comes
+  from table numbers) with every table as `…/131ed/tables/12sNNNN.xls` ("973 - Price Indexes of New One-Family
+  Houses Sold, by Region").
+
+The page **Structure** (`/structure`, `pages/Structure.jsx`; `/abstract` redirects) shows the category structures
+GovGraph's data can be organised by, as nested categories: the Statistical Abstract (also shown as the book: sections,
+table ranges, printed pages, appendices) and the Comparative Agendas Project's topics (codes, descriptions). Each
+structure is a JSON file in `server/seed/data/structures/` (`{ id, name, basis, levels, source, categories }`, a
+category `{ id, name, children }` plus its scheme's fields), imported by the client through the `@data` alias in
+`client/vite.config.js` (`client/src/structures.js`). No database tables. The Abstract's file is built from the book's PDF by
+`server/seed/build-abstract-structure.js` (contents; section numbers as codes; each section's opening paragraph as its
+description; subsections have neither). CAP's file is rebuilt by `server/seed/fetch-cap-codebook.js`
+(saves the codebook and its licence page to the data folder; parser `server/lib/parse-cap-codebook.js`, with a test); CC BY-NC-SA 4.0,
+so the derived file carries the same licence. Codes are hidden unless "Codes" is ticked. The downloaded Abstract PDF repeats
+Education's pages and stops at page 876. Tracked in `features/category-breakdowns/index.md`.
+
+**Placements** (2026-10-13): the measures (`MEASURES` in `server/lib/series-dimensions.js`) are GovGraph's own flat
+list (user: no grouping level of our own), placed in each structure by `server/seed/data/placements.json`
+(`{ [structure id]: { [measure]: { category, basis: 'table', tables } | { category, basis: 'judgement', reason } |
+{ left_out: true, reason } } }`). The structure files are never edited for this. A placement may point at any level;
+one place per measure per structure. All 27 start as `judgement`: the Abstract's tables are not read yet, and CAP sorts
+documents, not statistics. `server/lib/placements.test.js` fails when a measure is neither placed nor left out in a
+structure, a category id does not exist, or a basis lacks its tables or reason. A new measure needs a placement in
+every structure.
+
+The timeline catalogue's **Build** tab (`DatasetBuilder.jsx`, left column `StructureTree.jsx`; design D.1 in
+`design/timeline-data/build-structures/`) is a structure (Statistical Abstract or Policy topics (CAP), switchable)
+nested down to the measures as leaves (`withMeasures` in `client/src/structures.js`), with a filter over category
+names, CAP's subtopic descriptions, measures and dataset names, "Only with data", and "Not in this structure" last.
+Choosing a measure opens its choices as before, headed by its path and why it sits there. Below 860px the tree gives
+way to a select grouped by top-level category. Tracked in `features/category-breakdowns/index.md`; table-based
+placements wait for Phase 2 of `features/statistical-abstract/index.md`.
 
 ## PDFs
 

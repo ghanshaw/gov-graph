@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abstract nav A: contents</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../builder/builder.css">
+<link rel="stylesheet" href="abstract.css">
+</head>
+<body>
+<script type="module">
+import { SECTIONS, on, count, sectionCount, sectionOn, subCount, measuresOf, find, esc, frame, pane, onPaneClick } from './abstract-frame.js';
+
+// A: the rail is the book's contents. Sections are numbered as printed; opening one shows its subsections in
+// book order, and under each the measures it holds. "With data" hides what holds nothing yet; "All 30" shows the
+// whole book, empty parts in grey, so the reader sees what is still to collect.
+const body = frame({
+  onMeasure: key => select(key),
+  option: 'Option A',
+  title: 'the book’s contents as the rail',
+  lede: 'The measure list becomes the Abstract’s table of contents: section → subsection → measure, in book order, in the one rail. Sections open and close; the measure chosen opens the builder on the right. A switch shows only what holds data, or all 30 sections with the empty ones in grey.',
+  notes: `<h2>How it works</h2><ul>
+    <li><b>Three levels in one rail.</b> Section (numbered as printed), subsection (small, grey, not clickable), measure (the clickable row, as today: name, “N on”, count).</li>
+    <li><b>With data / All 30.</b> “With data” is the default: 10 sections, and only their subsections that hold something. “All 30” shows the whole book; a section with nothing yet is grey, with no count, and opens to its subsections in grey.</li>
+    <li><b>Opens where you are.</b> Sections holding a dataset that is on start open, so what is on the timeline is visible without hunting.</li>
+    <li><b>Placed by GovGraph</b> (◇): a measure no Abstract table holds; the reason is in the builder.</li>
+    <li>Good: one place to look, mirrors the book, scales to 1,400 tables by folding. Weak: long section names wrap in a narrow rail (widened to 290px); three levels of indentation.</li>
+    <li>The placements are a proposal for the mock; Phase 4 of <code>features/statistical-abstract</code> decides them.</li></ul>`,
+});
+
+let all = false;
+let current = 'federal-debt';
+const open = new Set(SECTIONS.filter(s => sectionOn(s) > 0 || measuresOf(s).some(m => m.key === current)).map(s => s.n));
+
+// From the Structure tab: open the measure's section and choose it.
+function select(key) { current = key; open.add(find(key).section.n); render(); }
+
+function render() {
+  const list = SECTIONS.filter(s => all || sectionCount(s) > 0).map(s => {
+    const bare = sectionCount(s) === 0, isOpen = open.has(s.n), n = sectionOn(s);
+    const subs = s.subsections.filter(u => all || subCount(u) > 0);
+    return `<button class="sec${bare ? ' bare' : ''}" data-sec="${s.n}" aria-expanded="${isOpen}">
+        <span class="num">${s.n}</span><span class="t">${esc(s.title)}</span>
+        <span class="end">${!isOpen && n ? `<span class="badge">${n} on</span>` : ''}${bare ? '' : `<span class="n">${sectionCount(s)}</span>`}</span></button>
+      ${isOpen ? `<div class="subs">${subs.length ? subs.map(u => `
+        <div class="sub${subCount(u) ? '' : ' bare'}">${esc(u.title)}</div>
+        ${u.measures.map(m => `<button class="meas${m.key === current ? ' on' : ''}" data-m="${m.key}">
+          <i>${esc(m.label)}${m.judgement ? ' <span class="mark" title="Placed by GovGraph">◇</span>' : ''}</i>${on[m.key] ? `<span class="badge">${on[m.key]} on</span>` : ''}<span class="n">${count(m)}</span></button>`).join('')}`).join('')
+        : `<div class="sub bare">No subsections; ${esc(s.tables)}</div>`}</div>` : ''}`;
+  }).join('');
+  const withData = SECTIONS.filter(s => sectionCount(s) > 0).length;
+  body.innerHTML = `<nav class="toc" aria-label="Statistical Abstract">
+      <div class="toc-head"><span>Contents</span><span class="seg"><button class="${all ? '' : 'on'}" data-all="0">With data · ${withData}</button><button class="${all ? 'on' : ''}" data-all="1">All 30</button></span></div>
+      <div class="toc-list">${list}</div></nav>${pane(current)}`;
+}
+
+body.addEventListener('click', e => {
+  if (onPaneClick(e, render)) return;
+  const t = e.target.closest('[data-sec],[data-m],[data-all]');
+  if (!t) return;
+  if (t.dataset.all) all = t.dataset.all === '1';
+  else if (t.dataset.m) current = t.dataset.m;
+  else { const n = +t.dataset.sec; open.has(n) ? open.delete(n) : open.add(n); }
+  render();
+});
+const q = new URLSearchParams(location.search);
+if (q.get('all')) all = true;
+if (q.get('m') && find(q.get('m'))) { current = q.get('m'); open.add(find(current).section.n); }
+render();
+</script>
+</body>
+</html>

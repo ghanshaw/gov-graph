@@ -10,7 +10,7 @@
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import { mirrorFile } from './data-dir.js';
+import { mirrorFile, recordFetch } from './data-dir.js';
 
 const CONGRESS = 'https://api.congress.gov/v3';
 const GOVINFO_API = 'https://api.govinfo.gov';
@@ -58,6 +58,7 @@ async function statuteCitation(id) {
     const { data } = await axios.get(url, { responseType: 'text', headers: { 'User-Agent': 'Mozilla/5.0 (govgraph)' } });
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, data);
+    recordFetch(file, url);
   }
   const m = /\[\[Page (\d+) STAT\. (\d+)\]\]/.exec(fs.readFileSync(file, 'utf8'));
   return m ? `${m[1]} Stat. ${m[2]}` : null;

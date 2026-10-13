@@ -26,7 +26,7 @@ import path from 'path';
 import crypto from 'crypto';
 import axios from 'axios';
 import pg from 'pg';
-import { mirrorFile } from '../lib/data-dir.js';
+import { mirrorFile, recordFetch } from '../lib/data-dir.js';
 import { justicesFromFjc } from '../lib/parse-fjc-justices.js';
 import { SCHEMA as DECISION_SCHEMA, linkAllJustices } from '../lib/decision-storage.js';
 
@@ -41,6 +41,7 @@ async function readDirectory() {
     const { data } = await axios.get(FJC_URL, { responseType: 'text', transformResponse: x => x, headers: { 'User-Agent': 'Mozilla/5.0 (govgraph)' } });
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, data);
+    recordFetch(file, FJC_URL);
     console.log(`  downloaded ${path.basename(file)}`);
   }
   return fs.readFileSync(file, 'utf8');

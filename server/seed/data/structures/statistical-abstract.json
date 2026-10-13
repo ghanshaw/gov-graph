@@ -1,0 +1,1198 @@
+{
+  "id": "statistical-abstract",
+  "name": "Statistical Abstract",
+  "basis": "Follows the sections and subsections of the Statistical Abstract of the United States, 2012.",
+  "levels": [
+    "section",
+    "subsection"
+  ],
+  "source": {
+    "title": "Statistical Abstract of the United States: 2012 (131st edition), U.S. Census Bureau",
+    "url": "https://www.census.gov/library/publications/2011/compendia/statab/131ed.html",
+    "read": "2026-10-13",
+    "dataset": "statistical-abstract",
+    "note": "Read from 2012-statab.pdf in the data folder: the contents (pages vii–x), and each section’s opening paragraph as its description. A section’s code is its number; the book does not number subsections. Page numbers are as printed. That PDF prints Education twice and ends at page 876."
+  },
+  "categories": [
+    {
+      "id": "population",
+      "code": "1",
+      "name": "Population",
+      "description": "This section presents statistics on the growth, distribution, and characteristics of the U.S. population. The principal source of these data is the U.S. Census Bureau, which conducts a decennial census of population, a monthly population survey, a program of population estimates and projections, and a number of other periodic surveys.",
+      "tables": [
+        1,
+        77
+      ],
+      "page": 1,
+      "children": [
+        {
+          "id": "population/estimates-and-projections-by-age-sex-race-and-hispanic-origin",
+          "name": "Estimates and projections by age, sex, race, and Hispanic origin",
+          "page": 8
+        },
+        {
+          "id": "population/states-metropolitan-areas-cities",
+          "name": "States, metropolitan areas, cities",
+          "page": 18
+        },
+        {
+          "id": "population/mobility-status",
+          "name": "Mobility status",
+          "page": 37
+        },
+        {
+          "id": "population/profiles-of-elderly-racial-and-hispanic-origin-populations",
+          "name": "Profiles of elderly, racial, and Hispanic-origin populations",
+          "page": 39
+        },
+        {
+          "id": "population/native-and-foreign-born-populations",
+          "name": "Native and foreign-born populations",
+          "page": 43
+        },
+        {
+          "id": "population/immigration",
+          "name": "Immigration",
+          "page": 46
+        },
+        {
+          "id": "population/ancestry-languages",
+          "name": "Ancestry, languages",
+          "page": 50
+        },
+        {
+          "id": "population/marital-status-and-households",
+          "name": "Marital status and households",
+          "page": 52
+        },
+        {
+          "id": "population/religion",
+          "name": "Religion",
+          "page": 61
+        }
+      ]
+    },
+    {
+      "id": "births-deaths-marriages-and-divorces",
+      "code": "2",
+      "name": "Births, Deaths, Marriages, and Divorces",
+      "description": "This section presents vital statistics data on natality, mortality, marriages, and divorces, as well as factors that help explain fertility, such as, use of contraception, sexual activity, and prevalence of abortions and fetal deaths. Vital statistics are collected and disseminated for the nation through the National Vital Statistics System by the National Center for Health Statistics (NCHS) and published annually in Vital Statistics of the United States, National Vital Statistics Reports (NVSR), and other selected publications. Reports are also issued by various state bureaus participating in the National Vital Statistics System. Factors influencing fertility are collected in NCHS’s National Survey of Family Growth and the U.S. Census Bureau’s Current Population Survey and American Community Survey published in Fertility of American Women. Data on abortions are published by the Alan Guttmacher Institute in selected issues of Perspectives on Sexual and Reproductive Health.",
+      "tables": [
+        78,
+        133
+      ],
+      "page": 63,
+      "children": [
+        {
+          "id": "births-deaths-marriages-and-divorces/births",
+          "name": "Births",
+          "page": 65
+        },
+        {
+          "id": "births-deaths-marriages-and-divorces/life-expectancy",
+          "name": "Life expectancy",
+          "page": 77
+        },
+        {
+          "id": "births-deaths-marriages-and-divorces/deaths",
+          "name": "Deaths",
+          "page": 81
+        },
+        {
+          "id": "births-deaths-marriages-and-divorces/marriages-and-divorces",
+          "name": "Marriages and divorces",
+          "page": 96
+        }
+      ]
+    },
+    {
+      "id": "health-and-nutrition",
+      "code": "3",
+      "name": "Health and Nutrition",
+      "description": "This section presents statistics on health expenditures and insurance coverage, including Medicare and Medicaid, medical personnel, hospitals, nursing homes and other care facilities, injuries, diseases, disability status, nutritional intake of the population, and food consumption. Summary statistics showing recent trends on health care and discussions of selected health issues are published annually by the U.S. National Center for Health Statistics (NCHS) in Health, United States. Data on national health expenditures, medical costs, and insurance coverage are compiled by the U.S. Centers for Medicare & Medicaid Services (CMS) and appear on the CMS Web site at <http://www.cms.gov/NationalHealthExpendData/> and in the annual Medicare and Medicaid Statistical Supplement to the Health Care Financing Review. Statistics on health insurance are also collected by NCHS and are published in Series 10 of Vital and Health Statistics. NCHS also conducts periodic surveys of nutrient levels in the population, including estimates of food and nutrient intake, overweight and obesity, hypercholesterolemia, hypertension, and clinical signs of malnutrition. Data are published in Series 10 and 11 of Vital and Health Statistics. Statistics on hospitals are published annually by the Health Forum, L.L.C.; an American Hospital Association (AHA) company, in AHA Hospital Statistics. The primary source for data on nutrition and on annual per capita consumption of food is Diet Quality and Food Consumption, issued by the U.S. Department of Agriculture. Data are available on the Web site at <http://www.ers.usda.gov/Briefing/DietQuality>.",
+      "tables": [
+        134,
+        218
+      ],
+      "page": 99,
+      "children": [
+        {
+          "id": "health-and-nutrition/national-health-expenditure-accounts",
+          "name": "National Health Expenditure Accounts",
+          "page": 101
+        },
+        {
+          "id": "health-and-nutrition/medicare-medicaid-and-schip",
+          "name": "Medicare, Medicaid, and SCHIP",
+          "page": 106
+        },
+        {
+          "id": "health-and-nutrition/health-insurance",
+          "name": "Health insurance",
+          "page": 111
+        },
+        {
+          "id": "health-and-nutrition/employment",
+          "name": "Employment",
+          "page": 114
+        },
+        {
+          "id": "health-and-nutrition/hospitals",
+          "name": "Hospitals",
+          "page": 118
+        },
+        {
+          "id": "health-and-nutrition/health-measures",
+          "name": "Health measures",
+          "page": 123
+        },
+        {
+          "id": "health-and-nutrition/food-consumption-nutrition",
+          "name": "Food consumption, nutrition",
+          "page": 140
+        }
+      ]
+    },
+    {
+      "id": "education",
+      "code": "4",
+      "name": "Education",
+      "description": "This section presents data primarily concerning formal education as a whole, at various levels, and for public and private schools. Data shown relate to the school-age population and school enrollment, educational attainment, education personnel, and financial aspects of education. In addition, data are shown for charter schools, homeschooling, security measures used in schools, technology usage in schools, and academic libraries. The chief sources are the decennial census of population and the Current Population Survey (CPS), both conducted by the U.S. Census Bureau (see text, Section 1, Population); annual, biennial, and other periodic surveys conducted by the National Center for Education Statistics (NCES), a part of the U.S. Department of Education; and surveys conducted by the National Education Association.",
+      "tables": [
+        219,
+        305
+      ],
+      "page": 143,
+      "children": [
+        {
+          "id": "education/school-enrollment",
+          "name": "School enrollment",
+          "page": 145
+        },
+        {
+          "id": "education/educational-attainment",
+          "name": "Educational attainment",
+          "page": 151
+        },
+        {
+          "id": "education/technology-in-schools",
+          "name": "Technology in schools",
+          "page": 171
+        },
+        {
+          "id": "education/degrees-conferred",
+          "name": "Degrees conferred",
+          "page": 188
+        }
+      ]
+    },
+    {
+      "id": "law-enforcement-courts-and-prisons",
+      "code": "5",
+      "name": "Law Enforcement, Courts, and Prisons",
+      "description": "This section presents data on crimes committed, victims of crimes, arrests, and data related to criminal violations and the criminal justice system. The major sources of these data are the Bureau of Justice Statistics (BJS), the Federal Bureau of Investigation (FBI), and the Administrative Office of the U.S. Courts. BJS issues many reports—see our Guide to Sources for a complete listing. The Federal Bureau of Investigation’s major annual reports are Crime in the United States, Law Enforcement Officers Killed and Assaulted, annual, and Hate Crimes, annual, which present data on reported crimes as gathered from state and local law enforcement agencies.",
+      "tables": [
+        306,
+        357
+      ],
+      "page": 193,
+      "children": [
+        {
+          "id": "law-enforcement-courts-and-prisons/crime-rates",
+          "name": "Crime rates",
+          "page": 196
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/crimes-and-arrests",
+          "name": "Crimes and arrests",
+          "page": 207
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/courts",
+          "name": "Courts",
+          "page": 209
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/juveniles-child-abuse",
+          "name": "Juveniles, child abuse",
+          "page": 214
+        },
+        {
+          "id": "law-enforcement-courts-and-prisons/prisoners-and-inmates",
+          "name": "Prisoners and inmates",
+          "page": 217
+        }
+      ]
+    },
+    {
+      "id": "geography-and-environment",
+      "code": "6",
+      "name": "Geography and Environment",
+      "description": "This section presents a variety of information on the physical environment of the United States, starting with basic area measurement data and ending with climatic data for selected weather stations around the country. The subjects covered between those points are mostly concerned with environmental trends but include related subjects such as land use, water consumption, air pollutant emissions, toxic releases, oil spills, hazardous waste sites, municipal waste and recycling, threatened and endangered wildlife, and the environmental industry.",
+      "tables": [
+        358,
+        396
+      ],
+      "page": 221,
+      "children": [
+        {
+          "id": "geography-and-environment/land-and-water",
+          "name": "Land and water",
+          "page": 223
+        },
+        {
+          "id": "geography-and-environment/air-quality",
+          "name": "Air quality",
+          "page": 229
+        },
+        {
+          "id": "geography-and-environment/municipal-hazardous-waste",
+          "name": "Municipal hazardous waste",
+          "page": 231
+        },
+        {
+          "id": "geography-and-environment/weather",
+          "name": "Weather",
+          "page": 236
+        }
+      ]
+    },
+    {
+      "id": "elections",
+      "code": "7",
+      "name": "Elections",
+      "description": "This section relates primarily to presidential, congressional, and gubernatorial elections. Also presented are summary tables on congressional legislation; state legislatures; Hispanic and female officeholders; population of voting age; voter participation; and campaign finances.",
+      "tables": [
+        397,
+        427
+      ],
+      "page": 243,
+      "children": [
+        {
+          "id": "elections/vote-results",
+          "name": "Vote results",
+          "page": 248
+        },
+        {
+          "id": "elections/campaign-finances",
+          "name": "Campaign finances",
+          "page": 263
+        }
+      ]
+    },
+    {
+      "id": "state-and-local-government-finances-and-employment",
+      "code": "8",
+      "name": "State and Local Government Finances and Employment",
+      "description": "This section presents data on revenues, expenditures, debt, and employment of state and local governments. Nationwide statistics relating to state and local governments, their numbers, finances, and employment are compiled primarily by the U.S. Census Bureau through a program of censuses and surveys. Every fifth year (for years ending in “2” and “7”), the Census Bureau conducts a census of governments involving collection of data for all governmental units in the United States. In addition, the Census Bureau conducts annual surveys which cover all the state governments and a sample of local governments.",
+      "tables": [
+        428,
+        468
+      ],
+      "page": 265,
+      "children": [
+        {
+          "id": "state-and-local-government-finances-and-employment/governmental-units",
+          "name": "Governmental units",
+          "page": 267
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/aid-to-state-and-local-governments",
+          "name": "Aid to state and local governments",
+          "page": 268
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/state-and-local-governments",
+          "name": "State and local governments",
+          "page": 273
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/state-government-finances",
+          "name": "State government finances",
+          "page": 286
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/local-government-finances",
+          "name": "Local government finances",
+          "page": 292
+        },
+        {
+          "id": "state-and-local-government-finances-and-employment/employment-and-payroll",
+          "name": "Employment and payroll",
+          "page": 300
+        }
+      ]
+    },
+    {
+      "id": "federal-government-finances-and-employment",
+      "code": "9",
+      "name": "Federal Government Finances and Employment",
+      "description": "This section presents statistics relating to the financial structure and the civilian employment of the federal government. The fiscal data cover taxes, other receipts, outlays, and debt. The principal sources of fiscal data are the Budget of the United States Government and related documents, published annually by the Office of Management and Budget (OMB), and the U.S. Department of the Treasury’s United States Government Annual Report and its Appendix. Detailed data on tax returns and collections are published annually by the Internal Revenue Service. The personnel data relate to staffing and payrolls. They are published by the Office of Personnel Management and the Bureau of Labor Statistics. Data on federally owned land and real property are collected by the General Services Administration and presented in its annual “Federal Real Property Report.”",
+      "tables": [
+        469,
+        502
+      ],
+      "page": 307,
+      "children": [
+        {
+          "id": "federal-government-finances-and-employment/budget-receipts-outlays-debt",
+          "name": "Budget receipts, outlays, debt",
+          "page": 310
+        },
+        {
+          "id": "federal-government-finances-and-employment/income-taxes",
+          "name": "Income taxes",
+          "page": 317
+        },
+        {
+          "id": "federal-government-finances-and-employment/federal-employment-and-payroll",
+          "name": "Federal employment and payroll",
+          "page": 326
+        }
+      ]
+    },
+    {
+      "id": "national-security-and-veterans-affairs",
+      "code": "10",
+      "name": "National Security and Veterans Affairs",
+      "description": "This section displays data for national security (national defense and homeland security) and benefits for veterans. Data are presented on national defense and its human and financial costs; active and reserve military personnel; and federally sponsored programs and benefits for veterans, and funding, budget and selected agencies for homeland security. The principal sources of these data are the annual Selected Manpower Statistics and the Atlas/Data Abstract for the United States, Annual Report of Secretary of Veterans Affairs, U.S. Department of Veterans Affairs (VA), Budget in Brief, U.S. Department of Homeland Security; and The Budget of the United States Government, Office of Management and Budget. For data on international expenditures and personnel, see Table 1406, Section 30.",
+      "tables": [
+        503,
+        537
+      ],
+      "page": 329,
+      "children": [
+        {
+          "id": "national-security-and-veterans-affairs/national-defense-outlays-expenditures-personnel",
+          "name": "National defense outlays, expenditures, personnel",
+          "page": 332
+        },
+        {
+          "id": "national-security-and-veterans-affairs/military-manpower",
+          "name": "Military manpower",
+          "page": 334
+        },
+        {
+          "id": "national-security-and-veterans-affairs/veterans",
+          "name": "Veterans",
+          "page": 340
+        },
+        {
+          "id": "national-security-and-veterans-affairs/homeland-security",
+          "name": "Homeland security",
+          "page": 342
+        }
+      ]
+    },
+    {
+      "id": "social-insurance-and-human-services",
+      "code": "11",
+      "name": "Social Insurance and Human Services",
+      "description": "This section presents data related to governmental expenditures for social insurance and human services; governmental programs for Old-Age, Survivors, Disability, and Health Insurance (OASDHI); governmental employee retirement; private pension plans; government unemployment and temporary disability insurance; federal supplemental security income payments and aid to the needy; child and other welfare services; and federal food programs. Also included here are selected data on workers’ compensation and vocational rehabilitation, child support, child care, charity contributions, and philanthropic trusts and foundations.",
+      "tables": [
+        538,
+        585
+      ],
+      "page": 347,
+      "children": [
+        {
+          "id": "social-insurance-and-human-services/government-transfer-payments",
+          "name": "Government transfer payments",
+          "page": 351
+        },
+        {
+          "id": "social-insurance-and-human-services/social-security",
+          "name": "Social security",
+          "page": 354
+        },
+        {
+          "id": "social-insurance-and-human-services/public-aid-federal-food-programs",
+          "name": "Public aid, federal food programs",
+          "page": 364
+        },
+        {
+          "id": "social-insurance-and-human-services/child-care-child-support",
+          "name": "Child care, child support",
+          "page": 366
+        }
+      ]
+    },
+    {
+      "id": "labor-force-employment-and-earnings",
+      "code": "12",
+      "name": "Labor Force, Employment, and Earnings",
+      "description": "This section presents statistics on the labor force; its distribution by occupation and industry affiliation; and the supply of, demand for, and conditions of labor. The chief source of these data is the Current Population Survey (CPS) conducted by the U.S. Census Bureau for the Bureau of Labor Statistics (BLS). Comprehensive historical and current data are available from the BLS Internet site at <http://www.bls.gov/cps/>. These data are published on a current basis in the BLS monthly publication Employment and Earnings Online. Detailed data on the labor force are also available from the Census Bureau’s decennial census of population.",
+      "tables": [
+        586,
+        666
+      ],
+      "page": 373,
+      "children": [
+        {
+          "id": "labor-force-employment-and-earnings/labor-force-status",
+          "name": "Labor force status",
+          "page": 377
+        },
+        {
+          "id": "labor-force-employment-and-earnings/occupations",
+          "name": "Occupations",
+          "page": 393
+        },
+        {
+          "id": "labor-force-employment-and-earnings/projections",
+          "name": "Projections",
+          "page": 398
+        },
+        {
+          "id": "labor-force-employment-and-earnings/unemployment",
+          "name": "Unemployment",
+          "page": 401
+        },
+        {
+          "id": "labor-force-employment-and-earnings/establishments",
+          "name": "Establishments",
+          "page": 406
+        },
+        {
+          "id": "labor-force-employment-and-earnings/productivity",
+          "name": "Productivity",
+          "page": 416
+        },
+        {
+          "id": "labor-force-employment-and-earnings/benefits",
+          "name": "Benefits",
+          "page": 424
+        },
+        {
+          "id": "labor-force-employment-and-earnings/injuries",
+          "name": "Injuries",
+          "page": 426
+        },
+        {
+          "id": "labor-force-employment-and-earnings/union-membership",
+          "name": "Union membership",
+          "page": 429
+        }
+      ]
+    },
+    {
+      "id": "income-expenditures-poverty-and-wealth",
+      "code": "13",
+      "name": "Income, Expenditures, Poverty, and Wealth",
+      "description": "This section presents data on gross domestic product (GDP), gross national product (GNP), national and personal income, saving and investment, money income, poverty, and national and personal wealth. The data on income and expenditures measure two aspects of the U.S. economy. One aspect relates to the National Income and Product Accounts (NIPA), a summation reflecting the entire complex of the nation’s economic income and output and the interaction of its major components; the other relates to the distribution of money income to families and individuals or consumer income.",
+      "tables": [
+        667,
+        723
+      ],
+      "page": 431,
+      "children": [
+        {
+          "id": "income-expenditures-poverty-and-wealth/gross-domestic-product",
+          "name": "Gross domestic product",
+          "page": 435
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/personal-income",
+          "name": "Personal income",
+          "page": 443
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/consumer-expenditures",
+          "name": "Consumer expenditures",
+          "page": 448
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/money-income",
+          "name": "Money income",
+          "page": 452
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/state-income-and-poverty",
+          "name": "State income and poverty",
+          "page": 460
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/poverty-status",
+          "name": "Poverty status",
+          "page": 462
+        },
+        {
+          "id": "income-expenditures-poverty-and-wealth/wealth",
+          "name": "Wealth",
+          "page": 467
+        }
+      ]
+    },
+    {
+      "id": "prices",
+      "code": "14",
+      "name": "Prices",
+      "description": "The Prices section contains producer and consumer prices indexes and actual prices for selected commodities. The primary sources of the data are monthly publications of the U.S. Department of Labor, Bureau of Labor Statistics (BLS), which include Monthly Labor Review, Consumer Price Index, Detailed Report, Producer Price Indexes, and U.S. Import and Export Price Indexes. The Bureau of Economic Analysis is the source for gross domestic product measures. Cost of living data for many urban and metropolitan areas are provided by The Council for Community and Economic Research, a private organization in Arlington, VA. Table 728 on housing price indexes appears in this edition from the Office of Federal Housing Enterprise Oversight, Housing Price Index. Other commodity, housing, and energy prices may be found in the Energy and Utilities; Forestry, Fishing and Mining; and Construction and Housing sections.",
+      "tables": [
+        724,
+        743
+      ],
+      "page": 471,
+      "children": [
+        {
+          "id": "prices/consumer-price-index",
+          "name": "Consumer price index",
+          "page": 474
+        },
+        {
+          "id": "prices/cost-of-living-index",
+          "name": "Cost of living index",
+          "page": 478
+        },
+        {
+          "id": "prices/producer-price-index",
+          "name": "Producer price index",
+          "page": 482
+        }
+      ]
+    },
+    {
+      "id": "business-enterprise",
+      "code": "15",
+      "name": "Business Enterprise",
+      "description": "This section relates to the place and behavior of the business firm and to business initiative in the American economy. It includes data on the number, type, and size of businesses; financial data of domestic and multinational U.S. corporations; business investments, expenditures, and profits; and sales and inventories.",
+      "tables": [
+        744,
+        798
+      ],
+      "page": 489,
+      "children": [
+        {
+          "id": "business-enterprise/sole-proprietors-partnerships-corporations",
+          "name": "Sole proprietors, partnerships, corporations",
+          "page": 491
+        },
+        {
+          "id": "business-enterprise/establishments-employees-payroll",
+          "name": "Establishments, employees, payroll",
+          "page": 499
+        },
+        {
+          "id": "business-enterprise/firms-births-deaths-expansions-and-contractions",
+          "name": "Firms, births, deaths, expansions, and contractions",
+          "page": 505
+        },
+        {
+          "id": "business-enterprise/women-and-minority-owned-businesses",
+          "name": "Women- and minority-owned businesses",
+          "page": 507
+        },
+        {
+          "id": "business-enterprise/bankruptcy-patents",
+          "name": "Bankruptcy, patents",
+          "page": 511
+        },
+        {
+          "id": "business-enterprise/investment-capital-expenditures",
+          "name": "Investment, capital expenditures",
+          "page": 514
+        },
+        {
+          "id": "business-enterprise/economic-indicators",
+          "name": "Economic indicators",
+          "page": 516
+        },
+        {
+          "id": "business-enterprise/corporate-profits",
+          "name": "Corporate profits",
+          "page": 518
+        },
+        {
+          "id": "business-enterprise/multinationals",
+          "name": "Multinationals",
+          "page": 519
+        }
+      ]
+    },
+    {
+      "id": "science-and-technology",
+      "code": "16",
+      "name": "Science and Technology",
+      "description": "This section presents statistics on scientific, engineering, and technological resources, with emphasis on patterns of research and development (R&D) funding and on scientific, engineering, and technical personnel; education; and employment.",
+      "tables": [
+        799,
+        822
+      ],
+      "page": 521,
+      "children": [
+        {
+          "id": "science-and-technology/randd-funds-outlays",
+          "name": "R&D funds, outlays",
+          "page": 522
+        },
+        {
+          "id": "science-and-technology/science-and-engineering-degrees",
+          "name": "Science and engineering degrees",
+          "page": 527
+        },
+        {
+          "id": "science-and-technology/science-and-engineering-employment",
+          "name": "Science and engineering employment",
+          "page": 530
+        },
+        {
+          "id": "science-and-technology/space-program",
+          "name": "Space program",
+          "page": 532
+        }
+      ]
+    },
+    {
+      "id": "agriculture",
+      "code": "17",
+      "name": "Agriculture",
+      "description": "This section presents statistics on farms and farm operators; land use; farm income, expenditures, and debt; farm output, productivity, and marketings; foreign trade in agricultural products; specific crops; and livestock, poultry, and their products.",
+      "tables": [
+        823,
+        878
+      ],
+      "page": 533,
+      "children": [
+        {
+          "id": "agriculture/farms-and-farmland",
+          "name": "Farms and farmland",
+          "page": 536
+        },
+        {
+          "id": "agriculture/farm-balance-sheet-income",
+          "name": "Farm balance sheet, income",
+          "page": 542
+        },
+        {
+          "id": "agriculture/agricultural-exports-and-imports",
+          "name": "Agricultural exports and imports",
+          "page": 546
+        },
+        {
+          "id": "agriculture/crops-livestock",
+          "name": "Crops, livestock",
+          "page": 549
+        }
+      ]
+    },
+    {
+      "id": "forestry-fishing-and-mining",
+      "code": "18",
+      "name": "Forestry, Fishing, and Mining",
+      "description": "This section presents data on the area, ownership, production, trade, reserves, and disposition of natural resources. Natural resources is defined here as including forestry, fisheries, and mining and mineral products.",
+      "tables": [
+        879,
+        922
+      ],
+      "page": 559,
+      "children": [
+        {
+          "id": "forestry-fishing-and-mining/timber-lumber",
+          "name": "Timber, lumber",
+          "page": 562
+        },
+        {
+          "id": "forestry-fishing-and-mining/fishery",
+          "name": "Fishery",
+          "page": 568
+        },
+        {
+          "id": "forestry-fishing-and-mining/petroleum-natural-gas-coal",
+          "name": "Petroleum, natural gas, coal",
+          "page": 576
+        }
+      ]
+    },
+    {
+      "id": "energy-and-utilities",
+      "code": "19",
+      "name": "Energy and Utilities",
+      "description": "This section presents statistics on fuel resources, energy production and consumption, electric energy, hydroelectric power, nuclear power, solar and wind energy, biomass, and the electric and gas utility industries. The principal sources are the U.S. Department of Energy’s Energy Information Administration (EIA), the Edison Electric Institute, Washington, DC, and the American Gas Association, Arlington, VA. The Department of Energy was created in October 1977 and assumed and centralized the responsibilities of all or part of several agencies including the Federal Power Commission (FPC), the U.S. Bureau of Mines, the Federal Energy Administration, and the U.S. Energy Research and Development Administration. For additional data on transportation, see Section 23; on fuels, see Section 18; and on energy-related housing characteristics, see Section 20.",
+      "tables": [
+        923,
+        960
+      ],
+      "page": 581,
+      "children": [
+        {
+          "id": "energy-and-utilities/energy-production-consumption",
+          "name": "Energy production, consumption",
+          "page": 584
+        },
+        {
+          "id": "energy-and-utilities/expenditures",
+          "name": "Expenditures",
+          "page": 586
+        },
+        {
+          "id": "energy-and-utilities/crude-oil",
+          "name": "Crude oil",
+          "page": 591
+        },
+        {
+          "id": "energy-and-utilities/nuclear",
+          "name": "Nuclear",
+          "page": 593
+        },
+        {
+          "id": "energy-and-utilities/electric-power",
+          "name": "Electric power",
+          "page": 594
+        },
+        {
+          "id": "energy-and-utilities/gas-utilities",
+          "name": "Gas utilities",
+          "page": 600
+        }
+      ]
+    },
+    {
+      "id": "construction-and-housing",
+      "code": "20",
+      "name": "Construction and Housing",
+      "description": "This section presents data on the construction industry and on various indicators of its activity and costs; on housing units and their characteristics and occupants; and on the characteristics and vacancy rates for commercial buildings. This edition contains data from the 2005 American Housing Survey.",
+      "tables": [
+        961,
+        1006
+      ],
+      "page": 603,
+      "children": [
+        {
+          "id": "construction-and-housing/construction-spending",
+          "name": "Construction spending",
+          "page": 605
+        },
+        {
+          "id": "construction-and-housing/home-sales",
+          "name": "Home sales",
+          "page": 611
+        },
+        {
+          "id": "construction-and-housing/homeownership",
+          "name": "Homeownership",
+          "page": 621
+        },
+        {
+          "id": "construction-and-housing/home-remodeling",
+          "name": "Home remodeling",
+          "page": 629
+        }
+      ]
+    },
+    {
+      "id": "manufactures",
+      "code": "21",
+      "name": "Manufactures",
+      "description": "This section presents summary data for manufacturing as a whole and more detailed information for major industry groups and selected products. The types of measures shown at the different levels include data for establishments, employment and payroll, value and quantity of production and shipments, value added by manufacture, inventories, and various indicators of financial status.",
+      "tables": [
+        1007,
+        1041
+      ],
+      "page": 631,
+      "children": [
+        {
+          "id": "manufactures/manufacturing-summary",
+          "name": "Manufacturing summary",
+          "page": 636
+        },
+        {
+          "id": "manufactures/hours-and-earnings-of-production-workers",
+          "name": "Hours and earnings of production workers",
+          "page": 637
+        },
+        {
+          "id": "manufactures/shipments-inventories-new-orders-and-finances",
+          "name": "Shipments, inventories, new orders, and finances",
+          "page": 641
+        },
+        {
+          "id": "manufactures/industry-reports-by-subject-and-subsector",
+          "name": "Industry reports by subject and subsector",
+          "page": 645
+        }
+      ]
+    },
+    {
+      "id": "wholesale-and-retail-trade",
+      "code": "22",
+      "name": "Wholesale and Retail Trade",
+      "description": "This section presents statistics relating to the distributive trades, specifically wholesale trade and retail trade. Data shown for the trades are classified by kind of business and cover sales, establishments, employees, payrolls, and other items. The principal sources of these data are from the U.S. Census Bureau and include the 2007 Economic Census, annual and monthly surveys, and the County Business Patterns program. These data are supplemented by several tables from trade associations, such as the National Automobile Dealers Association (Table 1057). Several notable research groups are also represented, such as Nielsen Claritas (Table 1059).",
+      "tables": [
+        1042,
+        1062
+      ],
+      "page": 653,
+      "children": [
+        {
+          "id": "wholesale-and-retail-trade/wholesale-trade",
+          "name": "Wholesale trade",
+          "page": 655
+        },
+        {
+          "id": "wholesale-and-retail-trade/retail-trade",
+          "name": "Retail trade",
+          "page": 659
+        }
+      ]
+    },
+    {
+      "id": "transportation",
+      "code": "23",
+      "name": "Transportation",
+      "description": "This section presents data on civil air transportation, both passenger and cargo, and on water transportation, including inland waterways, oceanborne commerce, the merchant marine, cargo, and vessel tonnages.",
+      "tables": [
+        1063,
+        1127
+      ],
+      "page": 667,
+      "children": [
+        {
+          "id": "transportation/transportation-system",
+          "name": "Transportation system",
+          "page": 674
+        },
+        {
+          "id": "transportation/air-transportation",
+          "name": "Air transportation",
+          "page": 677
+        },
+        {
+          "id": "transportation/port-traffic",
+          "name": "Port traffic",
+          "page": 683
+        },
+        {
+          "id": "transportation/motor-vehicle-registration",
+          "name": "Motor vehicle registration",
+          "page": 688
+        },
+        {
+          "id": "transportation/motor-vehicle-accidents",
+          "name": "Motor vehicle accidents",
+          "page": 693
+        },
+        {
+          "id": "transportation/transit-ridership-railroads",
+          "name": "Transit ridership, railroads",
+          "page": 699
+        }
+      ]
+    },
+    {
+      "id": "information-and-communications",
+      "code": "24",
+      "name": "Information and Communications",
+      "description": "This section presents statistics on the various information and communications media: publishing, including newspapers, periodicals, books, and software; motion pictures, sound recordings, broadcasting, and telecommunications; and information services, such as libraries. Statistics on computer use and Internet access are also included. Data on the usage, finances, and operations of the U.S. Postal Service previously shown in this section are now presented in Section 23, Transportation.",
+      "tables": [
+        1128,
+        1161
+      ],
+      "page": 707,
+      "children": [
+        {
+          "id": "information-and-communications/information-industries",
+          "name": "Information industries",
+          "page": 709
+        },
+        {
+          "id": "information-and-communications/media-usage",
+          "name": "Media usage",
+          "page": 711
+        },
+        {
+          "id": "information-and-communications/newspapers",
+          "name": "Newspapers",
+          "page": 714
+        },
+        {
+          "id": "information-and-communications/books",
+          "name": "Books",
+          "page": 715
+        },
+        {
+          "id": "information-and-communications/recording-media",
+          "name": "Recording media",
+          "page": 716
+        },
+        {
+          "id": "information-and-communications/telecommunications",
+          "name": "Telecommunications",
+          "page": 719
+        },
+        {
+          "id": "information-and-communications/internet-access-and-use",
+          "name": "Internet access and use",
+          "page": 723
+        }
+      ]
+    },
+    {
+      "id": "banking-finance-and-insurance",
+      "code": "25",
+      "name": "Banking, Finance, and Insurance",
+      "description": "This section presents data on the nation’s finances, various types of financial institutions, money and credit, securities, insurance, and real estate. The primary sources of these data are publications of several departments of the federal government, especially the U.S. Treasury Department, and independent agencies such as the Federal Deposit Insurance Corporation, the Board of Governors of the Federal Reserve System, and the Securities and Exchange Commission. National data on insurance are available primarily from private organizations, such as the American Council of Life Insurers and the Insurance Information Institute.",
+      "tables": [
+        1162,
+        1227
+      ],
+      "page": 727,
+      "children": [
+        {
+          "id": "banking-finance-and-insurance/establishments-receipts",
+          "name": "Establishments, receipts",
+          "page": 730
+        },
+        {
+          "id": "banking-finance-and-insurance/flow-of-funds-financial-assets-and-liabilities",
+          "name": "Flow of funds, financial assets, and liabilities",
+          "page": 731
+        },
+        {
+          "id": "banking-finance-and-insurance/financial-institutions",
+          "name": "Financial institutions",
+          "page": 735
+        },
+        {
+          "id": "banking-finance-and-insurance/payment-instruments-credit-and-debit-cards",
+          "name": "Payment instruments, credit and debit cards",
+          "page": 739
+        },
+        {
+          "id": "banking-finance-and-insurance/consumer-credit-mortgage-debt",
+          "name": "Consumer credit, mortgage debt",
+          "page": 741
+        },
+        {
+          "id": "banking-finance-and-insurance/money-stock-interest-rates",
+          "name": "Money stock, interest rates",
+          "page": 744
+        },
+        {
+          "id": "banking-finance-and-insurance/stocks-and-bonds-equity-ownership-mutual-funds",
+          "name": "Stocks and bonds, equity ownership, mutual funds",
+          "page": 746
+        },
+        {
+          "id": "banking-finance-and-insurance/insurance",
+          "name": "Insurance",
+          "page": 754
+        }
+      ]
+    },
+    {
+      "id": "arts-recreation-and-travel",
+      "code": "26",
+      "name": "Arts, Recreation, and Travel",
+      "description": "This section presents data on the arts, entertainment, and recreation economic sector of the economy, and personal recreational activities, the arts and humanities, and domestic and foreign travel.",
+      "tables": [
+        1228,
+        1271
+      ],
+      "page": 757,
+      "children": [
+        {
+          "id": "arts-recreation-and-travel/employees-establishments-and-payroll",
+          "name": "Employees, establishments, and payroll",
+          "page": 759
+        },
+        {
+          "id": "arts-recreation-and-travel/performing-arts",
+          "name": "Performing arts",
+          "page": 761
+        },
+        {
+          "id": "arts-recreation-and-travel/leisure-activities",
+          "name": "Leisure activities",
+          "page": 763
+        },
+        {
+          "id": "arts-recreation-and-travel/sports",
+          "name": "Sports",
+          "page": 766
+        },
+        {
+          "id": "arts-recreation-and-travel/parks-and-wildlife-activities",
+          "name": "Parks and wildlife activities",
+          "page": 771
+        },
+        {
+          "id": "arts-recreation-and-travel/travel",
+          "name": "Travel",
+          "page": 775
+        }
+      ]
+    },
+    {
+      "id": "accommodation-food-services-and-other-services",
+      "code": "27",
+      "name": "Accommodation, Food Services, and Other Services",
+      "description": "This section presents statistics relating to services other than those covered in the previous few sections (22 to 26) on wholesale and retail trade, transportation, communications, financial services, and recreation services. Data shown for services are classified by kind of business and cover sales or receipts, establishments, employees, payrolls, and other items.",
+      "tables": [
+        1272,
+        1285
+      ],
+      "page": 779,
+      "children": [
+        {
+          "id": "accommodation-food-services-and-other-services/professional-scientific-and-technical-services",
+          "name": "Professional, scientific, and technical services",
+          "page": 784
+        },
+        {
+          "id": "accommodation-food-services-and-other-services/administrative-and-support-and-waste-management",
+          "name": "Administrative and support and waste management",
+          "page": 786
+        }
+      ]
+    },
+    {
+      "id": "foreign-commerce-and-aid",
+      "code": "28",
+      "name": "Foreign Commerce and Aid",
+      "description": "This section presents data on the flow of goods, services, and capital between the United States and other countries; changes in official reserve assets of the United States; international investments; and foreign assistance programs.",
+      "tables": [
+        1286,
+        1312
+      ],
+      "page": 789,
+      "children": [
+        {
+          "id": "foreign-commerce-and-aid/international-transactions",
+          "name": "International transactions",
+          "page": 792
+        },
+        {
+          "id": "foreign-commerce-and-aid/foreign-investments",
+          "name": "Foreign investments",
+          "page": 797
+        },
+        {
+          "id": "foreign-commerce-and-aid/foreign-grants-and-credits",
+          "name": "Foreign grants and credits",
+          "page": 801
+        },
+        {
+          "id": "foreign-commerce-and-aid/exports-and-imports",
+          "name": "Exports and imports",
+          "page": 804
+        }
+      ]
+    },
+    {
+      "id": "puerto-rico-and-the-island-areas",
+      "code": "29",
+      "name": "Puerto Rico and the Island Areas",
+      "description": "This section presents summary economic and social statistics for Puerto Rico, the U.S. Virgin Islands, Guam, American Samoa, and the Northern Mariana Islands. Primary sources are the decennial censuses of population and housing, County Business Patterns, and the Puerto Rico Community Survey conducted by the U.S. Census Bureau; the annual Vital Statistics of the United States, issued by the National Center for Health Statistics; and the annual Income and Product of the Puerto Rico Planning Board.",
+      "tables": [
+        1313,
+        1328
+      ],
+      "page": 815,
+      "children": []
+    },
+    {
+      "id": "international-statistics",
+      "code": "30",
+      "name": "International Statistics",
+      "description": "This section presents statistics for the world as a whole and for many countries on a comparative basis with the United States. Data are shown for population, births and deaths, social and industrial indicators, finances, agriculture, communication, and military affairs.",
+      "tables": [
+        1329,
+        1406
+      ],
+      "page": 823,
+      "children": [
+        {
+          "id": "international-statistics/world-maps",
+          "name": "World maps",
+          "page": 826
+        },
+        {
+          "id": "international-statistics/world-population-vital-statistics",
+          "name": "World population, vital statistics",
+          "page": 835
+        },
+        {
+          "id": "international-statistics/economic-measures",
+          "name": "Economic measures",
+          "page": 846
+        },
+        {
+          "id": "international-statistics/labor-force",
+          "name": "Labor force",
+          "page": 856
+        },
+        {
+          "id": "international-statistics/agriculture",
+          "name": "Agriculture",
+          "page": 859
+        },
+        {
+          "id": "international-statistics/energy",
+          "name": "Energy",
+          "page": 863
+        },
+        {
+          "id": "international-statistics/finance",
+          "name": "Finance",
+          "page": 869
+        }
+      ]
+    }
+  ],
+  "appendices": [
+    {
+      "number": "I",
+      "parts": [
+        {
+          "title": "Guide to Sources of Statistics",
+          "page": 877
+        },
+        {
+          "title": "Guide to State Statistical Abstracts",
+          "page": 892
+        },
+        {
+          "title": "Guide to Foreign Statistical Abstracts",
+          "page": 896
+        }
+      ]
+    },
+    {
+      "number": "II",
+      "parts": [
+        {
+          "title": "Metropolitan and Micropolitan Statistical Areas: Concepts, Components, and Population",
+          "page": 898
+        }
+      ]
+    },
+    {
+      "number": "III",
+      "parts": [
+        {
+          "title": "Limitations of the Data",
+          "page": 919
+        }
+      ]
+    },
+    {
+      "number": "IV",
+      "parts": [
+        {
+          "title": "Weights and Measures",
+          "page": 946
+        }
+      ]
+    },
+    {
+      "number": "V",
+      "parts": [
+        {
+          "title": "Tables Deleted From the 2010 Edition of the Statistical Abstract",
+          "page": 947
+        }
+      ]
+    }
+  ],
+  "index_page": 949
+}

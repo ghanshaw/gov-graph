@@ -8,6 +8,7 @@ import { enactedLaws } from './lib/enacted-laws.js';
 import { peopleQueries, BillSponsor } from './people.js';
 import { timelineQueries } from './timeline.js';
 import { reportQueries } from './reports.js';
+import { sourceQueries, sourceResolvers } from './sources.js';
 import { economicQueries, economicResolvers } from './economic.js';
 import { uscQueries } from './usc.js';
 import { tagQueries, tagMutations } from './tags.js';
@@ -396,6 +397,7 @@ export const resolvers = {
     ...peopleQueries,
     ...timelineQueries,
     ...reportQueries,
+    ...sourceQueries,
     ...economicQueries,
     ...uscQueries,
     ...tagQueries,
@@ -807,6 +809,7 @@ export const resolvers = {
   BillSponsor,
 
   ...economicResolvers,
+  ...sourceResolvers,
 
   CourtDecision: {
     // Each Justice's vote, in the order the outcome lists them (the Court's order of seniority).

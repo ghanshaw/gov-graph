@@ -38,8 +38,7 @@
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import { DATA_DIR } from '../lib/data-dir.js';
-import { mirrorFile } from '../lib/data-dir.js';
+import { DATA_DIR, mirrorFile, recordFetch } from '../lib/data-dir.js';
 import { EIA_API, BLS_API, BEA_FILES, DEBT_TO_PENNY, CENSUS_RESSALES, CDC_COVID_META, FED_H15, FED_H15_FILE, FED_OMO_PAGES, FILE_SOURCES, FISCAL_DATASETS, IRS_TABLE_24, SERIES, seriesFile } from '../lib/economic-series.js';
 
 const arg = name => {
@@ -105,6 +104,7 @@ async function fetchBea() {
     const file = mirrorFile(url);
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, text);
+    recordFetch(file, url);
     console.log(`  BEA ${path.basename(file)}: ${(text.length / 1e6).toFixed(1)} MB`);
   }
 }
@@ -122,6 +122,7 @@ async function fetchDebtToPenny() {
   const file = `${mirrorFile(DEBT_TO_PENNY)}.json`;
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify({ source: 'treasury', fetched_at: new Date().toISOString(), labels, rows }));
+  recordFetch(file, DEBT_TO_PENNY);
   console.log(`  Treasury debt to the penny: ${rows.length} days, ${rows[0]?.record_date} – ${rows.at(-1)?.record_date}`);
 }
 
@@ -147,6 +148,7 @@ async function fetchFiscalData(source, values) {
   const file = `${mirrorFile(url)}.json`;
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify({ source, dataset: url, filter: filter ? queries : null, fetched_at: new Date().toISOString(), labels, rows }));
+  recordFetch(file, url);
   console.log(`  ${FISCAL_DATASETS[source].name}: ${rows.length} rows, ${rows[0]?.record_date} – ${rows.at(-1)?.record_date}`);
 }
 
@@ -157,7 +159,9 @@ async function fetchFiscalData(source, values) {
 async function fetchFile(url, file = mirrorFile(url), archive = null) {
   const contact = process.env.BLS_CONTACT_EMAIL;
   let res = await fetch(url, { headers: { 'User-Agent': `govgraph public records research${contact ? ` (${contact})` : ''}` } });
+  let capture = null;
   if (!res.ok && archive) {
+    capture = archive;
     console.log(`  ${url}: ${res.status}; taking the Internet Archive's capture of ${archive}`);
     res = await fetch(`https://web.archive.org/web/${archive}id_/${url}`);
   }
@@ -165,6 +169,7 @@ async function fetchFile(url, file = mirrorFile(url), archive = null) {
   const body = Buffer.from(await res.arrayBuffer());
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, body);
+  recordFetch(file, url, { archive: capture });
   console.log(`  ${path.relative(DATA_DIR, file)}: ${(body.length / 1e6).toFixed(1)} MB`);
 }
 
@@ -184,6 +189,7 @@ async function fetchRessales() {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   // The key is a request parameter only; it is not stored.
   fs.writeFileSync(file, JSON.stringify({ source: 'census', dataset: 'timeseries/eits/ressales', fetched_at: new Date().toISOString(), rows }));
+  recordFetch(file, CENSUS_RESSALES);
   console.log(`  Census new residential sales: ${rows.length - 1} values`);
 }
 
@@ -191,6 +197,8 @@ function save(s, rows) {
   const file = seriesFile(s);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify({ source: s.source, series: s.source_id, route: s.route ?? null, frequency: s.frequency, fetched_at: new Date().toISOString(), rows }));
+  // The API's address for the series; the rows were requested in pages, with the key as a parameter only.
+  recordFetch(file, s.source === 'eia' ? `${EIA_API}/${s.route}/data/` : `${BLS_API}/v2/timeseries/data/${s.source_id}`);
   console.log(`  ${s.slug} (${s.source_id}): ${rows.length} rows`);
 }
 

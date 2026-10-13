@@ -27,7 +27,7 @@ import path from 'path';
 import crypto from 'crypto';
 import axios from 'axios';
 import pg from 'pg';
-import { mirrorFile, valuesClause, LEGISLATOR_FILES, EXECUTIVE_FILE } from '../lib/data-dir.js';
+import { mirrorFile, recordFetch, valuesClause, LEGISLATOR_FILES, EXECUTIVE_FILE } from '../lib/data-dir.js';
 import { mergePeople } from '../lib/parse-legislators.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -79,6 +79,7 @@ async function readList(url) {
     const { data } = await axios.get(url, { responseType: 'text', transformResponse: x => x });
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, data);
+    recordFetch(file, url);
     console.log(`  downloaded ${path.basename(file)}`);
   }
   return JSON.parse(fs.readFileSync(file, 'utf8'));

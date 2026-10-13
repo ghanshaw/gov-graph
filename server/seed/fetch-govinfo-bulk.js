@@ -18,7 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import { pipeline } from 'stream/promises';
 import axios from 'axios';
-import { BILL_TYPES, bulkFile, bulkPath, congressRange, DATA_DIR } from '../lib/data-dir.js';
+import { BILL_TYPES, bulkFile, bulkPath, congressRange, DATA_DIR, recordFetch } from '../lib/data-dir.js';
 
 const arg = name => {
   const i = process.argv.indexOf(name);
@@ -52,6 +52,7 @@ async function download(collection, congress, type, session) {
   // Write beside the target and rename, so an interrupted download is never mistaken for a whole one.
   await pipeline(response.data, fs.createWriteStream(`${file}.part`));
   fs.renameSync(`${file}.part`, file);
+  recordFetch(file, url);
   return 'downloaded';
 }
 

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build D.1: wide tree, measures</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../builder/builder.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-builder.css">
+<link rel="stylesheet" href="d1.css">
+</head>
+<body>
+<header class="topbar"><span class="brand">gov<b>graph</b></span>
+  <nav class="nav"><span>Executive</span><span>Congress</span><span>Courts</span><span class="on">Timeline</span><span>Economy</span><span>Sources</span></nav>
+  <span class="variant-tag">Build by structure · <a href="wide-tree-1.html" class="cur">D.1</a> · <a href="wide-tree.html">D</a> · <a href="map-focus.html">E</a> · <a href="filter-first.html">F</a> · <a href="../index.html">all variants</a></span></header>
+<main class="page">
+  <h1>D.1: wide tree, down to the measure</h1>
+  <p class="lede">D with a third level. The tree goes category → subcategory → measure (Macroeconomics → General → GDP), and the measure is the leaf: choosing it opens the app’s own Build choices for it, run on the real datasets. No codes.</p>
+  <div class="catalog">
+    <div class="catalog-top">
+      <span class="modes"><button type="button" data-mode="browse">Browse</button><button type="button" data-mode="build">Build</button></span>
+      <span class="inuse" id="inuse"></span>
+    </div>
+    <div id="browse" class="browse" hidden>
+      <p><b>Browse</b> stays as it is in the app: the search field and the catalogue of every dataset by subject. Build walks a structure down to a measure and its choices.</p>
+    </div>
+    <div id="build"></div>
+  </div>
+  <section class="notes"><h2>What changed from D</h2><ul>
+    <li><b>Three levels.</b> The two levels the structure prints (section → subsection, or major topic → subtopic), then GovGraph’s measures as the leaves. A subcategory folds its measures; an empty one has none and stays grey.</li>
+    <li><b>The leaf opens the real Build choices</b> (<code>dimensions.js</code> copied from the client, the series and dimensions from the local database), so GDP shows “Measured as: Amount / Growth rate”, then how often, years and source, as in the app.</li>
+    <li><b>No codes</b> for CAP’s topics, and the crumb names the category and subcategory above the measure.</li>
+    <li><b>The filter</b> matches categories, subcategories, measures and dataset names; a measure listed only for a dataset name shows the names that matched.</li>
+    <li>“N on” sits on the measure, and on a category or subcategory when it is folded. The unemployment rate and the home price index start on.</li>
+    <li>Placements are still a proposal: in the Abstract they wait for the table list (Phase 2); in CAP every one is GovGraph’s judgement, since CAP sorts documents, not statistics.</li></ul></section>
+</main>
+<script type="module" src="d1.js"></script>
+</body>
+</html>

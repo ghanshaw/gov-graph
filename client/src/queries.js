@@ -662,3 +662,37 @@ export const GET_ACS_TABLE = gql`
     acsTable(year: $year, geoid: $geoid, table: $table)
   }
 `;
+
+// Where the data comes from (server/sources.js): every dataset, and one with its files and series.
+const SOURCE_DATASET_FIELDS = `
+  slug name kind kindLabel description homepage licence licenceLabel licenceDetail
+  accessUsed accessBest accessKey accessContact accessNote status statusLabel ended successor successorName
+  collected inAbstract outsideAbstract notes fileCount fileBytes lastModified seriesCount
+  organizations { role organization { slug name shortName kind kindLabel branch parent parentName url notes } }
+`;
+
+export const GET_SOURCE_DATASETS = gql`
+  query GetSourceDatasets {
+    sourceDatasets { ${SOURCE_DATASET_FIELDS} }
+    sourceVocabulary
+  }
+`;
+
+export const GET_SOURCE_DATASET = gql`
+  query GetSourceDataset($slug: String!) {
+    sourceDataset(slug: $slug) {
+      ${SOURCE_DATASET_FIELDS}
+      paths
+      lineage { from fromName to toName date kind citation document href notes }
+      folders(limit: 200) { path count bytes lastModified }
+      series(limit: 500) { slug name frequency unit firstDate lastDate }
+    }
+    sourceVocabulary
+  }
+`;
+
+export const GET_SOURCE_FILES = gql`
+  query GetSourceFiles($dataset: String!, $folder: String, $limit: Int) {
+    sourceFiles(dataset: $dataset, folder: $folder, limit: $limit) { path size sha256 modifiedAt url urlInferred archive fetchedAt }
+  }
+`;

@@ -81,3 +81,13 @@ export const uscodeReleaseUrl = id => {
   const [congress, law] = id.split('-');
   return `https://uscode.house.gov/download/releasepoints/us/pl/${congress}/${law}/xml_uscAll@${id}.zip`;
 };
+
+// The fetch log: one line per file a fetch script saved, with what the file alone cannot tell (the
+// URL it came from, an Internet Archive capture). Read by seed/load-sources.js into source_files.
+export const FETCH_LOG = path.join(DATA_DIR, 'fetch-log.jsonl');
+
+/** Note that `file` was just saved from `url` (`archive`: the Internet Archive capture it came from). */
+export function recordFetch(file, url, { archive = null } = {}) {
+  const entry = { path: path.relative(DATA_DIR, file).split(path.sep).join('/'), url, archive, fetched_at: new Date().toISOString() };
+  fs.appendFileSync(FETCH_LOG, `${JSON.stringify(entry)}\n`);
+}

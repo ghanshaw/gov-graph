@@ -2,8 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { GET_SERIES_DIMENSIONS } from '../queries';
 import { buildTree, withoutPath, yearsOf } from '../dimensions';
+import { PLACEMENTS, STRUCTURES, withMeasures } from '../structures';
+import StructureTree from './StructureTree';
 
-// The catalogue's Build mode (concept A in design/timeline-data/builder): choose a measure, then its options
+// The catalogue's Build mode (concept A in design/timeline-data/builder): choose a measure from a category
+// structure (StructureTree: the Statistical Abstract or CAP's topics, the measures as leaves), then its options
 // as a tree. Choosing an option opens beneath it only what exists for it, so nothing on screen leads nowhere;
 // an option alone under its parent is chosen for you. A click chooses, its × takes it out (with what is
 // beneath it), and several options may be open at once. The datasets the choices reach go on the timeline,
@@ -84,6 +87,7 @@ function Node({ node, onPick, onUnpick }) {
 export default function DatasetBuilder({ bySlug, isOn, onSwap }) {
   const { data, loading, error } = useQuery(GET_SERIES_DIMENSIONS);
   const [measure, setMeasure] = useState(null);
+  const [structureId, setStructureId] = useState(STRUCTURES[0].id);
   // Choices are kept per measure, so going back to one finds them as they were.
   const [pickedBy, setPickedBy] = useState({});
   const vocab = data?.seriesDimensionVocabulary;
@@ -99,6 +103,9 @@ export default function DatasetBuilder({ bySlug, isOn, onSwap }) {
     return groups;
   }, [data, bySlug]);
   const series = useMemo(() => (measure ? byMeasure.get(measure) ?? [] : []), [byMeasure, measure]);
+  const structure = STRUCTURES.find(s => s.id === structureId);
+  const keys = useMemo(() => Object.keys(data?.seriesDimensionVocabulary?.measures ?? {}).filter(key => byMeasure.has(key)), [data, byMeasure]);
+  const categories = useMemo(() => withMeasures(structure, keys), [structure, keys]);
   const tree = useMemo(() => (vocab && measure ? buildTree(vocab, measure, series, picked) : null), [vocab, measure, series, picked]);
 
   const target = !tree ? [] : tree.automatic ? (picked.has(ONE) ? tree.matches : []) : tree.matches;
@@ -125,34 +132,48 @@ export default function DatasetBuilder({ bySlug, isOn, onSwap }) {
   const pick = path => setPicked(p => new Set(p).add(path));
   const unpick = path => setPicked(p => withoutPath(p, path));
   const onCount = key => (byMeasure.get(key) ?? []).filter(s => isOn([s.slug])).length;
-  const measures = Object.entries(vocab.measures).filter(([key]) => byMeasure.has(key));
+  const label = key => vocab.measures[key]?.label ?? key;
   const name = slug => bySlug.get(slug)?.name ?? slug;
+  // On a narrow screen the tree gives way to a list: the measures under each top-level category.
+  const groups = categories.categories.map(c => {
+    const all = [];
+    const walk = node => { all.push(...node.measures); node.children.forEach(walk); };
+    walk(c);
+    return { name: c.name, keys: all };
+  }).filter(g => g.keys.length);
+  if (categories.leftOut.length) groups.push({ name: 'Not in this structure', keys: categories.leftOut });
+  const path = measure ? categories.pathOf.get(measure) : null;
+  const placement = measure ? PLACEMENTS[structureId]?.[measure] : null;
 
   return (
-    <div className="catalog-body">
-      <nav className="catalog-nav" aria-label="Measures">
-        {measures.map(([key, m]) => {
-          const n = onCount(key);
-          return (
-            <button key={key} type="button" className={measure === key ? 'on' : undefined} onClick={() => setMeasure(key)}>
-              <i>{m.label}</i>{n > 0 && <b>{n} on</b>}<span>{byMeasure.get(key).length}</span>
-            </button>
-          );
-        })}
-      </nav>
+    <div className="catalog-body build-body">
+      <StructureTree tree={categories} label={label} size={key => byMeasure.get(key)?.length ?? 0} onCount={onCount}
+        names={key => (byMeasure.get(key) ?? []).map(s => s.name)} selected={measure} onSelect={setMeasure}
+        structureId={structureId} onStructure={setStructureId} />
       <div className="catalog-list builder" data-testid="dataset-builder">
         <select className="measure-select" aria-label="Measure" value={measure ?? ''} onChange={e => setMeasure(e.target.value || null)}>
           <option value="">Choose what to measure…</option>
-          {measures.map(([key, m]) => <option key={key} value={key}>{m.label}</option>)}
+          {groups.map(g => (
+            <optgroup key={g.name} label={g.name}>{g.keys.map(key => <option key={key} value={key}>{label(key)}</option>)}</optgroup>
+          ))}
         </select>
         {!tree ? (
-          <p className="catalog-empty">Choose what to measure on the left, then narrow it down: how it is measured, which part of it, how often.</p>
+          <p className="catalog-empty">Choose a category on the left and what to measure in it, then narrow it down: how it is measured, which part of it, how often.</p>
         ) : (
           <>
+            <p className="builder-path">{path ? path.join(' › ') : `Not in the ${structure.name}`}</p>
             <div className="builder-head">
               <h3>{vocab.measures[measure].label}</h3>
               {picked.size > 0 && <button type="button" className="clear" onClick={() => setPicked(() => new Set())}>Clear choices</button>}
             </div>
+            {placement && (
+              // Why it sits here: the structure's own tables, or GovGraph's reason.
+              <p className="builder-placement">
+                {placement.left_out ? <><b>Not in this structure.</b> {placement.reason}</>
+                  : placement.basis === 'table' ? `${structure.name} tables ${placement.tables.join(', ')}.`
+                    : <><b>Placed by GovGraph.</b> {placement.reason}</>}
+              </p>
+            )}
             {tree.automatic ? (
               // One dataset: a button to put it on, what it is in a tooltip.
               <div className="one-dataset">

@@ -18,7 +18,7 @@ import path from 'path';
 import { pipeline } from 'stream/promises';
 import { execFileSync } from 'child_process';
 import axios from 'axios';
-import { mirrorFile, uscodeReleaseUrl } from '../lib/data-dir.js';
+import { mirrorFile, recordFetch, uscodeReleaseUrl } from '../lib/data-dir.js';
 
 const arg = name => {
   const i = process.argv.indexOf(name);
@@ -76,6 +76,7 @@ async function run() {
 
   if (!ARCHIVE) {
     if (!(await save(url, file))) throw new Error(`${url} did not download whole`);
+    recordFetch(file, url);
     console.log(`Downloaded ${url}\n  → ${file}`);
     return;
   }
@@ -85,6 +86,7 @@ async function run() {
     process.stdout.write(`Archive capture ${timestamp} (${(length / 1e6).toFixed(0)} MB) … `);
     // "id_" asks for the file exactly as captured, without the archive's page around it.
     if (await save(`https://web.archive.org/web/${timestamp}id_/${url}`, file)) {
+      recordFetch(file, url, { archive: timestamp });
       console.log(`whole\n  → ${file}`);
       return;
     }

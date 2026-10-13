@@ -1355,4 +1355,7 @@ export const SCHEMA = `
   ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS measure TEXT;
   ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS place TEXT;
   CREATE INDEX IF NOT EXISTS economic_series_measure ON economic_series (measure);
+
+  -- The dataset it comes from (source_datasets; seed/data/sources.json, lib/sources.js).
+  ALTER TABLE economic_series ADD COLUMN IF NOT EXISTS dataset TEXT;
 `;

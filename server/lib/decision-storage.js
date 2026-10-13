@@ -16,7 +16,7 @@
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import { mirrorFile } from './data-dir.js';
+import { mirrorFile, recordFetch } from './data-dir.js';
 import { NATURAL_COURTS } from '../naturalCourts.js';
 
 export const SCHEMA = `
@@ -136,6 +136,7 @@ export async function readPdf(url) {
     if (Buffer.from(data).subarray(0, 5).toString() !== '%PDF-') throw new Error(`not a PDF: ${url}`);
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, Buffer.from(data));
+    recordFetch(file, url);
   }
   return fs.readFileSync(file);
 }

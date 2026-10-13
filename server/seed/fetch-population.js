@@ -18,7 +18,7 @@ import path from 'path';
 import { pipeline } from 'stream/promises';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
-import { mirrorFile } from '../lib/data-dir.js';
+import { mirrorFile, recordFetch } from '../lib/data-dir.js';
 import {
   CENSUS, COLLECTIONS, DATA_FILE, SKIP_DIR, ACS, ACS_TABLES, ACS_SEQUENCE_YEARS, ACS_TABLE_YEARS,
 } from '../lib/population/sources.js';
@@ -137,6 +137,7 @@ async function download(url, { always = false } = {}) {
       }
       await pipeline(response.data, fs.createWriteStream(`${file}.part`));
       fs.renameSync(`${file}.part`, file);
+      recordFetch(file, url);
       counts.downloaded++;
       counts.bytes += fs.statSync(file).size;
       return file;

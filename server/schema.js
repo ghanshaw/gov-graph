@@ -374,6 +374,102 @@ export const typeDefs = `#graphql
     value: Float!
   }
 
+  # Where the data comes from (seed/data/sources.json; server/sources.js). An organization publishes
+  # datasets; a dataset's files are what was downloaded into the data folder.
+  type SourceOrganization {
+    slug: String!
+    name: String!
+    shortName: String!
+    kind: String!          # federal | federal-reserve-bank | government-sponsored | international | academic | …
+    kindLabel: String!
+    branch: String         # federal bodies: executive | legislative | judicial
+    parent: String
+    parentName: String
+    url: String
+    notes: String
+  }
+
+  type DatasetOrganization {
+    role: String!          # publisher | producer | distributor | former-publisher
+    organization: SourceOrganization!
+  }
+
+  # A predecessor body and its successor (to is null when it was abolished); href once the document is loaded.
+  type SourceLineage {
+    from: String!
+    fromName: String!
+    to: String
+    toName: String
+    date: String!
+    kind: String!          # renamed | merged | transferred | split | abolished
+    citation: String
+    document: String
+    href: String
+    notes: String
+  }
+
+  type SourceFolder {
+    path: String!
+    count: Int!
+    bytes: Float!
+    lastModified: String
+  }
+
+  type SourceFile {
+    path: String!          # in the data folder
+    size: Float!
+    sha256: String!
+    modifiedAt: String!
+    url: String
+    urlInferred: Boolean!  # guessed from the path, not recorded when fetched
+    archive: String        # Internet Archive capture it came from
+    fetchedAt: String
+  }
+
+  type DatasetSeries {
+    slug: String!
+    name: String!
+    frequency: String!
+    unit: String!
+    firstDate: String
+    lastDate: String
+  }
+
+  type SourceDataset {
+    slug: String!
+    name: String!
+    kind: String!          # statistics | documents
+    kindLabel: String!
+    description: String!
+    homepage: String!
+    licence: String!       # public-domain | open-licence | free-with-terms | licensed | unchecked
+    licenceLabel: String!
+    licenceDetail: JSON    # { name, url, checked, attribution, limits, note }
+    accessUsed: [String!]! # bulk | file | api | api-key | page | archive
+    accessBest: String
+    accessKey: String
+    accessContact: Boolean!
+    accessNote: String
+    status: String!        # active | final | discontinued | moved
+    statusLabel: String!
+    ended: String
+    successor: String
+    successorName: String
+    collected: Boolean!
+    inAbstract: Boolean    # cited in the 2012 Statistical Abstract; null until compared
+    outsideAbstract: String
+    paths: [String!]!
+    notes: String
+    organizations: [DatasetOrganization!]!
+    lineage: [SourceLineage!]
+    fileCount: Int!
+    fileBytes: Float!
+    lastModified: String
+    seriesCount: Int!
+    folders(limit: Int): [SourceFolder!]!
+    series(limit: Int): [DatasetSeries!]!
+  }
+
   # A report of an investigation (reports; seed/data/reports.json): a commission's, a congressional
   # inquiry's, a special counsel's. The text is read once into parts (reportPart).
   type Report {
@@ -627,6 +723,14 @@ export const typeDefs = `#graphql
     reports: [Report!]!
     report(slug: String!): Report
     reportPart(slug: String!, partId: String!): JSON
+
+    # Where the data comes from: every dataset (in the order of sources.json), one dataset, and the
+    # labels of the registry's values ({ organizationKinds, datasetKinds, licences, access, statuses }).
+    sourceDatasets: [SourceDataset!]!
+    sourceDataset(slug: String!): SourceDataset
+    # A dataset's files, in path order; with folder, only those directly in it.
+    sourceFiles(dataset: String!, folder: String, limit: Int): [SourceFile!]!
+    sourceVocabulary: JSON
 
     economicSeriesList: [EconomicSeries!]!
     economicSeries(slug: String!): EconomicSeries

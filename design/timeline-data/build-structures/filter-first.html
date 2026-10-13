@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build F: filter first</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../builder/builder.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script type="module">
+import { page, state, struct, tree, datasets, structureSwitch, searchBox, onlyDataBox, subTotals, visible, subCount } from './frame.js';
+
+// F: search-led. The filter is the first thing in the column, large, with suggested words under it. The tree starts
+// folded to its categories and with only what holds data; typing opens what matches, down to dataset names. Empty
+// subsections are counted per category and can be shown in grey.
+const SUGGEST = { abstract: ['taxes', 'prices', 'housing', 'jobs', 'trade', 'oil', 'debt'], cap: ['inflation', 'budget', 'tax', 'unemployment', 'tariff', 'oil', 'housing'] };
+page({
+  variant: 'F. Filter first',
+  title: 'search the structure, then open what matches',
+  lede: 'The left column (400px) leads with a large filter and suggested words. The tree starts folded to its sections, showing only what holds data; typing opens every match, down to the dataset names. Empty subsections are counted per section and shown in grey on request.',
+  notes: `<h2>How it works</h2><ul>
+    <li><b>Folded and filtered to start.</b> Sections only, each with its count; “Only with data” is on, so the first view is the 10 sections (or 12 topics) that hold something.</li>
+    <li><b>Typing opens what matches</b>, with the matching dataset names under each subsection (up to three, then “+ N more”). Esc clears.</li>
+    <li><b>Suggested words</b> per structure, as quick ways in; a status line says how many subsections match.</li>
+    <li><b>The empty ones are still there</b>: turn off “Only with data” to see every subsection in grey, so the structure's full shape is a click away.</li>
+    <li>Good: the quickest way to peruse by word; short to start with. Weak: the whole structure is not seen at first; relies on knowing a word.</li></ul>`,
+  render(el) {
+    const rows = visible();
+    const shown = rows.reduce((n, r) => n + r.children.length, 0);
+    const withData = rows.reduce((n, r) => n + r.children.filter(c => subCount(c.sub)).length, 0);
+    const t = subTotals();
+    el.innerHTML = `<div class="f-body">
+      <div class="f-rail">
+        <div class="f-search">
+          ${searchBox(`Find in the ${struct().name}…`)}
+          <div class="f-chips">${SUGGEST[state.sid].map(w => `<button type="button" data-act="q:${w}">${w}</button>`).join('')}</div>
+          <div>${structureSwitch()}</div><div>${onlyDataBox()}</div>
+        </div>
+        <p class="f-status"><span>${state.query ? `${shown} ${struct().levels[1]}s match` : `${t.withData} of ${t.subs} ${struct().levels[1]}s hold data`}${state.query && !state.onlyData ? ` · ${withData} with data` : ''}</span>
+          ${state.query ? '' : '<span class="tools"><button type="button" class="link" data-act="collapse">Fold all</button><button type="button" class="link" data-act="expand">Open all</button></span>'}</p>
+        <div class="f-scroll">${tree({ rows })}</div>
+      </div>
+      ${datasets()}
+    </div>`;
+  },
+  init: {
+    start: q => { if (!q.get('all')) state.onlyData = true; if (!q.get('open')) struct().categories.forEach(c => state.closed.add(c.id)); },
+    reset: () => struct().categories.forEach(c => state.closed.add(c.id)),
+    act: a => { if (a.startsWith('q:')) state.query = a.slice(2); },
+  },
+});
+</script>
+</body>
+</html>

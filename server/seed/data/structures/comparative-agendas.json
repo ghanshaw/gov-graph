@@ -1,0 +1,1448 @@
+{
+  "id": "comparative-agendas",
+  "name": "Comparative Agendas Project",
+  "basis": "The topics of the Comparative Agendas Project, a political-science codebook used to code bills, hearings, executive orders, court cases and budgets.",
+  "levels": [
+    "major topic",
+    "subtopic"
+  ],
+  "source": {
+    "title": "CAP Master Topics Codebook, version 1.1 (August 9, 2022)",
+    "citation": "Jones, Bryan D., Frank R. Baumgartner, Sean M. Theriault, Derek A. Epp, Shruti Khandekar, Daniel Little. 2025. Policy Agendas Project: Codebook.",
+    "url": "https://comparativeagendas.net/pages/master-codebook",
+    "read": "2026-10-13",
+    "dataset": "cap-master-codebook",
+    "note": "The codebook says 220 subtopics; the page lists 213."
+  },
+  "licence": "CC BY-NC-SA 4.0 (© Comparative Agendas Project). This file is derived from the codebook and shared under the same licence.",
+  "categories": [
+    {
+      "id": "1",
+      "code": "1",
+      "name": "Macroeconomics",
+      "children": [
+        {
+          "id": "100",
+          "code": "100",
+          "name": "General",
+          "description": "Includes issues related to general domestic macroeconomic policy."
+        },
+        {
+          "id": "101",
+          "code": "101",
+          "name": "Interest Rates",
+          "description": "Includes issues related to inflation, cost of living, prices, and interest rates."
+        },
+        {
+          "id": "103",
+          "code": "103",
+          "name": "Unemployment Rate",
+          "description": "Includes issues related to the unemployment rate, impact of unemployment.",
+          "see_also": "502 training and retraining; 503 unemployment benefits."
+        },
+        {
+          "id": "104",
+          "code": "104",
+          "name": "Monetary Policy",
+          "description": "Includes issues related to the monetary policy, central bank, and the treasury."
+        },
+        {
+          "id": "105",
+          "code": "105",
+          "name": "National Budget",
+          "description": "Issues related to public debt, budgeting, and efforts to reduce deficits."
+        },
+        {
+          "id": "107",
+          "code": "107",
+          "name": "Tax Code",
+          "description": "Includes issues related to tax policy, the impact of taxes, and tax enforcement.",
+          "note": "Specific tax changes should be coded based upon the substantive area. For instance, airfare taxes should go in Air Travel (1003). General tax issues including changes to multiple substantive areas should be coded as 107."
+        },
+        {
+          "id": "108",
+          "code": "108",
+          "name": "Industrial Policy",
+          "description": "Includes issues related to manufacturing policy, industrial revitalization and growth."
+        },
+        {
+          "id": "110",
+          "code": "110",
+          "name": "Price Control",
+          "description": "Includes issues related to wage or price control, emergency price controls."
+        },
+        {
+          "id": "199",
+          "code": "199",
+          "name": "Other",
+          "description": "Includes issues related to other macroeconomics subtopics."
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "code": "2",
+      "name": "Civil Rights",
+      "children": [
+        {
+          "id": "200",
+          "code": "200",
+          "name": "General",
+          "description": "Includes issues related generally to civil rights and minority rights."
+        },
+        {
+          "id": "201",
+          "code": "201",
+          "name": "Minority Discrimination",
+          "description": "Includes issues related to minority, ethnic, and racial group discrimination."
+        },
+        {
+          "id": "202",
+          "code": "202",
+          "name": "Gender Discrimination",
+          "description": "Includes issues related to sex, gender, and sexual orientation discrimination."
+        },
+        {
+          "id": "204",
+          "code": "204",
+          "name": "Age Discrimination",
+          "description": "Includes issues related to age discrimination, including mandatory retirement age policies."
+        },
+        {
+          "id": "205",
+          "code": "205",
+          "name": "Handicap Discrimination",
+          "description": "Includes issues related to handicap and disease discrimination."
+        },
+        {
+          "id": "206",
+          "code": "206",
+          "name": "Voting Rights",
+          "description": "Includes issues related to voting rights, expanding or contracting the franchise, participation and related issues."
+        },
+        {
+          "id": "207",
+          "code": "207",
+          "name": "Freedom of Speech",
+          "description": "Issues related to freedom of speech, religious freedoms, and other types of freedom of expression."
+        },
+        {
+          "id": "208",
+          "code": "208",
+          "name": "Right to Privacy",
+          "description": "Includes issues related to privacy rights, including privacy of records, access to government information, and abortion rights."
+        },
+        {
+          "id": "209",
+          "code": "209",
+          "name": "Anti-Government",
+          "description": "Includes issues related to anti-government activity groups, such as the communist party and local insurgency groups."
+        },
+        {
+          "id": "299",
+          "code": "299",
+          "name": "Other",
+          "description": "Includes issues related to other civil rights subtopics."
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "code": "3",
+      "name": "Health",
+      "children": [
+        {
+          "id": "300",
+          "code": "300",
+          "name": "General",
+          "description": "Includes issues related generally to health care, including appropriations for general health care government agencies."
+        },
+        {
+          "id": "301",
+          "code": "301",
+          "name": "Health Care Reform",
+          "description": "Includes issues related to broad, comprehensive changes in the health care system."
+        },
+        {
+          "id": "302",
+          "code": "302",
+          "name": "Insurance",
+          "description": "Includes issues related to health insurance reform, regulation, availability, and cost."
+        },
+        {
+          "id": "321",
+          "code": "321",
+          "name": "Drug Industry",
+          "description": "Includes issues related to the regulation and promotion of pharmaceuticals, medical devices, and clinical labs."
+        },
+        {
+          "id": "322",
+          "code": "322",
+          "name": "Medical Facilities",
+          "description": "Issues related to facilities construction, regulation and payments, including waitlists and ambulance services."
+        },
+        {
+          "id": "323",
+          "code": "323",
+          "name": "Insurance Providers",
+          "description": "Includes issues related to provider and insurer payments and regulation, including other types of benefits or multiple benefits."
+        },
+        {
+          "id": "324",
+          "code": "324",
+          "name": "Medical Liability",
+          "description": "Includes issues related to medical liability, malpractice issues, medical fraud and abuse, and unfair practices."
+        },
+        {
+          "id": "325",
+          "code": "325",
+          "name": "Manpower",
+          "description": "Issues related to the supply and quantity of labor in the health care industry, training and licensing."
+        },
+        {
+          "id": "331",
+          "code": "331",
+          "name": "Disease Prevention",
+          "description": "Issues related to disease prevention, treatment, and health promotion, including specific diseases not covered in other subtopics."
+        },
+        {
+          "id": "332",
+          "code": "332",
+          "name": "Infants and Children",
+          "description": "Includes issues related to infants and children, including coverage and quality of care, health promotion, and school health programs."
+        },
+        {
+          "id": "333",
+          "code": "333",
+          "name": "Mental Health",
+          "description": "Includes issues related to mental health care and mental health disease."
+        },
+        {
+          "id": "334",
+          "code": "334",
+          "name": "Long-term Care",
+          "description": "Includes issues related to long term care, home health care, the terminally ill, and rehabilitation services.",
+          "see_also": "1303 elderly assistance; 1304 disability assistance."
+        },
+        {
+          "id": "335",
+          "code": "335",
+          "name": "Drug Coverage and Cost",
+          "description": "Includes issues related to prescription drug coverage, programs to pay for prescription drugs, and policy to reduce the cost of prescription drugs."
+        },
+        {
+          "id": "341",
+          "code": "341",
+          "name": "Tobacco Abuse",
+          "description": "Includes issues related to tobacco abuse, treatment, education, and health effects."
+        },
+        {
+          "id": "342",
+          "code": "342",
+          "name": "Drug and Alcohol Abuse",
+          "description": "Includes issues related to alcohol and illegal drug abuse, treatment, education, and health effects."
+        },
+        {
+          "id": "398",
+          "code": "398",
+          "name": "R&D",
+          "description": "Includes issues related to health care research and development."
+        },
+        {
+          "id": "399",
+          "code": "399",
+          "name": "Other",
+          "description": "Includes issues related to other health care topics."
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "code": "4",
+      "name": "Agriculture",
+      "children": [
+        {
+          "id": "400",
+          "code": "400",
+          "name": "General",
+          "description": "Includes issues related to general agriculture policy, including appropriations for general agriculture government agencies."
+        },
+        {
+          "id": "401",
+          "code": "401",
+          "name": "Trade",
+          "description": "Includes issues related to the regulation and impact of agricultural foreign trade."
+        },
+        {
+          "id": "402",
+          "code": "402",
+          "name": "Subsidies to Farmers",
+          "description": "Includes issues related to government subsidies to farmers and ranchers, including agricultural disaster insurance."
+        },
+        {
+          "id": "403",
+          "code": "403",
+          "name": "Food Inspection & Safety",
+          "description": "Includes issues related to food inspection and safety, including seafood, and labeling requirements."
+        },
+        {
+          "id": "404",
+          "code": "404",
+          "name": "Food Marketing & Promotion",
+          "description": "Includes issues related to the regulation of agricultural marketing and providing information to consumers regarding a healthy diet."
+        },
+        {
+          "id": "405",
+          "code": "405",
+          "name": "Animal and Crop Disease",
+          "description": "Includes issues related to animal and crop disease, pest control and pesticide regulation, and welfare for domesticated animals."
+        },
+        {
+          "id": "408",
+          "code": "408",
+          "name": "Fisheries & Fishing",
+          "description": "Includes issues related to fishing, commercial fishery regulation and conservation."
+        },
+        {
+          "id": "498",
+          "code": "498",
+          "name": "R&D",
+          "description": "Includes issues related to agricultural research and development."
+        },
+        {
+          "id": "499",
+          "code": "499",
+          "name": "Other",
+          "description": "Includes issues related to other agricultural subtopics."
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "code": "5",
+      "name": "Labor",
+      "children": [
+        {
+          "id": "500",
+          "code": "500",
+          "name": "General",
+          "description": "Includes issues generally related to labor, employment, and pensions, including appropriations for government agencies regulating labor policy."
+        },
+        {
+          "id": "501",
+          "code": "501",
+          "name": "Worker Safety",
+          "description": "Includes issues related to worker safety and protection and compensation for work-related injury and disease."
+        },
+        {
+          "id": "502",
+          "code": "502",
+          "name": "Employment Training",
+          "description": "Includes issues related to job training for adult workers, workforce development, and efforts to retrain displaced workers."
+        },
+        {
+          "id": "503",
+          "code": "503",
+          "name": "Employee Benefits",
+          "description": "Includes issues related to all employee benefits, pensions, and retirement accounts, including government-provided unemployment insurance."
+        },
+        {
+          "id": "504",
+          "code": "504",
+          "name": "Labor Unions",
+          "description": "Includes issues related to labor unions, collective bargaining, and employer-employee relations."
+        },
+        {
+          "id": "505",
+          "code": "505",
+          "name": "Fair Labor Standards",
+          "description": "Includes issues related to fair labor standards such as the minimum wage and overtime compensation, and labor law."
+        },
+        {
+          "id": "506",
+          "code": "506",
+          "name": "Youth Employment",
+          "description": "Includes issues related to youth employment, child labor and job training for youths."
+        },
+        {
+          "id": "529",
+          "code": "529",
+          "name": "Migrant and Seasonal",
+          "description": "Includes issues related to migrant, guest and seasonal workers."
+        },
+        {
+          "id": "599",
+          "code": "599",
+          "name": "Other",
+          "description": "Issues related to other labor policy."
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "code": "6",
+      "name": "Education",
+      "children": [
+        {
+          "id": "600",
+          "code": "600",
+          "name": "General",
+          "description": "Includes issues related to general education policy, including appropriations for government agencies regulating education policy."
+        },
+        {
+          "id": "601",
+          "code": "601",
+          "name": "Higher",
+          "description": "Includes issues related to higher education, student loans and education finance, and the regulation of colleges and universities."
+        },
+        {
+          "id": "602",
+          "code": "602",
+          "name": "Elementary & Secondary",
+          "description": "Includes issues related to elementary and primary schools, school reform, safety in schools, and efforts to generally improve educational standards and outcomes."
+        },
+        {
+          "id": "603",
+          "code": "603",
+          "name": "Underprivileged",
+          "description": "Includes issues related to education of underprivileged students, including adult literacy programs, bilingual education needs, and rural education initiatives."
+        },
+        {
+          "id": "604",
+          "code": "604",
+          "name": "Vocational",
+          "description": "Includes issues related to vocational education for children and adults and their impact."
+        },
+        {
+          "id": "606",
+          "code": "606",
+          "name": "Special",
+          "description": "Includes issues related to special education and education for the physically or mentally handicapped."
+        },
+        {
+          "id": "607",
+          "code": "607",
+          "name": "Excellence",
+          "description": "Includes issues related to education excellence, including efforts to increase the quality of specific areas, such as math, science or foreign language skills."
+        },
+        {
+          "id": "698",
+          "code": "698",
+          "name": "R&D",
+          "description": "Includes issues related to research and development in education."
+        },
+        {
+          "id": "699",
+          "code": "699",
+          "name": "Other",
+          "description": "Includes issues related to other subtopics in education policy."
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "code": "7",
+      "name": "Environment",
+      "children": [
+        {
+          "id": "700",
+          "code": "700",
+          "name": "General",
+          "description": "Includes issues related to general environmental policy, including appropriations for government agencies regulating environmental policy."
+        },
+        {
+          "id": "701",
+          "code": "701",
+          "name": "Drinking Water",
+          "description": "Includes issues related to domestic drinking water safety, supply, pollution, and additives (e.g., fluoridation)."
+        },
+        {
+          "id": "703",
+          "code": "703",
+          "name": "Waste Disposal",
+          "description": "Includes issues related to the disposal and treatment of wastewater, solid waste and runoff."
+        },
+        {
+          "id": "704",
+          "code": "704",
+          "name": "Hazardous Waste",
+          "description": "Includes issues related to hazardous waste and toxic chemical regulation, treatment, and disposal."
+        },
+        {
+          "id": "705",
+          "code": "705",
+          "name": "Air Pollution",
+          "description": "Includes issues related to air pollution, climate change, and noise pollution."
+        },
+        {
+          "id": "707",
+          "code": "707",
+          "name": "Recycling",
+          "description": "Includes issues related to recycling, reuse, and resource conservation."
+        },
+        {
+          "id": "708",
+          "code": "708",
+          "name": "Indoor Hazards",
+          "description": "Includes issues related to indoor environmental hazards, indoor air contamination (including on airlines), and indoor hazardous substances such as asbestos."
+        },
+        {
+          "id": "709",
+          "code": "709",
+          "name": "Species & Forest",
+          "description": "Includes issues related to species and forest protection, endangered species, control of the domestic illicit trade in wildlife products, and regulation of laboratory or performance animals."
+        },
+        {
+          "id": "711",
+          "code": "711",
+          "name": "Land and Water Conservation",
+          "description": "Includes issues related to land and water resource conservation."
+        },
+        {
+          "id": "798",
+          "code": "798",
+          "name": "R&D",
+          "description": "Includes issues related to research and development in environmental technology, not including alternative energy."
+        },
+        {
+          "id": "799",
+          "code": "799",
+          "name": "Other",
+          "description": "Includes issues related to other environmental subtopics."
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "code": "8",
+      "name": "Energy",
+      "children": [
+        {
+          "id": "800",
+          "code": "800",
+          "name": "General",
+          "description": "Includes issues generally related to energy policy, including appropriations for government agencies regulating energy policy."
+        },
+        {
+          "id": "801",
+          "code": "801",
+          "name": "Nuclear",
+          "description": "Includes issues related to nuclear energy, safety and security, and disposal of nuclear waste."
+        },
+        {
+          "id": "802",
+          "code": "802",
+          "name": "Electricity",
+          "description": "Includes issues related to general electricity, hydropower, and regulation of electrical utilities."
+        },
+        {
+          "id": "803",
+          "code": "803",
+          "name": "Natural Gas & Oil",
+          "description": "Includes issues related to natural gas and oil, drilling, oil spills and flaring, oil and gas prices, shortages and gasoline regulation."
+        },
+        {
+          "id": "805",
+          "code": "805",
+          "name": "Coal",
+          "description": "Includes issues related to coal production, use, trade, and regulation, including coal gasification and clean coal technologies."
+        },
+        {
+          "id": "806",
+          "code": "806",
+          "name": "Alternative & Renewable",
+          "description": "Includes issues related to alternative and renewable energy, biofuels, hydrogen and geothermal power."
+        },
+        {
+          "id": "807",
+          "code": "807",
+          "name": "Conservation",
+          "description": "Includes issues related to energy conservation and energy efficiency, including vehicles, homes, commercial use and government."
+        },
+        {
+          "id": "898",
+          "code": "898",
+          "name": "R&D",
+          "description": "Includes issues related to energy research and development."
+        },
+        {
+          "id": "899",
+          "code": "899",
+          "name": "Other",
+          "description": "Includes issues related to other energy subtopics."
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "code": "9",
+      "name": "Immigration",
+      "children": [
+        {
+          "id": "900",
+          "code": "900",
+          "name": "Immigration",
+          "description": "Includes issues related to immigration, refugees, and citizenship."
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "code": "10",
+      "name": "Transportation",
+      "children": [
+        {
+          "id": "1000",
+          "code": "1000",
+          "name": "General",
+          "description": "Includes issues related generally to transportation, including appropriations for government agencies regulating transportation policy."
+        },
+        {
+          "id": "1001",
+          "code": "1001",
+          "name": "Mass",
+          "description": "Includes issues related to mass transportation construction, regulation, safety, and availability."
+        },
+        {
+          "id": "1002",
+          "code": "1002",
+          "name": "Highways",
+          "description": "Includes issues related to public highway construction, maintenance, and safety."
+        },
+        {
+          "id": "1003",
+          "code": "1003",
+          "name": "Air Travel",
+          "description": "Includes issues related to air travel, regulation and safety of aviation, airports, air traffic control, pilot training, and aviation technology."
+        },
+        {
+          "id": "1005",
+          "code": "1005",
+          "name": "Railroad Travel",
+          "description": "Includes issues related to railroads, rail travel, rail freight, and the development and deployment of new rail technologies."
+        },
+        {
+          "id": "1007",
+          "code": "1007",
+          "name": "Maritime",
+          "description": "Includes issues related to maritime transportation, including maritime freight and shipping, safety and security, and inland waterways and channels."
+        },
+        {
+          "id": "1010",
+          "code": "1010",
+          "name": "Infrastructure",
+          "description": "Includes issues related to infrastructure and public works, including employment initiatives."
+        },
+        {
+          "id": "1098",
+          "code": "1098",
+          "name": "R&D",
+          "description": "Includes issues related to transportation research and development."
+        },
+        {
+          "id": "1099",
+          "code": "1099",
+          "name": "Other",
+          "description": "Includes issues related to other transportation subtopics."
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "code": "12",
+      "name": "Law and Crime",
+      "children": [
+        {
+          "id": "1200",
+          "code": "1200",
+          "name": "General",
+          "description": "Includes issues related to general law, crime, and family issues."
+        },
+        {
+          "id": "1201",
+          "code": "1201",
+          "name": "Agencies",
+          "description": "Includes issues related to all law enforcement agencies, including border, customs, and other specialized enforcement agencies and their appropriations."
+        },
+        {
+          "id": "1202",
+          "code": "1202",
+          "name": "White Collar Crime",
+          "description": "Includes issues related to white collar crime, organized crime, counterfeiting and fraud, cyber-crime, and money laundering."
+        },
+        {
+          "id": "1203",
+          "code": "1203",
+          "name": "Illegal Drugs",
+          "description": "Issues related to illegal drug crime and enforcement, criminal penalties for drug crimes, including international efforts to combat drug trafficking."
+        },
+        {
+          "id": "1204",
+          "code": "1204",
+          "name": "Court Administration",
+          "description": "Includes issues related to court administration, judiciary appropriations, guidelines for bail, pre-release, fines and legal representation."
+        },
+        {
+          "id": "1205",
+          "code": "1205",
+          "name": "Prisons",
+          "description": "Includes issues related to prisons and jails, parole systems, and appropriations."
+        },
+        {
+          "id": "1206",
+          "code": "1206",
+          "name": "Juvenile Crime",
+          "description": "Includes issues related to juvenile crime and justice, juvenile prisons and jails, and efforts to reduce juvenile crime and recidivism."
+        },
+        {
+          "id": "1207",
+          "code": "1207",
+          "name": "Child Abuse",
+          "description": "Includes issues related to child abuse, child pornography, sexual exploitation of children and parental kidnapping."
+        },
+        {
+          "id": "1208",
+          "code": "1208",
+          "name": "Family Issues",
+          "description": "Includes issues related to family issues, domestic violence, child welfare, family law."
+        },
+        {
+          "id": "1210",
+          "code": "1210",
+          "name": "Criminal & Civil Code",
+          "description": "Includes issues related to domestic criminal and civil codes, including crimes not mentioned in other subtopics."
+        },
+        {
+          "id": "1211",
+          "code": "1211",
+          "name": "Crime Control",
+          "description": "Includes issues related to the control, prevention, and impact of crime."
+        },
+        {
+          "id": "1227",
+          "code": "1227",
+          "name": "Police",
+          "description": "Includes issues related to Police and other general domestic security responses to terrorism, such as special police."
+        },
+        {
+          "id": "1299",
+          "code": "1299",
+          "name": "Other",
+          "description": "Includes issues related to other law, crime, and family subtopics."
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "code": "13",
+      "name": "Social Welfare",
+      "children": [
+        {
+          "id": "1300",
+          "code": "1300",
+          "name": "General",
+          "description": "Includes issues generally related to social welfare policy."
+        },
+        {
+          "id": "1302",
+          "code": "1302",
+          "name": "Low-Income Assistance",
+          "description": "Includes issues related to poverty assistance for low-income families, including food assistance programs, programs to assess or alleviate welfare dependency and tax credits directed at low-income families."
+        },
+        {
+          "id": "1303",
+          "code": "1303",
+          "name": "Elderly Assistance",
+          "description": "Includes issues related to elderly issues and elderly assistance, including government pensions."
+        },
+        {
+          "id": "1304",
+          "code": "1304",
+          "name": "Disabled Assistance",
+          "description": "Includes issues related to aid for people with physical or mental disabilities."
+        },
+        {
+          "id": "1305",
+          "code": "1305",
+          "name": "Volunteer Associations",
+          "description": "Includes issues related to domestic volunteer associations, charities, and youth organizations."
+        },
+        {
+          "id": "1308",
+          "code": "1308",
+          "name": "Child Care",
+          "description": "Includes issues related to parental leave and child care."
+        },
+        {
+          "id": "1399",
+          "code": "1399",
+          "name": "Other",
+          "description": "Includes issues related to other social welfare policy subtopics."
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "code": "14",
+      "name": "Housing",
+      "children": [
+        {
+          "id": "1400",
+          "code": "1400",
+          "name": "General",
+          "description": "Includes issues related generally to housing and urban affairs."
+        },
+        {
+          "id": "1401",
+          "code": "1401",
+          "name": "Community Development",
+          "description": "Includes issues related to housing and community development, neighborhood development, and national housing policy."
+        },
+        {
+          "id": "1403",
+          "code": "1403",
+          "name": "Urban Development",
+          "description": "Includes issues related to urban development and general urban issues."
+        },
+        {
+          "id": "1404",
+          "code": "1404",
+          "name": "Rural Housing",
+          "description": "Includes issues related to rural housing."
+        },
+        {
+          "id": "1405",
+          "code": "1405",
+          "name": "Rural Development",
+          "description": "Includes non-housing issues focused on economic, infrastructure, and other developments in non-urban areas."
+        },
+        {
+          "id": "1406",
+          "code": "1406",
+          "name": "Low-Income Assistance",
+          "description": "Includes issues related to housing for low-income individuals and families, including public housing projects and housing affordability programs."
+        },
+        {
+          "id": "1407",
+          "code": "1407",
+          "name": "Veterans",
+          "description": "Includes issues related to housing for military veterans and their families, including subsidies for veterans."
+        },
+        {
+          "id": "1408",
+          "code": "1408",
+          "name": "Elderly",
+          "description": "Includes issues related to housing for the elderly, including housing facilities for the handicapped elderly."
+        },
+        {
+          "id": "1409",
+          "code": "1409",
+          "name": "Homeless",
+          "description": "Includes issues related to housing for the homeless and efforts to reduce homelessness."
+        },
+        {
+          "id": "1498",
+          "code": "1498",
+          "name": "R&D",
+          "description": "Includes issues related to housing and community development research and development."
+        },
+        {
+          "id": "1499",
+          "code": "1499",
+          "name": "Other",
+          "description": "Other issues related to housing and community development."
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "code": "15",
+      "name": "Domestic Commerce",
+      "children": [
+        {
+          "id": "1500",
+          "code": "1500",
+          "name": "General",
+          "description": "Includes issues generally related to domestic commerce, including appropriations for government agencies regulating domestic commerce."
+        },
+        {
+          "id": "1501",
+          "code": "1501",
+          "name": "Banking",
+          "description": "Includes issues related to the regulation of national banking systems and other non-bank financial institutions."
+        },
+        {
+          "id": "1502",
+          "code": "1502",
+          "name": "Securities & Commodities",
+          "description": "Includes issues related to the regulation and facilitation of securities and commodities trading, regulation of investments and related industries, and exchanges."
+        },
+        {
+          "id": "1504",
+          "code": "1504",
+          "name": "Consumer Finance",
+          "description": "Includes issues related to consumer finance, mortgages, credit cards, access to credit records, and consumer credit fraud."
+        },
+        {
+          "id": "1505",
+          "code": "1505",
+          "name": "Insurance Regulation",
+          "description": "Includes issues related to insurance regulation, fraud and abuse in the insurance industry, the financial health of the insurance industry, and insurance availability and cost."
+        },
+        {
+          "id": "1507",
+          "code": "1507",
+          "name": "Bankruptcy",
+          "description": "Includes issues related to personal, commercial, and municipal bankruptcies."
+        },
+        {
+          "id": "1520",
+          "code": "1520",
+          "name": "Corporate Management",
+          "description": "Includes issues related to corporate mergers, antitrust regulation, corporate accounting and governance, and corporate management."
+        },
+        {
+          "id": "1521",
+          "code": "1521",
+          "name": "Small Businesses",
+          "description": "Includes issues related to small businesses, including programs to promote and subsidize small businesses."
+        },
+        {
+          "id": "1522",
+          "code": "1522",
+          "name": "Copyrights and Patents",
+          "description": "Includes issues related to copyrights and patents, patent reform, and intellectual property."
+        },
+        {
+          "id": "1523",
+          "code": "1523",
+          "name": "Disaster Relief",
+          "description": "Includes issues related to domestic natural disaster relief, disaster or flood insurance, and natural disaster preparedness."
+        },
+        {
+          "id": "1524",
+          "code": "1524",
+          "name": "Tourism",
+          "description": "Issues related to tourism regulation, promotion, and impact."
+        },
+        {
+          "id": "1525",
+          "code": "1525",
+          "name": "Consumer Safety",
+          "description": "Includes issues related to consumer fraud and safety in domestic commerce."
+        },
+        {
+          "id": "1526",
+          "code": "1526",
+          "name": "Sports Regulation",
+          "description": "Includes issues related to the regulation and promotion of sports, gambling, and personal fitness."
+        },
+        {
+          "id": "1598",
+          "code": "1598",
+          "name": "R&D",
+          "description": "Includes issues related to domestic commerce research and development."
+        },
+        {
+          "id": "1599",
+          "code": "1599",
+          "name": "Other",
+          "description": "Includes issues related to other domestic commerce policy subtopics."
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "code": "16",
+      "name": "Defense",
+      "children": [
+        {
+          "id": "1600",
+          "code": "1600",
+          "name": "General",
+          "description": "Includes issues related generally to defense policy, and appropriations for agencies that oversee general defense policy."
+        },
+        {
+          "id": "1602",
+          "code": "1602",
+          "name": "Alliances",
+          "description": "Includes issues related to defense alliance and agreement, security assistance, and UN peacekeeping activities."
+        },
+        {
+          "id": "1603",
+          "code": "1603",
+          "name": "Intelligence",
+          "description": "Includes issues related to military intelligence, espionage, and covert operations."
+        },
+        {
+          "id": "1604",
+          "code": "1604",
+          "name": "Readiness",
+          "description": "Includes issues related to military readiness, coordination of armed services air support and sealift capabilities, and national stockpiles of strategic materials."
+        },
+        {
+          "id": "1605",
+          "code": "1605",
+          "name": "Nuclear Arms",
+          "description": "Includes issues related to nuclear weapons, nuclear proliferation, modernization of nuclear equipment."
+        },
+        {
+          "id": "1606",
+          "code": "1606",
+          "name": "Military Aid",
+          "description": "Includes issues related to military aid to other countries and the control of arms sales to other countries."
+        },
+        {
+          "id": "1608",
+          "code": "1608",
+          "name": "Personnel Issues",
+          "description": "Includes issues related to military manpower, military personel and their dependents, military courts, and general veterans' issues."
+        },
+        {
+          "id": "1610",
+          "code": "1610",
+          "name": "Procurement",
+          "description": "Includes issues related to military procurement, conversion of old equipment, and weapons systems evaluation."
+        },
+        {
+          "id": "1611",
+          "code": "1611",
+          "name": "Installations & Land",
+          "description": "Includes issues related to military installations, construction, and land transfers."
+        },
+        {
+          "id": "1612",
+          "code": "1612",
+          "name": "Reserve Forces",
+          "description": "Issues related to military reserves and reserve affairs."
+        },
+        {
+          "id": "1614",
+          "code": "1614",
+          "name": "Hazardous Waste",
+          "description": "Includes issues related to military nuclear and hazardous waste disposal and military environmental compliance."
+        },
+        {
+          "id": "1615",
+          "code": "1615",
+          "name": "Civil",
+          "description": "Includes issues related to domestic civil defense, national security responses to terrorism, and other issues related to homeland security."
+        },
+        {
+          "id": "1616",
+          "code": "1616",
+          "name": "Civilian Personnel",
+          "description": "Includes issues related to non-contractor civilian personnel, civilian employment in the defense industry, and military base closings."
+        },
+        {
+          "id": "1617",
+          "code": "1617",
+          "name": "Contractors",
+          "description": "Includes issues related to military contractors and contracting, oversight of military contrators and fraud by military contractors."
+        },
+        {
+          "id": "1619",
+          "code": "1619",
+          "name": "Foreign Operations",
+          "description": "Includes issues related to direct war-related foreign military operations, prisoners of war and collateral damage to civilian populations."
+        },
+        {
+          "id": "1620",
+          "code": "1620",
+          "name": "Claims against Military",
+          "description": "Includes issues related to claims against the military, settlements for military dependents, and compensation for civilians injured in military operations."
+        },
+        {
+          "id": "1698",
+          "code": "1698",
+          "name": "R&D",
+          "description": "Includes issues related to defense research and development."
+        },
+        {
+          "id": "1699",
+          "code": "1699",
+          "name": "Other",
+          "description": "Includes issues related to other defense policy subtopics."
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "code": "17",
+      "name": "Technology",
+      "children": [
+        {
+          "id": "1700",
+          "code": "1700",
+          "name": "General",
+          "description": "Includes issues related to general space, science, technology, and communications."
+        },
+        {
+          "id": "1701",
+          "code": "1701",
+          "name": "Space",
+          "description": "Includes issues related to the government use of space and space resource exploitation agreements, government space programs and space exploration, military use of space."
+        },
+        {
+          "id": "1704",
+          "code": "1704",
+          "name": "Commercial Use of Space",
+          "description": "Includes issues related to the regulation and promotion of commercial use of space, commercial satellite technology, and government efforts to encourage commercial space development."
+        },
+        {
+          "id": "1705",
+          "code": "1705",
+          "name": "Science Transfer",
+          "description": "Includes issues related to science and technology transfer and international science cooperation."
+        },
+        {
+          "id": "1706",
+          "code": "1706",
+          "name": "Telecommunications",
+          "description": "Includes issues related to telephones and telecommunication regulation, infrastructure for high-speed internet, and other forms of telecommunication (e.g., mobile phones)."
+        },
+        {
+          "id": "1707",
+          "code": "1707",
+          "name": "Broadcast",
+          "description": "Includes issues related to the broadcast industry, published media, and control of the electromagnetic spectrum."
+        },
+        {
+          "id": "1708",
+          "code": "1708",
+          "name": "Weather Forecasting",
+          "description": "Includes issues related to weather forecasting, oceanography, geological surveys, and weather forecasting research and technology."
+        },
+        {
+          "id": "1709",
+          "code": "1709",
+          "name": "Computers",
+          "description": "Includes issues relating to the computer industry, regulation of the internet, and cyber security."
+        },
+        {
+          "id": "1798",
+          "code": "1798",
+          "name": "R&D",
+          "description": "Includes issues related to space, science, technology, and communication research and development not mentioned in other subtopics."
+        },
+        {
+          "id": "1799",
+          "code": "1799",
+          "name": "Other",
+          "description": "Includes issues related to other space, science, technology, and communication research and development."
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "code": "18",
+      "name": "Foreign Trade",
+      "children": [
+        {
+          "id": "1800",
+          "code": "1800",
+          "name": "General",
+          "description": "Includes issues generally related to foreign trade and appropriations for government agencies generally regulating foreign trade."
+        },
+        {
+          "id": "1802",
+          "code": "1802",
+          "name": "Trade Agreements",
+          "description": "Includes issues related to trade negotiations, disputes, and agreements, including tax treaties."
+        },
+        {
+          "id": "1803",
+          "code": "1803",
+          "name": "Exports",
+          "description": "Includes issues related to export regulation, subsidies, promotion, and control."
+        },
+        {
+          "id": "1804",
+          "code": "1804",
+          "name": "Private Investments",
+          "description": "Includes issues related to international private business investment and corporate development."
+        },
+        {
+          "id": "1806",
+          "code": "1806",
+          "name": "Competitiveness",
+          "description": "Includes issues related to productivity of competitiveness of domestic businesses and balance of payments issues."
+        },
+        {
+          "id": "1807",
+          "code": "1807",
+          "name": "Tariff & Imports",
+          "description": "Includes issues related to tariffs and other barriers to imports, import regulation and impact of imports on domestic industries."
+        },
+        {
+          "id": "1808",
+          "code": "1808",
+          "name": "Exchange Rates",
+          "description": "Includes issues related to exchange rate and related issues."
+        },
+        {
+          "id": "1899",
+          "code": "1899",
+          "name": "Other",
+          "description": "Includes issues related to other foreign trade policy subtopics."
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "code": "19",
+      "name": "International Affairs",
+      "children": [
+        {
+          "id": "1900",
+          "code": "1900",
+          "name": "General",
+          "description": "Includes issues related to general international affairs and foreign aid, including appropriations for general government foreign affairs agencies."
+        },
+        {
+          "id": "1901",
+          "code": "1901",
+          "name": "Foreign Aid",
+          "description": "Includes issues related to foreign aid not directly targeting at increasing international development."
+        },
+        {
+          "id": "1902",
+          "code": "1902",
+          "name": "Resources Exploitation",
+          "description": "Includes issues related to international resources exploitation and resources agreements, law of the sea and international ocean conservation efforts."
+        },
+        {
+          "id": "1905",
+          "code": "1905",
+          "name": "Developing Countries",
+          "description": "Includes issues related specifically to developing countries (for Financial Issues see 1906)."
+        },
+        {
+          "id": "1906",
+          "code": "1906",
+          "name": "International Finance",
+          "description": "Includes issues related to international finance and economic development, the World Bank and International Monetary Fund, regional development banks, sovereign debt and implications for international lending institutions."
+        },
+        {
+          "id": "1910",
+          "code": "1910",
+          "name": "Western Europe",
+          "description": "Includes issues related to Western Europe and the European Union."
+        },
+        {
+          "id": "1921",
+          "code": "1921",
+          "name": "Specific Country",
+          "description": "Includes issues related specifically to a foreign country or region not codable using other codes, assessment of political issues in other countries, relations between individual countries."
+        },
+        {
+          "id": "1925",
+          "code": "1925",
+          "name": "Human Rights",
+          "description": "Includes issues related to human rights, human rights violations, human rights treaties and conventions, UN reports on human rights, crimes associated with genocide or crimes against humanity."
+        },
+        {
+          "id": "1926",
+          "code": "1926",
+          "name": "Organizations",
+          "description": "International organizations, NGOs, the United Nations, International Red Cross, UNESCO, International Olympic Committee, International Criminal Court."
+        },
+        {
+          "id": "1927",
+          "code": "1927",
+          "name": "Terrorism",
+          "description": "Includes issues related to international terrorism, hijacking, and acts of piracy in other countries, efforts to fight international terrorism, international legal mechanisms to combat terrorism."
+        },
+        {
+          "id": "1929",
+          "code": "1929",
+          "name": "Diplomats",
+          "description": "Includes issues related to diplomats, diplomacy, embassies, citizens abroad, foreign diplomats in the country, visas and passports."
+        },
+        {
+          "id": "1999",
+          "code": "1999",
+          "name": "Other",
+          "description": "Includes issues related to other international affairs policy subtopics."
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "code": "20",
+      "name": "Government Operations",
+      "children": [
+        {
+          "id": "2000",
+          "code": "2000",
+          "name": "General",
+          "description": "Includes issues related to general government operations, including appropriations for multiple government agencies."
+        },
+        {
+          "id": "2001",
+          "code": "2001",
+          "name": "Intergovernmental Relations",
+          "description": "Includes issues related to intergovernmental relations, local government issues."
+        },
+        {
+          "id": "2002",
+          "code": "2002",
+          "name": "Bureaucracy",
+          "description": "Includes issues related to general government efficiencies and bureaucratic oversight."
+        },
+        {
+          "id": "2003",
+          "code": "2003",
+          "name": "Postal Service",
+          "description": "Includes issues related to postal services, regulation of mail, and post-civil service."
+        },
+        {
+          "id": "2004",
+          "code": "2004",
+          "name": "Employees",
+          "description": "Includes issues related to civil employees not mentioned in other subtopics, government pensions and general civil service issues."
+        },
+        {
+          "id": "2005",
+          "code": "2005",
+          "name": "Appointments",
+          "description": "Includes issues related to nominations and appointments not mentioned elsewhere."
+        },
+        {
+          "id": "2006",
+          "code": "2006",
+          "name": "Currency",
+          "description": "Includes issues related the currency, national mints, medals, and commemorative coins."
+        },
+        {
+          "id": "2007",
+          "code": "2007",
+          "name": "Procurement & Contractors",
+          "description": "Includes issues related to government procurement, government contractors, contractor and procurement fraud, and procurement processes and systems."
+        },
+        {
+          "id": "2008",
+          "code": "2008",
+          "name": "Property Management",
+          "description": "Includes issues related to government property management, construction, and regulation."
+        },
+        {
+          "id": "2009",
+          "code": "2009",
+          "name": "Tax Administration",
+          "description": "Includes issues related to tax administration, enforcement, and auditing for both individuals and corporations."
+        },
+        {
+          "id": "2010",
+          "code": "2010",
+          "name": "Scandals",
+          "description": "Includes issues related to public scandal and impeachment."
+        },
+        {
+          "id": "2011",
+          "code": "2011",
+          "name": "Branch Relations",
+          "description": "Includes issues related to government branch relations, administrative issues, and constitutional reforms."
+        },
+        {
+          "id": "2012",
+          "code": "2012",
+          "name": "Political Campaigns",
+          "description": "Includes issues related to the regulation of political campaigns, campaign finance, political advertising and voter registration."
+        },
+        {
+          "id": "2013",
+          "code": "2013",
+          "name": "Census & Statistics",
+          "description": "Includes issues related to census and statistics collection by government."
+        },
+        {
+          "id": "2014",
+          "code": "2014",
+          "name": "Capital City",
+          "description": "Includes issues related to the capital city."
+        },
+        {
+          "id": "2015",
+          "code": "2015",
+          "name": "Claims against the government",
+          "description": "Includes issues related to claims against the government, compensation for the victims of terrorist attacks, compensation policies without other substantive provisions."
+        },
+        {
+          "id": "2030",
+          "code": "2030",
+          "name": "National Holidays",
+          "description": "Includes issues related to national holidays and their observation."
+        },
+        {
+          "id": "2099",
+          "code": "2099",
+          "name": "Other",
+          "description": "Includes issues related to other government operations subtopics."
+        }
+      ]
+    },
+    {
+      "id": "21",
+      "code": "21",
+      "name": "Public Lands",
+      "children": [
+        {
+          "id": "2100",
+          "code": "2100",
+          "name": "General",
+          "description": "Includes issues related to general public lands, water management, and territorial issues."
+        },
+        {
+          "id": "2101",
+          "code": "2101",
+          "name": "National Parks",
+          "description": "Includes issues related to national parks, memorials, historic sites, and recreation, including the management and staffing of cultural sites."
+        },
+        {
+          "id": "2102",
+          "code": "2102",
+          "name": "Indigenous Affairs",
+          "description": "Includes issues related to indigenous affairs, indigenous lands, and assistance to indigenous people."
+        },
+        {
+          "id": "2103",
+          "code": "2103",
+          "name": "Public Lands",
+          "description": "Includes issues related to natural resources, public lands, and forest management, including forest fires, livestock grazing."
+        },
+        {
+          "id": "2104",
+          "code": "2104",
+          "name": "Water Resources",
+          "description": "Includes issues related to water resources, water resource development and civil works, flood control, and research."
+        },
+        {
+          "id": "2105",
+          "code": "2105",
+          "name": "Dependencies & Territories",
+          "description": "Includes issues related to territorial and dependency issues and devolution."
+        },
+        {
+          "id": "2199",
+          "code": "2199",
+          "name": "Other",
+          "description": "Includes issues related to other public lands policy subtopics."
+        }
+      ]
+    },
+    {
+      "id": "23",
+      "code": "23",
+      "name": "Culture",
+      "children": [
+        {
+          "id": "2300",
+          "code": "2300",
+          "name": "General",
+          "description": "Includes issues related to general cultural policy issues."
+        }
+      ]
+    }
+  ]
+}

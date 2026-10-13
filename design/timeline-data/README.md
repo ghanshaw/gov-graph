@@ -13,6 +13,41 @@ They draw **real data**: `shared/data.js` is 59 series pulled from the local Gra
 context events (laws, the tariff order) are entered by hand in `shared/catalog.js`; in the app they would
 come from `timelineEvents`. Screenshots are in `screenshots/`.
 
+## Build by structure (2026-10-13): `build-structures/`
+
+Direction from review of `abstract-nav/`: Browse and Build become separate tabs; Build can switch between structures
+(the Statistical Abstract and the Comparative Agendas Project's topics, from `server/seed/data/structures/`); the
+category list is wide and shows the whole nested structure as the Structure page does, empty categories greyed or
+filtered out; choosing a subsection shows every dataset under it (the choosing itself stays as in the app); a filter
+over categories and dataset names. Data in `data.js` (27 measures placed in both structures as a proposal), shared
+code in `frame.js`, styles in `style.css`.
+
+- **D. Wide tree** (`wide-tree.html`): the whole structure open in a 440px left column, filter and switch above it.
+- **D.1 Wide tree, down to the measure** (`wide-tree-1.html`, `d1.js`, `d1.css`): D with a third level, the measure as
+  the leaf (Macroeconomics → General → GDP). Choosing it runs the app's own Build choices: `dimensions.js` is copied
+  from `client/src/dimensions.js`, the app's styles for them are in `app-builder.css`, and `builder-data.js` holds the
+  vocabulary and every national series with its dimensions and dates (local database, 2026-10-13). No codes.
+- **E. Map, then focus** (`map-focus.html`): the whole structure across the panel in three columns; choosing a
+  subsection folds it into a 360px column, only its section open, with the datasets beside.
+- **F. Filter first** (`filter-first.html`): a large filter with suggested words; the tree starts folded and filtered
+  to what holds data, and opens on matches down to dataset names.
+
+URL options for all three: `?structure=cap`, `?q=tax`, `?only=1`, `?sub=<subsection id>`, `?tab=browse`.
+
+## Build mode navigation by the Statistical Abstract (2026-10-13): `abstract-nav/`
+
+The measure list in Build mode's left column, regrouped by the 2012 Abstract (sections and subsections as printed
+in its contents, pages vii–x; data in `abstract.js`, shared frame in `abstract-frame.js`). Today's 27
+measures are placed by hand as a proposal; ◇ marks one no Abstract table holds (placed by GovGraph, with the reason).
+
+- **A. Contents** (`a-contents.html`): the book's contents as the rail, section → subsection → measure, folding.
+  "With data" (default) shows the 10 sections that hold something; "All 30" shows the whole book with empty parts grey.
+- **B. Section index** (`b-index.html`): the 30 sections in the rail (with data first); the panel lists the chosen
+  section's subsections in book order, measures as cards, empty subsections "Not collected yet". A measure opens the
+  builder in the panel, with a link back.
+- **Structure tab** (both options, `?tab=structure`): the whole book at a glance, every section with its subsections
+  nested under it and the measures each holds; a measure opens it in Build.
+
 ## Build mode concepts (2026-10-13): `builder/`
 
 The catalogue's Build mode (`client/src/components/DatasetBuilder.jsx`) treats every dimension as an equal row, so

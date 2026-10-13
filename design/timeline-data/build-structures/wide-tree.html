@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build D: wide tree</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../builder/builder.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script type="module">
+import { page, state, tree, datasets, structureSwitch, searchBox, onlyDataBox } from './frame.js';
+
+// D: the tree is the left column, made wide (440px) so the whole nested structure reads as on the Structure page:
+// every category open, subsections on connector lines, empty ones grey (or hidden with "Only with data").
+// The filter sits above it; the chosen subsection's datasets fill the right.
+page({
+  variant: 'D. Wide tree',
+  title: 'the whole structure as the left column',
+  lede: 'Browse and Build are separate tabs. In Build, the left column is the chosen structure, Statistical Abstract or CAP’s policy topics, fully nested and wide enough to read. Empty subsections are grey, or hidden with “Only with data”. The filter narrows sections, subsections and dataset names as you type. Choosing a subsection lists every dataset under it.',
+  notes: `<h2>How it works</h2><ul>
+    <li><b>Wide, open tree.</b> 440px, every category open to start, as on the Structure page; − / + fold it all. The column scrolls on its own.</li>
+    <li><b>Structure switch</b> at the top of the column. Each structure remembers nothing of the other; switching clears the choice.</li>
+    <li><b>Filter</b> matches category and subsection names, CAP's descriptions, and every dataset name. A subsection listed only because a dataset matched shows the matching names under it, so you can peruse without opening it.</li>
+    <li><b>Grey or hidden.</b> Empty subsections stay in place in grey by default, so the structure keeps its shape; “Only with data” drops them.</li>
+    <li>Good: the closest to the Structure page, one glance from structure to datasets. Weak: the datasets pane is narrower; on a laptop the tree takes 40% of the width.</li></ul>`,
+  render(el) {
+    el.innerHTML = `<div class="d-body">
+      <div class="d-rail">
+        <div class="d-controls">
+          ${structureSwitch()}
+          ${searchBox()}
+          <div class="row2">${onlyDataBox()}<span class="tools"><button type="button" class="link" data-act="collapse" title="Fold all">−</button><button type="button" class="link" data-act="expand" title="Open all">+</button></span></div>
+        </div>
+        <div class="d-scroll">${tree()}</div>
+      </div>
+      ${datasets()}
+    </div>`;
+  },
+  init: { start: () => { if (!state.selected) state.selected = 'labor-force-employment-and-earnings/unemployment'; } },
+});
+</script>
+</body>
+</html>

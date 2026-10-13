@@ -25,7 +25,7 @@ import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
 import { pipeline } from 'stream/promises';
-import { mirrorFile, DATA_DIR } from '../lib/data-dir.js';
+import { mirrorFile, DATA_DIR, recordFetch } from '../lib/data-dir.js';
 
 const arg = name => {
   const i = process.argv.indexOf(name);
@@ -74,6 +74,7 @@ async function download(file) {
   const size = fs.statSync(partial).size;
   if (size !== file.size) throw new Error(`${file.name}: got ${size} bytes, listing says ${file.size}`);
   fs.renameSync(partial, target);
+  recordFetch(target, file.url);
   return 'downloaded';
 }
 

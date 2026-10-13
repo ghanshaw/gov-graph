@@ -13,7 +13,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { DATA_DIR, mirrorFile } from '../lib/data-dir.js';
+import { DATA_DIR, mirrorFile, recordFetch } from '../lib/data-dir.js';
 import { readReports, reportFileUrl, reportFile, govinfoPdfUrl, govinfoModsUrl } from '../lib/reports.js';
 
 const arg = name => {
@@ -30,6 +30,7 @@ async function fetchTo(url, file) {
   const body = Buffer.from(await res.arrayBuffer());
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, body);
+  recordFetch(file, url);
   console.log(`  ${path.relative(DATA_DIR, file)}: ${(body.length / 1e6).toFixed(2)} MB`);
   await sleep(200);
 }
