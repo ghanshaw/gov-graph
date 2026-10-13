@@ -69,7 +69,8 @@ The live database has moved past the pattern below. Tables: `executive_documents
 `legislative_documents`, `legislative_document_sections`, `bill_actions`, `roll_calls`, `member_votes`,
 `congresses`, `people`, `person_roles`, `bill_sponsors`, `bill_relationships`, `bill_titles` (see Search under Bill Text), `proposals`, `economic_series` / `economic_observations`
 (see Economic Data), `periods` (see Timeline), `reports` / `report_parts` (see Reports), the source registry
-`source_organizations`, `source_lineage`, `source_datasets`, `source_dataset_organizations`, `source_files` (see Data Sources), the U.S. Code tables `usc_release_points`,
+`source_organizations`, `source_lineage`, `source_datasets`, `source_dataset_organizations`, `source_files` (see Data Sources),
+the Statistical Abstract's `statab_sections`, `statab_subsections`, `statab_tables` (see Statistical Abstract), the U.S. Code tables `usc_release_points`,
 `usc_titles`, `usc_nodes`, `usc_section_versions`, `usc_source_credits` (see U.S. Code below), and the
 case-graph tables `cg_cases`, `cg_case_relationships`, `cg_scdb_cases`, `cg_data_sources`.
 There is no `documents` or `document_relationships` table, and `server/seed/schema.sql`
@@ -627,6 +628,15 @@ continues it under licence) is the foundation of all data collection (user, 2026
   `construction-housing.html`); each lists its subsections (`<h3>`, alphabetical on the page, so book order comes
   from table numbers) with every table as `…/131ed/tables/12sNNNN.xls` ("973 - Price Indexes of New One-Family
   Houses Sold, by Region").
+
+The Abstract as Census left it online (Phase 2): the section pages and every table file are in the data folder
+(pages under `census.gov/…/131ed/`, files under `www2.census.gov/…/131ed/tables/`), read by `server/lib/statab.js`
+(test `statab.test.js`) into `statab_sections`, `statab_subsections` (the web pages' grouping, which is not the book's)
+and `statab_tables` (headnote, column heads, row labels, footnotes, source note, years, whether by state; `read_error`
+where a file could not be read).
+
+    node server/seed/fetch-statistical-abstract.js [--only <section slugs>] [--pages-only] [--refresh-pages] [--dry-run]
+    node --env-file=server/.env server/seed/load-statistical-abstract.js [--dry-run] [--json out.json]
 
 The page **Structure** (`/structure`, `pages/Structure.jsx`; `/abstract` redirects) shows the category structures
 GovGraph's data can be organised by, as nested categories: the Statistical Abstract (also shown as the book: sections,

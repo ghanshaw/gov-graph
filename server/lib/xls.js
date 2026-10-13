@@ -100,7 +100,7 @@ function rk(v) {
   if (v & 0x02) n = v >> 2;
   else {
     const b = Buffer.alloc(8);
-    b.writeUInt32LE(v & 0xfffffffc, 4);
+    b.writeUInt32LE((v & 0xfffffffc) >>> 0, 4);
     n = b.readDoubleLE(0);
   }
   return v & 0x01 ? n / 100 : n;

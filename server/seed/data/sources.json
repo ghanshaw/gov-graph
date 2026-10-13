@@ -73,7 +73,7 @@
       "access": { "used": ["file"] },
       "status": "discontinued", "ended": "2011-10-01", "successor": "proquest-statistical-abstract",
       "in_abstract": true,
-      "paths": ["www2.census.gov/library/publications/2011/compendia/statab/"]
+      "paths": ["www2.census.gov/library/publications/2011/compendia/statab/", "census.gov/library/publications/2011/compendia/statab/"]
     },
     {
       "slug": "proquest-statistical-abstract", "name": "ProQuest Statistical Abstract of the United States",

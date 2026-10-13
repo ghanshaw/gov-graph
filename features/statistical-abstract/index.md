@@ -1,8 +1,8 @@
 # Statistical Abstract
 
 ## Status
-Planning (2026-10-13). The 2012 edition's PDF is downloaded; nothing else built yet. The source registry this
-depends on is `features/data-sources`.
+Phase 2 (2026-10-13): every section page and table file fetched and read into `statab_*` tables. The source
+registry is `features/data-sources`; the book's own contents are a category structure (`features/category-breakdowns`).
 
 ## Goal
 Use the **Statistical Abstract of the United States, 2012** (131st edition, the last the Census Bureau published;
@@ -54,14 +54,28 @@ Organizations, datasets, files and licences for everything already used, before 
 Phase 2's downloads go through `recordFetch` and become files of the `statistical-abstract` dataset.
 
 ### Phase 2 — the Abstract's skeleton
-- Fetch the 30 section pages (`census.gov/library/publications/2011/compendia/statab/131ed/<slug>.html`) and every
-  table file (`…/131ed/tables/12sNNNN.xls`, binary Excel), plus the section PDFs and appendices. www2.census.gov
-  rate-limits: two requests at a time, 500 ms apart, as `fetch-population.js` does.
-- Read each table with `server/lib/xls.js`: number, title, subsection, headnote, years or dates shown, what it is
-  broken down by (state, country, age, …), source note and footnotes.
-- Store as `statab_sections`, `statab_subsections`, `statab_tables`, and the source note text per table.
-- Appendix I (guide to sources of statistics) and Appendix III (limitations of the data: the surveys described)
-  seed the dataset list. To be confirmed when read.
+- Fetch the index page, the 30 section pages and the six other pages (`census.gov/library/publications/2011/compendia/statab/131ed/<slug>.html`),
+  and every file they link under `131ed/`: each table as `…/131ed/tables/12sNNNN.xls` (binary Excel), the section
+  PDFs, front matter and appendices (`server/seed/fetch-statistical-abstract.js`). One request at a time, 500 ms
+  apart; www2.census.gov answers 429 when pushed and the script waits. The other pages (rankings, brief, maps) link
+  files of earlier editions (129ed, 130ed) only; not fetched.
+- Read each table (`server/lib/statab.js`, test `statab.test.js` against copies in `server/references/statab-*`):
+  number, title, headnote, column heads, row labels with depth, symbols, footnotes, notes, source note, "For more
+  information" links, release date, years named (range and count), whether the rows are the states.
+- Store as `statab_sections`, `statab_subsections` (as the web pages group the tables), `statab_tables`
+  (`server/seed/load-statistical-abstract.js [--dry-run] [--json out.json]`).
+
+What the pages and files showed (2026-10-13):
+- Each table file has the same layout: a description for screen readers naming the column-head rows ("column headers
+  in rows 4 through 6"), "Table N. Title", the headnote in brackets, heads, body (".." per level in the row labels),
+  symbols, "FOOTNOTES:", "Source: …", "For more information:" with links, "Internet release date: …".
+- The web pages group tables into 206 subsections, listed alphabetically; the book's contents group them differently
+  (147 subsections in `structures/statistical-abstract.json`). Web subsections interleave (Housing Sales is 973–980,
+  inside Authorizations, Starts And Completions 968–981).
+- 1,396 tables online. Not on any page, though inside the book's ranges: 298, 697, 867, 966, 967, 1025, 1029, 1033,
+  1254, 1400. Listed twice: 587 (Labor Force Status; Employment Projections), 868 (Farms And Farmland; Crops).
+- Some files carry another table's number: 12s0164.xls is "Table 160", 12s0208.xls "Table 204" (reported by the
+  loader; the page's number is kept).
 
 ### Phase 3 — from source notes to datasets
 - Read each source note into publisher(s) and publication. Group into datasets in the registry, reviewed by
@@ -97,6 +111,9 @@ Phase 2's downloads go through `recordFetch` and become files of the `statistica
 ## Done
 - [x] Discussed and agreed the approach (2026-10-13)
 - [x] Downloaded the 2012 edition's PDF (2026-10-13)
+- [x] Section pages and all 1,396 table files fetched, read and stored (`statab_sections`, `statab_subsections`,
+  `statab_tables`) (2026-10-13)
+- [x] `server/lib/xls.js`: RK numbers with the top bit set (negative doubles) no longer throw (2026-10-13)
 - [x] Page for the book's structure (first `/abstract`, nav "Abstract"; now the Structure page, `/structure`): the book's structure as its contents print it, 30 sections, 147 subsections,
   table ranges, printed page numbers and the appendices, with a find field. Data now in `server/seed/data/structures/statistical-abstract.json`,
   read from the PDF's contents pages (vii–x); not tied to GovGraph's data and no database tables (user, 2026-10-13).
@@ -108,7 +125,9 @@ Phase 2's downloads go through `recordFetch` and become files of the `statistica
 
 ## Todo
 - [x] Phase 1: source registry built and loaded (`features/data-sources`, 2026-10-13)
-- [ ] Phase 2: fetch and read the section pages and table files
+- [x] Phase 2: fetch and read the section pages and table files (2026-10-13)
+- [ ] Map web subsections to the book's subsections (by the tables' printed pages, from the section PDFs)
+- [ ] Show the tables somewhere (on `/sources/statistical-abstract`, or under each category on `/structure`)
 - [ ] Phase 3: source notes → datasets; coverage report
 - [ ] Phase 4: placement for every current series; catalogue by section (the catalogue's Build tab is by section since
   2026-10-13, the 27 measures placed by judgement in `placements.json`; Phase 4 turns them into `table`)
