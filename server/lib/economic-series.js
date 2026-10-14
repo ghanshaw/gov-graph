@@ -6,10 +6,9 @@
 // other series need only an entry in SERIES.
 //
 // Sources:
-//   eia  U.S. Energy Information Administration, API v2 (EIA_API_KEY, free at
-//        https://www.eia.gov/opendata/). A series is a route and a series id.
-//   bls  U.S. Bureau of Labor Statistics, Public Data API (no key: 10 years a request, 25 requests
-//        a day; BLS_API_KEY, free at https://data.bls.gov/registrationEngine/, allows 20 years and 500).
+//   eia  U.S. Energy Information Administration: the petroleum bulk file (PET.zip, no key; one JSON line per
+//        series in PET.txt, updated weekly). A series is its id and frequency (RWTC daily is "PET.RWTC.D"; a
+//        four-week average ends ".4"). The API v2 (with EIA_API_KEY) was used until 2026-10-13; same values.
 //   bea  U.S. Bureau of Economic Analysis, the national accounts as flat files (no key): every
 //        quarterly NIPA series in one file, by series code (A191RC = GDP in current dollars).
 //   treasury  U.S. Treasury, Fiscal Data API (no key): Debt to the Penny, daily from April 1993.
@@ -17,8 +16,9 @@
 //        Consumer Sentiment as a CSV of final monthly values, from 1952 (every few months until 1978).
 //   census    Census Bureau tables published as .xlsx (read by lib/xlsx.js): household income
 //        (CPS ASEC Table H-5) and homeownership rates (Housing Vacancy Survey Table 14).
-//   census-api  Census Bureau API (CENSUS_API_KEY, free): New Residential Sales, every series
-//        (sales, prices, homes for sale, months' supply) monthly from 1963, kept whole.
+//   census-nrs  Census Bureau New Residential Sales, the published history spreadsheet (no key): median and
+//        average sales price of new homes, monthly from 1963 (price_cust.xlsx, sheet Monthly; dates are Excel
+//        day numbers). The Census API (CENSUS_API_KEY) was used until 2026-10-13; same values.
 //   freddiemac  Freddie Mac's Primary Mortgage Market Survey, weekly from 1971 (a CSV).
 //   fhfa      Federal Housing Finance Agency House Price Index, every index in one CSV.
 //   fed-h15   Federal Reserve Board H.15 Selected Interest Rates, the whole release (263 series,
@@ -71,8 +71,10 @@
 import path from 'path';
 import { DATA_DIR, mirrorFile } from './data-dir.js';
 
-export const EIA_API = 'https://api.eia.gov/v2';
-export const BLS_API = 'https://api.bls.gov/publicAPI';
+export const EIA_PET_BULK = 'https://www.eia.gov/opendata/bulk/PET.zip';
+const EIA_FREQUENCY = { daily: 'D', weekly: 'W', 'four-week-average': '4', monthly: 'M' };
+/** An EIA series' id in the bulk file: RWTC daily → "PET.RWTC.D". */
+export const eiaBulkId = s => `PET.${s.source_id}.${EIA_FREQUENCY[s.frequency]}`;
 export const BEA_FILES = ['NipaDataQ.txt', 'NipaDataM.txt', 'NipaDataA.txt', 'SeriesRegister.txt', 'TablesRegister.txt']
   .map(name => `https://apps.bea.gov/national/Release/TXT/${name}`);
 export const BEA_QUARTERLY = BEA_FILES[0];
@@ -80,7 +82,6 @@ export const BEA_MONTHLY = BEA_FILES[1];
 export const UMICH_SENTIMENT = 'https://www.sca.isr.umich.edu/files/tbmics.csv';
 const CENSUS_INCOME = 'https://www2.census.gov/programs-surveys/cps/tables/time-series/historical-income-households/h05.xlsx';
 const CENSUS_HOMEOWNERSHIP = 'https://www.census.gov/housing/hvs/data/histtab14.xlsx';
-export const CENSUS_RESSALES = 'https://api.census.gov/data/timeseries/eits/ressales';
 const FREDDIE_PMMS = 'https://www.freddiemac.com/pmms/docs/PMMS_history.csv';
 const FHFA_HPI = 'https://www.fhfa.gov/hpi/download/monthly/hpi_master.csv';
 export const FED_H15 = 'https://www.federalreserve.gov/datadownload/Output.aspx?rel=H15&filetype=zip';
@@ -94,7 +95,7 @@ const CENSUS_TRADE_MONTHLY = 'https://www.census.gov/foreign-trade/statistics/hi
 const CDC_COVID_DEATHS = 'https://data.cdc.gov/api/views/r8kw-7aab/rows.csv';
 export const CDC_COVID_META = 'https://data.cdc.gov/api/views/r8kw-7aab.json';
 /** Sources read from one published file (`url` on the series), downloaded whole. */
-export const FILE_SOURCES = ['umich', 'census', 'freddiemac', 'fhfa', 'atlantafed', 'cdc', 'omb', 'cbo', 'irs-soi', 'usitc', 'census-trade'];
+export const FILE_SOURCES = ['umich', 'census', 'census-nrs', 'freddiemac', 'fhfa', 'atlantafed', 'cdc', 'omb', 'cbo', 'irs-soi', 'usitc', 'census-trade'];
 const FISCAL_DATA = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service';
 export const DEBT_TO_PENNY = `${FISCAL_DATA}/v2/accounting/od/debt_to_penny`;
 // Fiscal Data datasets kept whole (`filter`: the query a download is limited to, by field).
@@ -439,77 +440,77 @@ const TRADE_SERIES = [
 
 export const SERIES = [
   {
-    slug: 'wti-spot', source: 'eia', route: 'petroleum/pri/spt', source_id: 'RWTC', frequency: 'daily',
+    slug: 'wti-spot', source: 'eia', source_id: 'RWTC', frequency: 'daily',
     name: 'U.S. Crude Oil Price (WTI)', category: 'crude', unit: '$/bbl',
     description: 'The price of a barrel of West Texas Intermediate crude, the U.S. benchmark, for delivery at Cushing, Oklahoma, each trading day (spot price)',
   },
   {
-    slug: 'brent-spot', source: 'eia', route: 'petroleum/pri/spt', source_id: 'RBRTE', frequency: 'daily',
+    slug: 'brent-spot', source: 'eia', source_id: 'RBRTE', frequency: 'daily',
     name: 'World Crude Oil Price (Brent)', category: 'crude', unit: '$/bbl',
     description: 'The price of a barrel of Brent crude from the North Sea, the international benchmark, each trading day (spot price)',
   },
   {
-    slug: 'gasoline-retail', source: 'eia', route: 'petroleum/pri/gnd', source_id: 'EMM_EPMR_PTE_NUS_DPG', frequency: 'weekly',
+    slug: 'gasoline-retail', source: 'eia', source_id: 'EMM_EPMR_PTE_NUS_DPG', frequency: 'weekly',
     name: 'Regular Gas Price at the Pump', category: 'retail', unit: '$/gal',
     description: 'The average price of a gallon of regular gasoline at the pump across the U.S., all formulations, surveyed weekly',
   },
   {
-    slug: 'diesel-retail', source: 'eia', route: 'petroleum/pri/gnd', source_id: 'EMD_EPD2D_PTE_NUS_DPG', frequency: 'weekly',
+    slug: 'diesel-retail', source: 'eia', source_id: 'EMD_EPD2D_PTE_NUS_DPG', frequency: 'weekly',
     name: 'Diesel Price at the Pump', category: 'retail', unit: '$/gal',
     description: 'The average price of a gallon of No. 2 diesel at the pump across the U.S., surveyed weekly',
   },
   {
-    slug: 'demand-total-4wk', source: 'eia', route: 'petroleum/cons/wpsup', source_id: 'WRPUPUS2', frequency: 'four-week-average',
+    slug: 'demand-total-4wk', source: 'eia', source_id: 'WRPUPUS2', frequency: 'four-week-average',
     name: 'Oil Demand, All Products (4-Week Average)', category: 'oil-demand', unit: 'kb/d',
     description: 'All petroleum products supplied to the U.S. market (gasoline, diesel, jet fuel, heating oil, propane and the rest), the standard measure of how much oil the country uses, in barrels per day, averaged over the four weeks to the date shown. EIA\'s weekly estimate (Weekly Petroleum Status Report)',
   },
   {
-    slug: 'demand-distillate-4wk', source: 'eia', route: 'petroleum/cons/wpsup', source_id: 'WDIUPUS2', frequency: 'four-week-average',
+    slug: 'demand-distillate-4wk', source: 'eia', source_id: 'WDIUPUS2', frequency: 'four-week-average',
     name: 'Diesel Demand (4-Week Average)', category: 'oil-demand', unit: 'kb/d',
     description: 'Distillate fuel oil supplied to the U.S. market: mostly diesel for trucks, trains, farms and ships, plus heating oil. Watched as a sign of how much freight is moving, in barrels per day, averaged over the four weeks to the date shown. EIA\'s weekly estimate (Weekly Petroleum Status Report)',
   },
   {
-    slug: 'demand-gasoline-4wk', source: 'eia', route: 'petroleum/cons/wpsup', source_id: 'WGFUPUS2', frequency: 'four-week-average',
+    slug: 'demand-gasoline-4wk', source: 'eia', source_id: 'WGFUPUS2', frequency: 'four-week-average',
     name: 'Gasoline Demand (4-Week Average)', category: 'oil-demand', unit: 'kb/d',
     description: 'Finished motor gasoline supplied to the U.S. market, in barrels per day, averaged over the four weeks to the date shown. EIA\'s weekly estimate (Weekly Petroleum Status Report)',
   },
   {
-    slug: 'demand-jet-4wk', source: 'eia', route: 'petroleum/cons/wpsup', source_id: 'WKJUPUS2', frequency: 'four-week-average',
+    slug: 'demand-jet-4wk', source: 'eia', source_id: 'WKJUPUS2', frequency: 'four-week-average',
     name: 'Jet Fuel Demand (4-Week Average)', category: 'oil-demand', unit: 'kb/d',
     description: 'Kerosene-type jet fuel supplied to the U.S. market, in barrels per day, averaged over the four weeks to the date shown. EIA\'s weekly estimate (Weekly Petroleum Status Report)',
   },
   {
-    slug: 'demand-total-monthly', source: 'eia', route: 'petroleum/cons/psup', source_id: 'MTTUPUS2', frequency: 'monthly',
+    slug: 'demand-total-monthly', source: 'eia', source_id: 'MTTUPUS2', frequency: 'monthly',
     name: 'Monthly Oil Demand, All Products', category: 'oil-demand', unit: 'kb/d',
     description: 'All petroleum products supplied to the U.S. market (gasoline, diesel, jet fuel, heating oil, propane and the rest), the standard measure of how much oil the country uses, in barrels per day over the month. From EIA\'s Petroleum Supply Monthly: more complete than the weekly estimates, published about two months later',
   },
   {
-    slug: 'demand-distillate-monthly', source: 'eia', route: 'petroleum/cons/psup', source_id: 'MDIUPUS2', frequency: 'monthly',
+    slug: 'demand-distillate-monthly', source: 'eia', source_id: 'MDIUPUS2', frequency: 'monthly',
     name: 'Monthly Diesel Demand', category: 'oil-demand', unit: 'kb/d',
     description: 'Distillate fuel oil supplied to the U.S. market: mostly diesel for trucks, trains, farms and ships, plus heating oil. Watched as a sign of how much freight is moving, in barrels per day over the month. From EIA\'s Petroleum Supply Monthly: more complete than the weekly estimates, published about two months later',
   },
   {
-    slug: 'demand-gasoline-monthly', source: 'eia', route: 'petroleum/cons/psup', source_id: 'MGFUPUS2', frequency: 'monthly',
+    slug: 'demand-gasoline-monthly', source: 'eia', source_id: 'MGFUPUS2', frequency: 'monthly',
     name: 'Monthly Gasoline Demand', category: 'oil-demand', unit: 'kb/d',
     description: 'Finished motor gasoline supplied to the U.S. market, in barrels per day over the month. From EIA\'s Petroleum Supply Monthly: more complete than the weekly estimates, published about two months later',
   },
   {
-    slug: 'demand-jet-monthly', source: 'eia', route: 'petroleum/cons/psup', source_id: 'MKJUPUS2', frequency: 'monthly',
+    slug: 'demand-jet-monthly', source: 'eia', source_id: 'MKJUPUS2', frequency: 'monthly',
     name: 'Monthly Jet Fuel Demand', category: 'oil-demand', unit: 'kb/d',
     description: 'Kerosene-type jet fuel supplied to the U.S. market, in barrels per day over the month. From EIA\'s Petroleum Supply Monthly: more complete than the weekly estimates, published about two months later',
   },
   {
-    slug: 'unemployment-rate', source: 'bls', source_id: 'LNS14000000', frequency: 'monthly', from: 1948,
+    slug: 'unemployment-rate', source: 'bls-bulk', source_id: 'LNS14000000', frequency: 'monthly', file: 'ln/ln.data.1.AllData',
     name: 'Unemployment Rate', category: 'unemployment', unit: '%',
     description: 'Unemployment rate (U-3), 16 years and over, seasonally adjusted. Current Population Survey',
   },
   {
-    slug: 'unemployment-u6', source: 'bls', source_id: 'LNS13327709', frequency: 'monthly', from: 1994,
+    slug: 'unemployment-u6', source: 'bls-bulk', source_id: 'LNS13327709', frequency: 'monthly', file: 'ln/ln.data.1.AllData',
     name: 'Broad Unemployment Rate (U-6)', category: 'unemployment', unit: '%',
     description: 'Total unemployed, plus all persons marginally attached to the labor force, plus total employed part time for economic reasons, as a percent of the civilian labor force plus all persons marginally attached (U-6), seasonally adjusted. Current Population Survey',
   },
   {
-    slug: 'unemployed-persons', source: 'bls', source_id: 'LNS13000000', frequency: 'monthly', from: 1948,
+    slug: 'unemployed-persons', source: 'bls-bulk', source_id: 'LNS13000000', frequency: 'monthly', file: 'ln/ln.data.1.AllData',
     name: 'Number of Unemployed People', category: 'unemployment', unit: 'thousands',
     description: 'Unemployment level, 16 years and over, in thousands, seasonally adjusted. Current Population Survey',
   },
@@ -559,7 +560,8 @@ export const SERIES = [
     description: 'FHFA House Price Index, United States, purchase-only, seasonally adjusted, January 1991 = 100: repeat sales of the same houses with mortgages bought or guaranteed by Fannie Mae and Freddie Mac',
   },
   {
-    slug: 'home-price', source: 'census-api', source_id: 'ressales SOLD MEDIAN', frequency: 'monthly',
+    slug: 'home-price', source: 'census-nrs', source_id: 'Median sales price', frequency: 'monthly',
+    url: 'https://www.census.gov/construction/nrs/xls/price_cust.xlsx', sheet: 'Monthly',
     name: 'Median Price of a New Home', category: 'housing', unit: '$',
     description: 'Median sales price of new single-family houses sold, United States, not seasonally adjusted. Census Bureau and HUD, New Residential Sales',
   },
@@ -665,18 +667,15 @@ export const SERIES = [
  *   api.bls.gov/publicAPI/timeseries/data/LNS14000000-monthly.json
  */
 export function seriesFile(s) {
-  const name = `${s.source_id}-${s.frequency}.json`;
   if (s.source === 'bea') return mirrorFile({ monthly: BEA_MONTHLY, annual: BEA_FILES[2] }[s.frequency] ?? BEA_QUARTERLY);
   if (s.url) return mirrorFile(s.url);
-  if (s.source === 'census-api') return `${mirrorFile(CENSUS_RESSALES)}.json`;
+  if (s.source === 'eia') return mirrorFile(EIA_PET_BULK);
   if (s.source === 'fed-h15') return FED_H15_FILE();
   if (s.source === 'fed-omo') return mirrorFile(FED_OMO_PAGES[0]);
   if (s.source === 'treasury') return `${mirrorFile(DEBT_TO_PENNY)}.json`;
   if (FISCAL_DATASETS[s.source]) return `${mirrorFile(FISCAL_DATASETS[s.source].url)}.json`;
   if (s.source === 'bls-bulk') return path.join(DATA_DIR, 'download.bls.gov', 'pub', 'time.series', ...s.file.split('/'));
-  return s.source === 'bls'
-    ? path.join(DATA_DIR, 'api.bls.gov', 'publicAPI', 'timeseries', 'data', name)
-    : path.join(DATA_DIR, 'api.eia.gov', 'v2', ...s.route.split('/'), name);
+  throw new Error(`${s.slug}: no file for source ${s.source}`);
 }
 
 const QUARTER_START = { 1: '01', 2: '04', 3: '07', 4: '10' };
@@ -927,16 +926,36 @@ export function fomcChanges(pages) {
 
 /** `file`: the file's text, its parsed JSON, or (for .xlsx) its rows. */
 /** The Census API's rows (a header row, then values): new-home sales, median price, not adjusted. */
-function readRessales(s, rows) {
-  const [head, ...data] = rows;
-  const at = name => head.indexOf(name);
-  const observations = data
-    .filter(r => r[at('category_code')] === 'SOLD' && r[at('data_type_code')] === 'MEDIAN'
-      && r[at('seasonally_adj')] === 'no' && r[at('error_data')] === 'no')
-    .map(r => [`${r[at('time')]}-01`, r[at('cell_value')]])
-    .filter(([, v]) => Number.isFinite(Number(v)) && v !== '');
-  observations.sort((a, b) => a[0].localeCompare(b[0]));
-  return { description: s.description, observations, skipped: 0 };
+/** Census's new-home price history (price_cust.xlsx, sheet Monthly): an Excel day number, then median and average. */
+function readNrsPrice(s, rows) {
+  const head = rows.findIndex(r => r.includes(s.source_id));
+  const col = rows[head]?.indexOf(s.source_id);
+  if (head < 0) throw new Error(`${s.slug}: no column "${s.source_id}"`);
+  const observations = [];
+  let skipped = 0;
+  for (const r of rows.slice(head + 1)) {
+    const day = Number(r[0]);
+    if (!/^\d{5}$/.test(r[0] ?? '')) continue; // footnotes and source lines
+    if (!/^\d+(\.\d+)?$/.test(r[col] ?? '')) { skipped++; continue; } // "(NA)"
+    const date = new Date(Date.UTC(1899, 11, 30) + day * 864e5).toISOString().slice(0, 10);
+    if (!date.endsWith('-01')) throw new Error(`${s.slug}: ${r[0]} is not the first of a month`);
+    observations.push([date, r[col]]);
+  }
+  return sorted(s, observations, skipped);
+}
+
+/** EIA's bulk file, our series only (id → { name, data: [[YYYYMMDD | YYYYMM, value | null]] }) → [date, value]. */
+function readEiaBulk(s, bulk) {
+  const series = bulk.get(eiaBulkId(s));
+  if (!series) throw new Error(`${s.slug}: ${eiaBulkId(s)} is not in the bulk file`);
+  const observations = [];
+  let skipped = 0;
+  for (const [period, value] of series.data) {
+    if (value === null || !Number.isFinite(Number(value))) { skipped++; continue; }
+    const date = period.length === 6 ? `${period.slice(0, 4)}-${period.slice(4)}-01` : `${period.slice(0, 4)}-${period.slice(4, 6)}-${period.slice(6)}`;
+    observations.push([date, String(value)]);
+  }
+  return sorted(s, observations, skipped);
 }
 
 /**
@@ -1152,7 +1171,8 @@ export function readObservations(s, file) {
   if (s.source === 'cbo') return readCbo(s, file);
   if (s.source === 'irs-soi') return readIrs(s, file);
   if (s.source === 'atlantafed') return readHoam(s, file);
-  if (s.source === 'census-api') return readRessales(s, file.rows);
+  if (s.source === 'census-nrs') return readNrsPrice(s, file);
+  if (s.source === 'eia') return readEiaBulk(s, file);
   if (s.source === 'bls-bulk') return readBlsBulk(s, file);
   if (s.source === 'umich') return readUmich(s, file);
   if (s.source === 'census') return s.slug.startsWith('household-income') ? readCensusIncome(s, file) : readHomeownership(s, file);
@@ -1168,34 +1188,17 @@ export function readObservations(s, file) {
     const observations = readBea(s, file);
     return { description: s.description, observations, skipped: 0 };
   }
-  const { rows } = file;
+  if (s.source !== 'treasury') throw new Error(`${s.slug}: no reader for source ${s.source}`);
+  // Debt to the Penny, in dollars → billions. Debt held by the public is "null" before September 1997.
   const observations = [];
   let skipped = 0;
-  for (const row of rows) {
-    if (s.source === 'treasury') {
-      // Dollars → billions. Debt held by the public is "null" before September 1997.
-      const value = Number(row[s.source_id]);
-      if (row[s.source_id] === 'null' || !Number.isFinite(value)) { skipped++; continue; }
-      observations.push([row.record_date, String(value / 1e9)]);
-      continue;
-    }
-    let date;
-    if (s.source === 'bls') {
-      if (!/^M(0[1-9]|1[0-2])$/.test(row.period)) continue; // M13 is the annual average
-      date = `${row.year}-${row.period.slice(1)}-01`;
-    } else {
-      if (row.series !== s.source_id) throw new Error(`${s.slug}: row for ${row.series}`);
-      // Daily and weekly periods are dates; a month is "1963-01", dated by its first day.
-      date = /^\d{4}-\d{2}$/.test(row.period) ? `${row.period}-01` : row.period;
-    }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error(`${s.slug}: unexpected period ${row.period}`);
-    const value = row.value === null || row.value === '' ? NaN : Number(row.value);
-    if (Number.isFinite(value)) observations.push([date, row.value]);
-    else skipped++;
+  for (const row of file.rows) {
+    const value = Number(row[s.source_id]);
+    if (row[s.source_id] === 'null' || !Number.isFinite(value)) { skipped++; continue; }
+    observations.push([row.record_date, String(value / 1e9)]);
   }
   observations.sort((a, b) => a[0].localeCompare(b[0]));
-  const description = s.description ?? rows[0]?.['series-description'] ?? null;
-  return { description, observations, skipped };
+  return { description: s.description, observations, skipped };
 }
 
 // ---------------------------------------------------------------------------
@@ -1221,10 +1224,13 @@ function blsTitle(id, files) {
 export function publisherTitle(s, files) {
   switch (s.source) {
     case 'eia': {
-      const title = files.json(seriesFile(s))?.rows?.[0]?.['series-description'];
-      return title ? { title, from: 'EIA API v2, series-description' } : null;
+      const title = files.eia()?.get(eiaBulkId(s))?.name;
+      return title ? { title, from: 'EIA bulk file PET.txt, name' } : null;
     }
-    case 'bls':
+    case 'census-nrs': {
+      const rows = files.rows(seriesFile(s), s.sheet);
+      return rows?.[0]?.[0] ? { title: `${rows[0][0]}: ${s.source_id}`, from: 'Census price_cust.xlsx, Monthly sheet: title and column heading' } : null;
+    }
     case 'bls-bulk':
       return blsTitle(s.source_id, files);
     case 'bea': {
@@ -1324,7 +1330,7 @@ export const SCHEMA = `
   CREATE TABLE IF NOT EXISTS economic_series (
     id           SERIAL PRIMARY KEY,
     slug         TEXT NOT NULL UNIQUE,          -- 'wti-spot'
-    source       TEXT NOT NULL,                 -- 'eia' | 'bls'
+    source       TEXT NOT NULL,                 -- how it is read: 'eia' | 'bls-bulk' | 'bea' | … (SERIES)
     source_id    TEXT NOT NULL,                 -- 'RWTC', 'LNS14000000'
     route        TEXT,                          -- 'petroleum/pri/spt' (EIA API path)
     frequency    TEXT NOT NULL,                 -- 'daily' | 'weekly' | 'four-week-average' (EIA's, dated by the last week's end) | 'monthly' | 'quarterly' | 'annual' | 'fiscal-year' (dated by its first day) | 'irregular' (a value from each date on)

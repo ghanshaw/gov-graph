@@ -43,8 +43,8 @@ cross-references, and legal relationships.
 
 `server/.env` (gitignored; template in `server/.env.example`) holds `DATABASE_URL`,
 `COURTLISTENER_TOKEN`, `CONGRESS_API_KEY`, `GOV_INFO_KEY` (api.data.gov key for govinfo) and
-`EIA_API_KEY` (Energy Information Administration; its own key, not api.data.gov); optional `BLS_API_KEY`;
-`BLS_CONTACT_EMAIL` (BLS bulk downloads); `CENSUS_API_KEY` (new-home prices).
+`BLS_CONTACT_EMAIL` (BLS bulk downloads). Economic data needs no key since 2026-10-13: EIA, BLS and Census are read
+from bulk or published files (`EIA_API_KEY`, `BLS_API_KEY`, `CENSUS_API_KEY` are no longer used).
 The server must be restarted after changing `.env`, `schema.js`, `resolvers.js` or `pdf.js`
 (no watch mode in `npm start`). Re-running a loader script needs no restart.
 
@@ -510,8 +510,9 @@ mortgage payment share) were removed on 2026-10-10.
 
 Time series beside the documents: WTI and Brent daily spot ($/bbl), U.S. retail regular gasoline and
 diesel weekly ($/gal), and U.S. oil demand ("product supplied", thousand barrels per day: all petroleum,
-distillate, gasoline, jet fuel; EIA's four-week averages and monthly) from the EIA API v2; the unemployment rate (U-3, from 1948), U-6 and unemployed
-persons, monthly, from the BLS API (October 2025 was not collected, so it has no value), and their
+distillate, gasoline, jet fuel; EIA's four-week averages and monthly) from EIA's petroleum bulk file (`PET.zip`, no
+key; read for our series only); the unemployment rate (U-3, from 1948), U-6 and unemployed
+persons, monthly, from the BLS `ln` survey file (October 2025 was not collected, so it has no value), and their
 published breakdowns (rate and count for 43 groups by sex, race and ethnicity, age, education and their
 published combinations; `UNEMPLOYMENT_GROUPS`, slugs `unemployment-rate--black-women`), read from the
 downloaded `ln` survey file (`ln.data.1.AllData`) and offered as series of their own in the timeline's catalogue; GDP, real
@@ -524,7 +525,7 @@ the University of Michigan's consumer sentiment index (`umich`, a CSV; not gover
 Freddie Mac's 30-year mortgage rate (weekly from 1971), the FHFA house price index (monthly from 1991),
 and Census homeownership rates and median household income, read from Census .xlsx tables by
 `server/lib/xlsx.js` (no spreadsheet library; old binary .xls cannot be read); the median new-home price
-from the Census API (New Residential Sales, kept whole); the Atlanta Fed's Home Ownership Affordability Monitor
+from Census's New Residential Sales history spreadsheet (`price_cust.xlsx`); the Atlanta Fed's Home Ownership Affordability Monitor
 (national workbook, monthly from 2005: ownership cost share of income and affordability index). Trade and tariffs
 (tab `trade`, 2026-10-11): customs duties from USITC's duties table (`ave_table.pdf`, 1891 on, with duties as a percent of
 imports; read with `pdf-lines.js`; taken from the Internet Archive, usitc.gov refuses scripts; 1918 and 1930 are printed in

@@ -402,7 +402,7 @@ const FREQUENCY = { daily: 'daily', weekly: 'weekly', 'four-week-average': 'four
   annual: 'yearly', 'fiscal-year': 'yearly', irregular: 'irregular' };
 const PUBLISHER = { eia: 'eia', bls: 'bls', 'bls-bulk': 'bls', bea: 'bea', treasury: 'treasury', 'treasury-mts': 'treasury',
   'treasury-mts-1': 'treasury', 'treasury-mts-4': 'treasury', 'treasury-dts': 'treasury', 'treasury-dts-iv': 'treasury', omb: 'omb',
-  cbo: 'cbo', 'irs-soi': 'irs', usitc: 'usitc', census: 'census', 'census-api': 'census', 'census-trade': 'census', umich: 'umich',
+  cbo: 'cbo', 'irs-soi': 'irs', usitc: 'usitc', census: 'census', 'census-nrs': 'census', 'census-trade': 'census', umich: 'umich',
   freddiemac: 'freddiemac', fhfa: 'fhfa', atlantafed: 'atlantafed', cdc: 'cdc', 'fed-h15': 'fed', 'fed-omo': 'fed' };
 const DOLLARS = /^\$/;
 

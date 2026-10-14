@@ -61,7 +61,7 @@ export const shownFrequency = s => (s.frequency === 'daily' && !asPublished(s.sl
 const SOURCE_SHORT = {
   eia: 'EIA', bls: 'BLS', 'bls-bulk': 'BLS', bea: 'BEA', treasury: 'Treasury', 'treasury-mts': 'Treasury', 'treasury-mts-1': 'Treasury',
   'treasury-mts-4': 'Treasury', 'treasury-dts': 'Treasury', 'treasury-dts-iv': 'Treasury', omb: 'OMB', cbo: 'CBO', 'irs-soi': 'IRS',
-  usitc: 'USITC', census: 'Census', 'census-api': 'Census', 'census-trade': 'Census', umich: 'U. of Michigan', freddiemac: 'Freddie Mac',
+  usitc: 'USITC', census: 'Census', 'census-nrs': 'Census', 'census-trade': 'Census', umich: 'U. of Michigan', freddiemac: 'Freddie Mac',
   fhfa: 'FHFA', atlantafed: 'Atlanta Fed', cdc: 'CDC', 'fed-h15': 'Federal Reserve', 'fed-omo': 'Federal Reserve',
 };
 export const sourceShort = source => SOURCE_SHORT[source] ?? source;

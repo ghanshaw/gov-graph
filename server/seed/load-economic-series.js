@@ -25,7 +25,7 @@ import { extractPdfLines } from '../lib/pdf-lines.js';
 import { readXls } from '../lib/xls.js';
 import pg from 'pg';
 import { storeSeries } from '../lib/series-storage.js';
-import { SERIES, SCHEMA, seriesFile, readObservations, publisherTitle, FED_OMO_PAGES } from '../lib/economic-series.js';
+import { SERIES, SCHEMA, seriesFile, readObservations, publisherTitle, FED_OMO_PAGES, EIA_PET_BULK, eiaBulkId } from '../lib/economic-series.js';
 import { mirrorFile } from '../lib/data-dir.js';
 import { seriesNameProblems } from '../lib/series-names.js';
 
@@ -54,6 +54,21 @@ function readFile(file, asText, sheet = null) {
   return files.get(key);
 }
 
+// EIA's petroleum bulk file is one 370 MB text file in a zip, a JSON line per series: only our series' lines are
+// read (unzip piped to grep), once.
+function readEiaBulkFile() {
+  const file = mirrorFile(EIA_PET_BULK);
+  if (!files.has(file)) {
+    if (!fs.existsSync(file)) throw new Error(`no file at ${file}; run fetch-economic-series.js first`);
+    const ids = [...new Set(SERIES.filter(x => x.source === 'eia').map(eiaBulkId))];
+    if (ids.some(id => !/^[A-Z0-9_.]+$/.test(id))) throw new Error(`unexpected EIA series id in ${ids.join(', ')}`);
+    const pattern = `"series_id":"(${ids.map(id => id.replace(/\./g, '\\.')).join('|')})"`;
+    const text = execFileSync('sh', ['-c', 'unzip -p "$0" PET.txt | grep -E "$1"', file, pattern], { maxBuffer: 256 * 1024 * 1024 }).toString('utf8');
+    files.set(file, new Map(text.trim().split('\n').map(line => JSON.parse(line)).map(d => [d.series_id, d])));
+  }
+  return files.get(file);
+}
+
 // H.15 is one XML file in a zip (71 MB unzipped); the FOMC target is read from two saved pages.
 function readSource(s) {
   if (s.source === 'fed-h15') {
@@ -65,6 +80,7 @@ function readSource(s) {
     return files.get(file);
   }
   if (s.source === 'fed-omo') return FED_OMO_PAGES.map(url => readFile(mirrorFile(url), true));
+  if (s.source === 'eia') return readEiaBulkFile();
   return readFile(seriesFile(s), ['bea', 'bls-bulk', 'umich', 'freddiemac', 'fhfa', 'cdc'].includes(s.source), s.sheet);
 }
 
@@ -74,6 +90,7 @@ const titleFiles = {
   json: file => (fs.existsSync(file) ? readFile(file, false) : null),
   rows: (file, sheet) => (fs.existsSync(file) ? readFile(file, false, sheet) : null),
   h15: () => readSource(SERIES.find(x => x.source === 'fed-h15')),
+  eia: () => (fs.existsSync(mirrorFile(EIA_PET_BULK)) ? readEiaBulkFile() : null),
   pdf: file => files.get(file) ?? null,
 };
 

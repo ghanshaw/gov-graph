@@ -75,14 +75,18 @@ governments' data is not public domain under U.S. law.
 `licensed` datasets are listed with a link and not collected, for now (user, 2026-10-13).
 
 ## Moving off API keys
-| Used now | Bulk instead |
-|---|---|
-| Congress.gov API (`CONGRESS_API_KEY`) | govinfo BILLSTATUS bulk (already used for whole Congresses) |
-| EIA API (`EIA_API_KEY`) | EIA bulk zips (e.g. `PET.zip`), no key |
-| BLS API (unemployment) | `download.bls.gov` survey files (already used for `ln`, `cu`) |
-| Census API (new-home prices, `CENSUS_API_KEY`) | New Residential Sales history spreadsheet |
-| govinfo API (`GOV_INFO_KEY`) | govinfo bulk data |
-| CourtListener API (`COURTLISTENER_TOKEN`) | CourtListener bulk exports; the API may stay for finding new slip opinions, as the exports are periodic |
+| Used before | Bulk instead | Status |
+|---|---|---|
+| EIA API (`EIA_API_KEY`) | EIA petroleum bulk file `PET.zip` (www.eia.gov/opendata/bulk/), no key | **Done** 2026-10-13: 12 series, same values |
+| BLS API (three headline unemployment series) | `download.bls.gov` survey file `ln.data.1.AllData` | **Done** 2026-10-13: same values |
+| Census API (new-home prices, `CENSUS_API_KEY`) | New Residential Sales history spreadsheet `price_cust.xlsx` | **Done** 2026-10-13: 764 months, same values |
+| Congress.gov API (`CONGRESS_API_KEY`) | govinfo BILLSTATUS bulk (already used for whole Congresses) | To do; the app also calls it live (`resolvers.js`) |
+| govinfo API (`GOV_INFO_KEY`) | govinfo bulk data | To do (enacted laws' citations, CPD texts) |
+| CourtListener API (`COURTLISTENER_TOKEN`) | CourtListener bulk exports; the API may stay for finding new slip opinions, as the exports are periodic | To do |
+
+EIA's bulk file is updated weekly, a few days behind the API (the October 8 file ends with October 6 prices). The
+files fetched from the APIs before are kept in the data folder (`api.eia.gov/`, `api.bls.gov/`, `api.census.gov/`)
+and still belong to their programs; nothing reads them.
 
 Each change is checked by comparing the series before and after: same values, same dates.
 
@@ -145,7 +149,8 @@ here. The Abstract's coverage report (`features/statistical-abstract`, Phase 3) 
 ## Todo
 - [ ] Revisit Michigan sentiment and Freddie Mac: both kept for now although their terms forbid republishing (user, 2026-10-13)
 - [ ] Contact address only where required: drop `BLS_CONTACT_EMAIL` from the other fetchers, checking each still works
-- [ ] Replace API-key fetches with bulk files, one source at a time
+- [x] Economic data off API keys: EIA, BLS and Census from bulk or published files, checked identical in the database (2026-10-13)
+- [ ] Replace the remaining API-key fetches (Congress.gov, govinfo, CourtListener) with bulk files, one source at a time
 - [ ] Fold the Demographics Source Files tab in; make the file viewer (`/population/file`) read any dataset's files
 - [ ] Point `seed/scdb.js` at scdb.la.psu.edu; check its licence
 - [ ] Put the stray `www.` folders under one path

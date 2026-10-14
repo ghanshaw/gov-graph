@@ -93,7 +93,7 @@
       "description": "The monthly household survey behind the unemployment rate: employment, unemployment and the labor force, by sex, race, age, education and more, from 1940. BLS survey code `ln`.",
       "homepage": "https://www.bls.gov/cps/",
       "licence": { "type": "public-domain" },
-      "access": { "used": ["bulk", "api"], "best": "bulk", "contact": true, "note": "download.bls.gov refuses requests without a contact address in the User-Agent (BLS_CONTACT_EMAIL). Three headline series still come from the API (no key needed; BLS_API_KEY raises the limits)." },
+      "access": { "used": ["bulk"], "contact": true, "note": "download.bls.gov refuses requests without a contact address in the User-Agent (BLS_CONTACT_EMAIL). Every series is read from the survey file ln.data.1.AllData; the three headline series came from the API until 2026-10-13 (same values; those files are kept under api.bls.gov/)." },
       "status": "active",
       "paths": ["download.bls.gov/pub/time.series/ln/", "api.bls.gov/publicAPI/timeseries/data/LN"]
     },
@@ -123,9 +123,9 @@
       "description": "Crude oil spot prices, retail gasoline and diesel prices, and product supplied (U.S. oil demand).",
       "homepage": "https://www.eia.gov/petroleum/data.php",
       "licence": { "type": "public-domain" },
-      "access": { "used": ["api-key"], "best": "bulk", "key": "EIA_API_KEY", "note": "EIA publishes the same series as bulk zips (PET.zip) that need no key." },
+      "access": { "used": ["bulk"], "note": "The petroleum bulk file, www.eia.gov/opendata/bulk/PET.zip (no key; updated weekly, a few days behind the API). The API v2 with EIA_API_KEY was used until 2026-10-13 (same values; those files are kept under api.eia.gov/)." },
       "status": "active",
-      "paths": ["api.eia.gov/v2/petroleum/"]
+      "paths": ["eia.gov/opendata/bulk/PET.zip", "api.eia.gov/v2/petroleum/"]
     },
     {
       "slug": "treasury-debt-to-the-penny", "name": "Debt to the Penny",
@@ -233,9 +233,9 @@
       "description": "New single-family homes sold and for sale, their prices and months' supply, monthly from 1963. Published jointly with the Department of Housing and Urban Development.",
       "homepage": "https://www.census.gov/construction/nrs/index.html",
       "licence": { "type": "public-domain" },
-      "access": { "used": ["api-key"], "best": "file", "key": "CENSUS_API_KEY", "note": "The same history is published as spreadsheets on census.gov." },
+      "access": { "used": ["file"], "note": "The history spreadsheet census.gov/construction/nrs/xls/price_cust.xlsx (no key). The Census API with CENSUS_API_KEY was used until 2026-10-13 (same values; that file is kept under api.census.gov/)." },
       "status": "active",
-      "paths": ["api.census.gov/data/timeseries/eits/ressales"]
+      "paths": ["census.gov/construction/nrs/", "api.census.gov/data/timeseries/eits/ressales"]
     },
     {
       "slug": "freddie-mac-pmms", "name": "Primary Mortgage Market Survey",

@@ -127,7 +127,7 @@ export const SOURCES = {
   'bls-bulk': 'U.S. Bureau of Labor Statistics',
   umich: 'University of Michigan, Surveys of Consumers',
   census: 'U.S. Census Bureau',
-  'census-api': 'U.S. Census Bureau and HUD, New Residential Sales',
+  'census-nrs': 'U.S. Census Bureau and HUD, New Residential Sales',
   freddiemac: 'Freddie Mac',
   fhfa: 'Federal Housing Finance Agency',
   atlantafed: 'Federal Reserve Bank of Atlanta, Home Ownership Affordability Monitor',
@@ -158,7 +158,7 @@ export function sourceLink(series) {
     case 'bls-bulk': return { href: `https://data.bls.gov/timeseries/${series.sourceId}`, label: 'BLS series page' };
     case 'bea': return { href: 'https://apps.bea.gov/iTable/?reqid=19&step=2&isuri=1&categories=survey', label: 'BEA national accounts tables' };
     case 'umich': return { href: 'https://www.sca.isr.umich.edu/', label: 'Surveys of Consumers' };
-    case 'census-api': return { href: 'https://www.census.gov/construction/nrs/index.html', label: 'Census New Residential Sales' };
+    case 'census-nrs': return { href: 'https://www.census.gov/construction/nrs/index.html', label: 'Census New Residential Sales' };
     case 'freddiemac': return { href: 'https://www.freddiemac.com/pmms', label: 'Freddie Mac mortgage rates' };
     case 'fed-h15': return { href: 'https://www.federalreserve.gov/releases/h15/', label: 'Federal Reserve H.15' };
     case 'fed-omo': return { href: 'https://www.federalreserve.gov/monetarypolicy/openmarket.htm', label: 'FOMC target changes' };
