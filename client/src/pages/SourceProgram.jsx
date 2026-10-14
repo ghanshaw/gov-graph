@@ -98,7 +98,7 @@ export default function SourceProgram() {
           {l.limits && <><dt>Limits</dt><dd>{l.limits}</dd></>}
           {l.note && <><dt>Note</dt><dd>{l.note}</dd></>}
           {l.checked && <><dt>Checked</dt><dd>{shortDate(l.checked)}</dd></>}
-          {!d.collected && <><dt>Collected</dt><dd>No: licensed data is listed here but not collected.</dd></>}
+          {!d.collected && <><dt>Collected</dt><dd>{d.licence === 'licensed' ? 'No: licensed data is listed here but not collected.' : 'Not yet: a Statistical Abstract table names it.'}</dd></>}
         </dl>
       </section>
 

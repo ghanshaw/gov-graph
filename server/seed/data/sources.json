@@ -49,7 +49,19 @@
     { "slug": "comparative-agendas-project", "name": "Comparative Agendas Project", "short_name": "CAP", "kind": "academic", "url": "https://www.comparativeagendas.net", "notes": "An international network of political scientists coding policy activity (bills, hearings, orders, court cases, budgets, media) by one topic system. The U.S. project, the Policy Agendas Project, began with Baumgartner and Jones; the site is hosted at the University of Texas at Austin." },
     { "slug": "free-law-project", "name": "Free Law Project", "short_name": "Free Law Project", "kind": "nonprofit", "url": "https://free.law" },
     { "slug": "unitedstates-project", "name": "@unitedstates project", "short_name": "@unitedstates", "kind": "community", "url": "https://theunitedstates.io", "notes": "Volunteers keeping public-domain data about the U.S. government." },
-    { "slug": "proquest", "name": "ProQuest", "short_name": "ProQuest", "kind": "private", "url": "https://www.proquest.com" }
+    { "slug": "proquest", "name": "ProQuest", "short_name": "ProQuest", "kind": "private", "url": "https://www.proquest.com" },
+    { "slug": "opm", "name": "U.S. Office of Personnel Management", "short_name": "OPM", "kind": "federal", "branch": "executive", "url": "https://www.opm.gov" },
+    { "slug": "gsa", "name": "U.S. General Services Administration", "short_name": "GSA", "kind": "federal", "branch": "executive", "url": "https://www.gsa.gov" },
+    { "slug": "bureau-of-the-public-debt", "name": "Bureau of the Public Debt", "short_name": "Public Debt", "kind": "federal", "branch": "executive", "parent": "department-of-the-treasury" },
+    { "slug": "financial-management-service", "name": "Financial Management Service", "short_name": "FMS", "kind": "federal", "branch": "executive", "parent": "department-of-the-treasury" },
+    { "slug": "department-of-agriculture", "name": "U.S. Department of Agriculture", "short_name": "USDA", "kind": "federal", "branch": "executive", "url": "https://www.usda.gov" },
+    { "slug": "fns", "name": "Food and Nutrition Service", "short_name": "FNS", "kind": "federal", "branch": "executive", "parent": "department-of-agriculture", "url": "https://www.fns.usda.gov", "notes": "USDA announced on 2026-04-30 that FNS would be reorganized into the Food and Nutrition Administration (fna.usda.gov); the move was under way in October 2026." },
+    { "slug": "cnpp", "name": "Center for Nutrition Policy and Promotion", "short_name": "CNPP", "kind": "federal", "branch": "executive", "parent": "fns", "url": "https://www.fns.usda.gov/cnpp", "notes": "Created in 1994 as a USDA office of its own; merged into FNS from 2017 (Wikipedia; USDA calls it a program area within FNS)." },
+    { "slug": "c2er", "name": "Council for Community and Economic Research", "short_name": "C2ER", "kind": "nonprofit", "url": "https://www.c2er.org", "notes": "Formerly ACCRA (the American Chamber of Commerce Researchers Association), whose name the Cost of Living Index carried." },
+    { "slug": "barchart", "name": "Barchart.com, Inc.", "short_name": "Barchart", "kind": "private", "url": "https://www.barchart.com" },
+    { "slug": "commodity-research-bureau", "name": "Commodity Research Bureau", "short_name": "CRB", "kind": "private", "parent": "barchart", "url": "https://www.barchart.com/cmdty", "notes": "Founded 1934. Bought by Barchart in 2001, without the CRB futures index; renamed cmdty by Barchart in January 2019." },
+    { "slug": "ftse-russell", "name": "FTSE International Limited (FTSE Russell)", "short_name": "FTSE Russell", "kind": "private", "url": "https://www.lseg.com/en/ftse-russell", "notes": "An LSEG company. Administrator of the FTSE/CoreCommodity CRB Index since December 2024 (Refinitiv Benchmark Services before)." },
+    { "slug": "corecommodity-indexes", "name": "CoreCommodity Indexes, LLC", "short_name": "CoreCommodity", "kind": "private", "notes": "Owns the CRB futures index with LSEG." }
   ],
 
   "lineage": [
@@ -60,6 +72,8 @@
     { "from": "federal-energy-administration", "to": "eia", "date": "1977-10-01", "kind": "transferred", "citation": "Department of Energy Organization Act, Pub. L. 95-91", "notes": "Energy statistics moved to the new Energy Information Administration in the Department of Energy." },
     { "from": "ofheo", "to": "fhfa", "date": "2008-07-30", "kind": "merged", "citation": "Housing and Economic Recovery Act of 2008, Pub. L. 110-289", "document": "bill:110-HR-3221" },
     { "from": "federal-housing-finance-board", "to": "fhfa", "date": "2008-07-30", "kind": "merged", "citation": "Housing and Economic Recovery Act of 2008, Pub. L. 110-289", "document": "bill:110-HR-3221" },
+    { "from": "bureau-of-the-public-debt", "to": "bureau-of-the-fiscal-service", "date": "2012-10-07", "kind": "merged", "citation": "Treasury Order 136-01", "notes": "Consolidated with the Financial Management Service as the Bureau of the Fiscal Service." },
+    { "from": "financial-management-service", "to": "bureau-of-the-fiscal-service", "date": "2012-10-07", "kind": "merged", "citation": "Treasury Order 136-01", "notes": "Consolidated with the Bureau of the Public Debt as the Bureau of the Fiscal Service." },
     { "from": "national-commission-on-terrorist-attacks", "to": null, "date": "2004-08-21", "kind": "abolished", "citation": "Pub. L. 107-306, sec. 610", "notes": "Closed 30 days after its report, as its statute required. Its website is kept by the National Archives." }
   ],
 
@@ -540,6 +554,171 @@
       "status": "active",
       "in_abstract": false, "outside_abstract": "A classification of policy topics, not statistics; kept as an alternative to the Abstract's own arrangement.",
       "paths": ["comparativeagendas.net/"]
+    },
+
+    {
+      "slug": "bls-producer-price-index", "name": "Producer Price Index",
+      "organizations": [{ "org": "bls", "role": "publisher" }], "kind": "statistics",
+      "description": "Prices received by domestic producers, by commodity (BLS survey code `wp`, from 1913) and by industry (`pc`). Final demand–intermediate demand (FD-ID) has been the main aggregation since January 2014; the stage-of-processing indexes were discontinued with January 2016 data.",
+      "homepage": "https://www.bls.gov/ppi/",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "bulk", "contact": true, "note": "download.bls.gov/pub/time.series/wp/ and pc/, as for the CPI." },
+      "collected": false,
+      "status": "active",
+      "paths": []
+    },
+    {
+      "slug": "bls-import-export-price-indexes", "name": "Import/Export Price Indexes",
+      "organizations": [{ "org": "bls", "role": "publisher" }], "kind": "statistics",
+      "description": "Prices of goods and services bought from and sold to other countries, by end use, by commodity classification and by locality of origin. BLS survey code `ei`.",
+      "homepage": "https://www.bls.gov/mxp/",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "bulk", "contact": true, "note": "download.bls.gov/pub/time.series/ei/." },
+      "collected": false,
+      "status": "active",
+      "paths": []
+    },
+    {
+      "slug": "eia-monthly-energy-review", "name": "Monthly Energy Review",
+      "organizations": [{ "org": "eia", "role": "publisher" }], "kind": "statistics",
+      "description": "EIA's summary of energy production, consumption, trade, prices and emissions, monthly and yearly; chapter 9 has the prices of fuels and electricity.",
+      "homepage": "https://www.eia.gov/totalenergy/data/monthly/",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "bulk", "note": "The total energy bulk file, www.eia.gov/opendata/bulk/TOTAL.zip (no key)." },
+      "collected": false,
+      "status": "active",
+      "paths": []
+    },
+    {
+      "slug": "usda-food-plans", "name": "USDA Food Plans: Cost of Food",
+      "organizations": [{ "org": "cnpp", "role": "publisher" }], "kind": "statistics",
+      "description": "Monthly cost of a nutritious diet at four levels (Thrifty, Low-Cost, Moderate-Cost, Liberal), by age and sex and for example families. The Thrifty plan sets SNAP's maximum benefit.",
+      "homepage": "https://www.fns.usda.gov/research/cnpp/usda-food-plans/cost-food-monthly-reports",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "file", "note": "One PDF a month for each plan; no bulk file found yet." },
+      "collected": false,
+      "status": "active",
+      "paths": []
+    },
+    {
+      "slug": "c2er-cost-of-living-index", "name": "Cost of Living Index (COLI)",
+      "organizations": [{ "org": "c2er", "role": "publisher" }], "kind": "statistics",
+      "description": "Relative cost of living for a professional household in about 270 participating urban areas, quarterly and as annual averages. Formerly the ACCRA Cost of Living Index.",
+      "homepage": "https://www.coli.org",
+      "licence": { "type": "licensed", "note": "Sold by subscription: $180–$300 a year in 2025, by format (press releases at coli.org, read 2026-10-14). The Abstract printed it as copyright." },
+      "access": { "used": [] }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+    {
+      "slug": "crb-futures-index", "name": "FTSE/CoreCommodity CRB Index",
+      "organizations": [{ "org": "ftse-russell", "role": "publisher" }, { "org": "corecommodity-indexes", "role": "publisher" }, { "org": "commodity-research-bureau", "role": "former-publisher" }], "kind": "statistics",
+      "description": "A futures price index of 19 commodities, begun by the Commodity Research Bureau in 1957; since then the Reuters/Jefferies, Thomson Reuters/CoreCommodity and Refinitiv/CoreCommodity CRB Index.",
+      "homepage": "https://www.lseg.com/en/ftse-russell/indices/commodity-indices",
+      "licence": { "type": "licensed", "note": "A licensed benchmark (owned by LSEG and CoreCommodity Indexes, LLC; administered by FTSE International). The Abstract printed it as copyright." },
+      "access": { "used": [] }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+    {
+      "slug": "cmdty-bls-commodity-price-indexes", "name": "cmdty BLS Commodity Price Indexes",
+      "organizations": [{ "org": "commodity-research-bureau", "role": "publisher" }], "kind": "statistics",
+      "description": "Spot market price indexes of 22 raw commodities (all commodities, raw industrials, foodstuffs, and subgroups), begun by BLS and computed by the Commodity Research Bureau from 1981; the CRB/BLS spot indexes.",
+      "homepage": "https://www.barchart.com/cmdty",
+      "licence": { "type": "licensed", "note": "Sold by Barchart (cmdty). The Abstract printed it as copyright." },
+      "access": { "used": [] }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+
+    {
+      "slug": "omb-analytical-perspectives", "name": "Analytical Perspectives, Budget of the U.S. Government",
+      "organizations": [{ "org": "omb", "role": "publisher" }], "kind": "statistics",
+      "description": "The Budget's volume of analyses: trust funds' income, outlays and balances; tax expenditures; federal borrowing and debt; aid to states; and more, for the past year, the current year and the budget year.",
+      "homepage": "https://www.whitehouse.gov/omb/budget/analytical-perspectives/",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "file", "note": "Supplemental tables as spreadsheets beside each year's volume; one edition a year, each a snapshot of three years." }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+
+    {
+      "slug": "treasury-savings-bonds", "name": "U.S. Treasury Savings Bonds: Issues, Redemptions, and Maturities by Series",
+      "organizations": [{ "org": "bureau-of-the-fiscal-service", "role": "publisher" }], "kind": "statistics",
+      "description": "Savings bonds issued, redeemed, matured and outstanding by series (E, EE, H, HH, I), monthly. Published by the Bureau of the Public Debt until it was merged into the Fiscal Service in 2012.",
+      "homepage": "https://fiscaldata.treasury.gov/datasets/savings-bonds-issues-redemptions-maturities-by-series/",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "api", "note": "Fiscal Data's API (no key) or its CSV download, as for Debt to the Penny." }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+
+    {
+      "slug": "census-consolidated-federal-funds-report", "name": "Consolidated Federal Funds Report",
+      "organizations": [{ "org": "census-bureau", "role": "publisher" }], "kind": "statistics",
+      "description": "Federal spending by state and county: grants, salaries, procurement, direct payments, loans and insurance, fiscal years 1983–2010.",
+      "homepage": "https://www.census.gov/programs-surveys/cffr.html",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "file", "note": "Historical reports and files remain on the Census site." }, "collected": false,
+      "status": "discontinued", "ended": "2011-10-01", "successor": "usaspending",
+      "notes": "The Federal Financial Statistics program was ended with the FY 2012 budget, taking the CFFR and Federal Aid to States with it; the website closed on 2012-07-31. USAspending.gov's figures are not comparable with the CFFR's.",
+      "paths": []
+    },
+
+    {
+      "slug": "usaspending", "name": "USAspending",
+      "organizations": [{ "org": "bureau-of-the-fiscal-service", "role": "publisher" }], "kind": "statistics",
+      "description": "Federal awards (contracts, grants, loans, direct payments) and account spending, with the recipient's place, from fiscal year 2008; required by the DATA Act of 2014.",
+      "homepage": "https://www.usaspending.gov",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "bulk", "note": "Award data archive and bulk downloads (files.usaspending.gov), no key." }, "collected": false,
+      "status": "active",
+      "in_abstract": false, "outside_abstract": "Successor to the Consolidated Federal Funds Report (Table 479), which the Abstract cites; USAspending itself began after the 2012 edition's data.",
+      "paths": []
+    },
+
+    {
+      "slug": "irs-data-book", "name": "IRS Data Book",
+      "organizations": [{ "org": "irs", "role": "publisher" }], "kind": "statistics",
+      "description": "The IRS's yearly account of its work by fiscal year (Publication 55B): returns filed, collections by type of tax, refunds, examinations, collections enforcement, appeals.",
+      "homepage": "https://www.irs.gov/statistics/soi-tax-stats-irs-data-book",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "file", "note": "One spreadsheet per table per year; table numbers changed over the years (gross collections by type of tax was Table 6, now Table 1-6)." }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+
+    {
+      "slug": "irs-soi-individual-returns", "name": "SOI Individual Income Tax Statistics",
+      "organizations": [{ "org": "irs", "role": "publisher" }], "kind": "statistics",
+      "description": "Statistics of Income from individual returns by tax year: income, adjustments, deductions, credits and tax by size of adjusted gross income (Publication 1304 and the SOI Bulletin's tables), and by state.",
+      "homepage": "https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-returns",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "file", "note": "Spreadsheets per table per tax year; state data as separate files." }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+
+    {
+      "slug": "opm-federal-workforce-data", "name": "Federal Workforce Data",
+      "organizations": [{ "org": "opm", "role": "publisher" }], "kind": "statistics",
+      "description": "The federal civilian workforce from OPM's personnel records (EHRI, formerly the Central Personnel Data File): employment, pay, accessions and separations by agency, location, occupation and characteristics, monthly. Succeeds FedScope (data to March 2025) and the printed series the Abstract cites (Employment and Trends, Pay Structure of the Federal Civil Service, Employment by Geographic Area, the Fact Book), all discontinued.",
+      "homepage": "https://data.opm.gov",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "file", "note": "Downloadable datasets, updated monthly." }, "collected": false,
+      "status": "active",
+      "paths": []
+    },
+
+    {
+      "slug": "gsa-federal-real-property-profile", "name": "Federal Real Property Profile (FRPP)",
+      "organizations": [{ "org": "gsa", "role": "publisher" }], "kind": "statistics",
+      "description": "Buildings, land and structures held by federal agencies, by agency and location, from the Federal Real Property Council's yearly inventory; the public dataset leaves out assets withheld for national security.",
+      "homepage": "https://www.gsa.gov/policy-regulations/policy/real-property-policy/asset-management/federal-real-property-profile-frpp",
+      "licence": { "type": "public-domain" },
+      "access": { "used": [], "best": "file", "note": "One spreadsheet per fiscal year (FY 2024 on data.gov, July 2025); GSA's own page lagged at FY 2022." }, "collected": false,
+      "status": "active",
+      "paths": []
     }
   ]
 }

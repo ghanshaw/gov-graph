@@ -5,9 +5,12 @@ Renamed 2026-10-13 to follow `GLOSSARY.md`: the middle level of the sources is a
 one date-and-value line (`economic_series`).
 
 ## Status
-In progress (2026-10-13). The sources are recorded and loaded: 44 organizations, 8 lineage entries, 43 datasets,
-22,797 files (4.3 GB) and all 51,406 economic and demographic series linked to a dataset. `/sources` and
-`/sources/:slug` read it. Not yet: moving off API keys, folding in the Demographics Source Files tab.
+In use (2026-10-14). The sources are recorded and loaded: 45 organizations, 8 lineage entries, 44 programs, about 24,300
+files, and all 51,406 economic and demographic series linked to a program. `/sources` and `/sources/:program` read
+them. Economic data no longer uses API keys (2026-10-13). Next: Congress.gov off its key (including the app's live call),
+then govinfo and CourtListener; the contact address only where required. The Statistical Abstract's Phase 3 adds
+the programs its source notes name: from Prices and Federal Government Finances (2026-10-14), most not yet
+collected (`collected: false`, `access.best`); 57 organizations, 10 lineage entries and 59 programs, loaded.
 
 ## Goal
 Keep track of every source GovGraph uses: who publishes it, what it is, which files were downloaded and when,

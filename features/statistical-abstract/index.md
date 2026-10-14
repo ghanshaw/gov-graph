@@ -1,10 +1,11 @@
 # Statistical Abstract
 
 ## Status
-Phases 0–2 done, Phase 4's placements done (2026-10-13). Every table's subsection, printed page, title and source note
-is in `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
-`placements.json`. Next: Phase 3 (source notes → programs). The sources (publishers and programs) are
-`features/data-sources`; the Abstract as a taxonomy is `features/taxonomies`.
+2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 in progress**
+(source notes → programs), a section or two at a time for review: sections 9 (Federal Government Finances and Employment) and 14 (Prices) done. Every table's subsection, printed page, title and source note is in
+`server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
+`placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
+`features/taxonomies`.
 
 ## Goal
 Use the **Statistical Abstract of the United States, 2012** (131st edition, the last the Census Bureau published;
@@ -93,6 +94,34 @@ What the pages and files showed (2026-10-13):
 - **Coverage report**: every table marked have / partly / wanted / licensed (not collected) / discontinued, and
   whether it is a time series, by place, or a single-year snapshot. Shown on the sources page and per section.
 
+**Progress.** Coverage is kept by hand in `server/seed/data/statistical-abstract-coverage.json` (per table: `programs`,
+`coverage`, `shape`, `in_hand` when the publisher's file is already downloaded, `note`), checked by
+`server/lib/abstract-coverage.js` (test `abstract-coverage.test.js`: every table of a section listed in `sections`
+is covered, programs exist, `licensed` only for licensed programs). Programs not collected yet are in `sources.json`
+with `collected: false`, `paths: []` and `access.best`.
+
+- **Section 14, Prices (2026-10-14), 20 tables:** 5 partly (CPI groups and items, FHFA by state, EIA gasoline by
+  city, BEA PCE by type), 9 wanted, 2 discontinued (PPI stage of processing: ended with January 2016 data, successor
+  FD-ID), 3 licensed (C2ER Cost of Living Index; CRB futures and spot indexes). 8 of the 20 are already in the data
+  folder. New programs: BLS Producer Price Index (`wp`, `pc`), BLS Import/Export Price Indexes (`ei`), EIA Monthly
+  Energy Review (`TOTAL.zip`), USDA Food Plans (monthly PDFs, CNPP), and licensed C2ER and CRB. CPI average prices
+  (table 733) are BLS survey `ap`, kept under the CPI program. Not confirmed: who owns CRB today, and when CNPP came
+  under FNS's site. Found (2026-10-14, user asked): CRB was bought by Barchart in 2001 without its futures index, and
+  renamed cmdty in 2019; the futures index is the FTSE/CoreCommodity CRB Index (LSEG and CoreCommodity Indexes), so
+  735 and 736 are two programs. CNPP has been part of FNS since 2017; FNS is becoming the Food and Nutrition
+  Administration (announced 2026-04-30). CPI average prices stay in the CPI program (user).
+- **Section 9, Federal Government Finances and Employment (2026-10-14), 34 tables:** 2 partly (OMB receipts and
+  outlays, receipts by source), 28 wanted, 1 discontinued (Consolidated Federal Funds Report, ended with the FY 2012
+  budget; successor USAspending, not comparable), 2 unpublished (Treasury Office of Tax Analysis data, 494–495; a new
+  coverage value with no program). OMB Historical Tables still to download: 3.2, 4.1, 6.1, 7.1, 11.3. New programs:
+  OMB Analytical Perspectives, Treasury savings bonds (Fiscal Data), USAspending (not in the Abstract; successor),
+  Census CFFR (discontinued), IRS Data Book, SOI individual income tax statistics, OPM Federal Workforce Data
+  (data.opm.gov, replacing FedScope and the printed series the Abstract cites), GSA Federal Real Property Profile.
+  The Bureau of the Public Debt and FMS merged into the Fiscal Service on 2012-10-07 (lineage). To check when
+  collecting: whether OPM's data covers the legislative and judicial branches (496), and whether Fiscal Data's savings
+  bonds give dollars as Table 478 does.
+- Not yet: the coverage report on the sources page and per section.
+
 ### Phase 4 — the catalogue in the Abstract's order
 - Give every current series its subsection and `placement`. Done 2026-10-13: 17 of 29 measures by table, 12 by
   judgement (the reason names the nearest table). Where the Abstract prints a measure's series in two subsections they
@@ -151,7 +180,7 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
 - [x] The website's headings are not the book's subsections; not kept (2026-10-13)
 - [x] Every table mapped to the book's subsection by its printed page, from the section PDFs; written with its source
   note to `statistical-abstract-tables.json`; the `statab_*` tables dropped from the database (user, 2026-10-13)
-- [ ] Phase 3: source notes → datasets; coverage report
+- [ ] Phase 3: source notes → programs; coverage report (sections 9 and 14 done 2026-10-14; 28 sections and the report to go)
 - [x] Phase 4 placements: every measure placed from the tables; measures split where the Abstract splits them (2026-10-13)
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
 - [ ] Phase 4 rest: wanted tables shown as not yet here (after Phase 3)

@@ -202,7 +202,7 @@ export const SCHEMA = `
     status            TEXT NOT NULL,          -- 'active' | 'final' | 'discontinued' | 'moved'
     ended             DATE,
     successor         TEXT,                   -- another program's slug
-    collected         BOOLEAN NOT NULL DEFAULT true,   -- false: listed only (licensed data)
+    collected         BOOLEAN NOT NULL DEFAULT true,   -- false: listed only (licensed, or not collected yet)
     in_abstract       BOOLEAN,                -- cited in the 2012 Statistical Abstract; null until compared
     outside_abstract  TEXT,                   -- why a program the Abstract does not cite was added
     paths             TEXT[] NOT NULL,        -- prefixes of its files' paths in the data folder

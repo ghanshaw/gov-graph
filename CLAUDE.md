@@ -658,6 +658,22 @@ as "Table 961.", "Table. 553." or a bare "1158.". 1,389 source notes read; 17 ta
     node server/seed/fetch-statistical-abstract.js [--only <section slugs>] [--pages-only] [--refresh-pages] [--dry-run]
     node server/seed/build-abstract-tables.js [--dry-run]
 
+**Plan and status (2026-10-14; details in `features/statistical-abstract/index.md`):**
+
+| Phase | What | Status |
+|---|---|---|
+| 0. The book | The 2012 PDF in the data folder | Done |
+| 1. Sources | Every publisher and program already used, with licences, access and files (`sources.json`, `/sources`) | Done |
+| 2. Skeleton | Section pages, table files, section PDFs; every table's page, subsection, title, source note | Done |
+| 3. Source notes → programs | Read the 1,389 source notes into the programs they name; add the missing ones to `sources.json` (publisher, licence, status, bulk access, "not collected yet"); mark each table have / partly / wanted / licensed / discontinued. A section or two at a time, reviewed by the user. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | **Next** |
+| 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done, except showing wanted tables as "not here yet" (after Phase 3) |
+| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load | After Phase 3 |
+
+Other work in hand (user, 2026-10-13): move the remaining API-key fetches to bulk files (economic data done; Congress.gov,
+including the app's live call in `resolvers.js`, then govinfo, then CourtListener; `features/data-sources`); drop the
+contact address from fetches to publishers that do not require it (`fetchFile` in `fetch-economic-series.js` still sends
+it to BEA, Freddie Mac, FHFA and others). The work is on branch `sources-and-structures`, not yet merged to `main`.
+
 ## Taxonomies
 
 The page **Taxonomies** (`/taxonomies`, `pages/Taxonomies.jsx`; `/structure` and `/abstract` redirect) shows the
