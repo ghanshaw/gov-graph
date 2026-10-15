@@ -665,7 +665,7 @@ as "Table 961.", "Table. 553." or a bare "1158.". 1,389 source notes read; 17 ta
 | 0. The book | The 2012 PDF in the data folder | Done |
 | 1. Sources | Every publisher and program already used, with licences, access and files (`sources.json`, `/sources`) | Done |
 | 2. Skeleton | Section pages, table files, section PDFs; every table's page, subsection, title, source note | Done |
-| 3. Source notes → programs | Every table's programs, coverage (have / partly / wanted / licensed / discontinued / unpublished / compiled) and shape in `server/seed/data/statistical-abstract-coverage.json` (checked by `server/lib/abstract-coverage.js`); 409 programs in `sources.json`. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | Mapped for all 30 sections (2026-10-14); user's review of the 27 rule-drafted sections and the coverage report still to do |
+| 3. Source notes → programs | Every table's programs, coverage (have / partly / wanted / licensed / discontinued / unpublished / compiled) and shape in `server/seed/data/statistical-abstract-coverage.json` (checked by `server/lib/abstract-coverage.js`); 409 programs in `sources.json`. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | Mapped for all 30 sections, report at `/sources/abstract-coverage` (2026-10-14); user's review of the 27 rule-drafted sections still to do |
 | 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done, except showing wanted tables as "not here yet" (after Phase 3) |
 | 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load | After Phase 3 |
 

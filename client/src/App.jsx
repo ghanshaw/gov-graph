@@ -19,6 +19,7 @@ import BillDetail from './pages/BillDetail';
 import CorpusBrowser from './pages/CorpusBrowser';
 import CaseGraph from './pages/CaseGraph';
 import DataSources from './pages/DataSources';
+import AbstractCoverage from './pages/AbstractCoverage';
 import SourceProgram from './pages/SourceProgram';
 import TagsIndex from './pages/TagsIndex';
 import TagPage from './pages/TagPage';
@@ -58,6 +59,7 @@ export default function App() {
           <Route path="/structure" element={<Navigate to="/taxonomies" replace />} />
           <Route path="/abstract" element={<Navigate to="/taxonomies" replace />} />
           <Route path="/sources" element={<DataSources />} />
+          <Route path="/sources/abstract-coverage" element={<AbstractCoverage />} />
           <Route path="/sources/:slug" element={<SourceProgram />} />
           <Route path="/tags" element={<TagsIndex />} />
           <Route path="/tags/:word" element={<TagPage />} />

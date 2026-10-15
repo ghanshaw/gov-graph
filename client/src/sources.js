@@ -28,3 +28,9 @@ export const ABSTRACT_OPTIONS = [
 ];
 
 export const publishers = d => d.organizations.filter(o => o.role === 'publisher').map(o => o.organization);
+
+// How much of an Abstract table GovGraph holds (lib/abstract-coverage.js), as a chip; the order the report counts them in.
+export const COVERAGE_ORDER = ['have', 'partly', 'wanted', 'licensed', 'discontinued', 'unpublished', 'compiled'];
+export const COVERAGE_CHIP = {
+  have: 'chip ok', partly: 'chip accent', wanted: 'chip', licensed: 'chip danger', discontinued: 'chip warn', unpublished: 'chip', compiled: 'chip',
+};

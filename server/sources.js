@@ -1,10 +1,13 @@
 // Where the data comes from (source_organizations, source_lineage, source_programs, source_files;
 // seed/load-sources.js): every program with its publishers, terms and files, and one program with its
-// folders, files and series. Pages: client/src/pages/DataSources.jsx, SourceProgram.jsx.
+// folders, files and series; and the Statistical Abstract's tables with the programs they cite and how much of each
+// GovGraph holds (lib/abstract-coverage.js, read from the files). Pages: client/src/pages/DataSources.jsx,
+// SourceProgram.jsx, AbstractCoverage.jsx.
 
 import { pool } from './db.js';
 import { documentHref } from './timeline.js';
 import { ORGANIZATION_KINDS, PROGRAM_KINDS, LICENCES, ACCESS, STATUSES } from './lib/sources.js';
+import { coverageReport, COVERAGE, SHAPES } from './lib/abstract-coverage.js';
 
 const PROGRAM_COLUMNS = `d.slug, d.name, d.kind, d.description, d.homepage, d.licence, d.licence_detail AS "licenceDetail",
   d.access_used AS "accessUsed", d.access_best AS "accessBest", d.access_key AS "accessKey", d.access_contact AS "accessContact",
@@ -36,8 +39,12 @@ async function organizationsOf(slugs) {
   return by;
 }
 
+// A program a table cites is in the Abstract, whatever sources.json says (in_abstract is set there only to say why
+// one is not).
 const labelled = d => ({
   ...d,
+  inAbstract: coverageReport().byProgram.has(d.slug) ? true : d.inAbstract,
+  abstractTableCount: coverageReport().byProgram.get(d.slug)?.length ?? 0,
   kindLabel: PROGRAM_KINDS[d.kind] ?? d.kind,
   licenceLabel: LICENCES[d.licence] ?? d.licence,
   statusLabel: STATUSES[d.status] ?? d.status,
@@ -45,7 +52,14 @@ const labelled = d => ({
 
 export const sourceQueries = {
   // The labels of every value the sources use (lib/sources.js), for the page's filters.
-  sourceVocabulary: () => ({ organizationKinds: ORGANIZATION_KINDS, programKinds: PROGRAM_KINDS, licences: LICENCES, access: ACCESS, statuses: STATUSES }),
+  sourceVocabulary: () => ({ organizationKinds: ORGANIZATION_KINDS, programKinds: PROGRAM_KINDS, licences: LICENCES, access: ACCESS, statuses: STATUSES,
+    coverage: COVERAGE, shapes: SHAPES }),
+
+  // Every table of the Statistical Abstract in book order, with the programs it cites and its coverage, and the sections.
+  abstractCoverage: () => {
+    const { sections, tables } = coverageReport();
+    return { sections, tables };
+  },
 
   // Every program in the order of sources.json, with its organizations and counts.
   sourcePrograms: async () => {
@@ -84,8 +98,29 @@ export const sourceQueries = {
   },
 };
 
+// A table's programs by name; one query for every program, shared by all the tables a request resolves at once.
+let programNames = null;
+function namesOfPrograms() {
+  if (!programNames) {
+    programNames = pool.query('SELECT slug, name, licence, collected FROM source_programs')
+      .then(({ rows }) => new Map(rows.map(r => [r.slug, r])))
+      .catch(e => { programNames = null; throw e; });
+    setTimeout(() => { programNames = null; }, 60_000);
+  }
+  return programNames;
+}
+
 export const sourceResolvers = {
+  AbstractTable: {
+    programs: async t => {
+      const names = await namesOfPrograms();
+      return t.programs.map(slug => ({ slug, name: names.get(slug)?.name ?? slug, licence: names.get(slug)?.licence ?? null,
+        collected: names.get(slug)?.collected ?? false }));
+    },
+  },
   SourceProgram: {
+    // The Abstract's tables that cite this program.
+    abstractTables: d => coverageReport().byProgram.get(d.slug) ?? [],
     // Files by the folder they are in, in path order.
     folders: async (d, { limit }) => {
       const { rows } = await pool.query(

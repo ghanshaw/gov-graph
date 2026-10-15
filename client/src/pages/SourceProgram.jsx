@@ -8,6 +8,7 @@ import { RailGroup, Fact } from '../components/Rail';
 import Loading from '../components/Loading';
 import { shortDate } from '../dates';
 import { bytes, LICENCE_CHIP, accessChip, abstractLabel, publishers } from '../sources';
+import AbstractTables, { coverageCounts } from '../components/AbstractTables';
 
 const ROLE = { publisher: 'Publisher', producer: 'Producer', distributor: 'Distributor', 'former-publisher': 'Former publisher' };
 const LINEAGE = { renamed: 'Renamed', merged: 'Merged', transferred: 'Transferred', split: 'Split', abolished: 'Abolished' };
@@ -84,6 +85,7 @@ export default function SourceProgram() {
       <Fact label="On disk">{bytes(d.fileBytes)}</Fact>
       {d.lastModified && <Fact label="Latest file">{shortDate(d.lastModified)}</Fact>}
       <Fact label="Series">{d.seriesCount.toLocaleString()}</Fact>
+      {d.abstractTableCount > 0 && <Fact label="Abstract tables">{d.abstractTableCount}</Fact>}
     </RailGroup>
   );
 
@@ -113,6 +115,20 @@ export default function SourceProgram() {
           {d.accessNote && <><dt>Note</dt><dd>{d.accessNote}</dd></>}
         </dl>
       </section>
+
+      {d.abstractTables.length > 0 && (
+        <section className="page-section">
+          <h2 className="section-title">
+            In the Statistical Abstract{' '}
+            <small>
+              {d.abstractTables.length} {d.abstractTables.length === 1 ? 'table' : 'tables'}
+              {' · '}{coverageCounts(d.abstractTables).map(([c, n]) => `${n} ${data.sourceVocabulary.coverage[c].toLowerCase()}`).join(' · ')}
+            </small>
+          </h2>
+          <AbstractTables tables={d.abstractTables} vocabulary={data.sourceVocabulary} except={d.slug} />
+          <p className="note">Tables of the 2012 edition whose source note names this program. <Link to="/sources/abstract-coverage">Every table</Link></p>
+        </section>
+      )}
 
       {d.inAbstract === false && (
         <section className="page-section">

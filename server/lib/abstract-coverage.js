@@ -62,3 +62,33 @@ export function tablesByProgram({ tables: covered }) {
   for (const [id, c] of Object.entries(covered)) for (const slug of c.programs) out.set(slug, [...(out.get(slug) ?? []), id]);
   return out;
 }
+
+const FILES = ['statistical-abstract-coverage.json', 'statistical-abstract-tables.json', 'taxonomies/statistical-abstract.json'];
+let cache = null;
+
+/**
+ * Every table of the Abstract with its coverage, in book order, and the sections with their subsections' names:
+ * { sections: [{ number, id, name }], tables: [{ id, section, category, categoryName, page, title, online, url,
+ * coverage, shape, inHand, note, programs }], byProgram: Map(slug → tables) }. Read from the files (nothing is in the
+ * database) and kept until one of them changes.
+ */
+export function coverageReport() {
+  const stamp = FILES.map(f => fs.statSync(path.join(DATA, f)).mtimeMs).join();
+  if (cache?.stamp === stamp) return cache;
+  const { tables: covered } = readCoverage();
+  const taxonomy = read('taxonomies/statistical-abstract.json');
+  const names = new Map(taxonomy.categories.flatMap(s => [[s.id, s.name], ...(s.children ?? []).map(c => [c.id, c.name])]));
+  const tables = readAbstractTables().map(t => {
+    const c = covered[t.id] ?? {};
+    return {
+      id: t.id, section: t.section, category: t.category, categoryName: names.get(t.category) ?? null, page: t.page,
+      title: t.title, online: t.online, url: t.url ?? null,
+      coverage: c.coverage ?? null, shape: c.shape ?? null, inHand: Boolean(c.in_hand), note: c.note ?? null, programs: c.programs ?? [],
+    };
+  }).sort((a, b) => Number(a.id) - Number(b.id));
+  const byProgram = new Map();
+  for (const t of tables) for (const slug of t.programs) byProgram.set(slug, [...(byProgram.get(slug) ?? []), t]);
+  const sections = taxonomy.categories.map(s => ({ number: Number(s.code), id: s.id, name: s.name }));
+  cache = { stamp, sections, tables, byProgram };
+  return cache;
+}

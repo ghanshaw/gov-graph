@@ -435,6 +435,42 @@ export const typeDefs = `#graphql
     lastDate: String
   }
 
+  # A table of the 2012 Statistical Abstract and how much of what it prints GovGraph holds
+  # (seed/data/statistical-abstract-coverage.json; lib/abstract-coverage.js). Read from the files, not the database.
+  type AbstractTable {
+    id: String!            # the table number, "724"
+    section: Int!
+    category: String!      # its subsection in taxonomies/statistical-abstract.json
+    categoryName: String
+    page: Int
+    title: String!
+    online: Boolean!
+    url: String
+    coverage: String       # have | partly | wanted | licensed | discontinued | unpublished | compiled
+    shape: String          # time-series | by-place | snapshot
+    inHand: Boolean!       # the publisher's file is in the data folder, not yet loaded
+    note: String
+    programs: [AbstractTableProgram!]!
+  }
+
+  type AbstractTableProgram {
+    slug: String!
+    name: String!
+    licence: String
+    collected: Boolean!
+  }
+
+  type AbstractSection {
+    number: Int!
+    id: String!
+    name: String!
+  }
+
+  type AbstractCoverage {
+    sections: [AbstractSection!]!
+    tables: [AbstractTable!]!
+  }
+
   type SourceProgram {
     slug: String!
     name: String!
@@ -466,6 +502,8 @@ export const typeDefs = `#graphql
     fileBytes: Float!
     lastModified: String
     seriesCount: Int!
+    abstractTableCount: Int!
+    abstractTables: [AbstractTable!]!
     folders(limit: Int): [SourceFolder!]!
     series(limit: Int): [ProgramSeries!]!
   }
@@ -731,6 +769,7 @@ export const typeDefs = `#graphql
     # A program's files, in path order; with folder, only those directly in it.
     sourceFiles(program: String!, folder: String, limit: Int): [SourceFile!]!
     sourceVocabulary: JSON
+    abstractCoverage: AbstractCoverage!
 
     economicSeriesList: [EconomicSeries!]!
     economicSeries(slug: String!): EconomicSeries

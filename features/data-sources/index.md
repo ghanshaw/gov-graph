@@ -138,6 +138,7 @@ here. The Abstract's coverage report (`features/statistical-abstract`, Phase 3) 
 - `courtlistener.com/scotus-slip-opinions.json` is GovGraph's own match list, not a download.
 
 ## Done
+- [x] Coverage of the Statistical Abstract: `/sources/abstract-coverage`, each program's Abstract tables, table counts in the list (2026-10-14)
 - [x] Agreed the model (2026-10-13)
 - [x] `sources.json`: 44 organizations, 8 lineage entries, 43 datasets; non-federal terms read and dated (2026-10-13)
 - [x] Schema, loader, test (2026-10-13)

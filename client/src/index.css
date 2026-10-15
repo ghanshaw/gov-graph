@@ -1226,6 +1226,25 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .source-terms dt { color: var(--muted); font-size: 13px; }
 .source-terms dd { margin: 0; }
 .source-text { margin: 0; font-size: 14px; line-height: 1.6; max-width: 760px; }
+.inline-link { color: var(--accent); white-space: nowrap; }
+.inline-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* The Statistical Abstract's tables against what GovGraph holds (AbstractTables.jsx) */
+.coverage-tables td.no { width: 1%; }
+.coverage-tables td.meta { min-width: 180px; }
+.coverage-tables td.meta a:hover { color: var(--accent); }
+.coverage-tables code { font-family: var(--mono); font-size: 12px; }
+.coverage-tables .in-hand { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); }
+.records td.title .sub.narrow-only { display: none; }
+@media (max-width: 900px) { .records td.title .sub.narrow-only { display: block; } }
+.coverage-bar { display: flex; gap: 2px; height: 8px; margin: 0 0 28px; max-width: 640px; }
+.coverage-bar i { display: block; min-width: 2px; border-radius: 2px; }
+.cov-have { background: var(--ok); }
+.cov-partly { background: var(--accent); }
+.cov-wanted { background: var(--branch); }
+.cov-licensed { background: var(--danger); }
+.cov-discontinued { background: var(--warn); }
+.cov-unpublished, .cov-compiled { background: var(--rule); }
 .source-lineage { list-style: none; margin: 14px 0 0; padding: 0; font-size: 13.5px; line-height: 1.6; }
 .source-lineage .date { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
 .source-lineage .sub { color: var(--muted); }

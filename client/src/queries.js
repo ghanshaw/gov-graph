@@ -664,10 +664,15 @@ export const GET_ACS_TABLE = gql`
 `;
 
 // Where the data comes from (server/sources.js): every program, and one with its files and series.
+const ABSTRACT_TABLE_FIELDS = `
+  id section category categoryName page title online url coverage shape inHand note
+  programs { slug name licence collected }
+`;
+
 const SOURCE_PROGRAM_FIELDS = `
   slug name kind kindLabel description homepage licence licenceLabel licenceDetail
   accessUsed accessBest accessKey accessContact accessNote status statusLabel ended successor successorName
-  collected inAbstract outsideAbstract notes fileCount fileBytes lastModified seriesCount
+  collected inAbstract outsideAbstract notes fileCount fileBytes lastModified seriesCount abstractTableCount
   organizations { role organization { slug name shortName kind kindLabel branch parent parentName url notes } }
 `;
 
@@ -686,6 +691,17 @@ export const GET_SOURCE_PROGRAM = gql`
       lineage { from fromName to toName date kind citation document href notes }
       folders(limit: 200) { path count bytes lastModified }
       series(limit: 500) { slug name frequency unit firstDate lastDate }
+      abstractTables { ${ABSTRACT_TABLE_FIELDS} }
+    }
+    sourceVocabulary
+  }
+`;
+
+export const GET_ABSTRACT_COVERAGE = gql`
+  query GetAbstractCoverage {
+    abstractCoverage {
+      sections { number id name }
+      tables { ${ABSTRACT_TABLE_FIELDS} }
     }
     sourceVocabulary
   }

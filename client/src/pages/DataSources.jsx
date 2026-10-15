@@ -87,9 +87,9 @@ export default function DataSources() {
       </div>
       <p className="lede">
         Every program (statistics) and collection (documents) GovGraph uses: who publishes it, what its terms allow, how it is fetched, and each file
-        downloaded. Federal works are public domain; other publishers' terms were read on their sites. The 2012
+        downloaded. Federal works are public domain; other publishers' terms are read on their sites, and marked not checked until then. The 2012
         Statistical Abstract of the United States is the list of what to collect; those it does not cite say why
-        they are here.
+        they are here. <Link to="/sources/abstract-coverage" className="inline-link">Coverage of the Abstract, table by table</Link>
       </p>
 
       {loading && <Loading />}
@@ -116,6 +116,7 @@ export default function DataSources() {
                       {publishers(d).map(o => o.shortName).join(', ')}
                       {d.status !== 'active' && ` · ${d.statusLabel}`}
                       {d.seriesCount > 0 && ` · ${d.seriesCount.toLocaleString()} series`}
+                      {d.abstractTableCount > 0 && ` · ${d.abstractTableCount} Abstract ${d.abstractTableCount === 1 ? 'table' : 'tables'}`}
                     </span>
                     {d.inAbstract === false && (
                       <span className="sub source-flag" title={d.outsideAbstract}>Not in the Statistical Abstract: {d.outsideAbstract}</span>

@@ -2,8 +2,9 @@
 
 ## Status
 2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3's mapping is done**
-for all 30 sections (2026-10-14): every table has its programs, coverage and shape. Still to do in Phase 3: the coverage
-report on the sources page, and the user's review of the 27 sections drafted by rules. Every table's subsection, printed page, title and source note is in
+for all 30 sections (2026-10-14): every table has its programs, coverage and shape. The coverage report is built
+(`/sources/abstract-coverage`, and each program's tables on its page). Still to do: the user's review of the 27
+sections drafted by rules. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -156,8 +157,15 @@ with `collected: false`, `paths: []` and `access.best`.
   it); OHSS replaced DHS's Office of Immigration Statistics in 2023. Other discontinuations (Financial Crimes Report,
   NJRP, Homicide Trends, CNPP's expenditures on children, ITA aircraft shipments, FCC telephone trends, Fed new security
   issues, FHFA MIRS) are marked "not confirmed" in their notes.
-- Not yet: the coverage report on the sources page and per section; homepages of new programs were written from
-  knowledge and not each opened.
+- **Coverage report (2026-10-14):** `/sources/abstract-coverage` (`pages/AbstractCoverage.jsx`) lists every table in
+  book order under its section: subsection, shape, page, note, programs (linked) and a coverage chip, with a bar of the
+  coverage split, rail totals and filters for coverage, shape and section (kept in the URL) and a search. Each program's
+  page has "In the Statistical Abstract" with its tables (`components/AbstractTables.jsx`); the sources list shows each
+  program's table count. Served by the `abstractCoverage` query and `SourceProgram.abstractTables` /
+  `abstractTableCount`, read from the files (`coverageReport` in `lib/abstract-coverage.js`, cached until a file
+  changes); nothing in the database. A program a table cites now reports `inAbstract: true`. Not checked at phone
+  width (the browser window would not resize).
+- Homepages of new programs were written from knowledge and not each opened.
 
 ### Phase 4 — the catalogue in the Abstract's order
 - Give every current series its subsection and `placement`. Done 2026-10-13: 17 of 29 measures by table, 12 by
@@ -219,7 +227,7 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
   note to `statistical-abstract-tables.json`; the `statab_*` tables dropped from the database (user, 2026-10-13)
 - [x] Phase 3 mapping: every table's programs, coverage and shape (2026-10-14)
 - [ ] Phase 3 review: the user's review of the 27 rule-drafted sections
-- [ ] Phase 3 report: coverage on the sources page and per section
+- [x] Phase 3 report: `/sources/abstract-coverage` and each program's tables (2026-10-14)
 - [x] Phase 4 placements: every measure placed from the tables; measures split where the Abstract splits them (2026-10-13)
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
 - [ ] Phase 4 rest: wanted tables shown as not yet here (after Phase 3)
