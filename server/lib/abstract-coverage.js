@@ -20,7 +20,9 @@ export const COVERAGE = {
   licensed: 'Licensed', // sold or restricted: listed, not collected (user, 2026-10-13)
   discontinued: 'Discontinued', // the publisher stopped; the note names any successor
   unpublished: 'Unpublished', // the source note cites unpublished data: nothing to collect, no program
+  compiled: 'Compiled', // the Abstract compiled it from sources named in its footnotes, still to be traced; no program yet
 };
+const NO_PROGRAM = ['unpublished', 'compiled'];
 export const SHAPES = {
   'time-series': 'Time series', // years (or months) down the side
   'by-place': 'By place', // states, cities or countries, for one year or several
@@ -42,12 +44,13 @@ export function checkCoverage({ sections, tables: covered }, tables, programs) {
     if (!sections.includes(table.section)) problems.push(`${name}: its section ${table.section} is not in sections`);
     if (!COVERAGE[c.coverage]) problems.push(`${name}: unknown coverage ${c.coverage}`);
     if (!SHAPES[c.shape]) problems.push(`${name}: unknown shape ${c.shape}`);
-    if (c.coverage === 'unpublished' ? c.programs?.length : !c.programs?.length) problems.push(`${name}: ${c.coverage === 'unpublished' ? 'unpublished, but names programs' : 'no programs'}`);
+    const none = NO_PROGRAM.includes(c.coverage);
+    if (none ? c.programs?.length : !c.programs?.length) problems.push(`${name}: ${none ? `${c.coverage}, but names programs` : 'no programs'}`);
     const found = (c.programs ?? []).map(slug => bySlug.get(slug) ?? problems.push(`${name}: unknown program ${slug}`)).filter(p => typeof p === 'object');
     const licensed = found.some(p => p.licence?.type === 'licensed');
     if ((c.coverage === 'licensed') !== licensed) problems.push(`${name}: coverage licensed only for a licensed program`);
     if (['have', 'partly'].includes(c.coverage) && !found.some(p => p.collected !== false)) problems.push(`${name}: ${c.coverage}, but no program is collected`);
-    if (['partly', 'discontinued', 'unpublished'].includes(c.coverage) && !c.note) problems.push(`${name}: ${c.coverage} needs a note`);
+    if (['partly', 'discontinued', ...NO_PROGRAM].includes(c.coverage) && !c.note) problems.push(`${name}: ${c.coverage} needs a note`);
     if (c.in_hand && !found.some(p => p.collected !== false)) problems.push(`${name}: in hand, but no program is collected`);
   }
   return problems;

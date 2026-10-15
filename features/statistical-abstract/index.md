@@ -1,8 +1,9 @@
 # Statistical Abstract
 
 ## Status
-2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 in progress**
-(source notes → programs), a section or two at a time for review: sections 9 (Federal Government Finances and Employment) and 14 (Prices) done. Every table's subsection, printed page, title and source note is in
+2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3's mapping is done**
+for all 30 sections (2026-10-14): every table has its programs, coverage and shape. Still to do in Phase 3: the coverage
+report on the sources page, and the user's review of the 27 sections drafted by rules. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -101,7 +102,7 @@ is covered, programs exist, `licensed` only for licensed programs). Programs not
 with `collected: false`, `paths: []` and `access.best`.
 
 - **Section 14, Prices (2026-10-14), 20 tables:** 5 partly (CPI groups and items, FHFA by state, EIA gasoline by
-  city, BEA PCE by type), 9 wanted, 2 discontinued (PPI stage of processing: ended with January 2016 data, successor
+  city, BEA PCE by type), 10 wanted, 2 discontinued (PPI stage of processing: ended with January 2016 data, successor
   FD-ID), 3 licensed (C2ER Cost of Living Index; CRB futures and spot indexes). 8 of the 20 are already in the data
   folder. New programs: BLS Producer Price Index (`wp`, `pc`), BLS Import/Export Price Indexes (`ei`), EIA Monthly
   Energy Review (`TOTAL.zip`), USDA Food Plans (monthly PDFs, CNPP), and licensed C2ER and CRB. CPI average prices
@@ -111,7 +112,7 @@ with `collected: false`, `paths: []` and `access.best`.
   735 and 736 are two programs. CNPP has been part of FNS since 2017; FNS is becoming the Food and Nutrition
   Administration (announced 2026-04-30). CPI average prices stay in the CPI program (user).
 - **Section 9, Federal Government Finances and Employment (2026-10-14), 34 tables:** 2 partly (OMB receipts and
-  outlays, receipts by source), 28 wanted, 1 discontinued (Consolidated Federal Funds Report, ended with the FY 2012
+  outlays, receipts by source), 29 wanted, 1 discontinued (Consolidated Federal Funds Report, ended with the FY 2012
   budget; successor USAspending, not comparable), 2 unpublished (Treasury Office of Tax Analysis data, 494–495; a new
   coverage value with no program). OMB Historical Tables still to download: 3.2, 4.1, 6.1, 7.1, 11.3. New programs:
   OMB Analytical Perspectives, Treasury savings bonds (Fiscal Data), USAspending (not in the Abstract; successor),
@@ -120,7 +121,43 @@ with `collected: false`, `paths: []` and `access.best`.
   The Bureau of the Public Debt and FMS merged into the Fiscal Service on 2012-10-07 (lineage). To check when
   collecting: whether OPM's data covers the legislative and judicial branches (496), and whether Fiscal Data's savings
   bonds give dollars as Table 478 does.
-- Not yet: the coverage report on the sources page and per section.
+- **Section 12, Labor Force, Employment, and Earnings (2026-10-14), 81 tables:** 4 partly (CPS employment status,
+  by sex and race, unemployed summary, by education: what the unemployment series already loaded cover), 72 wanted,
+  2 discontinued (Mass Layoff Statistics, ended by the 2013 sequestration; the one-off 2005 Survey of Workplace
+  Violence Prevention), 3 unpublished (BLS's unpublished CPS data, 604, 605, 619: tabulating the microdata would be
+  our own series). 21 tables are in the `ln` file already. CPS supplements and BLS reports from the CPS (foreign-born,
+  veterans, disability, tenure, displaced workers, contingent work, minimum wage workers, union members, women's
+  earnings) are all the CPS program; usual weekly earnings (`le`) and union members (`lu`) are CPS files still to
+  download. New programs: BLS CES, LAUS (with the Geographic Profile), Employment Projections, JOLTS, Business
+  Employment Dynamics, Mass Layoff Statistics (discontinued), ATUS, Productivity and Costs, National Compensation
+  Survey (ECI, ECEC, benefits), QCEW, NLS, Injuries, Illnesses, and Fatalities, Work Stoppages; DOL's ETA
+  (unemployment insurance) and Wage and Hour Division (state minimum wages); Census Current Population Reports (one
+  program for every series, as decided; Historical Income Tables stay a program of their own for now); and three
+  private ones with licences not yet checked: NSC Injury Facts (its terms page refused the request), the Union
+  Membership and Coverage Database (unionstats.com; no terms stated), the Families and Work Institute's National
+  Study of Employers.
+- **The other 27 sections (2026-10-14, user: "do all the sections"), 1,271 tables:** drafted by matching each source
+  note against patterns, one per publication (the script stayed in the session's scratch folder; the coverage file is
+  the record), then reviewed program by program and about 20 tables corrected by hand. 16 tables with no source note in
+  the tables file were read from the files or the section PDFs; 7 not online and not legible in the PDFs were assigned
+  by judgement and say so (867, 966, 967, 1025, 1029, 1033, 1400). 331 new programs (3 of them there only as
+  successors or official alternatives) and 188 organizations.
+- **Totals, all 1,406 tables:** 1 have (House apportionment), 37 partly, 1,191 wanted (81 of them already in the data
+  folder: NIPA flat files, `cu`, `ln`, PET.zip, population estimates, ACS), 84 licensed, 63 discontinued, 25 unpublished,
+  5 compiled (a new coverage value: the Abstract compiled them from sources named in footnotes, not yet traced). Shapes:
+  707 time series, 364 by place, 335 snapshots. `sources.json`: 250 organizations, 409 programs (366 not yet
+  collected; 56 licensed, 65 licence unchecked, 24 discontinued).
+- **Licences:** non-federal programs not read on the publisher's site are `unchecked`; ones known to be sold are
+  `licensed` from GovGraph's knowledge (noted as not read), not from each publisher's terms. OECD and World Bank data
+  are believed to be CC BY 4.0 but recorded as unchecked until read.
+- **Confirmed on the web (2026-10-14):** Current Industrial Reports ended in fiscal 2011; EIA's Annual Energy Review was
+  not produced for 2012 (folded into the Monthly Energy Review); BLS International Labor Comparisons was cut in the
+  2013 sequestration; NOAA retired its billion-dollar disasters database after 2024 data (Climate Central continues
+  it); OHSS replaced DHS's Office of Immigration Statistics in 2023. Other discontinuations (Financial Crimes Report,
+  NJRP, Homicide Trends, CNPP's expenditures on children, ITA aircraft shipments, FCC telephone trends, Fed new security
+  issues, FHFA MIRS) are marked "not confirmed" in their notes.
+- Not yet: the coverage report on the sources page and per section; homepages of new programs were written from
+  knowledge and not each opened.
 
 ### Phase 4 — the catalogue in the Abstract's order
 - Give every current series its subsection and `placement`. Done 2026-10-13: 17 of 29 measures by table, 12 by
@@ -180,7 +217,9 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
 - [x] The website's headings are not the book's subsections; not kept (2026-10-13)
 - [x] Every table mapped to the book's subsection by its printed page, from the section PDFs; written with its source
   note to `statistical-abstract-tables.json`; the `statab_*` tables dropped from the database (user, 2026-10-13)
-- [ ] Phase 3: source notes → programs; coverage report (sections 9 and 14 done 2026-10-14; 28 sections and the report to go)
+- [x] Phase 3 mapping: every table's programs, coverage and shape (2026-10-14)
+- [ ] Phase 3 review: the user's review of the 27 rule-drafted sections
+- [ ] Phase 3 report: coverage on the sources page and per section
 - [x] Phase 4 placements: every measure placed from the tables; measures split where the Abstract splits them (2026-10-13)
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
 - [ ] Phase 4 rest: wanted tables shown as not yet here (after Phase 3)
