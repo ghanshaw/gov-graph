@@ -220,6 +220,7 @@ Checked 2026-10-13:
 - Should category names be rewritten from the source's wording ("Mobility status") into GovGraph's own?
 
 ## Done
+- [x] Build tab, Statistical Abstract: each subsection ends with "Not here yet · N tables" (its tables with nothing loaded, from the coverage file), folded, filterable by title (2026-10-14; `features/statistical-abstract`, Phase 4)
 - [x] Categories view of the Abstract (2026-10-13)
 - [x] Page renamed Structure (`/taxonomies`); structures stored as JSON files (2026-10-13)
 - [x] Comparative Agendas Project topics added as a second structure, with codes and descriptions (2026-10-13)

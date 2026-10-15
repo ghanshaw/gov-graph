@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@apollo/client/react';
-import { GET_SERIES_DIMENSIONS } from '../queries';
+import { GET_SERIES_DIMENSIONS, GET_ABSTRACT_COVERAGE } from '../queries';
 import { buildTree, withoutPath, yearsOf } from '../dimensions';
 import { PLACEMENTS, TAXONOMIES, withMeasures, partsOf } from '../taxonomies';
 import TaxonomyTree from './TaxonomyTree';
@@ -91,6 +91,18 @@ export default function SeriesBuilder({ bySlug, isOn, onSwap }) {
   // Choices are kept per measure, so going back to one finds them as they were.
   const [pickedBy, setPickedBy] = useState({});
   const vocab = data?.seriesDimensionVocabulary;
+  // The Abstract's tables with nothing loaded, by subsection, for the tree's "Not here yet" (Phase 4; fetched only for
+  // the Abstract). Tables partly held are not listed: what they hold is a measure in the tree.
+  const abstract = taxonomyId === 'statistical-abstract';
+  const { data: coverage } = useQuery(GET_ABSTRACT_COVERAGE, { skip: !abstract });
+  const missing = useMemo(() => {
+    const by = new Map();
+    for (const t of coverage?.abstractCoverage.tables ?? []) {
+      if (t.coverage === 'have' || t.coverage === 'partly') continue;
+      by.set(t.category, [...(by.get(t.category) ?? []), t]);
+    }
+    return by;
+  }, [coverage]);
   const picked = useMemo(() => pickedBy[measure] ?? new Set(), [pickedBy, measure]);
 
   const byMeasure = useMemo(() => {
@@ -166,7 +178,8 @@ export default function SeriesBuilder({ bySlug, isOn, onSwap }) {
     <div className="catalog-body build-body">
       <TaxonomyTree tree={categories} label={label} size={key => seriesOf(key).length} onCount={onCount}
         names={key => seriesOf(key).map(s => s.name)} selected={measure} onSelect={setMeasure}
-        taxonomyId={taxonomyId} onTaxonomy={switchTaxonomy} />
+        taxonomyId={taxonomyId} onTaxonomy={switchTaxonomy}
+        missing={abstract ? missing : undefined} coverageLabels={coverage?.sourceVocabulary.coverage} />
       <div className="catalog-list builder" data-testid="series-builder">
         <select className="measure-select" aria-label="Measure" value={measure ?? ''} onChange={e => setMeasure(e.target.value || null)}>
           <option value="">Choose what to measure…</option>

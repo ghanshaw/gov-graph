@@ -3,8 +3,8 @@
 ## Status
 2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 is done**
 (2026-10-14): every table has its programs, coverage, shape and, where held, its series; the report is at
-`/sources/abstract-coverage` and on each program's page. **Next: Phase 4's rest** (wanted tables as "not here yet" in
-the catalogue), then **Phase 5** (collect), starting with the 81 tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
+`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Next: Phase 5** (collect),
+starting with the 81 tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -212,7 +212,12 @@ with `collected: false`, `paths: []` and `access.best`.
   measure from someone else, the placement is a judgement that says so: Table 1197's 30-year mortgage rate is
   Bankrate's (copyright), not Freddie Mac's; Table 470's federal debt is OMB's, not Treasury's daily figure.
 - The catalogue's Build tab is the Abstract's sections and subsections (done before Phase 4).
-- Still to do: show wanted tables as not yet here (needs Phase 3).
+- Wanted tables shown as not here yet (2026-10-14): in the timeline catalogue's Build tab, with the Statistical Abstract
+  chosen, each subsection ends with a folded "Not here yet · N tables" line listing its tables with nothing loaded (not
+  have or partly; partly tables' data is a measure in the tree), each with its coverage chip and a link to the coverage
+  report (new tab, so the timeline keeps its state). The filter matches their titles. Fetched with `abstractCoverage`
+  only when the Abstract is chosen (`SeriesBuilder.jsx`, `TaxonomyTree.jsx`). Below 860px the tree gives way to the
+  measure select, which does not list them.
 
 **Subsections changed (user, 2026-10-13).** The book's contents list only selected topics per section, with the page
 each starts on; they do not divide the tables (Forestry, Fishing, and Mining lists Timber, Fishery, and Petroleum, so the
@@ -265,5 +270,5 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
 - [x] Phase 3 report: `/sources/abstract-coverage` and each program's tables (2026-10-14)
 - [x] Phase 4 placements: every measure placed from the tables; measures split where the Abstract splits them (2026-10-13)
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
-- [ ] Phase 4 rest: wanted tables shown as not yet here (after Phase 3)
+- [x] Phase 4 rest: wanted tables shown as not here yet in the catalogue's Build tab (2026-10-14)
 - [ ] Phase 5: collect, section by section
