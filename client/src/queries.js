@@ -667,7 +667,7 @@ export const GET_ACS_TABLE = gql`
 const ABSTRACT_TABLE_FIELDS = `
   id section sectionName category categoryName page title online url coverage shape inHand note
   programs { slug name licence collected }
-  series { key name national places placesLabel groups frequency firstDate lastDate found }
+  series { key name national places placesLabel groups count frequency firstDate lastDate found }
 `;
 
 const SOURCE_PROGRAM_FIELDS = `

@@ -7,6 +7,7 @@
 import { pool } from './db.js';
 import { documentHref } from './timeline.js';
 import { ORGANIZATION_KINDS, PROGRAM_KINDS, LICENCES, ACCESS, STATUSES } from './lib/sources.js';
+import { nipaTable } from './lib/nipa-series.js';
 import { coverageReport, COVERAGE, SHAPES } from './lib/abstract-coverage.js';
 
 const PROGRAM_COLUMNS = `d.slug, d.name, d.kind, d.description, d.homepage, d.licence, d.licence_detail AS "licenceDetail",
@@ -116,7 +117,7 @@ let seriesIndex = null;
 function indexOfSeries() {
   if (!seriesIndex) {
     seriesIndex = pool.query(
-      `SELECT slug, measure, place, regexp_replace(name, ', [^,]*$', '') AS "placeName", name, frequency,
+      `SELECT slug, source, source_id AS "sourceId", measure, place, regexp_replace(name, ', [^,]*$', '') AS "placeName", name, frequency,
               first_date::text AS "firstDate", last_date::text AS "lastDate"
        FROM economic_series`)
       .then(({ rows }) => rows)
@@ -131,6 +132,14 @@ function describeSeries(key, rows) {
     firstDate: list.map(r => r.firstDate).filter(Boolean).sort()[0] ?? null,
     lastDate: list.map(r => r.lastDate).filter(Boolean).sort().at(-1) ?? null,
   });
+  // nipa:T20100: every series loaded from that NIPA table's lines, whichever measure they belong to.
+  if (key.startsWith('nipa:')) {
+    const table = nipaTable(key.slice(5));
+    const list = rows.filter(r => r.source === 'bea' && table?.codes.has(r.sourceId) && !r.place);
+    const words = ['annual', 'quarterly', 'monthly'].filter(f => list.some(r => r.frequency === f)).map(f => (f === 'annual' ? 'yearly' : f));
+    const frequency = words.length ? words.slice(0, -1).join(', ') + (words.length > 1 ? ' and ' : '') + words.at(-1) : null;
+    return { key, name: `NIPA ${table?.title.replace(/\.$/, '') ?? key}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
+  }
   if (key.endsWith('--*')) {
     const base = key.slice(0, -3);
     const list = rows.filter(r => r.slug.startsWith(`${base}--`) && !r.place);

@@ -4,8 +4,8 @@
 // machine (the reader's words, saying the frequency only when it tells two series apart) is for review.
 
 // Short words kept lower case inside a name.
-const SMALL = new Set(['a', 'an', 'and', 'as', 'at', 'by', 'for', 'from', 'in', 'of', 'on', 'or', 'the', 'to', 'with']);
-export const MAX_NAME = 60;
+const SMALL = new Set(['a', 'an', 'and', 'as', 'at', 'by', 'for', 'from', 'in', 'of', 'on', 'or', 'per', 'the', 'to', 'with']);
+export const MAX_NAME = 80; // 60 until 2026-10-15, raised for the national accounts (user)
 
 /** What is wrong with one name, as sentences; empty when it is fine. */
 export function nameProblems(name) {

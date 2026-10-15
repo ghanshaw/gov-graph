@@ -1,0 +1,496 @@
+{
+ "about": "Hand-written names for NIPA lines (lib/nipa-series.js), by BEA code stem (the code without its last letter: a191r is GDP in current dollars, chained dollars, prices and percent changes). Each is the part of a series name that stands for the line, inside its measure's or table's template ('Consumer Spending on {B}'); frequency and form are added to it. Written where the line's label, in the reader's words, makes a name that is too long or unclear (user, 2026-10-15). The publisher's own label is kept as the series' publisher_title.",
+ "names": {
+  "dphcr": {
+   "name": "Consumer Spending by Households"
+  },
+  "dhcer": {
+   "name": "Household Spending on Services"
+  },
+  "dnpir": {
+   "name": "Consumer Spending by Nonprofit Institutions"
+  },
+  "dnper": {
+   "name": "Gross Output of Nonprofit Institutions"
+  },
+  "dnpsr": {
+   "name": "Sales by Nonprofit Institutions"
+  },
+  "dfxar": "Food and Drinks Bought in Stores",
+  "dtfdr": "Food Bought in Stores",
+  "daopr": "Alcohol Bought in Stores",
+  "dffdr": "Food Grown and Eaten on Farms",
+  "dtenr": "Rent Paid by Tenants",
+  "downr": "Imputed Rent of Owner-Occupied Homes",
+  "dfarr": "Rental Value of Farm Homes",
+  "dfhhr": "Furnishings and Household Upkeep",
+  "duter": "Glassware, Tableware, and Utensils",
+  "dtcer": "Telephones and Communication Equipment",
+  "dphmr": "Drugs and Other Medical Products",
+  "dpnpr": "Prescription and Over-the-Counter Drugs",
+  "dmflr": "Gasoline and Other Motor Fuels",
+  "dvpir": "Audio, Video, and Computers",
+  "dvapr": "Audio, Video, and Computer Equipment",
+  "davpr": "Audio, Video, and Computer Services",
+  "dsvcr": "Services for Audio, Video, and Computers",
+  "dodrr": "Sporting Goods and Related Services",
+  "dspgr": "Sporting Goods, Guns, and Ammunition",
+  "drrer": "Repair of Recreational Vehicles and Gear",
+  "drlsr": "Clubs, Parks, Theaters, and Museums",
+  "dmdfr": "Membership Clubs and Sports Centers",
+  "dorsr": "Amusement Parks and Campgrounds",
+  "dadmr": "Admissions to Spectator Events",
+  "dnehr": "Nursery Through High School",
+  "dfoor": "Food Provided to Employees",
+  "dofir": "Financial Service Charges and Fees",
+  "dimpr": "Financial Services Without Payment",
+  "dtinr": "Vehicle and Transportation Insurance",
+  "dnftr": "Net Foreign Travel and Spending Abroad",
+  "dexfr": "Spending in the U.S. by Nonresidents",
+  "dnfrr": "Net Spending Abroad by U.S. Residents",
+  "dpstr": "First-Class Mail",
+  "dodsr": "Other Delivery Services",
+  "dperr": "Personal Care and Clothing Services",
+  "dcomr": "Communication Services",
+  "dmvor": "Operating Motor Vehicles",
+  "a822r": "Government Consumption and Investment",
+  "a955r": "Government Consumption",
+  "a782r": "Government Investment",
+  "a760r": "Government Investment in Structures",
+  "y054r": "Government Investment in Equipment",
+  "y055r": "Government Investment in Intellectual Property",
+  "y056r": "Government Investment in Software",
+  "y057r": "Government Investment in Research and Development",
+  "a823r": "Federal Consumption and Investment",
+  "a957r": "Federal Government Consumption",
+  "a787r": "Federal Government Investment",
+  "a801r": "Federal Investment in Structures",
+  "y058r": "Federal Investment in Equipment",
+  "y059r": "Federal Investment in Intellectual Property",
+  "y060r": "Federal Investment in Software",
+  "y061r": "Federal Investment in Research and Development",
+  "a824r": "Defense Consumption and Investment",
+  "a997r": "Defense Consumption",
+  "a788r": "Defense Investment",
+  "a808r": "Defense Investment in Structures",
+  "y050r": "Defense Investment in Equipment",
+  "y052r": "Defense Investment in Intellectual Property",
+  "y053r": "Defense Investment in Software",
+  "y076r": "Defense Investment in Research and Development",
+  "a825r": "Nondefense Consumption and Investment",
+  "a542r": "Nondefense Federal Consumption",
+  "a798r": "Nondefense Federal Investment",
+  "a830r": "Nondefense Investment in Structures",
+  "y066r": "Nondefense Investment in Equipment",
+  "y067r": "Nondefense Investment in Intellectual Property",
+  "y068r": "Nondefense Investment in Software",
+  "y069r": "Nondefense Investment in R&D",
+  "a829r": "State and Local Consumption and Investment",
+  "a991r": "State and Local Government Consumption",
+  "a799r": "State and Local Government Investment",
+  "a842r": "State and Local Investment in Structures",
+  "y070r": "State and Local Investment in Equipment",
+  "y071r": "State and Local Investment in Intellectual Property",
+  "y072r": "State and Local Investment in Software",
+  "y073r": "State and Local Investment in R&D",
+  "w170r": "Gross Domestic Investment",
+  "a262r": "Depreciation of Domestic Capital",
+  "w171r": "Net Domestic Investment",
+  "a006r": "Gross Private Domestic Investment",
+  "a024r": "Depreciation of Private Capital",
+  "a557r": "Net Private Domestic Investment",
+  "a007r": "Private Fixed Investment",
+  "a560r": "Net Private Fixed Investment",
+  "a008r": "Nonresidential Investment",
+  "a753r": "Depreciation of Nonresidential Capital",
+  "a593r": "Net Nonresidential Investment",
+  "b009r": "Investment in Nonresidential Structures",
+  "b188r": "Depreciation of Nonresidential Structures",
+  "a594r": "Net Investment in Nonresidential Structures",
+  "y033r": "Investment in Business Equipment",
+  "y080r": "Depreciation of Business Equipment",
+  "y081r": "Net Investment in Business Equipment",
+  "y001r": "Investment in Intellectual Property",
+  "y083r": "Depreciation of Intellectual Property",
+  "y084r": "Net Investment in Intellectual Property",
+  "a011r": "Residential Investment",
+  "a754r": "Depreciation of Housing",
+  "a748r": "Net Residential Investment",
+  "a014r": "Change in Private Inventories",
+  "a264r": "Depreciation of Government Capital",
+  "a889r": "Net Government Investment",
+  "a890r": "Net Federal Investment",
+  "b891r": "Net Defense Investment",
+  "b892r": "Net Nondefense Investment",
+  "a893r": "Net State and Local Investment",
+  "a894r": "Depreciation of Government Structures",
+  "a895r": "Net Government Investment in Structures",
+  "a896r": "Net Federal Investment in Structures",
+  "b897r": "Net Defense Investment in Structures",
+  "b898r": "Net Nondefense Investment in Structures",
+  "b899r": "Net State and Local Investment in Structures",
+  "y085r": "Depreciation of Government Equipment",
+  "y086r": "Net Government Investment in Equipment",
+  "y087r": "Net Federal Investment in Equipment",
+  "y088r": "Net Defense Investment in Equipment",
+  "y089r": "Net Nondefense Investment in Equipment",
+  "y090r": "Net State and Local Investment in Equipment",
+  "y091r": "Depreciation of Government Intellectual Property",
+  "y092r": "Net Government Investment in Intellectual Property",
+  "y093r": "Net Federal Investment in Intellectual Property",
+  "y094r": "Net Defense Investment in Intellectual Property",
+  "y095r": "Net Nondefense Investment in Intellectual Property",
+  "y096r": "Net State and Local Intellectual Property Investment",
+  "w172r": "Gross Domestic Fixed Investment",
+  "w173r": "Net Domestic Fixed Investment",
+  "a190r": {
+   "name": "Final Sales of Domestic Product"
+  },
+  "a325r": {
+   "name": "Final Sales of Goods"
+  },
+  "a326r": {
+   "name": "Final Sales of Durable Goods"
+  },
+  "a355r": {
+   "name": "Change in Durable Goods Inventories"
+  },
+  "a334r": {
+   "name": "Final Sales of Nondurable Goods"
+  },
+  "a357r": {
+   "name": "Change in Nondurable Goods Inventories"
+  },
+  "a953r": {
+   "name": "Motor Vehicle Output"
+  },
+  "a962r": {
+   "name": "GDP Excluding Motor Vehicle Output"
+  },
+  "bb01r": {
+   "name": "Final Sales of Computers"
+  },
+  "bb00r": {
+   "name": "GDP Excluding Final Sales of Computers"
+  },
+  "y695r": {
+   "name": "GDP Excluding Research and Development"
+  },
+  "a358r": "Nonfarm Business",
+  "b359r": "Farms",
+  "b702r": "Nonprofits Serving Households",
+  "a766r": "Federal Government",
+  "a767r": "State and Local Government",
+  "a2009c": {
+   "name": "Gross Housing Value Added"
+  },
+  "a132r": "Private Wages and Salaries",
+  "b202r": "Government Wages and Salaries",
+  "b040r": "Employer Contributions to Pensions and Insurance",
+  "b039r": "Employer Social Insurance Contributions",
+  "b042r": "Farm Proprietors’ Income",
+  "a045r": "Nonfarm Proprietors’ Income",
+  "b046r": "Nonfarm Proprietors’ Income Before Adjustments",
+  "b179r": "Nonfarm Proprietors’ Inventory Valuation Adjustment",
+  "b047r": "Nonfarm Proprietors’ Capital Consumption Adjustment",
+  "a043r": "Farm Proprietors’ Income Before Depreciation Adjustment",
+  "b044r": "Farm Proprietors’ Capital Consumption Adjustment",
+  "b049r": "Rental Income Before Depreciation Adjustment",
+  "b050r": "Rental Income Capital Consumption Adjustment",
+  "w210r": "Personal Interest and Dividend Income",
+  "a577r": "Personal Transfer Receipts",
+  "a063r": "Government Social Benefits",
+  "w823r": "Social Security Benefits",
+  "w824r": "Medicare Benefits",
+  "w729r": "Medicaid Benefits",
+  "w825r": "Unemployment Insurance Benefits",
+  "w827r": "Other Government Social Benefits",
+  "b931r": "Transfer Receipts from Business",
+  "a061r": "Social Insurance Contributions (Payroll Taxes)",
+  "w055r": "Personal Taxes Paid to All Governments",
+  "w211r": "Personal Transfer Payments",
+  "w062r": "Personal Transfer Payments to Government",
+  "b070r": "Personal Transfer Payments Abroad (Net)",
+  "a072r": {
+   "name": "Personal Saving Rate"
+  },
+  "w875r": "Personal Income Excluding Transfer Receipts",
+  "a229r": "Disposable Personal Income",
+  "b230r": {
+   "name": "Population (BEA)"
+  },
+  "a054r": "Taxes on Corporate Income (All Governments)",
+  "a551r": "Corporate Profits After Tax",
+  "b056r": "Net Corporate Dividends",
+  "a127r": "Undistributed Corporate Profits",
+  "w255r": "Net Interest and Miscellaneous Payments",
+  "a107r": "Subsidies",
+  "b029r": "Business Transfer Payments (Net)",
+  "w061r": "Business Transfers to Government",
+  "w237r": "Business Transfers Abroad (Net)",
+  "a904r": "Corporate Net Cash Flow",
+  "a438r": "Depreciation of Corporate Capital",
+  "w976r": "Corporate Capital Transfers Paid (Net)",
+  "a052r": "Corporate Profits Before Depreciation Adjustment",
+  "a055r": "Corporate Profits After Tax Before Adjustments",
+  "b057r": "Undistributed Profits Before Adjustments",
+  "b058r": "Inventory Valuation Adjustment to Corporate Profits",
+  "a059r": "Capital Consumption Adjustment to Corporate Profits",
+  "b645r": "Income Receipts from the Rest of the World",
+  "a655r": "Income Payments to the Rest of the World",
+  "w276r": "Depreciation of Business Capital",
+  "y0004c": "Business Capital Consumption Adjustment",
+  "w279r": "Depreciation of Household and Nonprofit Capital",
+  "a265r": "Depreciation of General Government Capital",
+  "a266r": "Depreciation of Government Enterprise Capital",
+  "sb000008": {
+   "name": "Statistical Discrepancy as a Share of GDP"
+  },
+  "a2000c": "Farm Output",
+  "a2001c": "Farm Cash Receipts",
+  "b1005c": "Farm Cash Receipts from Crops",
+  "b1006c": "Farm Cash Receipts from Livestock",
+  "b1008c": "Farm Products Consumed on Farms",
+  "b1009c": "Other Farm Income",
+  "w248r": "Change in Farm Inventories of Finished Goods",
+  "b1010c": "Change in Farm Crop Inventories",
+  "b1011c": "Change in Farm Livestock Inventories",
+  "a2003c": "Farm Intermediate Goods and Services",
+  "w249r": "Farm Intermediate Goods and Services Other Than Rent",
+  "b1012c": "Farm Purchases Other Than Rent",
+  "w250r": "Change in Farm Materials and Supplies Inventories",
+  "b1013c": "Farm Rent Paid to Landlords",
+  "b366r": "Depreciation of Farm Capital",
+  "a365r": "Net Farm Value Added",
+  "a2006c": "Farm Employee Compensation",
+  "b1019c": "Farm Wages and Salaries",
+  "b1020c": "Farm Supplements to Wages and Salaries",
+  "b1017c": "Farm Taxes on Production and Imports",
+  "b1018c": "Subsidies to Farm Operators",
+  "w251r": "Farm Net Operating Surplus",
+  "b1021c": "Farm Net Interest",
+  "w252r": "Farm Current Transfer Payments",
+  "a1024c": "Farm Proprietors’ Income and Corporate Profits",
+  "b1023c": "Farm Corporate Profits",
+  "b018r": "Change in Farm Inventories",
+  "a445r": {
+   "name": "Domestic Corporate Profits"
+  },
+  "a587r": {
+   "name": "Domestic Financial Corporate Profits"
+  },
+  "a463r": {
+   "name": "Domestic Nonfinancial Corporate Profits"
+  },
+  "b394r": {
+   "name": "Corporate Profits from the Rest of the World"
+  },
+  "b933r": {
+   "name": "Corporate Profits Received from Abroad"
+  },
+  "b934r": {
+   "name": "Corporate Profits Paid Abroad"
+  },
+  "a390r": {
+   "name": "Domestic Corporate Profits Before Depreciation Adjustment"
+  },
+  "a392r": "Financial Industries",
+  "n398r": "Other Financial Industries",
+  "a399r": "Nonfinancial Industries",
+  "n406r": "Durable Goods Manufacturing",
+  "n401r": "Nondurable Goods Manufacturing",
+  "n410r": "Electrical Equipment",
+  "n411r": "Motor Vehicles and Parts",
+  "n402r": "Food, Beverages, and Tobacco",
+  "n420r": "Other Nonfinancial Industries",
+  "w986r": "Net Saving of Households and Nonprofits",
+  "a923r": "Net Federal Government Saving",
+  "a918r": "Depreciation of Federal Capital",
+  "a919r": "Depreciation of State and Local Capital",
+  "a928r": {
+   "name": "Gross Investment, Capital Transfers, and Net Lending"
+  },
+  "w987r": "Gross Private Investment by Business",
+  "w988r": "Gross Private Investment by Households and Nonprofits",
+  "w167r": "Capital Transfers (Net)",
+  "w999r": "Private Capital Transfers (Net)",
+  "w989r": "Business Capital Transfers (Net)",
+  "w990r": "Household and Nonprofit Capital Transfers (Net)",
+  "w991r": "Government Capital Transfers (Net)",
+  "w992r": "Federal Capital Transfers (Net)",
+  "w993r": "State and Local Capital Transfers (Net)",
+  "w162r": "Net Lending or Borrowing",
+  "w994r": "Private Net Lending or Borrowing",
+  "w995r": "Business Net Lending or Borrowing",
+  "w996r": "Household and Nonprofit Net Lending or Borrowing",
+  "ad01r": "Government Net Lending or Borrowing",
+  "ad03r": "State and Local Net Lending or Borrowing",
+  "w997r": "Gross Business Saving",
+  "w998r": "Gross Household and Nonprofit Saving",
+  "a926r": "Gross Federal Government Saving",
+  "a925r": "Gross State and Local Government Saving",
+  "w790r": "Net Business Investment",
+  "w791r": "Net Household and Nonprofit Investment",
+  "w206r": {
+   "name": "Gross Saving as a Share of Gross National Income"
+  },
+  "w207r": {
+   "name": "Net Saving as a Share of Gross National Income"
+  },
+  "w772r": "Private Disaster Losses",
+  "w773r": "Business Disaster Losses",
+  "w774r": "Household and Nonprofit Disaster Losses",
+  "w775r": "Government Disaster Losses",
+  "w776r": "Federal Disaster Losses",
+  "w777r": "State and Local Disaster Losses",
+  "w023r": "State and Local Current Receipts",
+  "w070r": "State and Local Tax Receipts",
+  "w071r": "State and Local Personal Taxes",
+  "b245r": "State and Local Individual Income Taxes",
+  "b247r": "Other State and Local Personal Taxes",
+  "w072r": "State and Local Taxes on Production and Imports",
+  "b248r": "State and Local Sales Taxes",
+  "la000239": "State and Local Excise Taxes",
+  "la000355": "State and Local Property Taxes",
+  "la000357": "Other State and Local Taxes on Production",
+  "b102r": "State and Local Corporate Income Taxes",
+  "b104r": "State and Local Social Insurance Contributions",
+  "w074r": "State and Local Income on Assets",
+  "b112r": "State and Local Interest Receipts",
+  "b081r": "State and Local Dividend Receipts",
+  "s23054": "State and Local Rents and Royalties",
+  "w075r": "State and Local Transfer Receipts",
+  "b089r": "Federal Grants to State and Local Governments",
+  "w076r": "State and Local Transfer Receipts from Business",
+  "b246r": "State and Local Transfer Receipts from Persons",
+  "la000016": "State and Local Transfer Receipts from Abroad",
+  "b115r": "Surplus of State and Local Government Enterprises",
+  "w024r": "State and Local Current Expenditures",
+  "la000017": "State and Local Transfer Payments",
+  "b109r": "State and Local Social Benefits",
+  "la000015": "State and Local Transfer Payments Abroad",
+  "b111r": "State and Local Interest Payments",
+  "y705r": "State and Local Interest Paid to Persons and Business",
+  "y706r": "State and Local Interest Paid to Nonresidents",
+  "b114r": "State and Local Subsidies",
+  "b118r": "State and Local Social Insurance Fund Saving",
+  "b119r": "Other State and Local Government Saving",
+  "w077r": "State and Local Total Receipts",
+  "w969r": "State and Local Capital Transfer Receipts",
+  "w079r": "State and Local Total Expenditures",
+  "w080r": "State and Local Capital Transfer Payments",
+  "ad09r": "State and Local Net Purchases of Nonproduced Assets",
+  "dfdhr": "Furnishings and Household Equipment",
+  "n4060c": "Banks and Credit Intermediation",
+  "n4066c": "Rental and Leasing Services",
+  "n4070c": "Other Professional and Technical Services",
+  "n4082c": "Performing Arts, Sports, and Museums",
+  "a4002c": "Domestic Industries",
+  "a4076c": "Government",
+  "b4077c": "Federal Government",
+  "b568r": {
+   "name": "Federal General Government Compensation"
+  },
+  "b4079c": "Federal Civilian Government",
+  "w4080c": "the Military",
+  "a4081c": "Federal Government Enterprises",
+  "b4082c": "State and Local Government",
+  "b251r": {
+   "name": "State and Local General Government Compensation"
+  },
+  "b4084c": "State and Local Education",
+  "b4085c": "Other State and Local Government",
+  "b4086c": "State and Local Government Enterprises",
+  "a4187c": {
+   "name": "Compensation of Employees Received"
+  },
+  "b4188c": {
+   "name": "Compensation Received from Abroad"
+  },
+  "b4189c": {
+   "name": "Compensation Paid to Nonresidents"
+  },
+  "a4401c": {
+   "name": "Average Wage per Full-Time Equivalent Employee"
+  },
+  "a4402c": "Domestic Industries",
+  "a4478c": "Federal General Government",
+  "a4483c": "State and Local General Government",
+  "a4301c": {
+   "name": "Full-Time Equivalent Employees"
+  },
+  "a4302c": "Domestic Industries",
+  "a4378c": "Federal General Government",
+  "a4383c": "State and Local General Government",
+  "a4387c": "the Rest of the World",
+  "n3062c": "Rental and Leasing Services",
+  "n3066c": "Other Professional and Technical Services",
+  "n3076c": "Hospitals and Nursing Facilities",
+  "n3079c": "Performing Arts, Sports, and Museums",
+  "e561r": {
+   "name": "Domestic Pretax Corporate Profits"
+  },
+  "n565r": "Durable Goods Manufacturing",
+  "n564r": "Nondurable Goods Manufacturing",
+  "b3075c": {
+   "name": "Pretax Corporate Profits Received from Abroad"
+  },
+  "b3076c": {
+   "name": "Pretax Corporate Profits Paid Abroad"
+  },
+  "a253r": "Exports of Goods",
+  "a646r": "Exports of Services",
+  "a255r": "Imports of Goods",
+  "b656r": "Imports of Services",
+  "a020r": "Exports of Goods and Services",
+  "a021r": "Imports of Goods and Services",
+  "dgdsr": {
+   "name": "Consumer Spending on Goods"
+  },
+  "dserr": {
+   "name": "Consumer Spending on Services"
+  },
+  "ddurr": {
+   "name": "Consumer Spending on Durable Goods"
+  },
+  "dndgr": {
+   "name": "Consumer Spending on Nondurable Goods"
+  },
+  "n4014c": "Durable Goods Manufacturing",
+  "n4026c": "Nondurable Goods Manufacturing",
+  "n4038c": "Wholesale Trade in Durable Goods",
+  "n4039c": "Wholesale Trade in Nondurable Goods",
+  "a4178c": "Federal General Government",
+  "a4183c": "State and Local General Government",
+  "a979r": {
+   "name": "Government Spending Residual"
+  },
+  "a960r": {
+   "name": "GDP Residual"
+  },
+  "a958r": {
+   "name": "GDP by Product Residual (Final Sales)"
+  },
+  "a959r": {
+   "name": "GDP by Product Residual (Goods and Services)"
+  },
+  "b253r": "Exports of Goods",
+  "b255r": "Imports of Goods",
+  "a961r": {
+   "name": "Value Added by Sector Residual"
+  },
+  "agdsr": {
+   "name": "Consumer Spending on Goods"
+  },
+  "a795r": {
+   "name": "Consumer Spending on Durable Goods"
+  },
+  "a796r": {
+   "name": "Consumer Spending on Nondurable Goods"
+  },
+  "a797r": {
+   "name": "Consumer Spending on Services"
+  },
+  "a019r": "Trade Balance"
+ }
+}

@@ -3,8 +3,7 @@
 ## Status
 2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 is done**
 (2026-10-14): every table has its programs, coverage, shape and, where held, its series; the report is at
-`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Next: Phase 5** (collect),
-starting with the 81 tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
+`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Phase 5** (collect) is under way: the national accounts' 20 tables are loaded (2026-10-15); next the other tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -231,6 +230,25 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
   label it (`series-dimensions.js`), name it (`series-names.js`), place it, load it.
 - New places: territories (`pr`, `gu`, `vi`, `as`, `mp`) and countries, for sections 29 and 30.
 - Tables that are not time series (one year by state, by age, by type) need a way to be shown; see open questions.
+- First the 81 tables whose files are in hand, by file: the NIPA flat files (20 tables), then `cu`, `ln`, PET.zip,
+  H.15, FHFA, NRS, OMB, Census trade, then the population and ACS files.
+
+**Decisions (user, 2026-10-15).** The publisher's whole table is collected, not only the rows the Abstract prints.
+BEA's tables are loaded both yearly and quarterly where BEA prints both. Names are generated from the publisher's
+line labels with hand overrides, and the publisher's own label is kept beside each (`publisher_title`). The name
+limit is 80 characters (was 60); hand-written names already in use are not changed.
+
+**The national accounts (2026-10-15): 20 tables done.** `server/lib/nipa-series.js` declares 15 measures, each
+answering Abstract tables and drawing every line of one or more NIPA tables; `server/seed/build-nipa-tables.js`
+writes the tables' lines from BEA's registers to `server/seed/data/nipa-tables.json`; hand names are in
+`server/seed/data/nipa-names.json` (by code stem). 2,439 new series (31 NIPA tables), 14 of them a yearly or
+quarterly twin of a series loaded before. Each line is a value of its measure's breakdown (GDP's `gdp_component`,
+consumer spending's `spending_on`, `industry`, …); chained-dollar, price and percent-change tables are lined up
+with their current-dollar table by code stem, else by label. Tables 430, 667–669, 673, 674, 676–679, 739, 740, 782,
+791–793, 840, 1017 and 1233 are now `have`; 643 is `partly` (BEA prints no compensation per employee). Coverage
+names them as `nipa:T20100` (every series loaded from that table's lines). Placements: 12 new measures, 11 by table and 1 by
+judgement (full-time equivalent employees); 3 existed (GDP, consumer spending, PCE prices) and gain a breakdown.
+Load: `load-economic-series.js --source bea`.
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
@@ -271,4 +289,6 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
 - [x] Phase 4 placements: every measure placed from the tables; measures split where the Abstract splits them (2026-10-13)
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
 - [x] Phase 4 rest: wanted tables shown as not here yet in the catalogue's Build tab (2026-10-14)
+- [x] Phase 5, national accounts: the 20 NIPA tables in hand (2026-10-15)
+- [ ] Phase 5: `cu` (CPI: 142, 724–727), `ln` (CPS: 586–628, 1275), PET.zip, H.15, FHFA, NRS, OMB, trade, population/ACS
 - [ ] Phase 5: collect, section by section

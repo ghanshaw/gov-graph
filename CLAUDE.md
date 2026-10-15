@@ -580,7 +580,7 @@ timeline, About the data; `useSeriesList.js`); `ECONOMY_TABS` names only pairs. 
 `design/timeline-data/NAMING.md` ("reads as a phrase": "Monthly Individual Income Taxes", "Average Federal
 Tax Rate of the Highest Quintile"): Title Case, the reader's words, frequency only when it tells two series
 apart, the publisher in brackets only when two print the same measure. They are written in
-`server/lib/economic-series.js` and checked by `server/lib/series-names.js` (test: `series-names.test.js`);
+`server/lib/economic-series.js` and checked by `server/lib/series-names.js` (test: `series-names.test.js`; at most 80 characters);
 the loader refuses names that break the rules. After renaming, `load-economic-series.js --names-only`
 updates names and descriptions without reading any file (renamed 2026-10-11).
 
@@ -674,11 +674,11 @@ database) gives every table `programs` (slugs in `sources.json`), `coverage`, `s
 
 - `coverage`: `have` (every series it prints is loaded), `partly`, `wanted`, `licensed` (only for licensed programs),
   `discontinued` (the note names the successor), `unpublished` and `compiled` (no programs; the Abstract built it from
-  unpublished data or from sources named in footnotes). Totals: 1 have, 35 partly, 1,178 wanted, 95 licensed, 67
-  discontinued, 25 unpublished, 5 compiled.
-- `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (81).
+  unpublished data or from sources named in footnotes). Totals (2026-10-15, after the national accounts): 20 have, 32
+  partly, 1,162 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled.
+- `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (61; 81 before Phase 5).
 - `series` (required for have / partly, only for them): what is loaded, as series slugs, measures (a measure covers its
-  national series and every place) or `prefix--*` (a family of published groups, e.g. `unemployment-rate--*`). The page
+  national series and every place), `nipa:T20100` (a NIPA table's lines) or `prefix--*` (a family of published groups, e.g. `unemployment-rate--*`). The page
   resolves them from `economic_series`, so a note can't claim what isn't loaded.
 - Sections 9, 12 and 14 were entered by hand; the other 27 were drafted from the source notes by pattern (the script was
   not kept) and reviewed against publishers and titles. Seven tables were assigned by judgement because their source
@@ -704,7 +704,17 @@ parameter, which "Loaded:" names would link to.
 | 2. Skeleton | Section pages, table files, section PDFs; every table's page, subsection, title, source note | Done |
 | 3. Source notes → programs | Every table's programs, coverage (have / partly / wanted / licensed / discontinued / unpublished / compiled) and shape in `server/seed/data/statistical-abstract-coverage.json` (checked by `server/lib/abstract-coverage.js`); 409 programs in `sources.json`. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | Done (2026-10-14): all 30 sections, reviewed; report at `/sources/abstract-coverage` |
 | 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done (2026-10-14), with wanted tables shown as "Not here yet" under each subsection in the catalogue's Build tab |
-| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load; first the 81 tables whose files are in hand | **Next** |
+| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load; first the 81 tables whose files are in hand | **Under way**: the 20 NIPA tables loaded (2026-10-15) |
+
+**Phase 5, national accounts (2026-10-15).** Whole publisher tables, yearly and quarterly where both are printed
+(user). `server/lib/nipa-series.js` lists 15 measures, each drawing every line of some NIPA tables (31 tables, 2,439
+series, slugs `nipa-<code>-yearly|quarterly`); the tables' lines come from BEA's registers through
+`server/seed/build-nipa-tables.js` into `server/seed/data/nipa-tables.json` (re-run after BEA's annual update and
+check the diff). A code printed in several tables belongs to the first measure listing it; a line already loaded by
+hand at one frequency gets a `twin_of` at the other, labelled and named after it. Names are generated from BEA's
+labels with hand overrides by code stem in `server/seed/data/nipa-names.json`; the name limit is 80 (was 60;
+`design/timeline-data/NAMING.md`). Coverage's `series` may name `nipa:T20100` (every series of that table's lines).
+Load with `load-economic-series.js --source bea`.
 
 Other work in hand (user, 2026-10-13): move the remaining API-key fetches to bulk files (economic data done; Congress.gov,
 including the app's live call in `resolvers.js`, then govinfo, then CourtListener; `features/data-sources`); drop the

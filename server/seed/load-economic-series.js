@@ -11,7 +11,7 @@
  * stored, without reading any file (after renaming series in lib/economic-series.js).
  *
  * Usage:
- *   node --env-file=server/.env server/seed/load-economic-series.js [--series wti-spot] [--dry-run]
+ *   node --env-file=server/.env server/seed/load-economic-series.js [--series wti-spot] [--source bea] [--dry-run]
  *   node --env-file=server/.env server/seed/load-economic-series.js --names-only [--dry-run]
  *
  * Env:
@@ -36,6 +36,7 @@ const arg = name => {
 const DRY_RUN = process.argv.includes('--dry-run');
 const NAMES_ONLY = process.argv.includes('--names-only');
 const only = arg('--series')?.split(',');
+const onlySource = arg('--source'); // every series read from one source ('bea': the national accounts)
 
 // Files are read once each (BEA's quarterly file holds every GDP series; Treasury's both debts;
 // a BLS survey file many series). A workbook's tab other than the first is named by `sheet`.
@@ -135,7 +136,7 @@ async function updateNames(list) {
 }
 
 async function run() {
-  const list = only ? SERIES.filter(s => only.includes(s.slug)) : SERIES;
+  const list = (only ? SERIES.filter(s => only.includes(s.slug)) : SERIES).filter(s => !onlySource || s.source === onlySource);
   if (only && list.length !== only.length) throw new Error(`Unknown series; known: ${SERIES.map(s => s.slug).join(', ')}`);
   const problems = seriesNameProblems(SERIES);
   if (problems.length) throw new Error(`Series names break the naming rules (lib/series-names.js):\n  ${problems.join('\n  ')}`);

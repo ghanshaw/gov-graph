@@ -50,7 +50,9 @@ column.
     (of, the, at, for, as, a, by, from).
 11. **No stray parentheses from the database:** "(monthly)", "(daily)" go.
 12. **About 50 characters at most.** A longer name is a sign the qualifier belongs in the description
-    (“Core Consumer Price Index”, with “without food and energy” in the description).
+    (“Core Consumer Price Index”, with “without food and energy” in the description). The machine limit is
+    80 since 2026-10-15 (it was 60): the national accounts' quarterly lines need “Quarterly … (Annualized)”
+    and an inflation-adjusted form around the item (user).
 
 Roles like "the one in the news" are a tag beside the name, not part of it.
 
@@ -88,8 +90,27 @@ A mix is possible: measure-first in lists (catalogue, search, lanes) and the phr
 
 "Reads as a phrase" was chosen. Every series' name is written in `server/lib/economic-series.js` and stored
 in `economic_series.name`; `server/lib/series-names.js` checks the rules a machine can check (Title Case,
-no "(monthly)", the ’ apostrophe, at most 60 characters, no name used twice) and `load-economic-series.js`
+no "(monthly)", the ’ apostrophe, at most 80 characters (60 until 2026-10-15), no name used twice) and `load-economic-series.js`
 refuses to store names that break them. `--names-only` updates names without reading the data files. The
 client shows the stored name everywhere; `ECONOMY_TABS` names only pairs (two series offered as one choice).
 Two rules were added in use: a series the publisher split in two at a redesign says its years in brackets
 ("Daily Excise Taxes (Since 2023)", "(2005–2023)"), and BEA's values at an annual rate say "(Annualized)".
+
+## At scale: the national accounts (2026-10-15)
+
+Phase 5 of the Statistical Abstract loads whole publisher tables, about 2,400 NIPA series at first, too many to
+name one by one. Their names are generated (`server/lib/nipa-series.js`) and overridden by hand where the result
+reads badly (user: "hand overrides but retain original names as well"):
+
+- The line's label in the reader's words (a short list of replacements: "GDP", "consumer spending"), in Title
+  Case, inside its measure's or table's template ("Spending on {B}", "Employee Compensation in {B}").
+- Hand names, by BEA code stem, in `server/seed/data/nipa-names.json`: the part standing for the line, written
+  once for its dollars, chained dollars, price index and growth rate; or a whole name (`{ "name": … }`).
+- The form: "Inflation-Adjusted …" for chained dollars, "Price Index for …", "… Growth Rate (Adjusted for
+  Inflation)", "… per Person". Where a name would pass 80 characters at either frequency, "Real …" and "… Real
+  Growth Rate" are used for that line at both.
+- Frequency: "Yearly …" and "Quarterly … (Annualized)", since BEA prints both. A line already loaded by hand at
+  one frequency keeps its name; its other frequency is named after it ("GDP (Annualized)" → "Yearly GDP").
+- Names that still collide are told apart by the line they sit under ("Parent: Line"), then by table; none do now.
+- The publisher's own words are kept: `publisher_title` is the table's title, the line number and BEA's label
+  ("Table 2.1. Personal Income and Its Disposition, line 10: Farm (Current Dollars, Level)").

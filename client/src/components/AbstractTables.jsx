@@ -12,7 +12,7 @@ function loadedLabel(series) {
   const detail = s => {
     if (!s.found) return 'not in the database';
     const years = s.firstDate && `${s.firstDate.slice(0, 4)}–${s.lastDate.slice(0, 4)}`;
-    const where = s.groups ? `${s.groups} groups` : s.placesLabel ? `${s.national ? 'nation, ' : ''}${s.placesLabel}` : null;
+    const where = s.count ? `${s.count} series` : s.groups ? `${s.groups} groups` : s.placesLabel ? `${s.national ? 'nation, ' : ''}${s.placesLabel}` : null;
     return `${[EVERY[s.frequency] ?? s.frequency, years].filter(Boolean).join(', ')}${where ? `; ${where}` : ''}`;
   };
   const groups = [];

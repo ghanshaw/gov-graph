@@ -11,13 +11,16 @@
 
 // Every dimension and its values. A value may name a `parent`, for values that sit inside another
 // (Medicare payroll taxes are payroll taxes).
+import { NIPA_MEASURES, NIPA_EXTRA_DIMENSIONS, nipaSeries } from './nipa-series.js';
+
 const V = (label, parent) => (parent ? { label, parent } : { label });
 export const DIMENSIONS = {
   measure: { label: 'Measure', values: {} }, // filled from MEASURES below
   form: { label: 'Measured as', values: {
     level: V('Amount'), rate: V('Rate'), index: V('Index'), 'growth-rate': V('Growth rate'),
     'share-of-gdp': V('Share of GDP'), 'share-of-total': V('Share of the total'), 'share-of-income': V('Share of income'),
-    'share-of-expected': V('Share of expected'),
+    'share-of-expected': V('Share of expected'), 'share-of-national-income': V('Share of national income'),
+    'per-person': V('Per person'), 'per-employee': V('Per full-time employee'),
   } },
   adjustment: { label: 'Dollars', values: { nominal: V('Dollars of the day'), real: V('Adjusted for inflation') } },
   seasonal: { label: 'Seasonal adjustment', values: {
@@ -159,6 +162,15 @@ export const MEASURES = {
   'foreign-commerce-and-aid/exports-and-imports/imports': { label: 'Imports', dims: ['goods_services'] },
   'foreign-commerce-and-aid/exports-and-imports/trade-balance': { label: 'Trade balance', dims: ['goods_services'] },
 };
+// The national accounts' measures and their breakdowns (lib/nipa-series.js): a measure already above gains the breakdown.
+const NIPA = nipaSeries();
+Object.assign(DIMENSIONS, NIPA_EXTRA_DIMENSIONS);
+for (const [id, d] of Object.entries(NIPA.dimensions)) DIMENSIONS[id] = { label: d.label, values: { ...(DIMENSIONS[id]?.values ?? {}), ...d.values } };
+for (const m of NIPA_MEASURES) {
+  const dims = [m.dim, ...(m.dims ?? [])];
+  if (MEASURES[m.key]) MEASURES[m.key].dims = [...new Set([...MEASURES[m.key].dims, ...dims])];
+  else MEASURES[m.key] = { label: m.label, dims };
+}
 for (const [key, m] of Object.entries(MEASURES)) DIMENSIONS.measure.values[key] = V(m.label);
 
 const COMMON = ['measure', 'form', 'adjustment', 'seasonal'];
@@ -194,10 +206,10 @@ const LABELS = {
 
   cpi: { measure: 'prices/consumer-price-indexes-cost-of-living-index/consumer-prices', form: 'index', price_index: 'cpi', scope: 'all-items', ...NSA },
   'cpi-core': { measure: 'prices/consumer-price-indexes-cost-of-living-index/consumer-prices', form: 'index', price_index: 'cpi', scope: 'core', ...NSA },
-  'pce-price': { measure: 'prices/price-indexes/consumer-prices', form: 'index', price_index: 'pce', scope: 'all-items', seasonal: 'sa' },
+  'pce-price': { measure: 'prices/price-indexes/consumer-prices', form: 'index', price_index: 'pce', scope: 'all-items', spending_on: 'dpcer', seasonal: 'sa' },
   'pce-price-core': { measure: 'prices/price-indexes/consumer-prices', form: 'index', price_index: 'pce', scope: 'core', seasonal: 'sa' },
-  spending: { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending', form: 'level', ...SAAR },
-  'spending-real': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending', form: 'level', ...REAL, ...SAAR },
+  spending: { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending', form: 'level', spending_on: 'dpcer', ...SAAR },
+  'spending-real': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending', form: 'level', spending_on: 'dpcer', ...REAL, ...SAAR },
   sentiment: { measure: 'business-enterprise/economic-indicators/consumer-sentiment', form: 'index' },
 
   'mortgage-rate': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/mortgage-rate', form: 'rate', term: '30-year' },
@@ -219,9 +231,9 @@ const LABELS = {
   'covid-deaths': { measure: 'births-deaths-marriages-and-divorces/deaths/deaths', form: 'level', cause: 'covid-19' },
   'deaths-vs-expected': { measure: 'births-deaths-marriages-and-divorces/deaths/deaths', form: 'share-of-expected', cause: 'all-causes' },
 
-  gdp: { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'level', ...SAAR },
-  'gdp-real': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'level', ...REAL, ...SAAR },
-  'gdp-growth': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'growth-rate', ...REAL, ...SAAR },
+  gdp: { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'level', gdp_component: 'a191r', ...SAAR },
+  'gdp-real': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'level', gdp_component: 'a191r', ...REAL, ...SAAR },
+  'gdp-growth': { measure: 'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp', form: 'growth-rate', gdp_component: 'a191r', ...REAL, ...SAAR },
   'debt-total': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-debt', form: 'level', holder: 'all' },
   'debt-public': { measure: 'federal-government-finances-and-employment/federal-budget-receipts-outlays-and-debt/federal-debt', form: 'level', holder: 'public' },
 
@@ -406,9 +418,18 @@ const PUBLISHER = { eia: 'eia', bls: 'bls', 'bls-bulk': 'bls', bea: 'bea', treas
   freddiemac: 'freddiemac', fhfa: 'fhfa', atlantafed: 'atlantafed', cdc: 'cdc', 'fed-h15': 'fed', 'fed-omo': 'fed' };
 const DOLLARS = /^\$/;
 
+// A NIPA line's twin (lib/nipa-series.js) is labelled as the hand-written series at its other frequency; a yearly
+// value is not seasonally adjusted.
+function twinLabels(s) {
+  const labels = { ...LABELS[s.twin_of] };
+  if (!labels.measure) return null;
+  if (s.frequency === 'annual') delete labels.seasonal;
+  return labels;
+}
+
 /** A series' dimensions: its labels, plus what is read from the series (frequency, year, publisher; dollars of the day unless labelled real). */
 export function seriesDimensions(s) {
-  const labels = LABELS[s.slug] ?? readLabels(s);
+  const labels = LABELS[s.slug] ?? (s.twin_of ? twinLabels(s) : s.labels) ?? readLabels(s);
   if (!labels) return null;
   const dims = { ...labels, frequency: FREQUENCY[s.frequency], publisher: PUBLISHER[s.source] };
   if (s.frequency === 'fiscal-year') dims.year = 'fiscal';
@@ -433,7 +454,7 @@ export function dimensionProblems(series) {
       if (!allowed.has(dim)) problems.push(`${s.slug}: ${dims.measure} has no ${dim}`);
       else if (!DIMENSIONS[dim]?.values[value]) problems.push(`${s.slug}: ${dim} has no value ${value}`);
     }
-    const percent = ['rate', 'growth-rate', 'share-of-gdp', 'share-of-total', 'share-of-income', 'share-of-expected'].includes(dims.form);
+    const percent = ['rate', 'growth-rate', 'share-of-gdp', 'share-of-total', 'share-of-income', 'share-of-expected', 'share-of-national-income'].includes(dims.form);
     if (percent !== (s.unit === '%')) problems.push(`${s.slug}: form ${dims.form} but unit ${s.unit}`);
     if ((dims.form === 'index') !== (s.unit === 'index')) problems.push(`${s.slug}: form ${dims.form} but unit ${s.unit}`);
     if (dims.adjustment && !DOLLARS.test(s.unit) && dims.form !== 'growth-rate') problems.push(`${s.slug}: adjustment on a series not in dollars`);

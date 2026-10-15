@@ -6,6 +6,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { nipaTable } from './nipa-series.js';
 
 const DATA = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'seed', 'data');
 const read = name => JSON.parse(fs.readFileSync(path.join(DATA, name), 'utf8'));
@@ -56,7 +57,10 @@ export function checkCoverage({ sections, tables: covered }, tables, programs) {
     const held = ['have', 'partly'].includes(c.coverage);
     if (held && !c.series?.length) problems.push(`${name}: ${c.coverage}, but no series named`);
     if (!held && c.series) problems.push(`${name}: series named, but coverage is ${c.coverage}`);
-    for (const s of c.series ?? []) if (!/^[a-z0-9-]+(--\*)?$/.test(s)) problems.push(`${name}: series ${s} is not a slug, a measure or a prefix--*`);
+    for (const s of c.series ?? []) {
+      if (/^nipa:T/.test(s)) { if (!nipaTable(s.slice(5))) problems.push(`${name}: ${s} is not a NIPA table GovGraph collects (lib/nipa-series.js)`); }
+      else if (!/^[a-z0-9-]+(--\*)?$/.test(s)) problems.push(`${name}: series ${s} is not a slug, a measure, a prefix--* or nipa:<table>`);
+    }
   }
   return problems;
 }

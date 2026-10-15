@@ -463,6 +463,7 @@ export const typeDefs = `#graphql
     places: Int!           # states, DC and Puerto Rico with the measure; districts are counted with their state
     placesLabel: String    # "50 states, DC and Puerto Rico"
     groups: Int!           # published groups in a prefix--* family
+    count: Int             # series loaded from a NIPA table (nipa:T20100)
     frequency: String
     firstDate: String
     lastDate: String

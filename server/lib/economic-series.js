@@ -70,6 +70,7 @@
 
 import path from 'path';
 import { DATA_DIR, mirrorFile } from './data-dir.js';
+import { nipaSeries, nameNipaSeries } from './nipa-series.js';
 
 export const EIA_PET_BULK = 'https://www.eia.gov/opendata/bulk/PET.zip';
 const EIA_FREQUENCY = { daily: 'D', weekly: 'W', 'four-week-average': '4', monthly: 'M' };
@@ -438,7 +439,8 @@ const TRADE_SERIES = [
   ...censusTrade(false),
 ];
 
-export const SERIES = [
+// Series written here by hand; the national accounts' tables (lib/nipa-series.js) are added after them.
+const HAND_SERIES = [
   {
     slug: 'wti-spot', source: 'eia', source_id: 'RWTC', frequency: 'daily',
     name: 'U.S. Crude Oil Price (WTI)', category: 'crude', unit: '$/bbl',
@@ -660,6 +662,10 @@ export const SERIES = [
   ...TRADE_SERIES,
 ];
 
+// Every line of the NIPA tables the Statistical Abstract reprints, yearly and quarterly (Phase 5); a line already
+// written above at one frequency is added at the other as its twin.
+export const SERIES = [...HAND_SERIES, ...nameNipaSeries(nipaSeries(HAND_SERIES).series, new Set(HAND_SERIES.map(s => s.name)))];
+
 /**
  * Where a series' downloaded rows are kept, under the API's own path with the series as the file
  * name (the key is never part of it):
@@ -684,11 +690,25 @@ const QUARTER_START = { 1: '01', 2: '04', 3: '07', 4: '10' };
  * BEA's quarterly, monthly or annual flat file ("A191RC,1947Q1,\"243,164\"", "DPCERC,2026M08,…",
  * "A019RC,1929,\"383\""; levels in millions) → that series' [date, billions or value].
  */
+// A flat file's lines by series code, so each file is split once however many of its series are read
+// (the loader keeps each file's text, so the text itself is the key).
+const beaLines = new Map();
+function beaSeriesLines(text) {
+  if (!beaLines.has(text)) {
+    const byCode = new Map();
+    for (const line of text.split('\n')) {
+      const code = line.slice(0, line.indexOf(','));
+      if (!byCode.has(code)) byCode.set(code, []);
+      byCode.get(code).push(line.replace(/\r$/, ''));
+    }
+    beaLines.set(text, byCode);
+  }
+  return beaLines.get(text);
+}
+
 function readBea(s, text) {
   const observations = [];
-  const prefix = `${s.source_id},`;
-  for (const line of text.split('\n')) {
-    if (!line.startsWith(prefix)) continue;
+  for (const line of beaSeriesLines(text).get(s.source_id) ?? []) {
     const m = /^[^,]+,(\d{4})(?:Q([1-4])|M(\d{2}))?,"?([-\d,.]+)"?\s*$/.exec(line);
     if (!m) throw new Error(`${s.slug}: unexpected line ${line}`);
     const value = Number(m[4].replace(/,/g, ''));
@@ -1221,6 +1241,25 @@ function blsTitle(id, files) {
   return title ? { title, from: `BLS ${survey}.series, series_title` } : null;
 }
 
+// BEA's registers, read once: series code → [line, label, metric, calculation]; table id → title.
+let beaRegisters = null;
+function beaRegister(files) {
+  if (!beaRegisters) {
+    const series = new Map();
+    for (const line of (files.text(mirrorFile(BEA_FILES[3])) ?? '').split('\n')) {
+      const m = /^([^,]+),"([^"]*)","([^"]*)","([^"]*)"/.exec(line);
+      if (m && !series.has(m[1])) series.set(m[1], m.slice(1));
+    }
+    const tables = new Map();
+    for (const line of (files.text(mirrorFile(BEA_FILES[4])) ?? '').split('\n')) {
+      const m = /^([^,]+),"([^"]*)"/.exec(line);
+      if (m) tables.set(m[1], m[2]);
+    }
+    beaRegisters = { series, tables };
+  }
+  return beaRegisters;
+}
+
 export function publisherTitle(s, files) {
   switch (s.source) {
     case 'eia': {
@@ -1234,9 +1273,12 @@ export function publisherTitle(s, files) {
     case 'bls-bulk':
       return blsTitle(s.source_id, files);
     case 'bea': {
-      const line = (files.text(mirrorFile(BEA_FILES[3])) ?? '').split('\n').find(l => l.startsWith(`${s.source_id},`));
-      const m = line && /^[^,]+,"([^"]*)","([^"]*)","([^"]*)"/.exec(line);
-      return m ? { title: `${m[1]}, ${m[2]}, ${m[3]}`, from: 'BEA SeriesRegister.txt: SeriesLabel, MetricName, CalculationType' } : null;
+      const m = beaRegister(files).series.get(s.source_id);
+      if (!m) return null;
+      // A NIPA table's line: the table as BEA titles it, the line number and the line's own label (the "original name").
+      const table = s.nipa && beaRegister(files).tables.get(s.nipa.table);
+      if (table) return { title: `${table}, line ${s.nipa.line}: ${m[1]} (${m[2]}, ${m[3]})`, from: 'BEA TablesRegister.txt TableTitle; SeriesRegister.txt SeriesLabel, MetricName, CalculationType' };
+      return { title: `${m[1]}, ${m[2]}, ${m[3]}`, from: 'BEA SeriesRegister.txt: SeriesLabel, MetricName, CalculationType' };
     }
     case 'treasury': {
       const title = files.json(seriesFile(s))?.labels?.[s.source_id];
