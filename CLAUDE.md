@@ -622,6 +622,15 @@ program (`sources.test.js`, and the loader reports files that match none).
   organizations' names) that combines with the rail's filters; it is not kept in the URL.
 - Every downloader calls `recordFetch(file, url, { archive })` (`lib/data-dir.js`), which appends to
   `<data dir>/fetch-log.jsonl`; the loader reads it into `source_files` with each file's sha-256.
+- As of 2026-10-14: 250 organizations, 10 lineage entries, 409 programs, most added from the Abstract's source notes.
+  366 are not collected yet: `collected: false`, `paths: []`, `access.used: []` and `access.best` (the best way to get
+  them). The list page says "Not collected"; the program page says "Not yet" (or "licensed" for licensed data).
+- Licences of non-federal programs: 61 `licensed` (sold or restricted, partly from knowledge, noted as such), 21
+  `free-with-terms` and 4 `open-licence` (terms read, dated), 36 `unchecked` (each notes whether terms were searched
+  for and not found, or not yet searched). Every homepage was requested on 2026-10-14 and broken ones fixed; where a
+  publisher has no site, the homepage is the Abstract table that cites it.
+- The loader removes programs no longer in the file, so renaming a slug (and its references in the coverage file) is
+  safe.
 
 Tracked in `features/data-sources/index.md`.
 
@@ -657,6 +666,34 @@ as "Table 961.", "Table. 553." or a bare "1158.". 1,389 source notes read; 17 ta
 
     node server/seed/fetch-statistical-abstract.js [--only <section slugs>] [--pages-only] [--refresh-pages] [--dry-run]
     node server/seed/build-abstract-tables.js [--dry-run]
+
+**Coverage (Phase 3, 2026-10-14).** `server/seed/data/statistical-abstract-coverage.json` (hand-kept; a file, not the
+database) gives every table `programs` (slugs in `sources.json`), `coverage`, `shape`, and where they apply `in_hand`,
+`series` and `note`. Vocabularies and `checkCoverage` in `server/lib/abstract-coverage.js` (test
+`abstract-coverage.test.js`, with `sources.test.js` the guard for any edit to either file):
+
+- `coverage`: `have` (every series it prints is loaded), `partly`, `wanted`, `licensed` (only for licensed programs),
+  `discontinued` (the note names the successor), `unpublished` and `compiled` (no programs; the Abstract built it from
+  unpublished data or from sources named in footnotes). Totals: 1 have, 35 partly, 1,178 wanted, 95 licensed, 67
+  discontinued, 25 unpublished, 5 compiled.
+- `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (81).
+- `series` (required for have / partly, only for them): what is loaded, as series slugs, measures (a measure covers its
+  national series and every place) or `prefix--*` (a family of published groups, e.g. `unemployment-rate--*`). The page
+  resolves them from `economic_series`, so a note can't claim what isn't loaded.
+- Sections 9, 12 and 14 were entered by hand; the other 27 were drafted from the source notes by pattern (the script was
+  not kept) and reviewed against publishers and titles. Seven tables were assigned by judgement because their source
+  notes can't be read (867, 966, 967, 1025, 1029, 1033, 1400); each note says so.
+
+Shown at `/sources/abstract-coverage` (`AbstractCoverage.jsx`, `components/AbstractTables.jsx`): every table under its
+section and a heading row per subsection, with its programs, shape, page, "Loaded:" series, note and a coverage chip;
+filters for coverage, shape and section kept in the URL, and a search. Each program's page lists the tables citing it
+("Section › Subsection" headings), and the sources list counts them. GraphQL: `abstractCoverage`,
+`SourceProgram.abstractTables` / `abstractTableCount`, `AbstractTable.series` (`coverageReport()` in
+`lib/abstract-coverage.js` reads the files and is cached until one changes; program names and series are one query each,
+shared by a request). A program any table cites reports `inAbstract: true`. In the timeline catalogue's Build tab, each
+Abstract subsection ends with a folded "Not here yet · N tables" line (tables with nothing loaded; the filter matches
+their titles). There is no page per series or measure yet; the planned one is `/series/<measure>` with the place as a
+parameter, which "Loaded:" names would link to.
 
 **Plan and status (2026-10-14; details in `features/statistical-abstract/index.md`):**
 
