@@ -1,10 +1,10 @@
 # Statistical Abstract
 
 ## Status
-2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3's mapping is done**
-for all 30 sections (2026-10-14): every table has its programs, coverage and shape. The coverage report is built
-(`/sources/abstract-coverage`, and each program's tables on its page). Still to do: the user's review of the 27
-sections drafted by rules. Every table's subsection, printed page, title and source note is in
+2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 is done**
+(2026-10-14): every table has its programs, coverage, shape and, where held, its series; the report is at
+`/sources/abstract-coverage` and on each program's page. **Next: Phase 4's rest** (wanted tables as "not here yet" in
+the catalogue), then **Phase 5** (collect), starting with the 81 tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -190,6 +190,15 @@ with `collected: false`, `paths: []` and `access.best`.
     (B18101) was loaded, but it is only downloaded (now wanted, file in hand); 53's English-only series covers 43 states
     and DC, not every state. A page per measure (`/series/<measure>`, places as a parameter) is the planned link target;
     not built yet (user chose names first).
+  - *Review (2026-10-14; user: "finish 3"):* Claude reviewed the 27 rule-drafted sections in two passes instead of the
+    user. (1) Each table's source note against its programs' publishers: 69 flags, all spelling or renamed bodies
+    (Medicare "&", Air Transport Association, Foundation Center) or the 16 notes read from PDFs, except table 144
+    (Trustees Report, moved to `medicare-trustees-report`), SUSB (SBA added as distributor) and Economic Indicators
+    (the Council of Economic Advisers, new organization, as publisher). (2) Titles read program by program for the
+    publishers with many programs (Census, BEA, NCHS, EIA, NCES, the Fed, USDA, BJS): no misplaced table found. The
+    slug `ers-national-survey-of-salaries` (Educational Research Service, easily read as USDA's ERS) is now
+    `educational-research-service-salaries`. The 7 tables assigned by judgement (867, 966, 967, 1025, 1029, 1033, 1400)
+    stand, each saying so; the user may still spot-check any section.
   - Totals now: 1 have, 35 partly, 1,178 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled. Licences:
     287 public domain, 4 open, 21 free with terms, 61 licensed, 36 unchecked.
 
@@ -252,7 +261,7 @@ tables under: 206, every online table in exactly one, ordered by first table. Th
 - [x] Every table mapped to the book's subsection by its printed page, from the section PDFs; written with its source
   note to `statistical-abstract-tables.json`; the `statab_*` tables dropped from the database (user, 2026-10-13)
 - [x] Phase 3 mapping: every table's programs, coverage and shape (2026-10-14)
-- [ ] Phase 3 review: the user's review of the 27 rule-drafted sections
+- [x] Phase 3 review: the 27 rule-drafted sections checked against publishers and titles (Claude, 2026-10-14)
 - [x] Phase 3 report: `/sources/abstract-coverage` and each program's tables (2026-10-14)
 - [x] Phase 4 placements: every measure placed from the tables; measures split where the Abstract splits them (2026-10-13)
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)

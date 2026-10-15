@@ -59,6 +59,7 @@
     { "slug": "national-safety-council", "name": "National Safety Council", "short_name": "NSC", "kind": "nonprofit", "url": "https://www.nsc.org", "notes": "Chartered by Congress in 1953 (36 U.S.C. 150101); not a government agency." },
     { "slug": "unionstats", "name": "Barry Hirsch, David Macpherson and William Even (unionstats.com)", "short_name": "Unionstats", "kind": "academic", "url": "https://www.unionstats.com", "notes": "Economists at Georgia State, Trinity and Miami Universities." },
     { "slug": "families-and-work-institute", "name": "Families and Work Institute", "short_name": "FWI", "kind": "nonprofit", "url": "https://www.familiesandwork.org", "notes": "Its national studies became projects of SHRM from 2016." },
+    { "slug": "cea", "name": "Council of Economic Advisers", "short_name": "CEA", "kind": "federal", "branch": "executive", "parent": "executive-office-of-the-president", "url": "https://www.whitehouse.gov/cea/" },
     { "slug": "department-of-agriculture", "name": "U.S. Department of Agriculture", "short_name": "USDA", "kind": "federal", "branch": "executive", "url": "https://www.usda.gov" },
     { "slug": "fns", "name": "Food and Nutrition Service", "short_name": "FNS", "kind": "federal", "branch": "executive", "parent": "department-of-agriculture", "url": "https://www.fns.usda.gov", "notes": "USDA announced on 2026-04-30 that FNS would be reorganized into the Food and Nutrition Administration (fna.usda.gov); the move was under way in October 2026." },
     { "slug": "cnpp", "name": "Center for Nutrition Policy and Promotion", "short_name": "CNPP", "kind": "federal", "branch": "executive", "parent": "fns", "url": "https://www.fns.usda.gov/cnpp", "notes": "Created in 1994 as a USDA office of its own; merged into FNS from 2017 (Wikipedia; USDA calls it a program area within FNS)." },
@@ -1189,7 +1190,7 @@
     },
     {
       "slug": "census-statistics-of-us-businesses", "name": "Statistics of U.S. Businesses (SUSB)",
-      "organizations": [{ "org": "census-bureau", "role": "publisher" }], "kind": "statistics",
+      "organizations": [{ "org": "census-bureau", "role": "publisher" }, { "org": "sba", "role": "distributor" }], "kind": "statistics",
       "description": "Firms, establishments, employment and payroll by enterprise size and industry, and employment changes from births and deaths, yearly. SBA’s Office of Advocacy republishes it.",
       "homepage": "https://www.census.gov/programs-surveys/susb.html",
       "licence": { "type": "public-domain" },
@@ -2815,7 +2816,7 @@
     },
     {
       "slug": "cea-economic-indicators", "name": "Economic Indicators",
-      "organizations": [{ "org": "executive-office-of-the-president", "role": "publisher" }], "kind": "statistics",
+      "organizations": [{ "org": "cea", "role": "publisher" }], "kind": "statistics",
       "description": "Monthly digest of economic statistics prepared by the Council of Economic Advisers for the Joint Economic Committee, drawn from other agencies.",
       "homepage": "https://www.govinfo.gov/app/collection/econi",
       "licence": { "type": "public-domain" },
@@ -3752,7 +3753,7 @@
       "paths": []
     },
     {
-      "slug": "ers-national-survey-of-salaries", "name": "National Survey of Salaries and Wages in Public Schools",
+      "slug": "educational-research-service-salaries", "name": "National Survey of Salaries and Wages in Public Schools",
       "organizations": [{ "org": "educational-research-service", "role": "publisher" }], "kind": "statistics",
       "description": "Salaries of public school staff by position.",
       "homepage": "https://www.ers.org",
