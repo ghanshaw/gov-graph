@@ -286,7 +286,7 @@
       "slug": "proquest-statistical-abstract", "name": "ProQuest Statistical Abstract of the United States",
       "organizations": [{ "org": "proquest", "role": "publisher" }], "kind": "statistics",
       "description": "ProQuest's continuation of the Statistical Abstract after the Census Bureau ended it, from the 2013 edition.",
-      "homepage": "https://about.proquest.com/en/products-services/Statistical-Abstract-of-the-US/",
+      "homepage": "https://proquest.libguides.com/statisticalabstract",
       "licence": { "type": "licensed", "note": "Sold by subscription." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
@@ -408,7 +408,7 @@
       "slug": "census-international-trade", "name": "U.S. International Trade in Goods and Services (FT-900)",
       "organizations": [{ "org": "census-bureau", "role": "publisher" }, { "org": "bea", "role": "publisher" }], "kind": "statistics",
       "description": "Exports, imports and the trade balance on a balance of payments basis: yearly from 1960, monthly from 1992 (historical series).",
-      "homepage": "https://www.census.gov/foreign-trade/statistics/historical/index.html",
+      "homepage": "https://www.census.gov/foreign-trade/data/index.html",
       "licence": { "type": "public-domain" },
       "access": { "used": ["file"] },
       "status": "active",
@@ -492,7 +492,7 @@
       "slug": "atlanta-fed-home-ownership-affordability", "name": "Home Ownership Affordability Monitor",
       "organizations": [{ "org": "federal-reserve-bank-of-atlanta", "role": "publisher" }], "kind": "statistics",
       "description": "The share of median income needed to own a median-priced home, and an affordability index, monthly from 2005.",
-      "homepage": "https://www.atlantafed.org/center-for-housing-and-policy/data-and-tools/home-ownership-affordability-monitor",
+      "homepage": "https://www.atlantafed.org/research-and-data/data/home-ownership-affordability-monitor",
       "licence": { "type": "free-with-terms", "url": "https://www.atlantafed.org/terms-of-use", "checked": "2026-10-13",
         "attribution": "Federal Reserve Bank of Atlanta",
         "limits": "Content may be reproduced without limit if not for private gain and with attribution to the Federal Reserve Bank of Atlanta; reproductions that abstract its material should be sent to its Public Affairs Department." },
@@ -706,7 +706,7 @@
       "organizations": [{ "org": "penn-state-mccourtney-institute", "role": "publisher" }, { "org": "washington-university-in-st-louis", "role": "former-publisher" }], "kind": "statistics",
       "description": "Every Supreme Court decision coded by issue, parties, disposition and votes: the Modern Database (1946 on) and the Legacy Database (1791–1945).",
       "homepage": "https://scdb.la.psu.edu",
-      "licence": { "type": "unchecked", "note": "Described elsewhere as Creative Commons licensed; no licence found on the current site (2026-10-13)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Secondary sources describe it as Creative Commons licensed; not confirmed." },
       "access": { "used": ["file"] },
       "status": "moved",
       "notes": "Moved from scdb.wustl.edu (Washington University), which refused connections on 2026-10-13, to scdb.la.psu.edu (Penn State). seed/scdb.js still names the old address.",
@@ -1079,7 +1079,7 @@
       "organizations": [{ "org": "national-safety-council", "role": "publisher" }], "kind": "statistics",
       "description": "The National Safety Council's statistics of deaths and injuries (work, home, road), annual as Accident Facts to 1998, then Injury Facts; online since 2018.",
       "homepage": "https://injuryfacts.nsc.org",
-      "licence": { "type": "unchecked", "note": "The Abstract printed it as copyright. The site's terms page refused GovGraph's request (2026-10-14); read them before collecting."},
+      "licence": { "type": "unchecked", "note": "Its terms page refused the request, and no terms were found by search (2026-10-14). The Abstract printed it as copyright." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -1089,7 +1089,7 @@
       "organizations": [{ "org": "unionstats", "role": "publisher" }], "kind": "statistics",
       "description": "Union membership and coverage by state, sector, industry and occupation from 1973 (1983 for most), compiled from the CPS; published as a book by BNA (Bloomberg BNA) and online at unionstats.com.",
       "homepage": "https://www.unionstats.com",
-      "licence": { "type": "unchecked", "note": "The book was copyright BNA. The website states no terms (2026-10-14)."},
+      "licence": { "type": "free-with-terms", "url": "https://www.unionstats.com", "checked": "2026-10-14", "limits": "Free online; figures must be cited (Hirsch and Macpherson, Industrial and Labor Relations Review 56(2), 2003). No other terms stated." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -1362,7 +1362,7 @@
       "slug": "census-federal-aid-to-states", "name": "Federal Aid to States",
       "organizations": [{ "org": "census-bureau", "role": "publisher" }], "kind": "statistics",
       "description": "Federal grants to state and local governments by state and program, fiscal years to 2010.",
-      "homepage": "https://www.census.gov/library/publications/time-series/fas.html",
+      "homepage": "https://www.census.gov/library/publications/time-series/cffr.2010.html",
       "licence": { "type": "public-domain" },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued", "ended": "2011-10-01", "successor": "usaspending",
@@ -1463,7 +1463,7 @@
       "slug": "nchs-ambulatory-care-surveys", "name": "National Ambulatory and Hospital Ambulatory Medical Care Surveys",
       "organizations": [{ "org": "nchs", "role": "publisher" }], "kind": "statistics",
       "description": "Visits to physicians’ offices, hospital outpatient and emergency departments (NAMCS, NHAMCS).",
-      "homepage": "https://www.cdc.gov/nchs/ahcd/",
+      "homepage": "https://www.cdc.gov/nchs/namcs/",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "bulk" }, "collected": false,
       "status": "active",
@@ -1473,11 +1473,11 @@
       "slug": "nchs-national-hospital-discharge-survey", "name": "National Hospital Discharge Survey",
       "organizations": [{ "org": "nchs", "role": "publisher" }], "kind": "statistics",
       "description": "Inpatient discharges from short-stay hospitals, days of care, diagnoses and procedures, 1965–2010.",
-      "homepage": "https://www.cdc.gov/nchs/nhds/",
+      "homepage": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NHDS/",
       "licence": { "type": "public-domain" },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "Last data year 2010; succeeded by the National Hospital Care Survey, which is not comparable.",
+      "notes": "Last data year 2010; succeeded by the National Hospital Care Survey, which is not comparable. CDC's survey page is gone (2026-10-14); the homepage is the survey's data files on CDC's FTP server. Its successor is the National Hospital Care Survey (www.cdc.gov/nchs/nhcs/).",
       "paths": []
     },
     {
@@ -1514,7 +1514,7 @@
       "slug": "cdc-national-immunization-survey", "name": "National Immunization Survey",
       "organizations": [{ "org": "cdc", "role": "publisher" }], "kind": "statistics",
       "description": "Vaccination coverage of children and teens, by vaccine and state, yearly.",
-      "homepage": "https://www.cdc.gov/vaccines/imz-managers/nis/",
+      "homepage": "https://www.cdc.gov/nis/about/",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -1575,7 +1575,7 @@
       "organizations": [{ "org": "hrsa", "role": "publisher" },{ "org": "unos", "role": "publisher" }], "kind": "statistics",
       "description": "Organ transplants, donors and waiting lists, from 1988.",
       "homepage": "https://optn.transplant.hrsa.gov/data/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "public-domain", "note": "OPTN data is published by HRSA, a federal agency; UNOS runs the network under contract." },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
       "paths": []
@@ -1644,7 +1644,7 @@
       "slug": "acf-head-start", "name": "Head Start Program Facts",
       "organizations": [{ "org": "acf", "role": "publisher" }], "kind": "statistics",
       "description": "Enrollment, funding and programs of Head Start and Early Head Start, yearly.",
-      "homepage": "https://headstart.gov/about-us/article/head-start-program-facts-fiscal-year",
+      "homepage": "https://acf.gov/ohs/programs-services",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
@@ -1734,7 +1734,7 @@
       "slug": "nces-school-crime-and-safety", "name": "School Survey on Crime and Safety and Indicators of School Crime and Safety",
       "organizations": [{ "org": "nces", "role": "publisher" },{ "org": "bjs", "role": "publisher" }], "kind": "statistics",
       "description": "Crime and discipline reported by public schools, and the yearly indicators report with BJS.",
-      "homepage": "https://nces.ed.gov/programs/crimeindicators/",
+      "homepage": "https://nces.ed.gov/programs/crime/",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -1794,7 +1794,7 @@
       "slug": "eeoc-eeo-reports", "name": "EEO-4 and EEO-5 Reports",
       "organizations": [{ "org": "eeoc", "role": "publisher" }], "kind": "statistics",
       "description": "Employment by sex, race and ethnicity and salary in state and local governments (EEO-4) and in elementary and secondary school systems (EEO-5).",
-      "homepage": "https://www.eeoc.gov/data/employment-data-reports",
+      "homepage": "https://www.eeoc.gov/data/data-and-statistics",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -1818,7 +1818,7 @@
       "licence": { "type": "public-domain" },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "No edition after fiscal years 2010–2011 found.",
+      "notes": "The last edition found covers fiscal years 2010–2011 (released February 2012).",
       "paths": []
     },
     {
@@ -1855,7 +1855,7 @@
       "slug": "bjs-justice-expenditure-and-employment", "name": "Justice Expenditure and Employment Extracts",
       "organizations": [{ "org": "bjs", "role": "publisher" }], "kind": "statistics",
       "description": "Government spending and employment for police, courts and corrections, by level of government and state, from Census data.",
-      "homepage": "https://bjs.ojp.gov/data-collection/justice-expenditure-and-employment-extracts-jee",
+      "homepage": "https://bjs.ojp.gov/data-collection/expenditure-and-employment-data-other-bjs-sources",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -1869,7 +1869,7 @@
       "licence": { "type": "public-domain" },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "The National Judicial Reporting Program’s last data year was 2006.",
+      "notes": "The last edition covers 2006 (published December 2009).",
       "paths": []
     },
     {
@@ -1880,7 +1880,7 @@
       "licence": { "type": "public-domain" },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "The Firearm Inquiry Statistics program’s last report found covers 2015; the FBI publishes NICS checks monthly.",
+      "notes": "The last statistical tables found cover 2015 (published November 2017); the FBI publishes NICS checks monthly.",
       "paths": []
     },
     {
@@ -1898,7 +1898,7 @@
       "slug": "us-courts-statistical-tables", "name": "Statistical Tables for the Federal Judiciary and Judicial Business",
       "organizations": [{ "org": "administrative-office-of-the-us-courts", "role": "publisher" }], "kind": "statistics",
       "description": "Cases filed, terminated and pending in the federal courts of appeals, district and bankruptcy courts, judgeships and jurors, yearly and quarterly.",
-      "homepage": "https://www.uscourts.gov/data-news/reports/statistical-reports",
+      "homepage": "https://www.uscourts.gov/data-news/reports/statistical-reports/statistical-tables-federal-judiciary",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -1929,7 +1929,7 @@
       "organizations": [{ "org": "national-center-for-state-courts", "role": "publisher" }], "kind": "statistics",
       "description": "Caseloads of state trial and appellate courts.",
       "homepage": "https://www.courtstatistics.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. The data comes from the state court administrators." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -1938,8 +1938,8 @@
       "slug": "ncjj-juvenile-court-statistics", "name": "Juvenile Court Statistics",
       "organizations": [{ "org": "national-center-for-juvenile-justice", "role": "publisher" }], "kind": "statistics",
       "description": "Delinquency and status offense cases handled by juvenile courts, yearly, produced for the Office of Juvenile Justice and Delinquency Prevention.",
-      "homepage": "https://www.ojjdp.gov/ojstatbb/",
-      "licence": { "type": "unchecked", "note": "Produced under contract for OJJDP (Department of Justice). Terms not read (2026-10-14)." },
+      "homepage": "https://ojjdp.ojp.gov/statistical-briefing-book",
+      "licence": { "type": "public-domain", "note": "Produced for and published by the Office of Juvenile Justice and Delinquency Prevention (Department of Justice)." },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
       "paths": []
@@ -2060,7 +2060,7 @@
       "organizations": [{ "org": "usgs", "role": "publisher" },{ "org": "international-boundary-commission", "role": "publisher" }], "kind": "statistics",
       "description": "Highest and lowest points and mean elevations, largest rivers and lakes, and border lengths (formerly in the National Atlas).",
       "homepage": "https://www.usgs.gov/educational-resources",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "public-domain", "note": "USGS works are federal; the International Boundary Commission’s border lengths are facts." },
       "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "notes": "Several of these were last published in 2003–2005; the National Atlas closed in 2014.",
@@ -2100,7 +2100,7 @@
       "slug": "nrcs-national-resources-inventory", "name": "National Resources Inventory",
       "organizations": [{ "org": "nrcs", "role": "publisher" }], "kind": "statistics",
       "description": "Land cover and use, wetlands, erosion on nonfederal land, from 1982.",
-      "homepage": "https://www.nrcs.usda.gov/resources/data-and-reports/national-resources-inventory",
+      "homepage": "https://www.nrcs.usda.gov/nri",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -2235,8 +2235,8 @@
       "homepage": "https://www.uscg.mil",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
-      "status": "active",
-      "notes": "Not found published after the 2004 compendium and later marine information system extracts; to be checked.",
+      "status": "discontinued",
+      "notes": "The series Pollution Incidents In and Around U.S. Waters ran to 2001, when the data moved to the MISLE database; an Oil Spill Compendium covered 1973–2009. Investigations data is now in MISLE through the Coast Guard’s Homeport site.",
       "paths": []
     },
     {
@@ -2264,7 +2264,7 @@
       "organizations": [{ "org": "american-national-election-studies", "role": "publisher" }], "kind": "statistics",
       "description": "Surveys of voters before and after each presidential election since 1948.",
       "homepage": "https://electionstudies.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://electionstudies.org/data-center/", "checked": "2026-10-14", "limits": "Free registration; research or statistical use only; cite ANES and link to the source dataset; no attempt to identify respondents." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2274,7 +2274,7 @@
       "organizations": [{ "org": "national-governors-association", "role": "publisher" }], "kind": "statistics",
       "description": "Governors by state and party.",
       "homepage": "https://www.nga.org/governors/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2294,7 +2294,7 @@
       "organizations": [{ "org": "ncsl", "role": "publisher" }], "kind": "statistics",
       "description": "Party control of state legislatures and governorships.",
       "homepage": "https://www.ncsl.org/about-state-legislatures/state-partisan-composition",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. NCSL’s terms say it owns the material on its site; the licence section was not read." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2303,8 +2303,8 @@
       "slug": "cawp-women-in-office", "name": "Women in Elective Office",
       "organizations": [{ "org": "cawp", "role": "publisher" }], "kind": "statistics",
       "description": "Women holding federal, state and local offices.",
-      "homepage": "https://cawp.rutgers.edu/facts",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "homepage": "https://cawp.rutgers.edu/",
+      "licence": { "type": "free-with-terms", "url": "https://cawp.rutgers.edu/", "checked": "2026-10-14", "limits": "Non-commercial reproduction encouraged with visible credit to CAWP and its footnotes; commercial reproduction needs written permission." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2324,7 +2324,7 @@
       "organizations": [{ "org": "nasbo", "role": "publisher" }], "kind": "statistics",
       "description": "State spending by fund and function, and general fund balances, yearly.",
       "homepage": "https://www.nasbo.org/reports-data",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Reports are marked copyright, all rights reserved." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2343,10 +2343,11 @@
       "slug": "dc-tax-burden-comparisons", "name": "Tax Rates and Tax Burdens in the District of Columbia: A Nationwide Comparison",
       "organizations": [{ "org": "dc-cfo", "role": "publisher" }], "kind": "statistics",
       "description": "State and local taxes paid by a family at several incomes in the largest city of each state, and property tax rates, yearly.",
-      "homepage": "https://cfo.dc.gov/page/tax-rates-and-revenues-tax-burden-comparisons",
+      "homepage": "https://cfo.dc.gov/release/tax-rate-comparison-booklets-now-available",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
+      "notes": "Published yearly under Public Law 93-407; the latest edition found is for 2021 (issued May 2023).",
       "paths": []
     },
     {
@@ -2424,7 +2425,7 @@
       "organizations": [{ "org": "nasi", "role": "publisher" }], "kind": "statistics",
       "description": "Workers’ compensation benefits and costs by state, yearly (Social Security Administration until 1994).",
       "homepage": "https://www.nasi.org/research/workers-compensation/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. From the 2023 data the report comes with a downloadable dataset." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2433,7 +2434,7 @@
       "slug": "opm-csrdf-annual-report", "name": "Civil Service Retirement and Disability Fund Annual Report",
       "organizations": [{ "org": "opm", "role": "publisher" }], "kind": "statistics",
       "description": "Federal civil service retirement: participants, annuitants, fund income and outgo.",
-      "homepage": "https://www.opm.gov/about-us/budget-performance/other-reports/",
+      "homepage": "https://www.opm.gov/about-us/reports-publications/",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -2463,7 +2464,7 @@
       "slug": "fns-snap-household-characteristics", "name": "Characteristics of SNAP Households",
       "organizations": [{ "org": "fns", "role": "publisher" }], "kind": "statistics",
       "description": "SNAP households and participants by income, composition and benefits, yearly from quality control data.",
-      "homepage": "https://www.fns.usda.gov/research/snap/characteristics",
+      "homepage": "https://www.fna.usda.gov/research/snap/household-characteristics",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -2494,7 +2495,7 @@
       "organizations": [{ "org": "investment-company-institute", "role": "publisher" }], "kind": "statistics",
       "description": "Mutual funds and their owners, IRAs and the retirement market.",
       "homepage": "https://www.ici.org/research",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "licensed", "note": "ICI states that the underlying data of its statistical publications are for members and subscribers only and are not to be republished (Copyright and Linking Policies, read 2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2573,7 +2574,7 @@
       "slug": "bea-fixed-assets", "name": "Fixed Assets Accounts",
       "organizations": [{ "org": "bea", "role": "publisher" }], "kind": "statistics",
       "description": "Stocks of fixed assets and consumer durables, by type and industry, yearly from 1925.",
-      "homepage": "https://www.bea.gov/data/by-topic/fixed-assets",
+      "homepage": "https://www.bea.gov/itable/fixed-assets",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "bulk" }, "collected": false,
       "status": "active",
@@ -2673,11 +2674,11 @@
       "slug": "frb-new-security-issues", "name": "New Security Issues",
       "organizations": [{ "org": "federal-reserve-board", "role": "publisher" }], "kind": "statistics",
       "description": "Gross proceeds of new securities issued by corporations and by state and local governments.",
-      "homepage": "https://www.federalreserve.gov/data.htm",
+      "homepage": "https://www.federalreserve.gov/data/corpsecure/current.htm",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
-      "notes": "Not confirmed still published.",
+      "notes": "The corporate release is published monthly (Securities Data Company data; a May 2026 release found on 2026-10-14). State and local government issues (Table 440) were in the Statistical Supplement to the Federal Reserve Bulletin, which ended in 2008; not found published since.",
       "paths": []
     },
     {
@@ -2696,7 +2697,7 @@
       "organizations": [{ "org": "federal-reserve-bank-of-philadelphia", "role": "publisher" }], "kind": "statistics",
       "description": "Research articles of the Federal Reserve Bank of Philadelphia (Business Review, now Economic Insights).",
       "homepage": "https://www.philadelphiafed.org/the-economy",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.philadelphiafed.org/about-us/privacy-notice", "checked": "2026-10-14", "limits": "For informational, educational and research use; copyrighted material needs the owner’s permission; the Bank’s name may not be used commercially." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -2705,11 +2706,11 @@
       "slug": "fhfa-monthly-interest-rate-survey", "name": "Monthly Interest Rate Survey",
       "organizations": [{ "org": "fhfa", "role": "publisher" }], "kind": "statistics",
       "description": "Terms and rates of conventional single-family mortgages, monthly from 1963.",
-      "homepage": "https://www.fhfa.gov/data",
+      "homepage": "https://www.fhfa.gov/data/mirs",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
-      "status": "active",
-      "notes": "Not confirmed still published.",
+      "status": "discontinued", "ended": "2019-05-29",
+      "notes": "Ended with the May 2019 survey: the respondent that supplied most of the loans stopped reporting. FHFA publishes a \"MIRS Transition Index\" (an adjusted Freddie Mac PMMS rate) for outstanding loans only.",
       "paths": []
     },
     {
@@ -2776,7 +2777,7 @@
       "slug": "uspto-patent-statistics", "name": "Patent Statistics",
       "organizations": [{ "org": "uspto", "role": "publisher" }], "kind": "statistics",
       "description": "Patents granted by type, state and country, and trademarks, yearly.",
-      "homepage": "https://www.uspto.gov/web/offices/ac/ido/oeip/taf/reports.htm",
+      "homepage": "https://www.uspto.gov/learning-and-resources/data-and-statistics",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -2786,7 +2787,7 @@
       "slug": "copyright-office-annual-report", "name": "Copyright Office Annual Report",
       "organizations": [{ "org": "copyright-office", "role": "publisher" }], "kind": "statistics",
       "description": "Copyright registrations by subject matter, yearly.",
-      "homepage": "https://www.copyright.gov/reports/annual/",
+      "homepage": "https://www.copyright.gov/",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -2797,7 +2798,7 @@
       "organizations": [{ "org": "nber", "role": "publisher" }], "kind": "statistics",
       "description": "Peaks and troughs of the U.S. business cycle since 1854, set by the Business Cycle Dating Committee. GovGraph already enters NBER recessions by hand (periods.json).",
       "homepage": "https://www.nber.org/research/data/us-business-cycle-expansions-and-contractions",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.nber.org/research/data/us-business-cycle-expansions-and-contractions", "checked": "2026-10-14", "limits": "The dating page grants permission to copy with attribution to the NBER; no fuller licence found." },
       "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
@@ -2826,7 +2827,7 @@
       "slug": "ncses-national-patterns", "name": "National Patterns of R&D Resources",
       "organizations": [{ "org": "ncses", "role": "publisher" }], "kind": "statistics",
       "description": "U.S. research and development spending by source of funds and performer, yearly from 1953.",
-      "homepage": "https://ncses.nsf.gov/surveys/national-patterns-rd-resources",
+      "homepage": "https://ncses.nsf.gov/data-collections/national-patterns",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -2856,10 +2857,11 @@
       "slug": "ncses-federal-se-support", "name": "Survey of Federal Science and Engineering Support to Universities, Colleges, and Nonprofit Institutions",
       "organizations": [{ "org": "ncses", "role": "publisher" }], "kind": "statistics",
       "description": "Federal S&E obligations to academic and nonprofit institutions by state and institution.",
-      "homepage": "https://ncses.nsf.gov/surveys/federal-support-universities-colleges-nonprofit",
+      "homepage": "https://ncses.nsf.gov/surveys/federal-support-survey",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
+      "notes": "Since fiscal year 2021, a module of the Survey of Federal Funds for Research and Development.",
       "paths": []
     },
     {
@@ -3091,7 +3093,7 @@
       "licence": { "type": "public-domain" },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "Last report (2015 data) published in 2017; not found updated since.",
+      "notes": "The last edition (2015 data) was published on 2017-01-09; no later edition and no notice of an end found (2026-10-14).",
       "paths": []
     },
     {
@@ -3181,7 +3183,7 @@
       "slug": "eia-uranium", "name": "Domestic Uranium Production Report",
       "organizations": [{ "org": "eia", "role": "publisher" }], "kind": "statistics",
       "description": "Uranium concentrate production, exploration, employment, purchases and prices.",
-      "homepage": "https://www.eia.gov/uranium/",
+      "homepage": "https://www.eia.gov/uranium/production/annual/",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
@@ -3410,7 +3412,7 @@
       "licence": { "type": "public-domain" },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "Not found updated after 2010.",
+      "notes": "Not found after 2010; ITA’s Key U.S. Aerospace Statistics ran to 2012. The General Aviation Manufacturers Association (an industry group) publishes shipments quarterly.",
       "paths": []
     },
     {
@@ -3430,18 +3432,19 @@
       "homepage": "https://www.fcc.gov/reports-research/reports",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "file" }, "collected": false,
-      "status": "active",
-      "notes": "Not confirmed still published in this form.",
+      "status": "discontinued",
+      "notes": "The last Trends in Telephone Service is the 2010 edition (September 2010). The FCC now publishes yearly Voice Telephone Services reports, which are not the same series.",
       "paths": []
     },
     {
       "slug": "imls-public-libraries-survey", "name": "Public Libraries Survey",
       "organizations": [{ "org": "imls", "role": "publisher" }], "kind": "statistics",
       "description": "Every public library: visits, circulation, staff, finances, by state, yearly.",
-      "homepage": "https://www.imls.gov/research-evaluation/data-collection/public-libraries-survey",
+      "homepage": "https://www.imls.gov/research-evaluation",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "bulk" }, "collected": false,
       "status": "active",
+      "notes": "IMLS's survey page (imls.gov/PLS) did not answer on 2026-10-14; the homepage is its research page.",
       "paths": []
     },
     {
@@ -3478,7 +3481,7 @@
       "slug": "nigc-gaming-revenue", "name": "Gross Gaming Revenue Reports",
       "organizations": [{ "org": "nigc", "role": "publisher" }], "kind": "statistics",
       "description": "Tribal gaming revenue by region and size, yearly.",
-      "homepage": "https://www.nigc.gov/commission/gaming-revenue-reports",
+      "homepage": "https://www.nigc.gov/commission/reports-and-publications/gross-gaming-revenue-reports/",
       "licence": { "type": "public-domain" },
       "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
@@ -3561,7 +3564,7 @@
       "organizations": [{ "org": "oecd", "role": "publisher" }], "kind": "statistics",
       "description": "OECD statistics: health, labour, national accounts, prices, taxes, education, migration, R&D, aid, investment, insurance.",
       "homepage": "https://data-explorer.oecd.org",
-      "licence": { "type": "unchecked", "note": "OECD data has been under CC BY 4.0 since July 2024 (as known; terms not read)." },
+      "licence": { "type": "open-licence", "name": "CC BY 4.0", "url": "https://www.oecd.org/en/about/terms-conditions.html", "checked": "2026-10-14", "note": "Open access under CC BY 4.0 since 1 July 2024; third-party content in OECD data may carry other terms." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3571,7 +3574,7 @@
       "organizations": [{ "org": "world-bank", "role": "publisher" }], "kind": "statistics",
       "description": "Development statistics for every country, including gross national income and external debt.",
       "homepage": "https://datatopics.worldbank.org/world-development-indicators/",
-      "licence": { "type": "unchecked", "note": "The World Bank publishes WDI under CC BY 4.0 (as known; terms not read)." },
+      "licence": { "type": "open-licence", "name": "CC BY 4.0", "url": "https://datacatalog.worldbank.org", "checked": "2026-10-14", "note": "The World Bank’s default licence for its data, WDI included; some indicators carry third-party terms." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3581,7 +3584,7 @@
       "organizations": [{ "org": "imf", "role": "publisher" }], "kind": "statistics",
       "description": "Prices, exchange rates, reserves, trade prices and balances of payments for every member country.",
       "homepage": "https://data.imf.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.imf.org/en/About/copyright-and-terms", "checked": "2026-10-14", "limits": "Free to download, copy and make derivative works of IMF statistical data (IFS included); commercial reuse needs permission (copyright@imf.org)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3591,7 +3594,7 @@
       "organizations": [{ "org": "itu", "role": "publisher" }], "kind": "statistics",
       "description": "Telephone, mobile and internet subscriptions and use by country.",
       "homepage": "https://www.itu.int/en/ITU-D/Statistics/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "open-licence", "name": "CC BY-NC-SA 3.0 IGO", "url": "https://datahub.itu.int/about", "checked": "2026-10-14", "note": "The free ITU DataHub is non-commercial, share-alike; the complete World Telecommunication/ICT Indicators Database is sold." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3601,7 +3604,7 @@
       "organizations": [{ "org": "unaids", "role": "publisher" }], "kind": "statistics",
       "description": "People living with HIV, new infections and deaths by region.",
       "homepage": "https://aidsinfo.unaids.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://unaids.org/en/terms-of-use", "checked": "2026-10-14", "limits": "Personal, non-commercial use and extracts for research, credited to UNAIDS with the page’s address; substantial reproduction needs written permission." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3610,7 +3613,7 @@
       "slug": "icao-civil-aviation-statistics", "name": "Civil Aviation Statistics of the World",
       "organizations": [{ "org": "icao", "role": "publisher" }], "kind": "statistics",
       "description": "World airline traffic and safety.",
-      "homepage": "https://www.icao.int/sustainability/Pages/Statistics.aspx",
+      "homepage": "https://www.icao.int/",
       "licence": { "type": "licensed", "note": "Sold or by subscription, as far as GovGraph knows; terms not read (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
@@ -3621,7 +3624,7 @@
       "organizations": [{ "org": "unwto", "role": "publisher" }], "kind": "statistics",
       "description": "International tourist arrivals and receipts by country.",
       "homepage": "https://www.untourism.int/tourism-statistics",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "licensed", "note": "The Tourism Statistics Database is sold by subscription through the UN Tourism Elibrary (free to students on written request); commercial licensing through elibrary@unwto.org. Read 2026-10-14." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3630,10 +3633,11 @@
       "slug": "aris-religious-identification", "name": "American Religious Identification Survey",
       "organizations": [{ "org": "trinity-college-isssc", "role": "publisher" }], "kind": "statistics",
       "description": "Self-described religion of U.S. adults, 1990, 2001, 2008.",
-      "homepage": "https://commons.trincoll.edu/aris/",
+      "homepage": "https://www2.census.gov/library/publications/2011/compendia/statab/131ed/tables/12s0075.xls",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "final",
+      "notes": "Trinity College's ARIS site (commons.trincoll.edu/aris) no longer answers (2026-10-14), so the homepage is the Abstract table that cites it.",
       "paths": []
     },
     {
@@ -3652,7 +3656,7 @@
       "organizations": [{ "org": "asarb", "role": "publisher" }], "kind": "statistics",
       "description": "Congregations and adherents by county and religious group, every ten years.",
       "homepage": "https://www.usreligioncensus.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.usreligioncensus.org/faq", "checked": "2026-10-14", "limits": "Free download; ASARB holds the copyright and does not want the dataset or its products distributed without permission." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3662,7 +3666,7 @@
       "organizations": [{ "org": "guttmacher-institute", "role": "publisher" }], "kind": "statistics",
       "description": "Abortions and providers by state, every few years, and patients’ characteristics.",
       "homepage": "https://www.guttmacher.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.guttmacher.org/public-use-datasets", "checked": "2026-10-14", "limits": "Free to copy, redistribute and adapt with credit to the Guttmacher Institute, passed on to others; datasets free with citation. The Data Center itself has closed." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3711,7 +3715,7 @@
       "slug": "aha-hospital-statistics", "name": "AHA Hospital Statistics",
       "organizations": [{ "org": "american-hospital-association", "role": "publisher" }], "kind": "statistics",
       "description": "Hospitals, beds, admissions, costs and staff by type and state, from the AHA Annual Survey.",
-      "homepage": "https://www.aha.org/data-insights",
+      "homepage": "https://www.ahadata.com",
       "licence": { "type": "licensed", "note": "Sold or by subscription, as far as GovGraph knows; terms not read (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
@@ -3732,7 +3736,7 @@
       "organizations": [{ "org": "american-cancer-society", "role": "publisher" }], "kind": "statistics",
       "description": "Estimated new cancer cases and deaths by site and state, yearly.",
       "homepage": "https://www.cancer.org/research/cancer-facts-statistics.html",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.cancer.org/about-us/policies/user-agreement.html", "checked": "2026-10-14", "limits": "The Cancer Statistics Center asks reuse to credit the American Cancer Society; the site’s user agreement allows personal, non-commercial use only and requires written consent to reproduce." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3742,7 +3746,7 @@
       "organizations": [{ "org": "national-education-association", "role": "publisher" }], "kind": "statistics",
       "description": "Public school enrollment, teachers, salaries, revenue and spending by state, yearly.",
       "homepage": "https://www.nea.org/resource-library/educator-pay-and-student-spending-how-does-your-state-rank",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.nea.org/resource-library/educator-pay-and-student-spending-how-does-your-state-rank", "checked": "2026-10-14", "limits": "No reproduction without permission from NEA Research, except by NEA affiliates; credit line and copyright notice required (RankingsEstimates@nea.org)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3755,7 +3759,7 @@
       "licence": { "type": "licensed", "note": "Sold or by subscription, as far as GovGraph knows; terms not read (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "The Educational Research Service closed (2013?); not confirmed.",
+      "notes": "The Educational Research Service wound down in November 2011; Editorial Projects in Education (Education Week) bought the rights to the salary survey. Whether it is still published was not found.",
       "paths": []
     },
     {
@@ -3763,7 +3767,7 @@
       "organizations": [{ "org": "college-board", "role": "publisher" }], "kind": "statistics",
       "description": "SAT scores and test takers’ characteristics, yearly.",
       "homepage": "https://reports.collegeboard.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://reports.collegeboard.org", "checked": "2026-10-14", "limits": "Copyright College Board; reports are embargoed until release; no general reuse grant found; permission through communications@collegeboard.org." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3773,7 +3777,7 @@
       "organizations": [{ "org": "act-inc", "role": "publisher" }], "kind": "statistics",
       "description": "ACT scores and test takers, yearly.",
       "homepage": "https://www.act.org/content/act/en/research/services-and-resources/data-and-visualization.html",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. The national report is marked confidential." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3783,7 +3787,7 @@
       "organizations": [{ "org": "institute-of-international-education", "role": "publisher" }], "kind": "statistics",
       "description": "International students in the United States and U.S. students abroad, yearly.",
       "homepage": "https://opendoorsdata.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Funded by the State Department; an archived copy is on DataLumos/ICPSR." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3792,8 +3796,8 @@
       "slug": "mla-language-enrollments", "name": "Enrollments in Languages Other Than English",
       "organizations": [{ "org": "modern-language-association", "role": "publisher" }], "kind": "statistics",
       "description": "College enrollments by language, about every four years.",
-      "homepage": "https://www.mla.org/Resources/Guidelines-and-Data/Reports-and-Professional-Guidelines/Enrollments-in-Languages-Other-Than-English",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "homepage": "https://apps.mla.org/flsurvey_search",
+      "licence": { "type": "free-with-terms", "url": "https://apps.mla.org/flsurvey_search", "checked": "2026-10-14", "limits": "Copyright MLA: quoting as fair use; any other reproduction needs written permission." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3803,7 +3807,7 @@
       "organizations": [{ "org": "heri-ucla", "role": "publisher" }], "kind": "statistics",
       "description": "Entering college students’ characteristics and attitudes, yearly.",
       "homepage": "https://heri.ucla.edu/cirp-freshman-survey/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Trend files to 2008 are public; newer data through HERI’s data access for researchers." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3813,7 +3817,7 @@
       "organizations": [{ "org": "commonfund-institute", "role": "publisher" }], "kind": "statistics",
       "description": "Inflation index for colleges’ costs, yearly.",
       "homepage": "https://www.commonfund.org/higher-education-price-index",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. NCES’s Digest of Education Statistics reprints the index." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3823,7 +3827,7 @@
       "organizations": [{ "org": "sheeo", "role": "publisher" }], "kind": "statistics",
       "description": "State and local support for higher education by state, yearly.",
       "homepage": "https://shef.sheeo.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3843,7 +3847,7 @@
       "organizations": [{ "org": "aaup", "role": "publisher" }], "kind": "statistics",
       "description": "Faculty salaries by rank and institution, yearly.",
       "homepage": "https://www.aaup.org/our-work/research/FCS",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "licensed", "note": "The Faculty Compensation Survey data is sold to institutions; free only to AAUP chapters and AFT locals for their own business (read 2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3863,7 +3867,7 @@
       "organizations": [{ "org": "insurance-information-institute", "role": "publisher" }], "kind": "statistics",
       "description": "Property and casualty insurance, fire losses and other insurance statistics.",
       "homepage": "https://www.iii.org/publications",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. The Fact Book is sold." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3873,7 +3877,7 @@
       "organizations": [{ "org": "nfpa", "role": "publisher" }], "kind": "statistics",
       "description": "Fires, deaths, injuries and losses by type, and fire departments and personnel, yearly.",
       "homepage": "https://www.nfpa.org/education-and-research/research/nfpa-research",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3903,7 +3907,7 @@
       "organizations": [{ "org": "american-forest-and-paper-association", "role": "publisher" }], "kind": "statistics",
       "description": "Production and supply of paper, paperboard and pulp.",
       "homepage": "https://www.afandpa.org/statistics-resources",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "licensed", "note": "AF&PA sells its full statistical reports through its statistics team; press releases give headline figures only (read 2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -3936,7 +3940,7 @@
       "licence": { "type": "licensed", "note": "Sold or by subscription, as far as GovGraph knows; terms not read (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
-      "notes": "Not confirmed still published; no website found, so the homepage is the Abstract table that cites it.",
+      "notes": "Nothing about it found on the web (2026-10-14); no website, so the homepage is the Abstract table that cites it.",
       "paths": []
     },
     {
@@ -4004,7 +4008,7 @@
       "organizations": [{ "org": "aerospace-industries-association", "role": "publisher" }], "kind": "statistics",
       "description": "Aerospace sales, orders, backlog and trade.",
       "homepage": "https://www.aia-aerospace.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Prepared with S&P Global Market Intelligence." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4014,7 +4018,7 @@
       "organizations": [{ "org": "nada", "role": "publisher" }], "kind": "statistics",
       "description": "Franchised new car dealerships: number, sales, employment, finances, yearly.",
       "homepage": "https://www.nada.org/nada/nada-data",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. NADA Data reports are a free download." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4044,7 +4048,7 @@
       "organizations": [{ "org": "airlines-for-america", "role": "publisher" }], "kind": "statistics",
       "description": "U.S. airline traffic, finances and passenger airline cost index.",
       "homepage": "https://www.airlines.org/dataset/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4064,7 +4068,7 @@
       "organizations": [{ "org": "texas-a-and-m-transportation-institute", "role": "publisher" }], "kind": "statistics",
       "description": "Traffic congestion and its cost by urban area.",
       "homepage": "https://mobility.tamu.edu/umr/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Reports are free to download; the speed data inside is INRIX’s." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4073,8 +4077,8 @@
       "slug": "apta-fact-book", "name": "Public Transportation Fact Book",
       "organizations": [{ "org": "apta", "role": "publisher" }], "kind": "statistics",
       "description": "Transit ridership, vehicles, finances.",
-      "homepage": "https://www.apta.com/research-technical-resources/transit-statistics/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "homepage": "https://www.apta.com/news-research/",
+      "licence": { "type": "free-with-terms", "url": "https://www.apta.com/news-research/", "checked": "2026-10-14", "limits": "Fact Book editions 2006–2015 say their material may be quoted or reproduced without permission, with a citation; its figures come mainly from the FTA’s National Transit Database." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4124,7 +4128,7 @@
       "organizations": [{ "org": "riaa", "role": "publisher" }], "kind": "statistics",
       "description": "Recorded music shipments and revenue by format, yearly.",
       "homepage": "https://www.riaa.com/u-s-sales-database/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.riaa.com/u-s-sales-database/", "checked": "2026-10-14", "limits": "RIAA (2016): permission to cite or copy the statistics is granted with attribution to the RIAA. No formal licence found." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4157,7 +4161,7 @@
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "Ended after 2012 (as known).",
+      "notes": "The last edition is 2011–2012 (with the American Library Association, funded by the Gates Foundation); none found after.",
       "paths": []
     },
     {
@@ -4165,7 +4169,7 @@
       "organizations": [{ "org": "pew-research-center", "role": "publisher" }], "kind": "statistics",
       "description": "Adults’ internet, broadband and online activities, from surveys since 1995.",
       "homepage": "https://www.pewresearch.org/internet/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.pewresearch.org/about/terms-and-conditions/", "checked": "2026-10-14", "limits": "Personal, educational or news-reporting use, credited to Pew Research Center; content credited to others may not be republished on its own; no use implying a political position." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4195,7 +4199,7 @@
       "organizations": [{ "org": "sifma", "role": "publisher" }], "kind": "statistics",
       "description": "Debt market issuance and outstanding by type of security.",
       "homepage": "https://www.sifma.org/resources/archive/research/statistics/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "free-with-terms", "url": "https://www.sifma.org/terms-of-use", "checked": "2026-10-14", "limits": "Reproduction needs SIFMA’s permission (request form; one-time or up to a year), subject to its terms of use." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4225,7 +4229,7 @@
       "organizations": [{ "org": "nyse", "role": "publisher" }], "kind": "statistics",
       "description": "Trading volume and listings of the New York Stock Exchange.",
       "homepage": "https://www.nyse.com",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "licensed", "note": "NYSE data is proprietary market data of Intercontinental Exchange under its market data policies, which restrict redistribution (read 2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4248,15 +4252,15 @@
       "licence": { "type": "licensed", "note": "Sold or by subscription, as far as GovGraph knows; terms not read (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "discontinued",
-      "notes": "Not found published after the early 2010s.",
+      "notes": "Library catalogues record the last edition as 2013 and the title as ended.",
       "paths": []
     },
     {
       "slug": "acli-life-insurers-fact-book", "name": "Life Insurers Fact Book",
       "organizations": [{ "org": "acli", "role": "publisher" }], "kind": "statistics",
       "description": "Life insurance in force, purchases, companies’ finances.",
-      "homepage": "https://www.acli.com/research-and-statistics",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "homepage": "https://www.acli.com/about-the-industry/life-insurers-fact-book",
+      "licence": { "type": "free-with-terms", "url": "https://www.acli.com/about-the-industry/life-insurers-fact-book", "checked": "2026-10-14", "limits": "Free to read; copyright ACLI, no reproduction without the publisher’s permission." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4265,7 +4269,7 @@
       "slug": "naic-insurance-reports", "name": "NAIC Auto Insurance Database and Homeowners Reports",
       "organizations": [{ "org": "naic", "role": "publisher" }], "kind": "statistics",
       "description": "Average auto, homeowners and renters premiums by state.",
-      "homepage": "https://content.naic.org/research/statistical-reports",
+      "homepage": "https://content.naic.org/",
       "licence": { "type": "licensed", "note": "Sold or by subscription, as far as GovGraph knows; terms not read (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
@@ -4276,7 +4280,7 @@
       "organizations": [{ "org": "national-assembly-of-state-arts-agencies", "role": "publisher" }], "kind": "statistics",
       "description": "State arts agency funding by state, yearly.",
       "homepage": "https://nasaa-arts.org/research/funding/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. A newsletter invites readers to circulate the figures." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4306,7 +4310,7 @@
       "organizations": [{ "org": "ncaa", "role": "publisher" }], "kind": "statistics",
       "description": "College athletes by sport and sex, yearly.",
       "homepage": "https://www.ncaa.org/sports/2018/10/10/ncaa-sports-sponsorship-and-participation-rates-database.aspx",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4316,7 +4320,7 @@
       "organizations": [{ "org": "nfhs", "role": "publisher" }], "kind": "statistics",
       "description": "High school athletes by sport and sex, yearly.",
       "homepage": "https://www.nfhs.org/sports-resource-content/high-school-participation-survey-archive/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4346,7 +4350,7 @@
       "organizations": [{ "org": "american-gaming-association", "role": "publisher" }], "kind": "statistics",
       "description": "Gaming revenue by industry and state.",
       "homepage": "https://www.americangaming.org/research/",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Its figures come from state regulators’ reports." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4356,7 +4360,7 @@
       "organizations": [{ "org": "clia", "role": "publisher" }], "kind": "statistics",
       "description": "Cruise passengers, spending and employment in the United States.",
       "homepage": "https://cruising.org",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4386,7 +4390,7 @@
       "organizations": [{ "org": "american-hotel-and-lodging-association", "role": "publisher" }], "kind": "statistics",
       "description": "Hotels, rooms, occupancy and revenue.",
       "homepage": "https://www.ahla.com",
-      "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
+      "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Hotel performance figures are STR’s (CoStar)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
       "paths": []
@@ -4419,7 +4423,7 @@
       "licence": { "type": "licensed", "note": "Sold or by subscription, as far as GovGraph knows; terms not read (2026-10-14)." },
       "access": { "used": [] }, "collected": false,
       "status": "active",
-      "notes": "Not confirmed still published; no website found, so the homepage is the Abstract table that cites it.",
+      "notes": "Nothing about this publication found on the web (2026-10-14); FIBER supplied international leading indexes to the Conference Board from 1999. No website, so the homepage is the Abstract table that cites it.",
       "paths": []
     },
     {

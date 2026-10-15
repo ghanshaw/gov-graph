@@ -110,8 +110,54 @@ function namesOfPrograms() {
   return programNames;
 }
 
+// What a table names as loaded (coverage `series`): a series slug, a measure (its national series and every place) or
+// `prefix--*` (a family of published groups). One query for all, refreshed with the program names.
+let seriesIndex = null;
+function indexOfSeries() {
+  if (!seriesIndex) {
+    seriesIndex = pool.query(
+      `SELECT slug, measure, place, regexp_replace(name, ', [^,]*$', '') AS "placeName", name, frequency,
+              first_date::text AS "firstDate", last_date::text AS "lastDate"
+       FROM economic_series`)
+      .then(({ rows }) => rows)
+      .catch(e => { seriesIndex = null; throw e; });
+    setTimeout(() => { seriesIndex = null; }, 60_000);
+  }
+  return seriesIndex;
+}
+
+function describeSeries(key, rows) {
+  const span = list => ({
+    firstDate: list.map(r => r.firstDate).filter(Boolean).sort()[0] ?? null,
+    lastDate: list.map(r => r.lastDate).filter(Boolean).sort().at(-1) ?? null,
+  });
+  if (key.endsWith('--*')) {
+    const base = key.slice(0, -3);
+    const list = rows.filter(r => r.slug.startsWith(`${base}--`) && !r.place);
+    const head = rows.find(r => r.slug === base);
+    return { key, name: head?.name ?? base, groups: list.length, places: 0, frequency: head?.frequency ?? list[0]?.frequency ?? null, ...span(list), found: list.length > 0 };
+  }
+  const national = rows.find(r => r.slug === key);
+  const places = rows.filter(r => r.measure === key && r.place);
+  const list = [national, ...places].filter(Boolean);
+  // States (districts counted with theirs), then DC and Puerto Rico by name: "50 states, DC and Puerto Rico".
+  const codes = new Set(places.map(r => r.place.split('-')[0]));
+  const states = [...codes].filter(c => !['dc', 'pr'].includes(c)).length;
+  const where = [states && `${states} states`, codes.has('dc') && 'DC', codes.has('pr') && 'Puerto Rico'].filter(Boolean);
+  return {
+    key, name: national?.name ?? places[0]?.placeName ?? key, groups: 0, places: codes.size,
+    placesLabel: where.length ? where.slice(0, -1).join(', ') + (where.length > 1 ? ' and ' : '') + where.at(-1) : null,
+    national: Boolean(national), frequency: list[0]?.frequency ?? null, ...span(list), found: list.length > 0,
+  };
+}
+
 export const sourceResolvers = {
   AbstractTable: {
+    series: async t => {
+      if (!t.series.length) return [];
+      const rows = await indexOfSeries();
+      return t.series.map(key => describeSeries(key, rows));
+    },
     programs: async t => {
       const names = await namesOfPrograms();
       return t.programs.map(slug => ({ slug, name: names.get(slug)?.name ?? slug, licence: names.get(slug)?.licence ?? null,

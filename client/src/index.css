@@ -1233,6 +1233,12 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .coverage-tables td.no { width: 1%; }
 .coverage-tables td.meta { min-width: 180px; }
 .coverage-tables td.meta a:hover { color: var(--accent); }
+.coverage-tables .subsection-row th { padding: 18px 12px 8px; text-align: left; font-size: 13.5px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--rule); background: var(--bg); }
+.coverage-tables tbody:first-of-type .subsection-row th { padding-top: 12px; }
+.coverage-tables .subsection-row small { margin-left: 10px; font-size: 12px; font-weight: 400; color: var(--muted); }
+.coverage-tables .subsection-row .section-name { font-weight: 400; color: var(--muted); }
+.records tbody tr.subsection-row:hover th { background: var(--bg); }
+.records td.title .sub.loaded { color: var(--text); font-weight: 400; }
 .coverage-tables code { font-family: var(--mono); font-size: 12px; }
 .coverage-tables .in-hand { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); }
 .records td.title .sub.narrow-only { display: none; }

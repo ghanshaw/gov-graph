@@ -440,6 +440,7 @@ export const typeDefs = `#graphql
   type AbstractTable {
     id: String!            # the table number, "724"
     section: Int!
+    sectionName: String
     category: String!      # its subsection in taxonomies/statistical-abstract.json
     categoryName: String
     page: Int
@@ -451,6 +452,21 @@ export const typeDefs = `#graphql
     inHand: Boolean!       # the publisher's file is in the data folder, not yet loaded
     note: String
     programs: [AbstractTableProgram!]!
+    series: [AbstractTableSeries!]!   # what is loaded, for have and partly
+  }
+
+  # A series a table names as loaded: one series, a measure with its places, or a family of groups (key prefix--*).
+  type AbstractTableSeries {
+    key: String!
+    name: String!
+    national: Boolean
+    places: Int!           # states, DC and Puerto Rico with the measure; districts are counted with their state
+    placesLabel: String    # "50 states, DC and Puerto Rico"
+    groups: Int!           # published groups in a prefix--* family
+    frequency: String
+    firstDate: String
+    lastDate: String
+    found: Boolean!        # false: named in the coverage file but not in the database
   }
 
   type AbstractTableProgram {

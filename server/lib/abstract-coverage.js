@@ -52,6 +52,11 @@ export function checkCoverage({ sections, tables: covered }, tables, programs) {
     if (['have', 'partly'].includes(c.coverage) && !found.some(p => p.collected !== false)) problems.push(`${name}: ${c.coverage}, but no program is collected`);
     if (['partly', 'discontinued', ...NO_PROGRAM].includes(c.coverage) && !c.note) problems.push(`${name}: ${c.coverage} needs a note`);
     if (c.in_hand && !found.some(p => p.collected !== false)) problems.push(`${name}: in hand, but no program is collected`);
+    // What is loaded is named for the tables that have some of it, and only for them.
+    const held = ['have', 'partly'].includes(c.coverage);
+    if (held && !c.series?.length) problems.push(`${name}: ${c.coverage}, but no series named`);
+    if (!held && c.series) problems.push(`${name}: series named, but coverage is ${c.coverage}`);
+    for (const s of c.series ?? []) if (!/^[a-z0-9-]+(--\*)?$/.test(s)) problems.push(`${name}: series ${s} is not a slug, a measure or a prefix--*`);
   }
   return problems;
 }
@@ -68,7 +73,7 @@ let cache = null;
 
 /**
  * Every table of the Abstract with its coverage, in book order, and the sections with their subsections' names:
- * { sections: [{ number, id, name }], tables: [{ id, section, category, categoryName, page, title, online, url,
+ * { sections: [{ number, id, name }], tables: [{ id, section, sectionName, category, categoryName, page, title, online, url,
  * coverage, shape, inHand, note, programs }], byProgram: Map(slug → tables) }. Read from the files (nothing is in the
  * database) and kept until one of them changes.
  */
@@ -78,12 +83,15 @@ export function coverageReport() {
   const { tables: covered } = readCoverage();
   const taxonomy = read('taxonomies/statistical-abstract.json');
   const names = new Map(taxonomy.categories.flatMap(s => [[s.id, s.name], ...(s.children ?? []).map(c => [c.id, c.name])]));
+  const sectionNames = new Map(taxonomy.categories.map(s => [Number(s.code), s.name]));
   const tables = readAbstractTables().map(t => {
     const c = covered[t.id] ?? {};
     return {
-      id: t.id, section: t.section, category: t.category, categoryName: names.get(t.category) ?? null, page: t.page,
+      id: t.id, section: t.section, sectionName: sectionNames.get(t.section) ?? null,
+      category: t.category, categoryName: names.get(t.category) ?? null, page: t.page,
       title: t.title, online: t.online, url: t.url ?? null,
       coverage: c.coverage ?? null, shape: c.shape ?? null, inHand: Boolean(c.in_hand), note: c.note ?? null, programs: c.programs ?? [],
+      series: c.series ?? [],
     };
   }).sort((a, b) => Number(a.id) - Number(b.id));
   const byProgram = new Map();

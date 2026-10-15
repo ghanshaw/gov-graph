@@ -665,8 +665,9 @@ export const GET_ACS_TABLE = gql`
 
 // Where the data comes from (server/sources.js): every program, and one with its files and series.
 const ABSTRACT_TABLE_FIELDS = `
-  id section category categoryName page title online url coverage shape inHand note
+  id section sectionName category categoryName page title online url coverage shape inHand note
   programs { slug name licence collected }
+  series { key name national places placesLabel groups frequency firstDate lastDate found }
 `;
 
 const SOURCE_PROGRAM_FIELDS = `

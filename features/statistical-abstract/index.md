@@ -157,15 +157,41 @@ with `collected: false`, `paths: []` and `access.best`.
   it); OHSS replaced DHS's Office of Immigration Statistics in 2023. Other discontinuations (Financial Crimes Report,
   NJRP, Homicide Trends, CNPP's expenditures on children, ITA aircraft shipments, FCC telephone trends, Fed new security
   issues, FHFA MIRS) are marked "not confirmed" in their notes.
-- **Coverage report (2026-10-14):** `/sources/abstract-coverage` (`pages/AbstractCoverage.jsx`) lists every table in
-  book order under its section: subsection, shape, page, note, programs (linked) and a coverage chip, with a bar of the
+- **Coverage report (2026-10-14):** `/sources/abstract-coverage` (`pages/AbstractCoverage.jsx`) lists every table under
+  its section and subsection (a heading row per subsection, in book order; user, 2026-10-14): shape, page, note, programs (linked) and a coverage chip, with a bar of the
   coverage split, rail totals and filters for coverage, shape and section (kept in the URL) and a search. Each program's
   page has "In the Statistical Abstract" with its tables (`components/AbstractTables.jsx`); the sources list shows each
   program's table count. Served by the `abstractCoverage` query and `SourceProgram.abstractTables` /
   `abstractTableCount`, read from the files (`coverageReport` in `lib/abstract-coverage.js`, cached until a file
-  changes); nothing in the database. A program a table cites now reports `inAbstract: true`. Not checked at phone
-  width (the browser window would not resize).
-- Homepages of new programs were written from knowledge and not each opened.
+  changes); nothing in the database. A program a table cites now reports `inAbstract: true`. On a program's page the
+  heading rows read "Section › Subsection". Checked in Chrome at 606px and wide.
+- **Checks closing Phase 3 (2026-10-14):**
+  - *Homepages:* every program's homepage requested (409). 358 answered at once; 25 refused scripts and were opened in
+    Chrome; 33 were wrong or moved and are fixed (CDC, BEA, NCSES, USPTO, uscourts.gov and others). ARIS's Trinity College
+    site no longer answers (homepage is now the Abstract table). The U.S. Code download page (`us-code-release-points`,
+    an older program) returns "Page Not Found"; not changed.
+  - *Status:* the "not confirmed" discontinuations checked. FHFA's Monthly Interest Rate Survey ended May 2019, FCC's
+    Trends in Telephone Service ended 2010, the Coast Guard's pollution series ended 2001 (MISLE since): their tables
+    1193, 1145, 1147, 386 are now discontinued. The Fed's corporate New Security Issues is still published. Last editions
+    recorded for the FBI Financial Crimes Report (FY 2010–11), BJS firearm checks (2015), NJRP (2006), CNPP expenditures
+    on children (2015 data), S&P's Global Stock Markets Factbook (2013), the ALA/UMD library study (2011–12); the
+    Educational Research Service closed in 2011. Nothing found about Pforzheimer's or FIBER's publications.
+  - *Licences:* the 65 unchecked programs' terms searched. 3 are public domain after all (USGS geographic facts, OJJDP's
+    juvenile court statistics, HRSA's OPTN data); 4 open licences (OECD and World Bank CC BY 4.0, ITU DataHub CC BY-NC-SA
+    3.0 IGO); 18 free with terms (Pew, IMF, UNAIDS, NBER, ANES, unionstats, CAWP, Philadelphia Fed, Guttmacher, ACS,
+    College Board, U.S. Religion Census, RIAA, APTA, SIFMA, MLA, NEA, ACLI); 5 restricted or sold, so licensed (UN
+    Tourism, ICI, AAUP, NYSE, AF&PA; their tables now licensed). 36 stay unchecked: 25 searched with no terms found
+    (noted), 11 not searched (FWI, AAAS, Puerto Rico, DC, Michigan, ARIS, AOA, Aesthetic Society, ALA/UMD, TechAmerica,
+    NALEO).
+  - *Series named (user, 2026-10-14):* every have / partly table lists what is loaded in a `series` field (series slugs,
+    measures, or `prefix--*` for the published groups), checked by the test and resolved from the database on the page:
+    "Loaded: Resident Population (yearly, 1900–2025; nation, 50 states, DC and Puerto Rico)". Series sharing frequency,
+    years and places are named together. This showed three notes wrong: tables 35 and 191 said the ACS disability table
+    (B18101) was loaded, but it is only downloaded (now wanted, file in hand); 53's English-only series covers 43 states
+    and DC, not every state. A page per measure (`/series/<measure>`, places as a parameter) is the planned link target;
+    not built yet (user chose names first).
+  - Totals now: 1 have, 35 partly, 1,178 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled. Licences:
+    287 public domain, 4 open, 21 free with terms, 61 licensed, 36 unchecked.
 
 ### Phase 4 — the catalogue in the Abstract's order
 - Give every current series its subsection and `placement`. Done 2026-10-13: 17 of 29 measures by table, 12 by
