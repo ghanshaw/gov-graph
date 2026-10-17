@@ -60,6 +60,8 @@ export const DIMENSIONS = {
   price_index: { label: 'Index', values: { cpi: V('Consumer Price Index'), pce: V('PCE price index') } },
   scope: { label: 'Items', values: { 'all-items': V('All items'), core: V('Core (without food and energy)') } },
   homes: { label: 'Homes', values: { existing: V('Existing homes'), new: V('New homes') } },
+  region: { label: 'Region', values: { us: V('United States'), northeast: V('Northeast', 'us'), midwest: V('Midwest', 'us'), south: V('South', 'us'), west: V('West', 'us') } },
+  hpi_sales: { label: 'Prices from', values: { 'purchase-only': V('Sales only'), 'all-transactions': V('Sales and refinance appraisals') } },
   term: { label: 'Term', values: { '30-year': V('30-year'), '15-year': V('15-year') } },
   interest_rate: { label: 'Rate', values: {
     'federal-funds': V('Federal funds rate'), 'federal-funds-target': V('Fed’s target for the federal funds rate'), prime: V('Prime rate'),
@@ -149,8 +151,8 @@ export const MEASURES = {
   'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/consumer-spending': { label: 'Consumer spending', dims: [] },
   'business-enterprise/economic-indicators/consumer-sentiment': { label: 'Consumer sentiment', dims: [] },
   'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/mortgage-rate': { label: 'Mortgage rate', dims: ['term'] },
-  'construction-and-housing/housing-sales/home-prices': { label: 'Home prices', dims: ['homes'] },
-  'prices/consumer-price-indexes-cost-of-living-index/home-prices': { label: 'Home prices', dims: ['homes'] },
+  'construction-and-housing/housing-sales/home-prices': { label: 'Home prices', dims: ['homes', 'region'] },
+  'prices/consumer-price-indexes-cost-of-living-index/home-prices': { label: 'Home prices', dims: ['homes', 'hpi_sales'] },
   'construction-and-housing/homeownership-and-housing-costs/home-affordability': { label: 'Home affordability', dims: [] },
   'construction-and-housing/homeownership-and-housing-costs/homeownership': { label: 'Homeownership', dims: [] },
   'income-expenditures-poverty-and-wealth/household-income/household-income': { label: 'Household income', dims: [] },
@@ -241,8 +243,9 @@ const LABELS = {
   sentiment: { measure: 'business-enterprise/economic-indicators/consumer-sentiment', form: 'index' },
 
   'mortgage-rate': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/mortgage-rate', form: 'rate', term: '30-year' },
-  'house-prices': { measure: 'prices/consumer-price-indexes-cost-of-living-index/home-prices', form: 'index', homes: 'existing', seasonal: 'sa' },
-  'home-price': { measure: 'construction-and-housing/housing-sales/home-prices', form: 'level', homes: 'new', ...NSA },
+  'house-prices': { measure: 'prices/consumer-price-indexes-cost-of-living-index/home-prices', form: 'index', homes: 'existing', hpi_sales: 'purchase-only', seasonal: 'sa' },
+  'house-prices-all-transactions': { measure: 'prices/consumer-price-indexes-cost-of-living-index/home-prices', form: 'index', homes: 'existing', hpi_sales: 'all-transactions', ...NSA },
+  'home-price': { measure: 'construction-and-housing/housing-sales/home-prices', form: 'level', homes: 'new', region: 'us', ...NSA },
   'hoam-share': { measure: 'construction-and-housing/homeownership-and-housing-costs/home-affordability', form: 'share-of-income' },
   'hoam-index': { measure: 'construction-and-housing/homeownership-and-housing-costs/home-affordability', form: 'index' },
   homeownership: { measure: 'construction-and-housing/homeownership-and-housing-costs/homeownership', form: 'rate' },
@@ -426,6 +429,7 @@ const CBO_GROUPS = { all: 'all', lowest: 'lowest-quintile', second: 'second-quin
 
 // Labels read from a series' own fields: unemployment by group, CBO by income group.
 function readLabels(s) {
+  if (s.region) return { measure: 'construction-and-housing/housing-sales/home-prices', form: 'level', homes: 'new', region: s.region, ...NSA };
   if (s.rate) return { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: s.rate };
   if (s.breakdown) {
     const { of, ages, ...dims } = s.breakdown;
@@ -475,6 +479,7 @@ export function dimensionProblems(series) {
   const slugs = new Set(series.map(s => s.slug));
   for (const slug of Object.keys(LABELS)) if (!slugs.has(slug)) problems.push(`${slug}: labelled but not a series`);
   for (const s of series) {
+    if (s.place) continue; // a place's series is labelled as its national series (s.measure)
     const dims = seriesDimensions(s);
     if (!dims) { problems.push(`${s.slug}: not labelled`); continue; }
     const measure = MEASURES[dims.measure];
@@ -497,6 +502,7 @@ export function dimensionProblems(series) {
 export function sameDimensions(series) {
   const groups = new Map();
   for (const s of series) {
+    if (s.place) continue;
     const dims = seriesDimensions(s);
     if (!dims) continue;
     const key = JSON.stringify(Object.entries(dims).sort());

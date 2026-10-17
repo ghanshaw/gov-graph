@@ -70,6 +70,7 @@
 
 import path from 'path';
 import { DATA_DIR, mirrorFile } from './data-dir.js';
+import { STATES } from './population/places.js';
 import { nipaSeries, nameNipaSeries } from './nipa-series.js';
 import { cpiSeries } from './cpi-series.js';
 import { cpsSeries } from './cps-series.js';
@@ -564,12 +565,30 @@ const HAND_SERIES = [
     name: 'Home Price Index', category: 'housing', unit: 'index',
     description: 'FHFA House Price Index, United States, purchase-only, seasonally adjusted, January 1991 = 100: repeat sales of the same houses with mortgages bought or guaranteed by Fannie Mae and Freddie Mac',
   },
+  // FHFA's all-transactions index (purchases and refinance appraisals), quarterly from 1975, for the U.S. and each state
+  // (Statistical Abstract Table 729; Phase 5). The states are kept by place, like the demographic series.
+  ...[null, ...STATES.filter(st => st.abbr !== 'pr')].map(st => ({
+    slug: st ? `house-prices-all-transactions--${st.abbr.toLowerCase()}` : 'house-prices-all-transactions',
+    source: 'fhfa', source_id: `traditional all-transactions quarterly ${st ? st.abbr.toUpperCase() : 'USA'} NSA`, frequency: 'quarterly', url: FHFA_HPI,
+    fhfa: { flavor: 'all-transactions', frequency: 'quarterly', place: st ? st.abbr.toUpperCase() : 'USA', field: 'index_nsa' },
+    measure: 'house-prices-all-transactions', ...(st ? { place: st.abbr.toLowerCase() } : {}),
+    name: `Home Price Index Including Refinances${st ? `, ${st.name}` : ''}`, category: 'housing', unit: 'index',
+    description: `FHFA House Price Index, all transactions (repeat sales and refinance appraisals of the same houses with mortgages bought or guaranteed by Fannie Mae and Freddie Mac), ${st ? st.name : 'United States'}, quarterly, not seasonally adjusted, 1980 Q1 = 100`,
+  })),
   {
     slug: 'home-price', source: 'census-nrs', source_id: 'Median sales price', frequency: 'monthly',
     url: 'https://www.census.gov/construction/nrs/xls/price_cust.xlsx', sheet: 'Monthly',
     name: 'Median Price of a New Home', category: 'housing', unit: '$',
     description: 'Median sales price of new single-family houses sold, United States, not seasonally adjusted. Census Bureau and HUD, New Residential Sales',
   },
+  // Census's median new-home price by region, quarterly from 1963 (Table Q6, pricereg_cust.xlsx; Statistical Abstract
+  // Table 975, Phase 5). A column of the quarterly sheet: 2 Northeast, 3 Midwest, 4 South, 5 West.
+  ...[['northeast', 'Northeast', 2], ['midwest', 'Midwest', 3], ['south', 'South', 4], ['west', 'West', 5]].map(([key, region, column]) => ({
+    slug: `home-price--${key}`, source: 'census-nrs', source_id: `Median Sales Price, ${region}`, frequency: 'quarterly',
+    url: 'https://www.census.gov/construction/nrs/xls/pricereg_cust.xlsx', sheet: 'Q6-Price Qtr', column, region: key,
+    name: `Median Price of a New Home in the ${region}`, category: 'housing', unit: '$',
+    description: `Median sales price of new single-family houses sold in the ${region} census region, by quarter, not seasonally adjusted. Census Bureau and HUD, New Residential Sales, Table Q6`,
+  })),
   {
     slug: 'hoam-share', source: 'atlantafed', source_id: 'Annual Payment Share of Income', frequency: 'monthly', url: ATLANTA_FED_HOAM, percent: true,
     name: 'Cost of Owning a Home as a Share of Income', category: 'housing', unit: '%',
@@ -878,17 +897,20 @@ function readFreddie(s, text) {
 
 /** FHFA's master CSV: the U.S. purchase-only monthly index, seasonally adjusted. */
 function readFhfa(s, text) {
+  // One index of the master file: purchase-only monthly for the U.S. unless the series says otherwise (`fhfa`).
+  const { flavor = 'purchase-only', frequency = 'monthly', place = 'USA', field = 'index_sa' } = s.fhfa ?? {};
   const [head, ...lines] = text.trim().split(/\r?\n/);
   const cols = head.split(',');
   const at = name => cols.indexOf(name);
   const observations = [];
   for (const line of lines) {
-    const c = line.split(',');
-    if (c[at('hpi_type')] !== 'traditional' || c[at('hpi_flavor')] !== 'purchase-only'
-      || c[at('frequency')] !== 'monthly' || c[at('place_id')] !== 'USA') continue;
-    const value = c[at('index_sa')];
+    if (!line.startsWith(`traditional,${flavor},${frequency},`)) continue;
+    const c = csvFields(line);
+    if (c[at('place_id')] !== place) continue;
+    const value = c[at(field)];
     if (!Number.isFinite(Number(value)) || value === '') continue;
-    observations.push([`${c[at('yr')]}-${String(c[at('period')]).padStart(2, '0')}-01`, value]);
+    const month = frequency === 'quarterly' ? QUARTER_START[c[at('period')]] : String(c[at('period')]).padStart(2, '0');
+    observations.push([`${c[at('yr')]}-${month}-01`, value]);
   }
   observations.sort((a, b) => a[0].localeCompare(b[0]));
   return { description: s.description, observations, skipped: 0 };
@@ -986,6 +1008,7 @@ export function fomcChanges(pages) {
 /** The Census API's rows (a header row, then values): new-home sales, median price, not adjusted. */
 /** Census's new-home price history (price_cust.xlsx, sheet Monthly): an Excel day number, then median and average. */
 function readNrsPrice(s, rows) {
+  if (s.region) return readNrsRegion(s, rows);
   const head = rows.findIndex(r => r.includes(s.source_id));
   const col = rows[head]?.indexOf(s.source_id);
   if (head < 0) throw new Error(`${s.slug}: no column "${s.source_id}"`);
@@ -998,6 +1021,19 @@ function readNrsPrice(s, rows) {
     const date = new Date(Date.UTC(1899, 11, 30) + day * 864e5).toISOString().slice(0, 10);
     if (!date.endsWith('-01')) throw new Error(`${s.slug}: ${r[0]} is not the first of a month`);
     observations.push([date, r[col]]);
+  }
+  return sorted(s, observations, skipped);
+}
+
+/** Census Table Q6, quarterly sheet: "2026Q2" and a column per region; "(NA)" and "(S)" are skipped. */
+function readNrsRegion(s, rows) {
+  const observations = [];
+  let skipped = 0;
+  for (const r of rows) {
+    const m = /^(\d{4})Q([1-4])$/.exec(r[0] ?? '');
+    if (!m) continue;
+    if (!/^\d+(\.\d+)?$/.test(r[s.column] ?? '')) { skipped++; continue; }
+    observations.push([`${m[1]}-${QUARTER_START[m[2]]}-01`, r[s.column]]);
   }
   return sorted(s, observations, skipped);
 }
@@ -1306,7 +1342,7 @@ export function publisherTitle(s, files) {
     }
     case 'census-nrs': {
       const rows = files.rows(seriesFile(s), s.sheet);
-      return rows?.[0]?.[0] ? { title: `${rows[0][0]}: ${s.source_id}`, from: 'Census price_cust.xlsx, Monthly sheet: title and column heading' } : null;
+      return rows?.[0]?.[0] ? { title: `${rows[0][0].replace(/\s+/g, ' ')}: ${s.source_id}`, from: `Census ${path.basename(s.url)}, ${s.sheet} sheet: title and column heading` } : null;
     }
     case 'bls-bulk':
       return blsTitle(s.source_id, files);

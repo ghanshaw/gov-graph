@@ -291,6 +291,13 @@ Eurodollar; 3- and 6-month CDs and the 3-month bill auction, history only; 3- an
 20-year Treasuries; Moody's Aaa and Baa as H.15 printed them to 2016; and Freddie Mac's 15-year mortgage rate). Not
 collected: money market fund yields, bank CD rates and municipal yields (sold), new-home mortgage yields (ended).
 
+**Home prices (2026-10-17): 2 tables `have`.** Table 729: FHFA's all-transactions index (the one the table prints),
+quarterly from 1975, for the U.S. and every state and DC, the states kept by place (`measure` + `place`, as the
+demographic series are) so the timeline's national list does not grow; home prices gain `hpi_sales` (sales only, or with
+refinance appraisals). Table 975: Census's median new-home price for each region, quarterly from 1963
+(`pricereg_cust.xlsx`, newly downloaded); home prices gain `region`. Place series are left out of the dimension checks:
+they are labelled as their national series.
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -335,5 +342,6 @@ collected: money market fund yields, bank CD rates and municipal yields (sold), 
 - [x] Phase 5, CPS: the 20 tables in the `ln` file (2026-10-17)
 - [x] Phase 5, EIA petroleum: tables 731, 911, 916, 937 from PET.zip (2026-10-17)
 - [x] Phase 5, interest rates: tables 1197, 1198 from H.15 and Freddie Mac (2026-10-17)
-- [ ] Phase 5: FHFA, NRS, OMB, trade, population/ACS
+- [x] Phase 5, home prices: tables 729 (FHFA by state) and 975 (new homes by region) (2026-10-17)
+- [ ] Phase 5: OMB, trade, population/ACS
 - [ ] Phase 5: collect, section by section
