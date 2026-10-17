@@ -298,6 +298,12 @@ refinance appraisals). Table 975: Census's median new-home price for each region
 (`pricereg_cust.xlsx`, newly downloaded); home prices gain `region`. Place series are left out of the dimension checks:
 they are labelled as their national series.
 
+**OMB (2026-10-17): 2 tables `have`.** Table 469: Table 1.3's constant fiscal-2017-dollar receipts, outlays and
+balance (newly downloaded). Table 475: every line of Table 2.4 but its two totals (Table 2.1 prints them), and Table
+2.1's on- and off-budget columns, 37 series; federal revenue gains `budget_fund` and a revenue source for each excise
+tax. Table 1300 stays `partly`: Census's FT-900 history has services in total only; services by type are BEA's
+international accounts (not in hand).
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -343,5 +349,6 @@ they are labelled as their national series.
 - [x] Phase 5, EIA petroleum: tables 731, 911, 916, 937 from PET.zip (2026-10-17)
 - [x] Phase 5, interest rates: tables 1197, 1198 from H.15 and Freddie Mac (2026-10-17)
 - [x] Phase 5, home prices: tables 729 (FHFA by state) and 975 (new homes by region) (2026-10-17)
-- [ ] Phase 5: OMB, trade, population/ACS
+- [x] Phase 5, OMB: tables 469 and 475 (2026-10-17); 1300's services by type are BEA's (not in hand)
+- [ ] Phase 5: population/ACS tables in hand
 - [ ] Phase 5: collect, section by section
