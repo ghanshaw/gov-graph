@@ -155,8 +155,10 @@ async function run() {
   const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
   const client = await pool.connect();
   try {
-    await client.query('BEGIN');
+    // The schema first, on its own: ALTER TABLE locks the table against every reader until its transaction ends,
+    // so inside the load's transaction it would hold the site's economic pages for the whole load.
     await client.query(SCHEMA);
+    await client.query('BEGIN');
     for (const { s, observations, title } of parsed) await storeSeries(client, s, observations, title);
     await client.query('COMMIT');
     console.log('Done.');
