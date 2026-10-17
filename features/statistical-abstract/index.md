@@ -315,7 +315,9 @@ old definition with its own years), not joined; household income gains `race` an
 - **Snapshot tables.** Many tables are one year broken down by something ("Arrests by Sex and Age: 2009"). Their
   publishers usually print a new one each year. Show them as series of yearly snapshots by place or group, or as
   tables of their own?
-- **Order of sections** for Phase 5.
+- **Order of sections** for Phase 5c.
+- **Download first, then load** (user, 2026-10-17): every file before any more loading. Estimated 15–40 GB compressed
+  against 62 GB free; the inventory (5a) measures it first.
 - **Documents in the Abstract.** Elections and Courts tables count things GovGraph holds as documents (bills
   vetoed, measures enacted, Supreme Court cases). Collect the publishers' counts and link them to the documents?
 - **Storage.** Unknown until Phase 3; the database is about 2.1 GB.
@@ -356,4 +358,6 @@ old definition with its own years), not joined; household income gains `race` an
 - [x] Phase 5, OMB: tables 469 and 475 (2026-10-17); 1300's services by type are BEA's (not in hand)
 - [x] Phase 5, household income by race: table 691 from Census Table H-5 (2026-10-17)
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
+- [ ] Phase 5a: inventory the 279 programs still to collect: URLs and sizes, access for the 56 without one (next; user, 2026-10-17)
+- [ ] Phase 5b: download everything (throttled, logged); 5c: load section by section from disk
 - [ ] Phase 5: collect, section by section

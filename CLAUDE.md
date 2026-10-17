@@ -704,7 +704,10 @@ parameter, which "Loaded:" names would link to.
 | 2. Skeleton | Section pages, table files, section PDFs; every table's page, subsection, title, source note | Done |
 | 3. Source notes → programs | Every table's programs, coverage (have / partly / wanted / licensed / discontinued / unpublished / compiled) and shape in `server/seed/data/statistical-abstract-coverage.json` (checked by `server/lib/abstract-coverage.js`); 409 programs in `sources.json`. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | Done (2026-10-14): all 30 sections, reviewed; report at `/sources/abstract-coverage` |
 | 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done (2026-10-14), with wanted tables shown as "Not here yet" under each subsection in the catalogue's Build tab |
-| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load; first the 81 tables whose files are in hand | **Under way**: 20 NIPA tables (2026-10-15); 5 CPI, 20 CPS, 4 EIA, 2 H.15, 2 home-price, 2 OMB tables and 691 (2026-10-17) |
+| 5. Collect | Load the publisher's current data, label, name, place; first the 81 tables whose files were in hand | **Under way**: 20 NIPA tables (2026-10-15); 5 CPI, 20 CPS, 4 EIA, 2 H.15, 2 home-price, 2 OMB tables and 691 (2026-10-17). 45 have, 29 partly, 1,140 wanted |
+| 5a. Inventory | For each of the 279 programs still to collect (cited by wanted or partly tables, not licensed): the exact URLs and sizes (HEAD requests), in `sources.json`; settle the 56 with no access method | **Next** |
+| 5b. Download | Everything in one throttled run (2 requests at a time, backing off on 429), each file through `recordFetch`; compressed, at the frequency the tables use | After 5a |
+| 5c. Load | Section by section from disk | After 5b |
 
 **Phase 5, national accounts (2026-10-15).** Whole publisher tables, yearly and quarterly where both are printed
 (user). `server/lib/nipa-series.js` lists 15 measures, each drawing every line of some NIPA tables (31 tables, 2,439
@@ -722,6 +725,17 @@ The CPS (2026-10-17): only the rows each Abstract table prints (user), hand-kept
 `server/seed/data/cps-tables.json`; `server/seed/build-cps-series.js` finds their `ln` series (`cps-series.json`,
 `--misses` lists rows with none) and `server/lib/cps-series.js` labels and names them (1,652 new series, `cps--<id>`);
 coverage names them as `cps:586`.
+
+**Download first, then load (user, 2026-10-17).** Until now each batch was fetched and loaded together; from here every
+file is downloaded first (5a, 5b), then loaded section by section (5c), because loading is the slow, judgement-heavy part.
+The disk had 62 GB free (2026-10-17). Measured: QCEW annual about 83 MB a year (~3 GB for 1990–2024; the quarterly
+files, ~11 GB, are not needed), County Business Patterns about 14 MB a year by county and 17 MB by ZIP code. The whole
+download is expected at 15–40 GB compressed; 5a measures it before anything large is fetched. The data folder can move
+to another drive through `GOVGRAPH_DATA_DIR`.
+
+**Scope per publisher (user):** BEA, the publisher's whole table (2026-10-15); the CPS, only the rows each table prints,
+since its file is a cube (2026-10-17; `cps-tables.json`); otherwise the rows each table prints, at the finest frequency
+published. Loads run the series schema before their transaction (an ALTER inside it locked the site's economic pages).
 
 Other work in hand (user, 2026-10-13): move the remaining API-key fetches to bulk files (economic data done; Congress.gov,
 including the app's live call in `resolvers.js`, then govinfo, then CourtListener; `features/data-sources`); drop the
