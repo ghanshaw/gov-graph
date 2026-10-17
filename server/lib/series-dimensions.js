@@ -60,10 +60,15 @@ export const DIMENSIONS = {
   price_index: { label: 'Index', values: { cpi: V('Consumer Price Index'), pce: V('PCE price index') } },
   scope: { label: 'Items', values: { 'all-items': V('All items'), core: V('Core (without food and energy)') } },
   homes: { label: 'Homes', values: { existing: V('Existing homes'), new: V('New homes') } },
-  term: { label: 'Term', values: { '30-year': V('30-year') } },
+  term: { label: 'Term', values: { '30-year': V('30-year'), '15-year': V('15-year') } },
   interest_rate: { label: 'Rate', values: {
     'federal-funds': V('Federal funds rate'), 'federal-funds-target': V('Fed’s target for the federal funds rate'), prime: V('Prime rate'),
     'treasury-2y': V('2-year Treasury'), 'treasury-10y': V('10-year Treasury'),
+    'discount-primary': V('Discount rate (primary credit)'), 'discount-old': V('Discount rate (until 2003)'), 'eurodollar-3m': V('3-month Eurodollar'),
+    'cd-3m': V('3-month certificate of deposit'), 'cd-6m': V('6-month certificate of deposit'), 'treasury-bill-3m': V('3-month Treasury bill'),
+    'treasury-bill-6m': V('6-month Treasury bill'), 'treasury-bill-auction-3m': V('3-month Treasury bill auction'), 'treasury-1y': V('1-year Treasury'),
+    'treasury-3y': V('3-year Treasury'), 'treasury-5y': V('5-year Treasury'), 'treasury-7y': V('7-year Treasury'), 'treasury-20y': V('20-year Treasury'),
+    'corporate-aaa': V('Aaa corporate bonds'), 'corporate-baa': V('Baa corporate bonds'),
   } },
   bound: { label: 'End of range', values: { lower: V('Lower end'), upper: V('Upper end') } },
   cause: { label: 'Cause of death', values: { 'covid-19': V('COVID-19'), 'all-causes': V('All causes') } },
@@ -250,6 +255,7 @@ const LABELS = {
   'treasury-10y': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'treasury-10y' },
   'treasury-2y': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'treasury-2y' },
   'prime-rate': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: 'prime' },
+  'mortgage-rate-15y': { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/mortgage-rate', form: 'rate', term: '15-year' },
 
   'covid-deaths': { measure: 'births-deaths-marriages-and-divorces/deaths/deaths', form: 'level', cause: 'covid-19' },
   'deaths-vs-expected': { measure: 'births-deaths-marriages-and-divorces/deaths/deaths', form: 'share-of-expected', cause: 'all-causes' },
@@ -420,6 +426,7 @@ const CBO_GROUPS = { all: 'all', lowest: 'lowest-quintile', second: 'second-quin
 
 // Labels read from a series' own fields: unemployment by group, CBO by income group.
 function readLabels(s) {
+  if (s.rate) return { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: s.rate };
   if (s.breakdown) {
     const { of, ages, ...dims } = s.breakdown;
     return { measure: 'labor-force-employment-and-earnings/unemployed-persons/unemployment', form: of === 'unemployment-rate' ? 'rate' : 'level', definition: 'u3', seasonal: 'sa', ...dims };

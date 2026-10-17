@@ -625,6 +625,33 @@ const HAND_SERIES = [
     name: 'Prime Rate', category: 'rates', unit: '%',
     description: 'Bank prime loan rate: the rate posted by a majority of the top 25 banks, business days. Federal Reserve Board, H.15 Selected Interest Rates',
   },
+  // The rest of H.15's rates that the Statistical Abstract prints (Tables 1197 and 1198; Phase 5), business days.
+  // Rates H.15 stopped publishing keep their history (H0 series: certificates of deposit, the old discount rate).
+  ...[
+    ['discount-rate', 'RIFSRP_F02_N.B', 'Discount Rate (Primary Credit)', 'discount-primary', 'The rate the Federal Reserve charges banks for primary credit, its main discount window loan, since January 2003, business days'],
+    ['discount-rate-old', 'H0.RIFSRD_F02_N.B', 'Discount Rate (Until 2003)', 'discount-old', 'The Federal Reserve Bank of New York\'s discount rate on loans to member banks until January 2003, when primary credit replaced it, business days'],
+    ['eurodollar-3m', 'RILSPDEPM03_N.B', '3-Month Eurodollar Deposit Rate', 'eurodollar-3m', 'The rate on 3-month dollar deposits held in banks outside the United States, business days (discontinued)'],
+    ['cd-3m', 'H0.RIFSPDCNSM03_N.B', '3-Month Certificate of Deposit Rate', 'cd-3m', 'The average rate on 3-month negotiable certificates of deposit in the secondary market, business days, until H.15 stopped publishing it'],
+    ['cd-6m', 'H0.RIFSPDCNSM06_N.B', '6-Month Certificate of Deposit Rate', 'cd-6m', 'The average rate on 6-month negotiable certificates of deposit in the secondary market, business days, until H.15 stopped publishing it'],
+    ['treasury-bill-3m', 'RIFSGFSM03_N.B', '3-Month Treasury Bill Rate', 'treasury-bill-3m', 'The 3-month Treasury bill rate in the secondary market, on a discount basis, business days'],
+    ['treasury-bill-6m', 'RIFSGFSM06_N.B', '6-Month Treasury Bill Rate', 'treasury-bill-6m', 'The 6-month Treasury bill rate in the secondary market, on a discount basis, business days'],
+    ['treasury-bill-auction-3m', 'H1.RIFSGFPAM03_N.B', '3-Month Treasury Bill Auction Rate', 'treasury-bill-auction-3m', 'The highest accepted rate at each 3-month Treasury bill auction, on a discount basis'],
+    ['treasury-1y', 'RIFLGFCY01_N.B', '1-Year Treasury Yield', 'treasury-1y', 'Market yield on U.S. Treasury securities at 1-year constant maturity, business days'],
+    ['treasury-3y', 'RIFLGFCY03_N.B', '3-Year Treasury Yield', 'treasury-3y', 'Market yield on U.S. Treasury securities at 3-year constant maturity, business days'],
+    ['treasury-5y', 'RIFLGFCY05_N.B', '5-Year Treasury Yield', 'treasury-5y', 'Market yield on U.S. Treasury securities at 5-year constant maturity, business days'],
+    ['treasury-7y', 'RIFLGFCY07_N.B', '7-Year Treasury Yield', 'treasury-7y', 'Market yield on U.S. Treasury securities at 7-year constant maturity, business days'],
+    ['treasury-20y', 'RIFLGFCY20_N.B', '20-Year Treasury Yield', 'treasury-20y', 'Market yield on U.S. Treasury securities at 20-year constant maturity, business days'],
+    ['corporate-aaa', 'RIMLPAAAR_N.B', 'Corporate Bond Yield, Aaa', 'corporate-aaa', 'Moody\'s yield on seasoned Aaa corporate bonds, all industries, as H.15 published it, business days'],
+    ['corporate-baa', 'RIMLPBAAR_N.B', 'Corporate Bond Yield, Baa', 'corporate-baa', 'Moody\'s yield on seasoned Baa corporate bonds, all industries, as H.15 published it, business days'],
+  ].map(([slug, id, name, rate, description]) => ({
+    slug, source: 'fed-h15', source_id: id, frequency: 'daily', name, category: 'rates', unit: '%', rate,
+    description: `${description}. Federal Reserve Board, H.15 Selected Interest Rates`,
+  })),
+  {
+    slug: 'mortgage-rate-15y', source: 'freddiemac', source_id: 'pmms15', frequency: 'weekly', url: FREDDIE_PMMS,
+    name: '15-Year Mortgage Rate', category: 'housing', unit: '%',
+    description: '15-year fixed-rate mortgage, average rate offered to borrowers with good credit and a 20 percent down payment, weekly. Freddie Mac Primary Mortgage Market Survey',
+  },
   {
     slug: 'covid-deaths', source: 'cdc', source_id: 'COVID-19 Deaths', frequency: 'weekly', url: CDC_COVID_DEATHS,
     name: 'COVID-19 Deaths', category: 'health', unit: 'deaths',

@@ -285,6 +285,12 @@ and disposition (`oil_product`, `oil_flow`, monthly in thousand barrels a day, s
 day; gas processed and the liquids' value are in EIA's natural gas data). Coverage names them as `eia:731`. The client
 formats the new units (`kbbl`, `weeks`, `hours`).
 
+**Interest rates (2026-10-17): 2 tables, both `partly`.** Sixteen series written by hand in `economic-series.js`
+(H.15: the discount rate, both the primary credit rate since 2003 and the old rate to 2003, not joined; 3-month
+Eurodollar; 3- and 6-month CDs and the 3-month bill auction, history only; 3- and 6-month bills; 1-, 3-, 5-, 7- and
+20-year Treasuries; Moody's Aaa and Baa as H.15 printed them to 2016; and Freddie Mac's 15-year mortgage rate). Not
+collected: money market fund yields, bank CD rates and municipal yields (sold), new-home mortgage yields (ended).
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -328,5 +334,6 @@ formats the new units (`kbbl`, `weeks`, `hours`).
 - [x] Phase 5, CPI: tables 142, 724–727 from the `cu` file (2026-10-17)
 - [x] Phase 5, CPS: the 20 tables in the `ln` file (2026-10-17)
 - [x] Phase 5, EIA petroleum: tables 731, 911, 916, 937 from PET.zip (2026-10-17)
-- [ ] Phase 5: H.15, FHFA, NRS, OMB, trade, population/ACS
+- [x] Phase 5, interest rates: tables 1197, 1198 from H.15 and Freddie Mac (2026-10-17)
+- [ ] Phase 5: FHFA, NRS, OMB, trade, population/ACS
 - [ ] Phase 5: collect, section by section
