@@ -144,7 +144,7 @@ function describeSeries(key, rows) {
     const base = key.slice(0, -3);
     const list = rows.filter(r => r.slug.startsWith(`${base}--`) && !r.place);
     const head = rows.find(r => r.slug === base);
-    return { key, name: head?.name ?? base, groups: list.length, places: 0, frequency: head?.frequency ?? list[0]?.frequency ?? null, ...span(list), found: list.length > 0 };
+    return { key, name: head?.name ?? base, groups: 0, count: list.length, places: 0, frequency: head?.frequency ?? list[0]?.frequency ?? null, ...span(list), found: list.length > 0 };
   }
   const national = rows.find(r => r.slug === key);
   const places = rows.filter(r => r.measure === key && r.place);

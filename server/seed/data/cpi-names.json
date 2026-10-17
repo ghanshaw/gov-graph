@@ -1,0 +1,18 @@
+{
+ "about": "Hand-written names for CPI items and areas (lib/cpi-series.js), by BLS code: the words after \"Consumer Price Index for\". Written where BLS's item or area name, in Title Case, reads badly or makes a name too long.",
+ "items": {
+  "SA0L12E4": "All Items Less Food, Shelter, Energy, Used Cars",
+  "SACL1E4": "Goods Less Food, Energy, Used Cars",
+  "SEAA02": "Men’s Underwear and Swimwear",
+  "SEAC04": "Women’s Underwear and Swimwear",
+  "SEEB04": "Technical and Vocational School Fees",
+  "SEEE03": "Internet Services",
+  "SEEE04": "Phones and Other Information Items",
+  "SEFM03": "Other Processed Fruits and Vegetables",
+  "SEHB02": "Hotels and Motels",
+  "SERA02": "Cable, Satellite, and Streaming TV",
+  "SERF01": "Club Memberships and Sports Fees",
+  "SS0206B": "Frozen Bakery Products and Pies"
+ },
+ "areas": {}
+}

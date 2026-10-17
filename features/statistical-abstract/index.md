@@ -3,7 +3,7 @@
 ## Status
 2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 is done**
 (2026-10-14): every table has its programs, coverage, shape and, where held, its series; the report is at
-`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Phase 5** (collect) is under way: the national accounts' 20 tables are loaded (2026-10-15); next the other tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
+`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Phase 5** (collect) is under way: the national accounts' 20 tables (2026-10-15) and the CPI's 5 (2026-10-17) are loaded; next the other tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -250,6 +250,16 @@ names them as `nipa:T20100` (every series loaded from that table's lines). Place
 judgement (full-time equivalent employees); 3 existed (GDP, consumer spending, PCE prices) and gain a breakdown.
 Load: `load-economic-series.js --source bea`.
 
+**The CPI (2026-10-17): 5 tables done.** `server/lib/cpi-series.js`, from `server/seed/data/cpi-series.json`
+(`server/seed/build-cpi-series.js`, from BLS's `cu` files; hand names in `cpi-names.json`): every CPI-U item for the
+U.S. city average, monthly, seasonally adjusted and not (722, slugs `cpi--<item>[-sa]`), all items for each of BLS's
+57 areas (`cpi--area-<code>`) and the purchasing power of the dollar (1982–84 and 1967), 781 series. Semiannual
+averages are left out (BLS prints the monthly indexes they average). Consumer prices gains `cpi_item` (BLS's list,
+with its levels; special aggregates stand alone) and `cpi_area`; the purchasing power of the dollar is a new measure
+(form "Value of a dollar"), placed by Table 724. Tables 142, 724, 725 and 727 are `have`; 726 is `partly`: it prints
+yearly percent changes, which BLS publishes in `cu.aspect` (not loaded). Coverage's `prefix--*` families now report
+their count of series.
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -290,5 +300,6 @@ Load: `load-economic-series.js --source bea`.
 - [x] Subsections are the website's groups, not the contents' topics (user, 2026-10-13)
 - [x] Phase 4 rest: wanted tables shown as not here yet in the catalogue's Build tab (2026-10-14)
 - [x] Phase 5, national accounts: the 20 NIPA tables in hand (2026-10-15)
-- [ ] Phase 5: `cu` (CPI: 142, 724–727), `ln` (CPS: 586–628, 1275), PET.zip, H.15, FHFA, NRS, OMB, trade, population/ACS
+- [x] Phase 5, CPI: tables 142, 724–727 from the `cu` file (2026-10-17)
+- [ ] Phase 5: `ln` (CPS: 586–628, 1275), PET.zip, H.15, FHFA, NRS, OMB, trade, population/ACS
 - [ ] Phase 5: collect, section by section
