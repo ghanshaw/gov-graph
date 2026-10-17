@@ -674,8 +674,8 @@ database) gives every table `programs` (slugs in `sources.json`), `coverage`, `s
 
 - `coverage`: `have` (every series it prints is loaded), `partly`, `wanted`, `licensed` (only for licensed programs),
   `discontinued` (the note names the successor), `unpublished` and `compiled` (no programs; the Abstract built it from
-  unpublished data or from sources named in footnotes). Totals (2026-10-17, after the national accounts, CPI, CPS and EIA tables): 40 have, 35
-  partly, 1,139 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled.
+  unpublished data or from sources named in footnotes). Totals (2026-10-17, after the national accounts, CPI, CPS and EIA tables): 40 have, 34
+  partly, 1,140 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled.
 - `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (32; 81 before Phase 5).
 - `series` (required for have / partly, only for them): what is loaded, as series slugs, measures (a measure covers its
   national series and every place), `nipa:T20100` (a NIPA table's lines) or `prefix--*` (a family of published groups, e.g. `unemployment-rate--*`). The page
