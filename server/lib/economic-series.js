@@ -660,6 +660,24 @@ const HAND_SERIES = [
     name: 'Median Household Income Adjusted for Inflation', category: 'housing', unit: '$',
     description: 'Median household income, all households, in 2025 dollars (adjusted with the Census Bureau\'s chained CPI-U). Current Population Survey Annual Social and Economic Supplement, Table H-5',
   },
+  // Median household income by race and Hispanic origin (Table H-5's other blocks; Statistical Abstract Table 691,
+  // Phase 5). Census asks for one race or more since 2002, so each race is two series, not joined: "alone" from 2002,
+  // and the old definition through 2001. [key, block, who, race, definition, years of the old definition]
+  ...[
+    ['white', 'White Alone (31)', 'White', 'white', 'alone'], ['white-old', 'White (32)', 'White', 'white', 'pre-2002'],
+    ['white-non-hispanic', 'White Alone, Not Hispanic (31)', 'Non-Hispanic White', 'white-non-hispanic', 'alone'],
+    ['white-non-hispanic-old', 'White, Not Hispanic (32)', 'Non-Hispanic White', 'white-non-hispanic', 'pre-2002', '1972–2001'],
+    ['black', 'Black Alone (33)', 'Black', 'black', 'alone'], ['black-old', 'Black (32)', 'Black', 'black', 'pre-2002'],
+    ['asian', 'Asian Alone (34)', 'Asian', 'asian', 'alone'], ['asian-pacific-islander', 'Asian and Pacific Islander (32)', 'Asian and Pacific Islander', 'asian-pacific-islander', 'pre-2002', '1987–2001'],
+    ['hispanic', 'Hispanic (any race) (4)', 'Hispanic', 'hispanic', null],
+  ].flatMap(([key, block, who, race, definition, years = '1967–2001']) => [[2, 'current dollars', '', ''], [3, '2025 dollars', '-real', 'Inflation-Adjusted ']].map(([column, dollars, suffix, adjusted]) => ({
+    slug: `household-income--${key}${suffix}`, source: 'census', source_id: `CPS ASEC Table H-5, ${block}, ${dollars}`, frequency: 'annual', url: CENSUS_INCOME,
+    column, block, race, definition,
+    name: `${adjusted}Median Income of ${who} Households${definition === 'alone' ? ' (Since 2002)' : definition === 'pre-2002' ? ` (${years})` : ''}`
+      .replace(/^Inflation-Adjusted (.{63,})$/, 'Real $1'), // "Real" where the name would pass 80 characters
+    category: 'housing', unit: '$',
+    description: `Median household income of ${who === 'Hispanic' ? 'Hispanic (any race)' : who} householders${definition === 'alone' ? ' reporting that race alone (2002 on)' : definition === 'pre-2002' ? ', race as asked before 2002' : ''}, ${dollars === 'current dollars' ? 'current dollars' : 'in 2025 dollars (adjusted with the Census Bureau\'s chained CPI-U)'}. Census Bureau, Current Population Survey Annual Social and Economic Supplement, Table H-5`,
+  }))),
   {
     slug: 'fed-funds', source: 'fed-h15', source_id: 'RIFSPFF_N.D', frequency: 'daily',
     name: 'Federal Funds Rate', category: 'rates', unit: '%',
@@ -887,8 +905,9 @@ function readUmich(s, text) {
  * twice (2013, 2017: survey changes) is taken from its first row, the method later years use.
  */
 function readCensusIncome(s, rows) {
-  const start = rows.findIndex(r => r[0] === 'All Races');
-  if (start < 0) throw new Error(`${s.slug}: no "All Races" block`);
+  const block = s.block ?? 'All Races';
+  const start = rows.findIndex(r => r[0] === block);
+  if (start < 0) throw new Error(`${s.slug}: no "${block}" block`);
   const byYear = new Map();
   for (const row of rows.slice(start + 1)) {
     const year = /^(\d{4})\b/.exec(row[0] ?? '')?.[1];
@@ -1422,7 +1441,7 @@ export function publisherTitle(s, files) {
       if (!rows) return null;
       if (s.slug.startsWith('household-income')) {
         const units = rows.find(r => /Current/.test(r[2] ?? ''))?.[s.column]?.replace(/\s+/g, ' ');
-        return { title: `${rows[1][0]}: All Races, Median income, ${units}`, from: 'Census Table H-5, title and column headings' };
+        return { title: `${rows[1][0]}: ${s.block ?? 'All Races'}, Median income, ${units}`, from: 'Census Table H-5, title, block and column headings' };
       }
       return { title: `${rows[1][0]}: United States`, from: 'Census HVS Table 14, title and row heading' };
     }

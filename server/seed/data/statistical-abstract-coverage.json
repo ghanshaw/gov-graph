@@ -692,7 +692,7 @@
     "688": { "programs": ["bls-consumer-expenditure-survey"], "coverage": "wanted", "shape": "snapshot" },
     "689": { "programs": ["cnpp-expenditures-on-children"], "coverage": "discontinued", "shape": "snapshot", "note": "Last report (2015 data) published in 2017; not found updated since." },
     "690": { "programs": ["census-current-population-reports"], "coverage": "wanted", "shape": "time-series" },
-    "691": { "programs": ["census-current-population-reports", "census-historical-income-tables"], "coverage": "partly", "shape": "time-series", "in_hand": true, "series": ["household-income", "household-income-real"], "note": "Median household income (all races) loaded from Historical Table H-5; the race lines are in the same file." },
+    "691": { "programs": ["census-current-population-reports", "census-historical-income-tables"], "coverage": "have", "shape": "time-series", "series": ["household-income", "household-income-real", "household-income--*"], "note": "Median household income for all races and by race and Hispanic origin, current and 2025 dollars (Table H-5). Census changed its race question in 2002, so each race is two series, not joined." },
     "692": { "programs": ["census-current-population-reports"], "coverage": "wanted", "shape": "snapshot" },
     "693": { "programs": ["census-current-population-reports"], "coverage": "wanted", "shape": "snapshot" },
     "694": { "programs": ["census-current-population-reports"], "coverage": "wanted", "shape": "time-series" },

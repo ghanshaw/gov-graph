@@ -304,6 +304,10 @@ balance (newly downloaded). Table 475: every line of Table 2.4 but its two total
 tax. Table 1300 stays `partly`: Census's FT-900 history has services in total only; services by type are BEA's
 international accounts (not in hand).
 
+**Household income by race (2026-10-17): Table 691 `have`.** Table H-5's race and Hispanic-origin blocks, current and
+2025 dollars, 18 series. Census changed its race question in 2002, so each race is two series ("Since 2002", and the
+old definition with its own years), not joined; household income gains `race` and `race_definition`.
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -350,5 +354,6 @@ international accounts (not in hand).
 - [x] Phase 5, interest rates: tables 1197, 1198 from H.15 and Freddie Mac (2026-10-17)
 - [x] Phase 5, home prices: tables 729 (FHFA by state) and 975 (new homes by region) (2026-10-17)
 - [x] Phase 5, OMB: tables 469 and 475 (2026-10-17); 1300's services by type are BEA's (not in hand)
-- [ ] Phase 5: population/ACS tables in hand
+- [x] Phase 5, household income by race: table 691 from Census Table H-5 (2026-10-17)
+- [ ] Phase 5: population/ACS tables in hand (demographic loader)
 - [ ] Phase 5: collect, section by section

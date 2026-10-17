@@ -676,7 +676,7 @@ database) gives every table `programs` (slugs in `sources.json`), `coverage`, `s
   `discontinued` (the note names the successor), `unpublished` and `compiled` (no programs; the Abstract built it from
   unpublished data or from sources named in footnotes). Totals (2026-10-17, after the national accounts, CPI, CPS and EIA tables): 40 have, 34
   partly, 1,140 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled.
-- `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (26; 81 before Phase 5).
+- `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (25; 81 before Phase 5).
 - `series` (required for have / partly, only for them): what is loaded, as series slugs, measures (a measure covers its
   national series and every place), `nipa:T20100` (a NIPA table's lines) or `prefix--*` (a family of published groups, e.g. `unemployment-rate--*`). The page
   resolves them from `economic_series`, so a note can't claim what isn't loaded.
@@ -704,7 +704,7 @@ parameter, which "Loaded:" names would link to.
 | 2. Skeleton | Section pages, table files, section PDFs; every table's page, subsection, title, source note | Done |
 | 3. Source notes → programs | Every table's programs, coverage (have / partly / wanted / licensed / discontinued / unpublished / compiled) and shape in `server/seed/data/statistical-abstract-coverage.json` (checked by `server/lib/abstract-coverage.js`); 409 programs in `sources.json`. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | Done (2026-10-14): all 30 sections, reviewed; report at `/sources/abstract-coverage` |
 | 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done (2026-10-14), with wanted tables shown as "Not here yet" under each subsection in the catalogue's Build tab |
-| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load; first the 81 tables whose files are in hand | **Under way**: 20 NIPA tables (2026-10-15); 5 CPI, 20 CPS, 4 EIA, 2 H.15, 2 home-price and 2 OMB tables (2026-10-17) |
+| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load; first the 81 tables whose files are in hand | **Under way**: 20 NIPA tables (2026-10-15); 5 CPI, 20 CPS, 4 EIA, 2 H.15, 2 home-price, 2 OMB tables and 691 (2026-10-17) |
 
 **Phase 5, national accounts (2026-10-15).** Whole publisher tables, yearly and quarterly where both are printed
 (user). `server/lib/nipa-series.js` lists 15 measures, each drawing every line of some NIPA tables (31 tables, 2,439

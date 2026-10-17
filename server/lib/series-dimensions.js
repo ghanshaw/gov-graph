@@ -49,7 +49,8 @@ export const DIMENSIONS = {
   } },
   definition: { label: 'Definition', values: { u3: V('Official rate (U-3)'), u6: V('Broad rate (U-6)') } },
   sex: { label: 'Sex', values: { men: V('Men'), women: V('Women') } },
-  race: { label: 'Race and ethnicity', values: { white: V('White'), black: V('Black'), asian: V('Asian'), hispanic: V('Hispanic') } },
+  race: { label: 'Race and ethnicity', values: { white: V('White'), black: V('Black'), asian: V('Asian'), hispanic: V('Hispanic'),
+    'asian-pacific-islander': V('Asian and Pacific Islander'), 'white-non-hispanic': V('White, not Hispanic', 'white') } },
   age: { label: 'Age', values: {
     '16-19': V('16–19'), '20-24': V('20–24'), '25-34': V('25–34'), '35-44': V('35–44'), '45-54': V('45–54'), '55-over': V('55 and over'),
   } },
@@ -148,6 +149,7 @@ export const DIMENSIONS = {
     '96-99': V('96th–99th percentiles', 'highest-quintile'), 'top-1': V('Top 1 percent', 'highest-quintile'),
   } },
   base: { label: 'Of', values: { 'all-imports': V('All imports'), 'dutiable-imports': V('Imports subject to tariffs') } },
+  race_definition: { label: 'Race as asked', values: { alone: V('One race alone (2002 on)'), 'pre-2002': V('Before 2002') } },
   budget_fund: { label: 'Paid into', values: {
     'federal-funds': V('Federal funds'), 'trust-funds': V('Trust funds'), 'on-budget': V('On-budget'), 'off-budget': V('Off-budget (Social Security, Postal Service)'),
   } },
@@ -172,7 +174,7 @@ export const MEASURES = {
   'prices/consumer-price-indexes-cost-of-living-index/home-prices': { label: 'Home prices', dims: ['homes', 'hpi_sales'] },
   'construction-and-housing/homeownership-and-housing-costs/home-affordability': { label: 'Home affordability', dims: [] },
   'construction-and-housing/homeownership-and-housing-costs/homeownership': { label: 'Homeownership', dims: [] },
-  'income-expenditures-poverty-and-wealth/household-income/household-income': { label: 'Household income', dims: [] },
+  'income-expenditures-poverty-and-wealth/household-income/household-income': { label: 'Household income', dims: ['race', 'race_definition'] },
   'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates': { label: 'Interest rates', dims: ['interest_rate', 'bound'] },
   'births-deaths-marriages-and-divorces/deaths/deaths': { label: 'Deaths', dims: ['cause'] },
   'income-expenditures-poverty-and-wealth/gross-domestic-product-gdp/gdp': { label: 'GDP', dims: [] },
@@ -486,6 +488,10 @@ const CBO_GROUPS = { all: 'all', lowest: 'lowest-quintile', second: 'second-quin
 
 // Labels read from a series' own fields: unemployment by group, CBO by income group.
 function readLabels(s) {
+  if (s.block) {
+    return { measure: 'income-expenditures-poverty-and-wealth/household-income/household-income', form: 'level', race: s.race,
+      ...(s.definition ? { race_definition: s.definition } : {}), ...(s.column === 3 ? REAL : {}) };
+  }
   if (s.region) return { measure: 'construction-and-housing/housing-sales/home-prices', form: 'level', homes: 'new', region: s.region, ...NSA };
   if (s.rate) return { measure: 'banking-finance-and-insurance/money-stock-interest-rates-bond-yields/interest-rates', form: 'rate', interest_rate: s.rate };
   if (s.breakdown) {
