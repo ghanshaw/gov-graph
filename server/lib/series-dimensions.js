@@ -13,6 +13,7 @@
 // (Medicare payroll taxes are payroll taxes).
 import { NIPA_MEASURES, NIPA_EXTRA_DIMENSIONS, nipaSeries } from './nipa-series.js';
 import { CPI_MEASURES, cpiDimensions } from './cpi-series.js';
+import { CPS_MEASURES, cpsDimensions } from './cps-series.js';
 
 const V = (label, parent) => (parent ? { label, parent } : { label });
 export const DIMENSIONS = {
@@ -21,7 +22,7 @@ export const DIMENSIONS = {
     level: V('Amount'), rate: V('Rate'), index: V('Index'), 'growth-rate': V('Growth rate'),
     'share-of-gdp': V('Share of GDP'), 'share-of-total': V('Share of the total'), 'share-of-income': V('Share of income'),
     'share-of-expected': V('Share of expected'), 'share-of-national-income': V('Share of national income'),
-    'per-person': V('Per person'), 'per-employee': V('Per full-time employee'), 'purchasing-power': V('Value of a dollar'),
+    'per-person': V('Per person'), 'per-employee': V('Per full-time employee'), 'purchasing-power': V('Value of a dollar'), average: V('Average'),
   } },
   adjustment: { label: 'Dollars', values: { nominal: V('Dollars of the day'), real: V('Adjusted for inflation') } },
   seasonal: { label: 'Seasonal adjustment', values: {
@@ -175,6 +176,14 @@ for (const m of NIPA_MEASURES) {
 // The CPI's items and areas, and the purchasing power of the dollar (lib/cpi-series.js).
 Object.assign(DIMENSIONS, cpiDimensions());
 for (const [key, m] of Object.entries(CPI_MEASURES)) {
+  if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
+  else MEASURES[key] = { label: m.label, dims: m.dims };
+}
+// The labor force tables' breakdowns (lib/cps-series.js): values join those of a breakdown already above.
+for (const [id, d] of Object.entries(cpsDimensions())) {
+  DIMENSIONS[id] = DIMENSIONS[id] ? { ...DIMENSIONS[id], values: { ...d.values, ...DIMENSIONS[id].values } } : d;
+}
+for (const [key, m] of Object.entries(CPS_MEASURES)) {
   if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
   else MEASURES[key] = { label: m.label, dims: m.dims };
 }

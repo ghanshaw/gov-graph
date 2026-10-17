@@ -3,7 +3,7 @@
 ## Status
 2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 is done**
 (2026-10-14): every table has its programs, coverage, shape and, where held, its series; the report is at
-`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Phase 5** (collect) is under way: the national accounts' 20 tables (2026-10-15) and the CPI's 5 (2026-10-17) are loaded; next the other tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
+`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Phase 5** (collect) is under way: the national accounts' 20 tables (2026-10-15), the CPI's 5 and the CPS's 20 (2026-10-17) are loaded; next the other tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -260,6 +260,22 @@ with its levels; special aggregates stand alone) and `cpi_area`; the purchasing 
 yearly percent changes, which BLS publishes in `cu.aspect` (not loaded). Coverage's `prefix--*` families now report
 their count of series.
 
+**The CPS (2026-10-17): 20 tables done.** The `ln` file is a cube (68,626 series: what is counted × any mix of sex,
+race, age, education, …), so "the publisher's whole table" would mean about 10,000 series for these tables. The user
+chose the rows each table prints (2026-10-17): `server/seed/data/cps-tables.json` (hand-kept) gives each table's rows
+and columns as BLS dimension codes; `server/seed/build-cps-series.js` finds their series (monthly, adjusted and not;
+else yearly; never BLS's quarterly averages or constructed `cnstr` copies) in `cps-series.json`, 1,712 series of which
+1,652 are new (the rest were loaded before). 80 rows have no series in the file (named by `--misses`): seven part-time
+combinations, occupation totals and occupation by sex. `server/lib/cps-series.js` labels each series from its codes
+(what is counted, then sex, race and origin, age, education, nativity, veteran status, disability, marital status,
+class of worker, industry, occupation and the survey's reasons as breakdowns) and names it from the same vocabulary
+("Unemployment Rate for Foreign-Born Women"), saying "(Unadjusted)" only where BLS also prints the adjusted series;
+short industry and occupation names and 17 whole names are in `cps-names.json`. Measures: unemployment (existing),
+labor force status, employment, and employment in services (Table 1275). 14 tables are `have`, 6 `partly` (587:
+projections; 592: percent distribution; 602: hours by class; 610: percent of employed; 623: search methods; 628:
+duration within reasons). Coverage names them as `cps:586`. BLS codes some series inconsistently (part-time series
+with and without "1 to 34 hours"; median weeks coded as average), handled in the builder and the module.
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -301,5 +317,6 @@ their count of series.
 - [x] Phase 4 rest: wanted tables shown as not here yet in the catalogue's Build tab (2026-10-14)
 - [x] Phase 5, national accounts: the 20 NIPA tables in hand (2026-10-15)
 - [x] Phase 5, CPI: tables 142, 724–727 from the `cu` file (2026-10-17)
-- [ ] Phase 5: `ln` (CPS: 586–628, 1275), PET.zip, H.15, FHFA, NRS, OMB, trade, population/ACS
+- [x] Phase 5, CPS: the 20 tables in the `ln` file (2026-10-17)
+- [ ] Phase 5: PET.zip, H.15, FHFA, NRS, OMB, trade, population/ACS
 - [ ] Phase 5: collect, section by section

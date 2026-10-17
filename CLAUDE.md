@@ -674,9 +674,9 @@ database) gives every table `programs` (slugs in `sources.json`), `coverage`, `s
 
 - `coverage`: `have` (every series it prints is loaded), `partly`, `wanted`, `licensed` (only for licensed programs),
   `discontinued` (the note names the successor), `unpublished` and `compiled` (no programs; the Abstract built it from
-  unpublished data or from sources named in footnotes). Totals (2026-10-17, after the national accounts and the CPI): 24 have, 31
-  partly, 1,159 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled.
-- `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (56; 81 before Phase 5).
+  unpublished data or from sources named in footnotes). Totals (2026-10-17, after the national accounts, the CPI and the CPS): 38 have, 33
+  partly, 1,143 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled.
+- `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (36; 81 before Phase 5).
 - `series` (required for have / partly, only for them): what is loaded, as series slugs, measures (a measure covers its
   national series and every place), `nipa:T20100` (a NIPA table's lines) or `prefix--*` (a family of published groups, e.g. `unemployment-rate--*`). The page
   resolves them from `economic_series`, so a note can't claim what isn't loaded.
@@ -704,7 +704,7 @@ parameter, which "Loaded:" names would link to.
 | 2. Skeleton | Section pages, table files, section PDFs; every table's page, subsection, title, source note | Done |
 | 3. Source notes → programs | Every table's programs, coverage (have / partly / wanted / licensed / discontinued / unpublished / compiled) and shape in `server/seed/data/statistical-abstract-coverage.json` (checked by `server/lib/abstract-coverage.js`); 409 programs in `sources.json`. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | Done (2026-10-14): all 30 sections, reviewed; report at `/sources/abstract-coverage` |
 | 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done (2026-10-14), with wanted tables shown as "Not here yet" under each subsection in the catalogue's Build tab |
-| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load; first the 81 tables whose files are in hand | **Under way**: the 20 NIPA tables (2026-10-15) and 5 CPI tables (2026-10-17) loaded |
+| 5. Collect | Section by section: fetch the publisher's current data, label, name, place, load; first the 81 tables whose files are in hand | **Under way**: 20 NIPA tables (2026-10-15), 5 CPI and 20 CPS tables (2026-10-17) loaded |
 
 **Phase 5, national accounts (2026-10-15).** Whole publisher tables, yearly and quarterly where both are printed
 (user). `server/lib/nipa-series.js` lists 15 measures, each drawing every line of some NIPA tables (31 tables, 2,439
@@ -718,6 +718,10 @@ Load with `load-economic-series.js --source bea`.
 The CPI (2026-10-17): `server/lib/cpi-series.js` adds every CPI-U item (U.S. city average, monthly, adjusted and not),
 each area's all-items index and the purchasing power of the dollar (781 series, `cpi--…`), from
 `server/seed/data/cpi-series.json` (`server/seed/build-cpi-series.js`); load with `--source bls-bulk`.
+The CPS (2026-10-17): only the rows each Abstract table prints (user), hand-kept as BLS dimension codes in
+`server/seed/data/cps-tables.json`; `server/seed/build-cps-series.js` finds their `ln` series (`cps-series.json`,
+`--misses` lists rows with none) and `server/lib/cps-series.js` labels and names them (1,652 new series, `cps--<id>`);
+coverage names them as `cps:586`.
 
 Other work in hand (user, 2026-10-13): move the remaining API-key fetches to bulk files (economic data done; Congress.gov,
 including the app's live call in `resolvers.js`, then govinfo, then CourtListener; `features/data-sources`); drop the

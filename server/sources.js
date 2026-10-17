@@ -8,6 +8,7 @@ import { pool } from './db.js';
 import { documentHref } from './timeline.js';
 import { ORGANIZATION_KINDS, PROGRAM_KINDS, LICENCES, ACCESS, STATUSES } from './lib/sources.js';
 import { nipaTable } from './lib/nipa-series.js';
+import { cpsTable } from './lib/cps-series.js';
 import { coverageReport, COVERAGE, SHAPES } from './lib/abstract-coverage.js';
 
 const PROGRAM_COLUMNS = `d.slug, d.name, d.kind, d.description, d.homepage, d.licence, d.licence_detail AS "licenceDetail",
@@ -139,6 +140,14 @@ function describeSeries(key, rows) {
     const words = ['annual', 'quarterly', 'monthly'].filter(f => list.some(r => r.frequency === f)).map(f => (f === 'annual' ? 'yearly' : f));
     const frequency = words.length ? words.slice(0, -1).join(', ') + (words.length > 1 ? ' and ' : '') + words.at(-1) : null;
     return { key, name: `NIPA ${table?.title.replace(/\.$/, '') ?? key}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
+  }
+  // cps:586: every series printing that Abstract table's rows (lib/cps-series.js), BLS's ids.
+  if (key.startsWith('cps:')) {
+    const ids = cpsTable(key.slice(4));
+    const list = rows.filter(r => r.source === 'bls-bulk' && ids?.has(r.sourceId) && !r.place);
+    const words = ['annual', 'quarterly', 'monthly'].filter(f => list.some(r => r.frequency === f)).map(f => (f === 'annual' ? 'yearly' : f));
+    const frequency = words.length ? words.slice(0, -1).join(', ') + (words.length > 1 ? ' and ' : '') + words.at(-1) : null;
+    return { key, name: `Current Population Survey, the rows of Table ${key.slice(4)}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
   }
   if (key.endsWith('--*')) {
     const base = key.slice(0, -3);

@@ -72,6 +72,7 @@ import path from 'path';
 import { DATA_DIR, mirrorFile } from './data-dir.js';
 import { nipaSeries, nameNipaSeries } from './nipa-series.js';
 import { cpiSeries } from './cpi-series.js';
+import { cpsSeries } from './cps-series.js';
 
 export const EIA_PET_BULK = 'https://www.eia.gov/opendata/bulk/PET.zip';
 const EIA_FREQUENCY = { daily: 'D', weekly: 'W', 'four-week-average': '4', monthly: 'M' };
@@ -665,9 +666,10 @@ const HAND_SERIES = [
 
 // Every line of the NIPA tables the Statistical Abstract reprints, yearly and quarterly (Phase 5); a line already
 // written above at one frequency is added at the other as its twin.
-// Then every CPI-U item (U.S. city average) and every area's all-items index (lib/cpi-series.js).
+// Then every CPI-U item (U.S. city average) and every area's all-items index (lib/cpi-series.js), and the CPS series
+// printing the Abstract's labor force tables (lib/cps-series.js).
 export const SERIES = [...HAND_SERIES, ...nameNipaSeries(nipaSeries(HAND_SERIES).series, new Set(HAND_SERIES.map(s => s.name))),
-  ...cpiSeries(HAND_SERIES)];
+  ...cpiSeries(HAND_SERIES), ...cpsSeries(HAND_SERIES)];
 
 /**
  * Where a series' downloaded rows are kept, under the API's own path with the series as the file
@@ -758,10 +760,15 @@ function readBlsBulk(s, text) {
   let skipped = 0;
   for (const line of blsBulkSeriesLines(s, text)) {
     const [, year, period, raw] = line.split('\t').map(x => x.trim());
-    if (!/^M(0[1-9]|1[0-2])$/.test(period)) continue;
+    // Monthly series are M01–M12 (M13, the year's average, is left out); quarterly Q01–Q04 (Q05 the year's
+    // average); yearly A01.
+    const date = s.frequency === 'annual' ? (period === 'A01' ? `${year}-01-01` : null)
+      : s.frequency === 'quarterly' ? (/^Q0[1-4]$/.test(period) ? `${year}-${QUARTER_START[period[2]]}-01` : null)
+        : /^M(0[1-9]|1[0-2])$/.test(period) ? `${year}-${period.slice(1)}-01` : null;
+    if (!date) continue;
     const value = Number(raw);
     if (raw === '-' || raw === '' || !Number.isFinite(value)) { skipped++; continue; }
-    observations.push([`${year}-${period.slice(1)}-01`, raw]);
+    observations.push([date, raw]);
   }
   observations.sort((a, b) => a[0].localeCompare(b[0]));
   return { description: s.description, observations, skipped };
