@@ -73,6 +73,7 @@ import { DATA_DIR, mirrorFile } from './data-dir.js';
 import { nipaSeries, nameNipaSeries } from './nipa-series.js';
 import { cpiSeries } from './cpi-series.js';
 import { cpsSeries } from './cps-series.js';
+import { eiaSeries } from './eia-series.js';
 
 export const EIA_PET_BULK = 'https://www.eia.gov/opendata/bulk/PET.zip';
 const EIA_FREQUENCY = { daily: 'D', weekly: 'W', 'four-week-average': '4', monthly: 'M' };
@@ -667,9 +668,9 @@ const HAND_SERIES = [
 // Every line of the NIPA tables the Statistical Abstract reprints, yearly and quarterly (Phase 5); a line already
 // written above at one frequency is added at the other as its twin.
 // Then every CPI-U item (U.S. city average) and every area's all-items index (lib/cpi-series.js), and the CPS series
-// printing the Abstract's labor force tables (lib/cps-series.js).
+// printing the Abstract's labor force tables (lib/cps-series.js), and EIA's petroleum series for its tables (lib/eia-series.js).
 export const SERIES = [...HAND_SERIES, ...nameNipaSeries(nipaSeries(HAND_SERIES).series, new Set(HAND_SERIES.map(s => s.name))),
-  ...cpiSeries(HAND_SERIES), ...cpsSeries(HAND_SERIES)];
+  ...cpiSeries(HAND_SERIES), ...cpsSeries(HAND_SERIES), ...eiaSeries(HAND_SERIES)];
 
 /**
  * Where a series' downloaded rows are kept, under the API's own path with the series as the file

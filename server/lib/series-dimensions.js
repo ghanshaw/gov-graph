@@ -14,6 +14,7 @@
 import { NIPA_MEASURES, NIPA_EXTRA_DIMENSIONS, nipaSeries } from './nipa-series.js';
 import { CPI_MEASURES, cpiDimensions } from './cpi-series.js';
 import { CPS_MEASURES, cpsDimensions } from './cps-series.js';
+import { EIA_MEASURES, eiaDimensions } from './eia-series.js';
 
 const V = (label, parent) => (parent ? { label, parent } : { label });
 export const DIMENSIONS = {
@@ -183,6 +184,12 @@ for (const [key, m] of Object.entries(CPI_MEASURES)) {
 for (const [id, d] of Object.entries(cpsDimensions())) {
   DIMENSIONS[id] = DIMENSIONS[id] ? { ...DIMENSIONS[id], values: { ...d.values, ...DIMENSIONS[id].values } } : d;
 }
+// EIA's cities, countries and petroleum supply (lib/eia-series.js).
+Object.assign(DIMENSIONS, eiaDimensions());
+for (const [key, m] of Object.entries(EIA_MEASURES)) {
+  if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
+  else MEASURES[key] = { label: m.label, dims: m.dims };
+}
 for (const [key, m] of Object.entries(CPS_MEASURES)) {
   if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
   else MEASURES[key] = { label: m.label, dims: m.dims };
@@ -205,8 +212,8 @@ const REAL = { adjustment: 'real' };
 const LABELS = {
   'wti-spot': { measure: 'prices/fuel-prices/crude-oil-price', form: 'level', benchmark: 'wti' },
   'brent-spot': { measure: 'prices/fuel-prices/crude-oil-price', form: 'level', benchmark: 'brent' },
-  'gasoline-retail': { measure: 'prices/fuel-prices/fuel-price-at-the-pump', form: 'level', fuel: 'gasoline' },
-  'diesel-retail': { measure: 'prices/fuel-prices/fuel-price-at-the-pump', form: 'level', fuel: 'diesel' },
+  'gasoline-retail': { measure: 'prices/fuel-prices/fuel-price-at-the-pump', form: 'level', fuel: 'gasoline', fuel_area: 'us' },
+  'diesel-retail': { measure: 'prices/fuel-prices/fuel-price-at-the-pump', form: 'level', fuel: 'diesel', fuel_area: 'us' },
   'demand-total-4wk': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'all' },
   'demand-distillate-4wk': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'distillate' },
   'demand-gasoline-4wk': { measure: 'energy-and-utilities/crude-oil-petroleum/oil-demand', form: 'level', product: 'gasoline' },

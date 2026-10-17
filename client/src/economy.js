@@ -43,6 +43,9 @@ export function formatValue(value, unit) {
   if (unit === 'years') return `${value.toFixed(1)} years`;
   if (unit === 'gini') return value.toFixed(3);
   if (unit === 'kb/d') return value >= 1000 ? `${(value / 1000).toFixed(2)} million barrels/day` : `${Math.round(value).toLocaleString()},000 barrels/day`;
+  if (unit === 'kbbl') return value >= 1000 ? `${(value / 1000).toFixed(1)} million barrels` : `${Math.round(value).toLocaleString()},000 barrels`;
+  if (unit === 'weeks') return `${value.toFixed(1)} weeks`;
+  if (unit === 'hours') return `${value.toFixed(1)} hours`;
   return value.toLocaleString();
 }
 
@@ -60,7 +63,7 @@ export function formatTick(value, unit) {
     const a = Math.abs(value);
     return a >= 1e6 ? `${+(value / 1e6).toFixed(2)}M` : a >= 1e3 ? `${+(value / 1e3).toFixed(1)}k` : String(value);
   }
-  if (unit === 'kb/d') return value >= 1000 ? `${+(value / 1000).toFixed(2)}M` : `${value}k`;
+  if (unit === 'kb/d' || unit === 'kbbl') return value >= 1000 ? `${+(value / 1000).toFixed(2)}M` : `${value}k`;
   if (unit === 'thousands') return value >= 1000 ? `${value / 1000}M` : `${value}k`;
   return unit === '$/gal' ? value.toFixed(2) : String(value);
 }
@@ -682,7 +685,7 @@ export function assignSlots(previous, keys) {
 const DOLLAR_SCALE = { '$': 1, '$k': 1e3, '$m': 1e6, '$bn': 1e9 };
 const UNIT_NAMES = {
   '%': 'Percent', '$/bbl': 'Dollars a barrel', '$/gal': 'Dollars a gallon', thousands: 'Thousands',
-  'kb/d': 'Thousand barrels a day', deaths: 'Deaths', x: 'Ratio', index: 'Index',
+  'kb/d': 'Thousand barrels a day', kbbl: 'Thousand barrels', weeks: 'Weeks', hours: 'Hours a week', deaths: 'Deaths', x: 'Ratio', index: 'Index',
   people: 'People', households: 'Households', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
 };
 const FREQUENCY_NAMES = {

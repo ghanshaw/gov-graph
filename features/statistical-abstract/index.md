@@ -276,6 +276,15 @@ projections; 592: percent distribution; 602: hours by class; 610: percent of emp
 duration within reasons). Coverage names them as `cps:586`. BLS codes some series inconsistently (part-time series
 with and without "1 to 34 hours"; median weeks coded as average), handled in the builder and the module.
 
+**EIA petroleum (2026-10-17): 4 tables.** `server/seed/data/eia-tables.json` lists by hand the PET.zip series printing
+each table's rows, with EIA's names and units; `server/lib/eia-series.js` names them in EIA's words ("Regular Gas Price
+in Boston", "Crude Oil Imports from Algeria", "Ending Stocks of Propane") and labels them: the pump price gains
+`fuel_area` (ten cities, weekly); new measures crude oil imports (`country`, monthly, Table 937) and petroleum supply
+and disposition (`oil_product`, `oil_flow`, monthly in thousand barrels a day, stocks in thousand barrels; Tables 911,
+916). 132 series. 731 and 937 `have`; 911 and 916 `partly` (Lower 48 production and SPR imports are not in barrels a
+day; gas processed and the liquids' value are in EIA's natural gas data). Coverage names them as `eia:731`. The client
+formats the new units (`kbbl`, `weeks`, `hours`).
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -318,5 +327,6 @@ with and without "1 to 34 hours"; median weeks coded as average), handled in the
 - [x] Phase 5, national accounts: the 20 NIPA tables in hand (2026-10-15)
 - [x] Phase 5, CPI: tables 142, 724–727 from the `cu` file (2026-10-17)
 - [x] Phase 5, CPS: the 20 tables in the `ln` file (2026-10-17)
-- [ ] Phase 5: PET.zip, H.15, FHFA, NRS, OMB, trade, population/ACS
+- [x] Phase 5, EIA petroleum: tables 731, 911, 916, 937 from PET.zip (2026-10-17)
+- [ ] Phase 5: H.15, FHFA, NRS, OMB, trade, population/ACS
 - [ ] Phase 5: collect, section by section

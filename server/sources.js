@@ -9,6 +9,7 @@ import { documentHref } from './timeline.js';
 import { ORGANIZATION_KINDS, PROGRAM_KINDS, LICENCES, ACCESS, STATUSES } from './lib/sources.js';
 import { nipaTable } from './lib/nipa-series.js';
 import { cpsTable } from './lib/cps-series.js';
+import { eiaTable } from './lib/eia-series.js';
 import { coverageReport, COVERAGE, SHAPES } from './lib/abstract-coverage.js';
 
 const PROGRAM_COLUMNS = `d.slug, d.name, d.kind, d.description, d.homepage, d.licence, d.licence_detail AS "licenceDetail",
@@ -128,6 +129,11 @@ function indexOfSeries() {
   return seriesIndex;
 }
 
+const TABLE_SERIES = {
+  cps: { ids: cpsTable, source: 'bls-bulk', name: 'Current Population Survey' },
+  eia: { ids: eiaTable, source: 'eia', name: 'EIA petroleum data' },
+};
+
 function describeSeries(key, rows) {
   const span = list => ({
     firstDate: list.map(r => r.firstDate).filter(Boolean).sort()[0] ?? null,
@@ -141,13 +147,15 @@ function describeSeries(key, rows) {
     const frequency = words.length ? words.slice(0, -1).join(', ') + (words.length > 1 ? ' and ' : '') + words.at(-1) : null;
     return { key, name: `NIPA ${table?.title.replace(/\.$/, '') ?? key}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
   }
-  // cps:586: every series printing that Abstract table's rows (lib/cps-series.js), BLS's ids.
-  if (key.startsWith('cps:')) {
-    const ids = cpsTable(key.slice(4));
-    const list = rows.filter(r => r.source === 'bls-bulk' && ids?.has(r.sourceId) && !r.place);
-    const words = ['annual', 'quarterly', 'monthly'].filter(f => list.some(r => r.frequency === f)).map(f => (f === 'annual' ? 'yearly' : f));
+  // cps:586, eia:731: every series printing that Abstract table's rows (lib/cps-series.js, lib/eia-series.js), by publisher id.
+  const byTable = /^(cps|eia):(\d+)$/.exec(key);
+  if (byTable) {
+    const [, kind, table] = byTable;
+    const ids = TABLE_SERIES[kind].ids(table);
+    const list = rows.filter(r => r.source === TABLE_SERIES[kind].source && ids?.has(r.sourceId) && !r.place);
+    const words = ['annual', 'quarterly', 'monthly', 'weekly'].filter(f => list.some(r => r.frequency === f)).map(f => (f === 'annual' ? 'yearly' : f));
     const frequency = words.length ? words.slice(0, -1).join(', ') + (words.length > 1 ? ' and ' : '') + words.at(-1) : null;
-    return { key, name: `Current Population Survey, the rows of Table ${key.slice(4)}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
+    return { key, name: `${TABLE_SERIES[kind].name}, the rows of Table ${table}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
   }
   if (key.endsWith('--*')) {
     const base = key.slice(0, -3);

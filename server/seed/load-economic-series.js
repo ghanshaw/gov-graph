@@ -62,7 +62,7 @@ function readEiaBulkFile() {
   if (!files.has(file)) {
     if (!fs.existsSync(file)) throw new Error(`no file at ${file}; run fetch-economic-series.js first`);
     const ids = [...new Set(SERIES.filter(x => x.source === 'eia').map(eiaBulkId))];
-    if (ids.some(id => !/^[A-Z0-9_.]+$/.test(id))) throw new Error(`unexpected EIA series id in ${ids.join(', ')}`);
+    if (ids.some(id => !/^[A-Z0-9_.-]+$/.test(id))) throw new Error(`unexpected EIA series id in ${ids.join(', ')}`);
     const pattern = `"series_id":"(${ids.map(id => id.replace(/\./g, '\\.')).join('|')})"`;
     const text = execFileSync('sh', ['-c', 'unzip -p "$0" PET.txt | grep -E "$1"', file, pattern], { maxBuffer: 256 * 1024 * 1024 }).toString('utf8');
     files.set(file, new Map(text.trim().split('\n').map(line => JSON.parse(line)).map(d => [d.series_id, d])));
