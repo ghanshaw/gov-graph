@@ -171613,9 +171613,6 @@
   ],
   "census-nonemployer-statistics": [
    "https://www2.census.gov/programs-surveys/nonemployer-statistics/datasets/2017/: no files listed"
-  ],
-  "nchs-health-united-states": [
-   "https://data.cdc.gov/data.json: no datasets titled ^Health, United States$"
   ]
  }
 }

@@ -3,7 +3,7 @@
 ## Status
 2026-10-14: Phases 0, 1, 2 and 4 done (4 except showing wanted tables as not yet here). **Phase 3 is done**
 (2026-10-14): every table has its programs, coverage, shape and, where held, its series; the report is at
-`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Phase 5** (collect) is under way: the national accounts' 20 tables (2026-10-15), the CPI's 5 and the CPS's 20 (2026-10-17) are loaded; next the other tables whose files are already in the data folder. Every table's subsection, printed page, title and source note is in
+`/sources/abstract-coverage` and on each program's page. Phase 4 is done too (2026-10-14). **Phase 5** (collect) is under way: the national accounts' 20 tables (2026-10-15), the CPI's 5 and the CPS's 20 (2026-10-17) are loaded; every file is now downloaded (5a list 2026-10-18, 5b download 2026-10-19: 21,245 files, 33 GB); next 5c, loading section by section from disk. Every table's subsection, printed page, title and source note is in
 `server/seed/data/statistical-abstract-tables.json` (not the database); every measure is placed from them in
 `placements.json`. The sources (publishers and programs) are `features/data-sources`; the Abstract as a taxonomy is
 `features/taxonomies`.
@@ -331,6 +331,20 @@ data.cdc.gov, whose file paths change on each release). A web page saved on purp
   queries per hour, so 5b must fetch them minutes apart), medicaid.gov (11, Akamai), Census serving a page for a file (6,
   its rate limit), three dead links. About 450 files (APIs and CSV endpoints) give no size.
 
+### Phase 5b — the download (done 2026-10-19)
+`server/seed/fetch-downloads.js` saved every file that measured (status under 400) into the data folder at the
+publisher's path, each logged with `recordFetch`. Requests go through `server/lib/polite-fetch.js` (shared with
+`size-downloads.js`): 2 at a time per host, 500 ms apart, OECD one every 200 s, backing off on 429 and 503; at most 6
+downloads at once; a stop before the disk would fall under 8 GB free. HTML where a file was expected is refused. An
+Internet Archive capture is kept at the original path with `archive` in the log; a URL with a query (Fed `Output.aspx`,
+Fiscal Data) needs a `name`.
+
+- **21,245 files, 33 GB on disk** (the 22.75 GB measured plus the files that gave no size: CDC's YRBSS high school
+  table 6 GB, the IMF's balance of payments 1.9 GB and CPI 0.4 GB, NASS Quick Stats). One run, 1 h 30 min, 2026-10-19;
+  the data folder is now 37 GB, 154 GB free.
+- 4 files failed on timeouts or a reset (VA, data.transportation.gov, history.house.gov) and came on a re-run. A re-run
+  skips files on disk (`--refresh` takes them again). The 142 files that failed to measure in 5a were not attempted.
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -339,8 +353,8 @@ data.cdc.gov, whose file paths change on each release). A web page saved on purp
   publishers usually print a new one each year. Show them as series of yearly snapshots by place or group, or as
   tables of their own?
 - **Order of sections** for Phase 5c.
-- **Download first, then load** (user, 2026-10-17): every file before any more loading. Measured at 22.75 GB (5a, 2026-10-18)
-  against 62 GB free.
+- **Download first, then load** (user, 2026-10-17): every file before any more loading. Measured at 22.75 GB (5a, 2026-10-18);
+  downloaded 33 GB (5b, 2026-10-19), 154 GB still free.
 - **Documents in the Abstract.** Elections and Courts tables count things GovGraph holds as documents (bills
   vetoed, measures enacted, Supreme Court cases). Collect the publishers' counts and link them to the documents?
 - **Storage.** Unknown until Phase 3; the database is about 2.1 GB.
@@ -382,5 +396,6 @@ data.cdc.gov, whose file paths change on each release). A web page saved on purp
 - [x] Phase 5, household income by race: table 691 from Census Table H-5 (2026-10-17)
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
 - [x] Phase 5a: the download list for the 279 programs still to collect, measured: 22.75 GB in 21,601 files; 87 with no file (2026-10-18)
-- [ ] Phase 5b: download everything (throttled, logged); 5c: load section by section from disk
+- [x] Phase 5b: download everything (throttled, logged): 21,245 files, 33 GB (2026-10-19)
+- [ ] Phase 5c: load section by section from disk
 - [ ] Phase 5: collect, section by section

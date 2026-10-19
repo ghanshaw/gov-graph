@@ -1227,10 +1227,9 @@
     "nchs-health-united-states": {
       "checked": "2026-10-19",
       "files": [
-        { "list": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/Health_US/hus20-21tables/", "match": "\\.xlsx$", "note": "Health, United States trend tables (110–129, 166, 194, 203, 204), the 2020–2021 edition; the 2022 and later editions are data finder pages." },
+        { "list": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/Health_US/hus20-21tables/", "match": "\\.xlsx$", "note": "Health, United States trend tables (110–129, 166, 194, 203, 204), the 2020–2021 edition; the 2022 and later editions are data finder pages. The current edition is served only by its Data Finder on www.cdc.gov, which refuses scripts (Akamai); data.cdc.gov’s catalog points there (2026-10-19)." },
         { "list": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/Health_US/hus2022/", "match": "\\.xlsx$" },
-        { "list": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/Health_US/hus19tables/", "match": "\\.xlsx?$", "note": "2019 edition, whose trend tables run further back." },
-        { "catalog": "https://data.cdc.gov/data.json", "title": "^Health, United States$", "note": "The current Health, United States data. CSV only: the catalog also lists the same data as JSON, XML and map formats.", "match": "\\.csv(\\?|$)" }
+        { "list": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/Health_US/hus19tables/", "match": "\\.xlsx?$", "note": "2019 edition, whose trend tables run further back." }
       ]
     },
     "nchs-national-health-interview-survey": {

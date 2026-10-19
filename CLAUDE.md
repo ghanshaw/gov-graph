@@ -707,8 +707,8 @@ parameter, which "Loaded:" names would link to.
 | 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done (2026-10-14), with wanted tables shown as "Not here yet" under each subsection in the catalogue's Build tab |
 | 5. Collect | Load the publisher's current data, label, name, place; first the 81 tables whose files were in hand | **Under way**: 20 NIPA tables (2026-10-15); 5 CPI, 20 CPS, 4 EIA, 2 H.15, 2 home-price, 2 OMB tables and 691 (2026-10-17). 45 have, 29 partly, 1,140 wanted |
 | 5a. Inventory | For each of the 279 programs still to collect (cited by wanted or partly tables, not licensed): the files, in `server/seed/data/downloads.json` (checked by `server/lib/downloads.js`), measured by `server/seed/size-downloads.js` into `download-sizes.json` (HEAD requests; nothing downloaded) | Done (2026-10-18): 22.75 GB in 21,601 files, 192 programs; 87 with no file (64 only in PDFs or pages, 5 to decide, 4 key-only); details in the feature file |
-| 5b. Download | **Next.** Everything in one throttled run (2 requests at a time, backing off on 429), each file through `recordFetch`; compressed, at the frequency the tables use | After 5a |
-| 5c. Load | Section by section from disk | After 5b |
+| 5b. Download | Everything in one throttled run (`server/seed/fetch-downloads.js`, through `server/lib/polite-fetch.js`: 2 requests at a time per host, backing off on 429), each file through `recordFetch` | Done (2026-10-19): 21,245 files, 33 GB (the files 5a could not size added 10 GB); a re-run skips files on disk |
+| 5c. Load | Section by section from disk | **Next.** |
 
 **Phase 5, national accounts (2026-10-15).** Whole publisher tables, yearly and quarterly where both are printed
 (user). `server/lib/nipa-series.js` lists 15 measures, each drawing every line of some NIPA tables (31 tables, 2,439

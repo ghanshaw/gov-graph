@@ -4,7 +4,7 @@
  * its size (HEAD, or a one-byte ranged GET where HEAD gives none), folders and pages are listed for their
  * files, and the results go to server/seed/data/download-sizes.json. Nothing is downloaded.
  *
- * At most 2 requests at a time per host, 500 ms apart, backing off on 429 and 503 (as fetch-population.js).
+ * At most 2 requests at a time per host, 500 ms apart, backing off on 429 and 503 (lib/polite-fetch.js).
  * A file already measured is kept unless --refresh.
  *
  * Usage:
@@ -16,6 +16,7 @@
 import fs from 'fs';
 import { readSources } from '../lib/sources.js';
 import { readDownloads, checkDownloads, expandEntry, SIZES_FILE } from '../lib/downloads.js';
+import { request, htmlExpected } from '../lib/polite-fetch.js';
 
 const arg = name => {
   const i = process.argv.indexOf(name);
@@ -34,45 +35,6 @@ if (problems.length) {
 
 const sizes = fs.existsSync(SIZES_FILE) ? JSON.parse(fs.readFileSync(SIZES_FILE, 'utf8')) : { files: {} };
 const save = () => fs.writeFileSync(SIZES_FILE, `${JSON.stringify(sizes, null, 1)}\n`);
-
-// A contact address goes in the User-Agent only where the publisher requires one (BLS; user, 2026-10-13).
-// Elsewhere a standard browser string, still naming GovGraph at the end: ed.gov's Azure firewall and the
-// USDA local food portal refuse any User-Agent that is not a browser's (user, 2026-10-18).
-const BROWSER = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 govgraph-research';
-const headersFor = url => ({
-  'User-Agent': /(^|\.)bls\.gov$/.test(new URL(url).hostname) && process.env.BLS_CONTACT_EMAIL
-    ? `govgraph public records research (${process.env.BLS_CONTACT_EMAIL})`
-    : BROWSER,
-});
-
-// Per host: two requests at a time, starts 500 ms apart.
-const hosts = new Map();
-async function polite(url, fn) {
-  const host = new URL(url).hostname;
-  const h = hosts.get(host) ?? hosts.set(host, { active: 0, last: 0, waiting: [] }).get(host);
-  while (h.active >= 2) await new Promise(resolve => h.waiting.push(resolve));
-  h.active++;
-  const wait = h.last + 500 - Date.now();
-  h.last = Date.now() + Math.max(0, wait);
-  if (wait > 0) await new Promise(r => setTimeout(r, wait));
-  try {
-    for (let attempt = 1; ; attempt++) {
-      const res = await fn();
-      if ((res.status === 429 || res.status === 503) && attempt <= 6) {
-        await new Promise(r => setTimeout(r, 2000 * 2 ** attempt));
-        continue;
-      }
-      return res;
-    }
-  } finally {
-    h.active--;
-    h.waiting.shift()?.();
-  }
-}
-
-const request = (url, init = {}) => polite(url, () =>
-  fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(60000), ...init, headers: { ...headersFor(url), ...init.headers } })
-    .catch(err => ({ status: 0, ok: false, headers: new Headers(), error: err.cause?.code ?? err.message, body: null })));
 
 /** A file's size and type without fetching it. `wanted` marks a web page saved on purpose (`name: '….html'`). */
 async function measure(url, wanted) {
@@ -95,8 +57,7 @@ async function measure(url, wanted) {
     }
   }
   const type = res.headers.get('content-type')?.split(';')[0] ?? null;
-  // Some publishers answer a missing file with an HTML page and 200 (BEA); a page is only wanted where asked for.
-  const page = !wanted && type === 'text/html' && !/\.(s?html?|cfm|aspx?|php)$|\/$/i.test(new URL(url).pathname);
+  const page = type === 'text/html' && !wanted && !htmlExpected(url);
   return {
     status: page ? 'html' : res.status,
     ...(res.error && { error: res.error }),
@@ -164,7 +125,7 @@ async function measureProgram(slug, d) {
     if (e.catalog) {
       const { urls, error } = await listCatalog(e);
       if (error) errors.push(error);
-      if (!urls.length && !error) errors.push(`${e.catalog}: no datasets titled ${e.title}`);
+      if (!urls.length && !error) errors.push(`${e.catalog}: no ${e.match ? `files matching ${e.match} in datasets` : 'datasets'} titled ${e.title}`);
       listed.push(...urls);
     } else if (e.list) {
       for (const list of expandEntry({ ...e, url: e.list, list: undefined })) {
