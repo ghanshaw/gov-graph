@@ -59,6 +59,7 @@
 //        (July–June) to 1917, calendar years from 1919; 1918 and 1930 are printed in parts. usitc.gov
 //        refuses scripted requests, so the file comes from the Internet Archive (`archive`).
 //   census-trade  Census Bureau, U.S. trade in goods and services on a balance of payments basis
+//   census-tables Census Bureau printed tables collected for the Statistical Abstract's Section 1 (lib/census-tables.js)
 //        (the FT-900 history), .xlsx: by year from 1960 (gands.xlsx) and by month, seasonally
 //        adjusted, from 1992 (exhibit_history.xlsx). A series is a column.
 //   BEA's exports, imports and their balance come from the same flat files as GDP, quarterly from
@@ -75,6 +76,7 @@ import { nipaSeries, nameNipaSeries } from './nipa-series.js';
 import { cpiSeries } from './cpi-series.js';
 import { cpsSeries } from './cps-series.js';
 import { eiaSeries } from './eia-series.js';
+import { censusSeries, readCensusTable } from './census-tables.js';
 
 export const EIA_PET_BULK = 'https://www.eia.gov/opendata/bulk/PET.zip';
 const EIA_FREQUENCY = { daily: 'D', weekly: 'W', 'four-week-average': '4', monthly: 'M' };
@@ -778,9 +780,10 @@ const HAND_SERIES = [
 // Every line of the NIPA tables the Statistical Abstract reprints, yearly and quarterly (Phase 5); a line already
 // written above at one frequency is added at the other as its twin.
 // Then every CPI-U item (U.S. city average) and every area's all-items index (lib/cpi-series.js), and the CPS series
-// printing the Abstract's labor force tables (lib/cps-series.js), and EIA's petroleum series for its tables (lib/eia-series.js).
+// printing the Abstract's labor force tables (lib/cps-series.js), and EIA's petroleum series for its tables (lib/eia-series.js),
+// and the Census printed tables of the Abstract's Section 1 (lib/census-tables.js).
 export const SERIES = [...HAND_SERIES, ...nameNipaSeries(nipaSeries(HAND_SERIES).series, new Set(HAND_SERIES.map(s => s.name))),
-  ...cpiSeries(HAND_SERIES), ...cpsSeries(HAND_SERIES), ...eiaSeries(HAND_SERIES)];
+  ...cpiSeries(HAND_SERIES), ...cpsSeries(HAND_SERIES), ...eiaSeries(HAND_SERIES), ...censusSeries()];
 
 /**
  * Where a series' downloaded rows are kept, under the API's own path with the series as the file
@@ -1322,6 +1325,7 @@ function readCensusTrade(s, rows) {
 export function readObservations(s, file) {
   if (s.source === 'usitc') return readUsitc(s, file);
   if (s.source === 'census-trade') return readCensusTrade(s, file);
+  if (s.source === 'census-tables') return readCensusTable(s, file);
   if (s.source === 'treasury-mts') return readMts(s, file);
   if (s.source === 'treasury-mts-1') return readMts1(s, file);
   if (s.source === 'treasury-mts-4') return readMts4(s, file);
@@ -1404,6 +1408,12 @@ export function publisherTitle(s, files) {
     case 'eia': {
       const title = files.eia()?.get(eiaBulkId(s))?.name;
       return title ? { title, from: 'EIA bulk file PET.txt, name' } : null;
+    }
+    case 'census-tables': {
+      // The table's title line, then the row's labels (block down) or the column heading.
+      const rows = files.rows(seriesFile(s));
+      const title = rows?.find(r => r?.[0] && !/^\s*$/.test(String(r[0])))?.[0];
+      return title ? { title: `${String(title).trim()}: ${s.key}`, from: `Census ${path.basename(s.url)}: title and row or column labels` } : null;
     }
     case 'census-nrs': {
       const rows = files.rows(seriesFile(s), s.sheet);

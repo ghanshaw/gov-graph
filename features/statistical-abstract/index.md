@@ -33,6 +33,10 @@ it ended the program on October 1, 2011) as the foundation for all the data GovG
 - Every Census "Current Population Reports" series (P20, P25, P60, …) is one program (user, 2026-10-13).
 - The Economic Data rules stand: series as their publishers print them, nothing computed, separate files never
   joined.
+- **Phase 5c (user, 2026-10-19):** sections in book order, 1 to 30. A snapshot table (one year broken down by
+  something) loads its publisher's latest edition only, one value per printed row dated at its year; the yearly
+  editions stay separate files, to be combined into series systematically later. By-place tables load the nation and
+  the states now; metro areas, cities and counties wait for a place level of their own.
 
 ## Where a series sits (`placement`)
 > Superseded 2026-10-13: placement is now the **measure's**, per structure, with `table` or `judgement`; see
@@ -345,14 +349,26 @@ Fiscal Data) needs a `name`.
 - 4 files failed on timeouts or a reset (VA, data.transportation.gov, history.house.gov) and came on a re-run. A re-run
   skips files on disk (`--refresh` takes them again). The 142 files that failed to measure in 5a were not attempted.
 
+### Phase 5c — loading, section by section (from 2026-10-19)
+Book order. **Section 1, Population:**
+- **Projections (tables 3, 9, 12; 2026-10-19).** Census's own summary tables of the 2023 projections, main series
+  (`np2023-t1` to `t4`, added to the download list: the datasets give single years of age only, and adding them into
+  the Abstract's groups would be computing). `server/lib/census-tables.js` reads Census's printed-table layout (a row
+  of years, dotted row labels under sex blocks) and says what each row is; `server/seed/build-census-tables.js` writes
+  the series list to `census-tables.json`; load with `load-economic-series.js --source census-tables`. 133 series in
+  thousands as printed, dated July 1: the total and its percent change yearly 2022–2100, sex by five-year and wider
+  age groups and median age every five years to 2100, race and Hispanic origin by sex to 2060. Measures: projected
+  population (national; and by age, sex, race) and projected median age. Table 3 `have`; 9 and 12 `partly` (Census
+  prints the percent distributions and race by age only as percentages).
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
   rebuild them as sections? Leaning: keep the tabs for now.
-- **Snapshot tables.** Many tables are one year broken down by something ("Arrests by Sex and Age: 2009"). Their
-  publishers usually print a new one each year. Show them as series of yearly snapshots by place or group, or as
-  tables of their own?
-- **Order of sections** for Phase 5c.
+- **Combining snapshot editions** (later; user, 2026-10-19). Each printed row would become one series with a value per
+  edition (Table A1 of *America's Families and Living Arrangements* has editions 1989–2024). A series would run only
+  while the row is printed alike (race "alone" from 2003, regrouped ages start new series), with gaps where an edition
+  is missing and one reader per file layout. Where the publisher prints a history table, that is used instead.
 - **Download first, then load** (user, 2026-10-17): every file before any more loading. Measured at 22.75 GB (5a, 2026-10-18);
   downloaded 33 GB (5b, 2026-10-19), 154 GB still free.
 - **Documents in the Abstract.** Elections and Courts tables count things GovGraph holds as documents (bills
@@ -397,5 +413,5 @@ Fiscal Data) needs a `name`.
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
 - [x] Phase 5a: the download list for the 279 programs still to collect, measured: 22.75 GB in 21,601 files; 87 with no file (2026-10-18)
 - [x] Phase 5b: download everything (throttled, logged): 21,245 files, 33 GB (2026-10-19)
-- [ ] Phase 5c: load section by section from disk
+- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections done)
 - [ ] Phase 5: collect, section by section

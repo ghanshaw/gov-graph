@@ -15,6 +15,7 @@ import { NIPA_MEASURES, NIPA_EXTRA_DIMENSIONS, nipaSeries } from './nipa-series.
 import { CPI_MEASURES, cpiDimensions } from './cpi-series.js';
 import { CPS_MEASURES, cpsDimensions } from './cps-series.js';
 import { EIA_MEASURES, eiaDimensions } from './eia-series.js';
+import { CENSUS_TABLE_MEASURES, censusTableDimensions } from './census-tables.js';
 
 const V = (label, parent) => (parent ? { label, parent } : { label });
 export const DIMENSIONS = {
@@ -213,6 +214,14 @@ for (const [id, d] of Object.entries(cpsDimensions())) {
 // EIA's cities, countries and petroleum supply (lib/eia-series.js).
 Object.assign(DIMENSIONS, eiaDimensions());
 for (const [key, m] of Object.entries(EIA_MEASURES)) {
+  if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
+  else MEASURES[key] = { label: m.label, dims: m.dims };
+}
+// The Census tables of the Abstract's Section 1 (lib/census-tables.js): ages and races join those above.
+for (const [id, values] of Object.entries(censusTableDimensions())) {
+  for (const [value, label] of Object.entries(values)) DIMENSIONS[id].values[value] ??= V(label);
+}
+for (const [key, m] of Object.entries(CENSUS_TABLE_MEASURES)) {
   if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
   else MEASURES[key] = { label: m.label, dims: m.dims };
 }
@@ -510,7 +519,7 @@ function readLabels(s) {
 const FREQUENCY = { daily: 'daily', weekly: 'weekly', 'four-week-average': 'four-week', monthly: 'monthly', quarterly: 'quarterly',
   annual: 'yearly', 'fiscal-year': 'yearly', irregular: 'irregular' };
 const PUBLISHER = { eia: 'eia', bls: 'bls', 'bls-bulk': 'bls', bea: 'bea', treasury: 'treasury', 'treasury-mts': 'treasury',
-  'treasury-mts-1': 'treasury', 'treasury-mts-4': 'treasury', 'treasury-dts': 'treasury', 'treasury-dts-iv': 'treasury', omb: 'omb',
+  'treasury-mts-1': 'treasury', 'census-tables': 'census', 'treasury-mts-4': 'treasury', 'treasury-dts': 'treasury', 'treasury-dts-iv': 'treasury', omb: 'omb',
   cbo: 'cbo', 'irs-soi': 'irs', usitc: 'usitc', census: 'census', 'census-nrs': 'census', 'census-trade': 'census', umich: 'umich',
   freddiemac: 'freddiemac', fhfa: 'fhfa', atlantafed: 'atlantafed', cdc: 'cdc', 'fed-h15': 'fed', 'fed-omo': 'fed' };
 const DOLLARS = /^\$/;

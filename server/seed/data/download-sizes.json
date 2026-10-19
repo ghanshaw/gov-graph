@@ -171600,6 +171600,142 @@
    "type": "text/csv",
    "modified": null,
    "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-a.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 27940,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:57 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-b.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 30262,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:58 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-c.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 25583,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:58 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-d.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 31195,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:58 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t1.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 31263,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:21 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t10.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 36181,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:23 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t11.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 29702,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:23 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t12.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 23239,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:24 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t13.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 23353,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:24 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t2.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 41139,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:21 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t3.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 29051,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:21 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t4.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 23135,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:22 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t5.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 24568,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:22 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t6.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 28665,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:22 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t7.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 30486,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:22 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t8.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 33611,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:23 GMT",
+   "checked": "2026-10-19"
+  },
+  "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/np2023-t9.xlsx": {
+   "program": "census-population-projections",
+   "status": 200,
+   "bytes": 42802,
+   "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "modified": "Thu, 09 Nov 2023 14:02:23 GMT",
+   "checked": "2026-10-19"
   }
  },
  "listing_errors": {

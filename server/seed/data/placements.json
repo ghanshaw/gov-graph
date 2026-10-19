@@ -48,7 +48,10 @@
       "state-and-local-government-finances-and-employment/receipts-expenditures-investment/state-and-local-government-budgets": {"category": "state-and-local-government-finances-and-employment/receipts-expenditures-investment", "basis": "table", "tables": [430], "reason": "BEA NIPA Table 3.3, state and local government current receipts and expenditures (Table 430)."},
       "agriculture/farm-income-and-balance-sheet/farm-output-and-value-added": {"category": "agriculture/farm-income-and-balance-sheet", "basis": "table", "tables": [840], "reason": "BEA NIPA Tables 7.3.5 and 7.3.6, farm sector output and value added (Table 840)."},
       "labor-force-employment-and-earnings/compensation-wages-and-earnings/pay-by-industry": {"category": "labor-force-employment-and-earnings/compensation-wages-and-earnings", "basis": "table", "tables": [643], "reason": "BEA NIPA Tables 6.2D, 6.3D and 6.6D: compensation, wages and salaries, and wages per full-time equivalent employee by industry (Table 643). Table 1017 prints the manufacturing lines under Manufactures."},
-      "labor-force-employment-and-earnings/compensation-wages-and-earnings/full-time-equivalent-employees": {"category": "labor-force-employment-and-earnings/compensation-wages-and-earnings", "basis": "judgement", "reason": "Only Table 1017 (Manufactures) prints BEA full-time equivalent employees, for manufacturing alone; NIPA Table 6.5D covers every industry, so it sits with pay by industry (Table 643), which is computed from it."}
+      "labor-force-employment-and-earnings/compensation-wages-and-earnings/full-time-equivalent-employees": {"category": "labor-force-employment-and-earnings/compensation-wages-and-earnings", "basis": "judgement", "reason": "Only Table 1017 (Manufactures) prints BEA full-time equivalent employees, for manufacturing alone; NIPA Table 6.5D covers every industry, so it sits with pay by industry (Table 643), which is computed from it."},
+      "population/national-estimates-and-projections/projected-population": {"category": "population/national-estimates-and-projections", "basis": "table", "tables": [3], "reason": "Census Bureau national population projections: the total and its yearly change (Table 3)."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-population": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [9, 12], "reason": "Census Bureau national population projections by sex and age (Table 9) and by race and Hispanic origin (Table 12)."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [9], "reason": "Census Bureau national population projections: median age by sex (Table 9)."}
     }
   },
   "comparative-agendas": {
@@ -99,7 +102,10 @@
       "state-and-local-government-finances-and-employment/receipts-expenditures-investment/state-and-local-government-budgets": {"category": "2001", "basis": "judgement", "reason": "Intergovernmental Relations: state and local finances, including federal grants."},
       "agriculture/farm-income-and-balance-sheet/farm-output-and-value-added": {"category": "400", "basis": "judgement", "reason": "Agriculture, General."},
       "labor-force-employment-and-earnings/compensation-wages-and-earnings/pay-by-industry": {"category": "500", "basis": "judgement", "reason": "Labor, General; Employee Benefits (503) covers only part of compensation."},
-      "labor-force-employment-and-earnings/compensation-wages-and-earnings/full-time-equivalent-employees": {"category": "500", "basis": "judgement", "reason": "Labor, General."}
+      "labor-force-employment-and-earnings/compensation-wages-and-earnings/full-time-equivalent-employees": {"category": "500", "basis": "judgement", "reason": "Labor, General."},
+      "population/national-estimates-and-projections/projected-population": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-population": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."}
     }
   }
 }

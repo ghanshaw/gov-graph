@@ -481,7 +481,8 @@
     "census-population-projections": {
       "checked": "2026-10-17",
       "files": [
-        { "list": "https://www2.census.gov/programs-surveys/popproj/datasets/2023/2023-popproj/", "recursive": true, "match": "\\.(csv|xlsx?)$", "note": "The 2023 national projections, 2022–2100." }
+        { "list": "https://www2.census.gov/programs-surveys/popproj/datasets/2023/2023-popproj/", "recursive": true, "match": "\\.(csv|xlsx?)$", "note": "The 2023 national projections, 2022–2100." },
+        { "list": "https://www2.census.gov/programs-surveys/popproj/tables/2023/2023-summary-tables/", "match": "np2023-(t\\d+|[a-d])\\.xlsx$", "note": "Census’s own summary tables of the main series (age groups, median age, race and origin), which the Abstract tables print (3, 9, 12); the datasets give single years of age only." }
       ]
     },
     "census-quarterly-financial-report": {
