@@ -1951,9 +1951,9 @@
       "description": "Lawful permanent residents, refugees and asylees, naturalizations, nonimmigrant admissions, apprehensions and removals, and estimates of the unauthorized population, yearly. OIS until 2023, then OHSS.",
       "homepage": "https://ohss.dhs.gov/topics/immigration/yearbook",
       "licence": { "type": "public-domain" },
-      "access": { "used": [], "best": "file" }, "collected": false,
+      "access": { "used": ["file"], "note": "The Yearbook's Excel tables, by edition; every Yearbook since 1996 as PDF beside them. Read: lawful permanent residents, refugees and asylees (fiscal 2023), naturalizations (fiscal 2022)." },
       "status": "active",
-      "paths": []
+      "paths": ["ohss.dhs.gov/sites/default/files/"]
     },
     {
       "slug": "uscg-migrant-interdictions", "name": "Coast Guard Migrant Interdictions",

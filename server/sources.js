@@ -10,6 +10,7 @@ import { ORGANIZATION_KINDS, PROGRAM_KINDS, LICENCES, ACCESS, STATUSES } from '.
 import { nipaTable } from './lib/nipa-series.js';
 import { cpsTable } from './lib/cps-series.js';
 import { eiaTable } from './lib/eia-series.js';
+import { dhsTable } from './lib/dhs-yearbook.js';
 import { coverageReport, COVERAGE, SHAPES } from './lib/abstract-coverage.js';
 
 const PROGRAM_COLUMNS = `d.slug, d.name, d.kind, d.description, d.homepage, d.licence, d.licence_detail AS "licenceDetail",
@@ -132,6 +133,8 @@ function indexOfSeries() {
 const TABLE_SERIES = {
   cps: { ids: cpsTable, source: 'bls-bulk', name: 'Current Population Survey' },
   eia: { ids: eiaTable, source: 'eia', name: 'EIA petroleum data' },
+  // dhs:3 is DHS's own table number, not the Abstract's.
+  dhs: { ids: dhsTable, source: 'dhs-yearbook', name: 'DHS Yearbook', title: table => `DHS Yearbook of Immigration Statistics, Table ${table}` },
 };
 
 function describeSeries(key, rows) {
@@ -147,15 +150,16 @@ function describeSeries(key, rows) {
     const frequency = words.length ? words.slice(0, -1).join(', ') + (words.length > 1 ? ' and ' : '') + words.at(-1) : null;
     return { key, name: `NIPA ${table?.title.replace(/\.$/, '') ?? key}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
   }
-  // cps:586, eia:731: every series printing that Abstract table's rows (lib/cps-series.js, lib/eia-series.js), by publisher id.
-  const byTable = /^(cps|eia):(\d+)$/.exec(key);
+  // cps:586, eia:731: every series printing that Abstract table's rows (lib/cps-series.js, lib/eia-series.js), by publisher id;
+  // dhs:3: every series read from DHS Yearbook Table 3 (lib/dhs-yearbook.js).
+  const byTable = /^(cps|eia|dhs):(\d+)$/.exec(key);
   if (byTable) {
     const [, kind, table] = byTable;
     const ids = TABLE_SERIES[kind].ids(table);
     const list = rows.filter(r => r.source === TABLE_SERIES[kind].source && ids?.has(r.sourceId) && !r.place);
     const words = ['annual', 'quarterly', 'monthly', 'weekly'].filter(f => list.some(r => r.frequency === f)).map(f => (f === 'annual' ? 'yearly' : f));
     const frequency = words.length ? words.slice(0, -1).join(', ') + (words.length > 1 ? ' and ' : '') + words.at(-1) : null;
-    return { key, name: `${TABLE_SERIES[kind].name}, the rows of Table ${table}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
+    return { key, name: TABLE_SERIES[kind].title?.(table) ?? `${TABLE_SERIES[kind].name}, the rows of Table ${table}`, groups: 0, count: list.length, places: 0, frequency, ...span(list), found: list.length > 0 };
   }
   if (key.endsWith('--*')) {
     const base = key.slice(0, -3);

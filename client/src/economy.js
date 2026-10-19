@@ -38,7 +38,7 @@ export function formatValue(value, unit) {
   if (unit === 'x') return `${value.toFixed(1)}×`;
   if (unit === 'deaths') return `${Math.round(value).toLocaleString()} deaths`;
   // Demographic counts (lib/population/series.js): whole people, households, seats.
-  if (unit === 'people' || unit === 'households') return Math.abs(value) >= 1e6 ? `${(value / 1e6).toFixed(1)} million` : Math.round(value).toLocaleString();
+  if (unit === 'people' || unit === 'households' || unit === 'petitions') return Math.abs(value) >= 1e6 ? `${(value / 1e6).toFixed(1)} million` : Math.round(value).toLocaleString();
   if (unit === 'seats') return `${value} ${value === 1 ? 'seat' : 'seats'}`;
   if (unit === 'years') return `${value.toFixed(1)} years`;
   if (unit === 'average-people') return `${value.toFixed(2)} people`;
@@ -60,7 +60,7 @@ export function formatTick(value, unit) {
   if (unit === '$') return value >= 1000 ? `$${value / 1000}k` : `$${value}`;
   if (unit === 'x') return `${value}×`;
   if (unit === 'deaths') return value >= 1000 ? `${value / 1000}k` : String(value);
-  if (unit === 'people' || unit === 'households') {
+  if (unit === 'people' || unit === 'households' || unit === 'petitions') {
     const a = Math.abs(value);
     return a >= 1e6 ? `${+(value / 1e6).toFixed(2)}M` : a >= 1e3 ? `${+(value / 1e3).toFixed(1)}k` : String(value);
   }
@@ -688,7 +688,7 @@ const DOLLAR_SCALE = { '$': 1, '$k': 1e3, '$m': 1e6, '$bn': 1e9 };
 const UNIT_NAMES = {
   '%': 'Percent', '$/bbl': 'Dollars a barrel', '$/gal': 'Dollars a gallon', thousands: 'Thousands',
   'kb/d': 'Thousand barrels a day', kbbl: 'Thousand barrels', weeks: 'Weeks', hours: 'Hours a week', deaths: 'Deaths', x: 'Ratio', index: 'Index',
-  people: 'People', 'average-people': 'People (average)', households: 'Households', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
+  people: 'People', 'average-people': 'People (average)', households: 'Households', petitions: 'Petitions', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
 };
 const FREQUENCY_NAMES = {
   daily: 'daily', weekly: 'weekly', 'four-week-average': 'four-week averages', monthly: 'monthly',

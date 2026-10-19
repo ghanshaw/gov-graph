@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import { nipaTable } from './nipa-series.js';
 import { cpsTable } from './cps-series.js';
 import { eiaTable } from './eia-series.js';
+import { dhsTable } from './dhs-yearbook.js';
 
 const DATA = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'seed', 'data');
 const read = name => JSON.parse(fs.readFileSync(path.join(DATA, name), 'utf8'));
@@ -63,7 +64,8 @@ export function checkCoverage({ sections, tables: covered }, tables, programs) {
       if (/^nipa:T/.test(s)) { if (!nipaTable(s.slice(5))) problems.push(`${name}: ${s} is not a NIPA table GovGraph collects (lib/nipa-series.js)`); }
       else if (/^cps:\d+$/.test(s)) { if (!cpsTable(s.slice(4))) problems.push(`${name}: ${s} has no series in cps-series.json (lib/cps-series.js)`); }
       else if (/^eia:\d+$/.test(s)) { if (!eiaTable(s.slice(4))) problems.push(`${name}: ${s} has no series in eia-tables.json (lib/eia-series.js)`); }
-      else if (!/^[a-z0-9-]+(--\*)?$/.test(s)) problems.push(`${name}: series ${s} is not a slug, a measure, a prefix--*, nipa:<table>, cps:<table> or eia:<table>`);
+      else if (/^dhs:\d+$/.test(s)) { if (!dhsTable(s.slice(4))) problems.push(`${name}: ${s} has no series in dhs-yearbook.json (lib/dhs-yearbook.js)`); }
+      else if (!/^[a-z0-9-]+(--\*)?$/.test(s)) problems.push(`${name}: series ${s} is not a slug, a measure, a prefix--*, nipa:<table>, cps:<table>, eia:<table> or dhs:<DHS table>`);
     }
   }
   return problems;

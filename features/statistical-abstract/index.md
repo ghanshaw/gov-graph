@@ -398,6 +398,26 @@ Book order. **Section 1, Population:**
   monthly totals, 2000s components) and 74; metros and cities 16–29 wait for a place level below states (coverage notes
   to say so). Religion 75–77 has no federal file. The tools are in place: `census-tables.js` for printed tables,
   `census-history.js` for years-down tables, scratchpad helpers aside. Moved on to other publishers from here.
+- **Immigration (tables 43, 44, 46–51; 2026-10-19).** DHS's Yearbook of Immigration Statistics, latest Excel edition
+  of each part: lawful permanent residents, refugees and asylees fiscal 2023 (OHSS, 2024), naturalizations fiscal 2022.
+  `server/lib/dhs-yearbook.js` reads the Yearbook layout (capitals title, one or two heading rows, blocks such as
+  REGION / COUNTRY / ADJUSTMENTS OF STATUS, rows indented under their parent: the depth is the cell's indent, read by
+  the new `readXlsxIndents` in `lib/xlsx.js`); `server/seed/build-dhs-yearbook.js` writes `dhs-yearbook.json`; load
+  with `--source dhs-yearbook`. 2,211 series, frequency `fiscal-year` (July 1 through 1976, October 1 after; the 1976
+  year runs 15 months as DHS prints it; the early years' note is quoted from the 2010 Yearbook), as printed (rounded to
+  tens except naturalizations). DHS Tables 1 (green cards 1820–2023), 3 (by country of birth), 6 (by class of
+  admission, adjustments and new arrivals), 8 (sex, age, marital status, occupation, 2023), 10 (broad class by country
+  of birth, 2023), 12 (orphans adopted, 2023), 13, 14 (refugees, by nationality), 16, 17, 19 (asylum, affirmative and
+  defensive, by nationality), 20 (naturalizations 1907–2022). The whole printed tables, every country DHS prints (212
+  regions and countries, as breakdowns `birth_country` and `nationality`, not places). 7 measures (lawful permanent
+  residents; refugee arrivals; grants of asylum; naturalization petitions filed and denied; people naturalized;
+  immigrant orphans adopted), placed under the Abstract's native- and foreign-born populations and CAP 900
+  Immigration; new unit `petitions`, publisher `dhs`. Names say "Green Cards" (the reader's words; the descriptions
+  give DHS's terms). Coverage may name a DHS table as `dhs:6`. Tables 43, 46, 47 `have`; 44, 48, 49, 50, 51 `partly`
+  (years before 2014 only in older editions; NACARA and HRIFA no longer printed; characteristics no longer by
+  country). Program `dhs-immigration-statistics` collected (path `ohss.dhs.gov/sites/default/files/`). Table 45
+  (unauthorized population) is a separate report, not downloaded. DHS's enforcement workbook (its Tables 33–42, fiscal 2022) is on disk
+  for Abstract tables 530–533.
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
@@ -451,5 +471,5 @@ Book order. **Section 1, Population:**
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
 - [x] Phase 5a: the download list for the 279 programs still to collect, measured: 22.75 GB in 21,601 files; 87 with no file (2026-10-18)
 - [x] Phase 5b: download everything (throttled, logged): 21,245 files, 33 GB (2026-10-19)
-- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections, estimates by age, sex, race, families and living arrangements done; the rest of Census paused 2026-10-19, see Phase 5c)
+- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections, estimates by age, sex, race, families and living arrangements, immigration done; the rest of Census paused 2026-10-19, see Phase 5c)
 - [ ] Phase 5: collect, section by section

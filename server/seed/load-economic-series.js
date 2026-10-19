@@ -20,7 +20,7 @@
 
 import fs from 'fs';
 import { execFileSync } from 'child_process';
-import { readXlsx } from '../lib/xlsx.js';
+import { readXlsx, readXlsxIndents } from '../lib/xlsx.js';
 import { extractPdfLines } from '../lib/pdf-lines.js';
 import { readXls } from '../lib/xls.js';
 import pg from 'pg';
@@ -84,6 +84,12 @@ function readSource(s) {
   if (s.source === 'eia') return readEiaBulkFile();
   // A Census table series may be read from several tables (one per decade), some by sheet.
   if (s.source === 'census-tables') return (url, sheet) => readFile(mirrorFile(url), false, sheet);
+  // DHS's Yearbook shows a row's depth by its indent.
+  if (s.source === 'dhs-yearbook') return (url, sheet) => {
+    const key = `${mirrorFile(url)}#${sheet}#indents`;
+    if (!files.has(key)) files.set(key, readXlsxIndents(mirrorFile(url), sheet));
+    return { rows: readFile(mirrorFile(url), false, sheet), indents: files.get(key) };
+  };
   return readFile(seriesFile(s), ['bea', 'bls-bulk', 'umich', 'freddiemac', 'fhfa', 'cdc'].includes(s.source), s.sheet);
 }
 

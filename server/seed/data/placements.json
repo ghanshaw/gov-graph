@@ -66,7 +66,14 @@
       "population/households-families-group-quarters/married-couple-families-with-a-stay-at-home-parent": {"category": "population/households-families-group-quarters", "basis": "table", "tables": [68], "reason": "Table 68 prints stay-at-home parent family groups (Census Table SHP-1)."},
       "population/households-families-group-quarters/children-with-a-stay-at-home-parent": {"category": "population/households-families-group-quarters", "basis": "table", "tables": [68], "reason": "Table 68 prints the children in stay-at-home parent family groups (Census Table SHP-1)."},
       "population/households-families-group-quarters/children-by-living-arrangement": {"category": "population/households-families-group-quarters", "basis": "table", "tables": [69], "reason": "Table 69 prints children under 18 by presence and marital status of parents (Census Tables CH-1 to CH-6)."},
-      "population/households-families-group-quarters/adults-living-alone": {"category": "population/households-families-group-quarters", "basis": "table", "tables": [72], "reason": "Table 72 prints persons living alone (Census Table AD-3 prints adults living alone, by sex and age as percents)."}
+      "population/households-families-group-quarters/adults-living-alone": {"category": "population/households-families-group-quarters", "basis": "table", "tables": [72], "reason": "Table 72 prints persons living alone (Census Table AD-3 prints adults living alone, by sex and age as percents)."},
+      "population/native-and-foreign-born-populations/lawful-permanent-residents": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [43, 48, 49, 50, 51], "reason": "Tables 43, 48, 49, 50 and 51 print persons obtaining lawful permanent resident status (DHS Yearbook Tables 1, 3, 6 and 10)."},
+      "population/native-and-foreign-born-populations/refugee-arrivals": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [44], "reason": "Table 44 prints refugee arrivals by country of nationality (DHS Yearbook Tables 13 and 14)."},
+      "population/native-and-foreign-born-populations/grants-of-asylum": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [44], "reason": "Table 44 prints individuals granted asylum by country of nationality (DHS Yearbook Tables 16, 17 and 19)."},
+      "population/native-and-foreign-born-populations/naturalization-petitions-filed": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [47], "reason": "Table 47 prints petitions for naturalization filed (DHS Yearbook Table 20)."},
+      "population/native-and-foreign-born-populations/people-naturalized": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [47], "reason": "Table 47 prints persons naturalized (DHS Yearbook Table 20)."},
+      "population/native-and-foreign-born-populations/naturalization-petitions-denied": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [47], "reason": "Table 47 prints petitions for naturalization denied (DHS Yearbook Table 20)."},
+      "population/native-and-foreign-born-populations/immigrant-orphans-adopted": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [46], "reason": "Table 46 prints immigrant orphans adopted by U.S. citizens (DHS Yearbook Table 12)."}
     }
   },
   "comparative-agendas": {
@@ -135,7 +142,14 @@
       "population/households-families-group-quarters/married-couple-families-with-a-stay-at-home-parent": {"category": "1208", "basis": "judgement", "reason": "Family Issues: CAP's subtopic for family life and family law, the nearest to how families are made up."},
       "population/households-families-group-quarters/children-with-a-stay-at-home-parent": {"category": "1208", "basis": "judgement", "reason": "Family Issues: CAP's subtopic for family life and family law, the nearest to how families are made up."},
       "population/households-families-group-quarters/children-by-living-arrangement": {"category": "1208", "basis": "judgement", "reason": "Family Issues: CAP's subtopic for family life and family law, the nearest to how families are made up."},
-      "population/households-families-group-quarters/adults-living-alone": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population or households themselves."}
+      "population/households-families-group-quarters/adults-living-alone": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population or households themselves."},
+      "population/native-and-foreign-born-populations/lawful-permanent-residents": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
+      "population/native-and-foreign-born-populations/refugee-arrivals": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
+      "population/native-and-foreign-born-populations/grants-of-asylum": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
+      "population/native-and-foreign-born-populations/naturalization-petitions-filed": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
+      "population/native-and-foreign-born-populations/people-naturalized": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
+      "population/native-and-foreign-born-populations/naturalization-petitions-denied": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
+      "population/native-and-foreign-born-populations/immigrant-orphans-adopted": {"category": "900", "basis": "judgement", "reason": "Immigration: the children are admitted as immigrants (immediate relatives of U.S. citizens)."}
     }
   }
 }

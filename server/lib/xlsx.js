@@ -74,3 +74,18 @@ export function readXlsx(file, sheetName = null) {
   }
   return rows;
 }
+
+/**
+ * The indent of each row's first cell (0 where none), in the order readXlsx gives the rows: tables that show a
+ * row's depth by indenting its label, not by dots (DHS's Yearbook tables).
+ */
+export function readXlsxIndents(file, sheetName = null) {
+  const styles = unzipPart(file, 'xl/styles.xml');
+  const xfs = /<cellXfs\b[^>]*>([\s\S]*?)<\/cellXfs>/.exec(styles)?.[1] ?? '';
+  const indents = [...xfs.matchAll(/<xf\b[^>]*?(?:\/>|>([\s\S]*?)<\/xf>)/g)].map(m => Number(/\bindent="(\d+)"/.exec(m[1] ?? '')?.[1] ?? 0));
+  const sheet = unzipPart(file, sheetName ? sheetPart(file, sheetName) : 'xl/worksheets/sheet1.xml');
+  return [...sheet.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)].map(row => {
+    const first = [...row[1].matchAll(/<c\b([^>]*?)(?:\/>|>)/g)].find(c => columnIndex(/\br="([A-Z]+\d+)"/.exec(c[1])?.[1] ?? 'A1') === 0);
+    return first ? indents[Number(/\bs="(\d+)"/.exec(first[1])?.[1] ?? 0)] ?? 0 : 0;
+  });
+}

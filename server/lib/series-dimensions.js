@@ -16,6 +16,7 @@ import { CPI_MEASURES, cpiDimensions } from './cpi-series.js';
 import { CPS_MEASURES, cpsDimensions } from './cps-series.js';
 import { EIA_MEASURES, eiaDimensions } from './eia-series.js';
 import { CENSUS_TABLE_MEASURES, censusTableDimensions } from './census-tables.js';
+import { DHS_MEASURES, dhsDimensions } from './dhs-yearbook.js';
 
 const V = (label, parent) => (parent ? { label, parent } : { label });
 export const DIMENSIONS = {
@@ -39,7 +40,7 @@ export const DIMENSIONS = {
   publisher: { label: 'Source', values: {
     eia: V('EIA'), bls: V('BLS'), bea: V('BEA'), treasury: V('Treasury'), omb: V('OMB'), cbo: V('CBO'), irs: V('IRS'), usitc: V('USITC'),
     census: V('Census'), umich: V('U. of Michigan'), freddiemac: V('Freddie Mac'), fhfa: V('FHFA'), atlantafed: V('Atlanta Fed'),
-    cdc: V('CDC'), fed: V('Federal Reserve'),
+    cdc: V('CDC'), fed: V('Federal Reserve'), dhs: V('DHS'),
   } },
 
   // Breakdowns, each used by some measures.
@@ -226,6 +227,12 @@ for (const [key, m] of Object.entries(CENSUS_TABLE_MEASURES)) {
   if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
   else MEASURES[key] = { label: m.label, dims: m.dims };
 }
+// DHS's immigration Yearbook (lib/dhs-yearbook.js): ages and sexes join those above.
+for (const [id, d] of Object.entries(dhsDimensions())) {
+  DIMENSIONS[id] ??= { label: d.label, values: {} };
+  for (const [value, label] of Object.entries(d.values)) DIMENSIONS[id].values[value] ??= V(label);
+}
+for (const [key, m] of Object.entries(DHS_MEASURES)) MEASURES[key] = { label: m.label, dims: m.dims };
 for (const [key, m] of Object.entries(CPS_MEASURES)) {
   if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
   else MEASURES[key] = { label: m.label, dims: m.dims };
@@ -520,7 +527,7 @@ function readLabels(s) {
 const FREQUENCY = { daily: 'daily', weekly: 'weekly', 'four-week-average': 'four-week', monthly: 'monthly', quarterly: 'quarterly',
   annual: 'yearly', 'fiscal-year': 'yearly', irregular: 'irregular' };
 const PUBLISHER = { eia: 'eia', bls: 'bls', 'bls-bulk': 'bls', bea: 'bea', treasury: 'treasury', 'treasury-mts': 'treasury',
-  'treasury-mts-1': 'treasury', 'census-tables': 'census', 'treasury-mts-4': 'treasury', 'treasury-dts': 'treasury', 'treasury-dts-iv': 'treasury', omb: 'omb',
+  'treasury-mts-1': 'treasury', 'census-tables': 'census', 'dhs-yearbook': 'dhs', 'treasury-mts-4': 'treasury', 'treasury-dts': 'treasury', 'treasury-dts-iv': 'treasury', omb: 'omb',
   cbo: 'cbo', 'irs-soi': 'irs', usitc: 'usitc', census: 'census', 'census-nrs': 'census', 'census-trade': 'census', umich: 'umich',
   freddiemac: 'freddiemac', fhfa: 'fhfa', atlantafed: 'atlantafed', cdc: 'cdc', 'fed-h15': 'fed', 'fed-omo': 'fed' };
 const DOLLARS = /^\$/;
