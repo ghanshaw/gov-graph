@@ -391,6 +391,13 @@ Book order. **Section 1, Population:**
   disk but printed by no Abstract table of Section 1; MC-1 waits for table 601. Still to do for families: 64 (no
   Census history table by number of children), and the snapshots 57, 58, 65, 66, 71 (yearly detailed tables, not
   yet downloaded).
+- **Census paused here (user, 2026-10-19): "revisit the census later".** Section 1's Census tables still to do, in
+  the order planned: the families leftovers above (64; snapshots 57, 58, 65, 66, 71, after adding the latest yearly
+  detailed tables to `downloads.json`); the ACS tables 33, 35, 36, 38, 39, 42, 52–55, 63, 70, 73 (fetch the missing
+  ones first); migration and other CPS reports 30–32, 34, 37, 40, 41; tables 1, 2, 4, 13–15 (regions, ranks, density,
+  monthly totals, 2000s components) and 74; metros and cities 16–29 wait for a place level below states (coverage notes
+  to say so). Religion 75–77 has no federal file. The tools are in place: `census-tables.js` for printed tables,
+  `census-history.js` for years-down tables, scratchpad helpers aside. Moved on to other publishers from here.
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
@@ -444,5 +451,5 @@ Book order. **Section 1, Population:**
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
 - [x] Phase 5a: the download list for the 279 programs still to collect, measured: 22.75 GB in 21,601 files; 87 with no file (2026-10-18)
 - [x] Phase 5b: download everything (throttled, logged): 21,245 files, 33 GB (2026-10-19)
-- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections, estimates by age, sex, race, families and living arrangements done)
+- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections, estimates by age, sex, race, families and living arrangements done; the rest of Census paused 2026-10-19, see Phase 5c)
 - [ ] Phase 5: collect, section by section
