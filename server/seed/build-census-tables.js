@@ -13,14 +13,17 @@ import { readXlsx } from '../lib/xlsx.js';
 import { readXls } from '../lib/xls.js';
 import { buildCensusTableSeries, CENSUS_TABLES_FILE } from '../lib/census-tables.js';
 
-const rowsOf = url => {
+const read = new Map();
+const rowsOf = (url, sheet = null) => {
   const file = mirrorFile(url);
   if (!fs.existsSync(file)) throw new Error(`no file at ${file}; run fetch-downloads.js first`);
-  return file.endsWith('.xlsx') ? readXlsx(file) : readXls(file);
+  const key = `${file}#${sheet}`;
+  if (!read.has(key)) read.set(key, file.endsWith('.xlsx') ? readXlsx(file, sheet) : readXls(file));
+  return read.get(key);
 };
 
 const series = buildCensusTableSeries(rowsOf);
-const byTable = Object.entries(Object.groupBy(series, s => s.table)).map(([t, l]) => `${t} ${l.length}`).join(', ');
+const byTable = Object.entries(Object.groupBy(series, s => s.parts[0].table.split(':')[0])).map(([t, l]) => `${t} ${l.length}`).join(', ');
 console.log(`${series.length} series (${byTable})`);
 if (!process.argv.includes('--dry-run')) {
   const about = 'Written by server/seed/build-census-tables.js from the Census tables in the data folder (lib/census-tables.js); never edited by hand.';

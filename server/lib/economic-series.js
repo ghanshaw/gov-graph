@@ -76,7 +76,7 @@ import { nipaSeries, nameNipaSeries } from './nipa-series.js';
 import { cpiSeries } from './cpi-series.js';
 import { cpsSeries } from './cps-series.js';
 import { eiaSeries } from './eia-series.js';
-import { censusSeries, readCensusTable } from './census-tables.js';
+import { censusSeries, readCensusTable, censusTableTitle } from './census-tables.js';
 
 export const EIA_PET_BULK = 'https://www.eia.gov/opendata/bulk/PET.zip';
 const EIA_FREQUENCY = { daily: 'D', weekly: 'W', 'four-week-average': '4', monthly: 'M' };
@@ -1409,12 +1409,9 @@ export function publisherTitle(s, files) {
       const title = files.eia()?.get(eiaBulkId(s))?.name;
       return title ? { title, from: 'EIA bulk file PET.txt, name' } : null;
     }
-    case 'census-tables': {
-      // The table's title line, then the row's labels (block down) or the column heading.
-      const rows = files.rows(seriesFile(s));
-      const title = rows?.find(r => r?.[0] && !/^\s*$/.test(String(r[0])))?.[0];
-      return title ? { title: `${String(title).trim()}: ${s.key}`, from: `Census ${path.basename(s.url)}: title and row or column labels` } : null;
-    }
+    case 'census-tables':
+      // Each table's title as Census prints it, then the row's labels (block down) or the column heading.
+      return { title: censusTableTitle(s), from: 'Census table titles, and row labels or column headings' };
     case 'census-nrs': {
       const rows = files.rows(seriesFile(s), s.sheet);
       return rows?.[0]?.[0] ? { title: `${rows[0][0].replace(/\s+/g, ' ')}: ${s.source_id}`, from: `Census ${path.basename(s.url)}, ${s.sheet} sheet: title and column heading` } : null;

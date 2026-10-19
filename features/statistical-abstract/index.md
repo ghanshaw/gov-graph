@@ -360,6 +360,14 @@ Book order. **Section 1, Population:**
   age groups and median age every five years to 2100, race and Hispanic origin by sex to 2060. Measures: projected
   population (national; and by age, sex, race) and projected median age. Table 3 `have`; 9 and 12 `partly` (Census
   prints the percent distributions and race by age only as percentages).
+- **Estimates by age, sex, race and Hispanic origin (tables 6, 7, 8, 10; 2026-10-19).** Census's printed national
+  tables for each decade: 2000–2010 intercensal (`us-est00int-01`, `-02`, `-03-*`), 2010–2020 intercensal (released
+  2024) and Vintage 2025 (`agesex`, `sr11h`, `asr6h`), added to the download list. Joined year by year as the resident
+  population already is (newest table wins; the description lists which table gives which years), July 1, 2000–2025.
+  850 series: sex by age group and median age; sex by race (alone; alone or in combination from 2010) and Hispanic
+  origin; race alone by Hispanic origin and age, both sexes. New breakdowns `race_scope` and `hispanic_origin` (the
+  projections' Hispanic and non-Hispanic white rows moved to them). Names say Male and Female ("Female Population Aged
+  85 and Over"): Census counts every age. Tables 6, 8, 10 `have`; 7 `partly` (ages before 2000 on disk, not loaded).
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
@@ -413,5 +421,5 @@ Book order. **Section 1, Population:**
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
 - [x] Phase 5a: the download list for the 279 programs still to collect, measured: 22.75 GB in 21,601 files; 87 with no file (2026-10-18)
 - [x] Phase 5b: download everything (throttled, logged): 21,245 files, 33 GB (2026-10-19)
-- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections done)
+- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections, estimates by age, sex, race done)
 - [ ] Phase 5: collect, section by section

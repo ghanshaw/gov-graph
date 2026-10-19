@@ -82,6 +82,8 @@ function readSource(s) {
   }
   if (s.source === 'fed-omo') return FED_OMO_PAGES.map(url => readFile(mirrorFile(url), true));
   if (s.source === 'eia') return readEiaBulkFile();
+  // A Census table series may be read from several tables (one per decade), some by sheet.
+  if (s.source === 'census-tables') return (url, sheet) => readFile(mirrorFile(url), false, sheet);
   return readFile(seriesFile(s), ['bea', 'bls-bulk', 'umich', 'freddiemac', 'fhfa', 'cdc'].includes(s.source), s.sheet);
 }
 

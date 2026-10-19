@@ -51,7 +51,9 @@
       "labor-force-employment-and-earnings/compensation-wages-and-earnings/full-time-equivalent-employees": {"category": "labor-force-employment-and-earnings/compensation-wages-and-earnings", "basis": "judgement", "reason": "Only Table 1017 (Manufactures) prints BEA full-time equivalent employees, for manufacturing alone; NIPA Table 6.5D covers every industry, so it sits with pay by industry (Table 643), which is computed from it."},
       "population/national-estimates-and-projections/projected-population": {"category": "population/national-estimates-and-projections", "basis": "table", "tables": [3], "reason": "Census Bureau national population projections: the total and its yearly change (Table 3)."},
       "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-population": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [9, 12], "reason": "Census Bureau national population projections by sex and age (Table 9) and by race and Hispanic origin (Table 12)."},
-      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [9], "reason": "Census Bureau national population projections: median age by sex (Table 9)."}
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [9], "reason": "Census Bureau national population projections: median age by sex (Table 9)."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/resident-population": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [6, 7, 8, 10], "reason": "Census Bureau population estimates by sex, race and Hispanic origin (Table 6), sex and age (7, 8), and race, Hispanic origin and age (10)."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/median-age": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [7, 8, 10], "reason": "Census Bureau population estimates: median age by sex (Tables 7, 8) and by race and Hispanic origin (10)."}
     }
   },
   "comparative-agendas": {
@@ -105,7 +107,9 @@
       "labor-force-employment-and-earnings/compensation-wages-and-earnings/full-time-equivalent-employees": {"category": "500", "basis": "judgement", "reason": "Labor, General."},
       "population/national-estimates-and-projections/projected-population": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
       "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-population": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
-      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."}
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/resident-population": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/median-age": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."}
     }
   }
 }

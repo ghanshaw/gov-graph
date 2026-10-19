@@ -218,8 +218,9 @@ for (const [key, m] of Object.entries(EIA_MEASURES)) {
   else MEASURES[key] = { label: m.label, dims: m.dims };
 }
 // The Census tables of the Abstract's Section 1 (lib/census-tables.js): ages and races join those above.
-for (const [id, values] of Object.entries(censusTableDimensions())) {
-  for (const [value, label] of Object.entries(values)) DIMENSIONS[id].values[value] ??= V(label);
+for (const [id, d] of Object.entries(censusTableDimensions())) {
+  DIMENSIONS[id] ??= { label: d.label, values: {} };
+  for (const [value, label] of Object.entries(d.values)) DIMENSIONS[id].values[value] ??= V(label);
 }
 for (const [key, m] of Object.entries(CENSUS_TABLE_MEASURES)) {
   if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
