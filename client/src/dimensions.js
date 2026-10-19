@@ -12,7 +12,11 @@
 // What a missing value means, per dimension.
 export const ABSENT = {
   sex: 'Everyone', race: 'Everyone', age: 'All ages', education: 'All levels', payment: 'However paid', bound: 'One rate', flow: 'Not stated',
+  admission_class: 'All classes', admission_type: 'Both', birth_country: 'All countries', nationality: 'All countries',
+  marital_status: 'Any marital status', immigrant_occupation: 'Any occupation', asylum_process: 'Both', naturalization_service: 'All',
 };
+// A series with no value for a breakdown is the total over it, unless ABSENT says otherwise.
+const ABSENT_DEFAULT = 'All';
 const DEMOGRAPHIC = ['sex', 'race', 'age', 'education'];
 // Demographic groups by what they combine, in this order, each kind on a line of its own.
 const KINDS = [['', 'Everyone'], ['sex', 'Sex'], ['race', 'Race and ethnicity'], ['race sex', 'Race and sex'], ['age', 'Age'],
@@ -72,7 +76,7 @@ function plainLevel(vocab, dim) {
     key: dim,
     label: dim === 'years' ? 'Years' : vocab.dimensions[dim].label,
     valueOf: s => s.dimensions[dim] ?? null,
-    labelOf: v => (v === null ? ABSENT[dim] ?? 'Not stated' : values?.[v]?.label ?? v),
+    labelOf: v => (v === null ? ABSENT[dim] ?? ABSENT_DEFAULT : values?.[v]?.label ?? v),
     order: vs => [...vs].sort((a, b) => (a === null ? -1 : b === null ? 1 : values ? keys.indexOf(a) - keys.indexOf(b) : String(a).localeCompare(String(b)))),
     depthOf: (v, present) => ancestors(values, v).filter(a => present.has(a)).length,
     parentOf: v => values?.[v]?.parent ?? null,
