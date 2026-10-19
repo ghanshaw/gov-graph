@@ -41,6 +41,7 @@ export function formatValue(value, unit) {
   if (unit === 'people' || unit === 'households') return Math.abs(value) >= 1e6 ? `${(value / 1e6).toFixed(1)} million` : Math.round(value).toLocaleString();
   if (unit === 'seats') return `${value} ${value === 1 ? 'seat' : 'seats'}`;
   if (unit === 'years') return `${value.toFixed(1)} years`;
+  if (unit === 'average-people') return `${value.toFixed(2)} people`;
   if (unit === 'gini') return value.toFixed(3);
   if (unit === 'kb/d') return value >= 1000 ? `${(value / 1000).toFixed(2)} million barrels/day` : `${Math.round(value).toLocaleString()},000 barrels/day`;
   if (unit === 'kbbl') return value >= 1000 ? `${(value / 1000).toFixed(1)} million barrels` : `${Math.round(value).toLocaleString()},000 barrels`;
@@ -74,11 +75,12 @@ export function formatChange(before, after, unit) {
     const pts = after - before;
     return `${pts > 0 ? '+' : pts < 0 ? '−' : ''}${Math.abs(pts).toFixed(1)} pts`;
   }
-  // Seats, ages and the Gini index change by amounts, not by percent.
-  if (unit === 'seats' || unit === 'years' || unit === 'gini') {
+  // Seats, ages, average household sizes and the Gini index change by amounts, not by percent.
+  if (unit === 'seats' || unit === 'years' || unit === 'gini' || unit === 'average-people') {
     const d = after - before;
     const sign = d > 0 ? '+' : d < 0 ? '−' : '';
     if (unit === 'seats') return `${sign}${Math.abs(d)} ${Math.abs(d) === 1 ? 'seat' : 'seats'}`;
+    if (unit === 'average-people') return `${sign}${Math.abs(d).toFixed(2)} people`;
     return unit === 'years' ? `${sign}${Math.abs(d).toFixed(1)} years` : `${sign}${Math.abs(d).toFixed(3)}`;
   }
   const pct = ((after - before) / Math.abs(before)) * 100;
@@ -686,7 +688,7 @@ const DOLLAR_SCALE = { '$': 1, '$k': 1e3, '$m': 1e6, '$bn': 1e9 };
 const UNIT_NAMES = {
   '%': 'Percent', '$/bbl': 'Dollars a barrel', '$/gal': 'Dollars a gallon', thousands: 'Thousands',
   'kb/d': 'Thousand barrels a day', kbbl: 'Thousand barrels', weeks: 'Weeks', hours: 'Hours a week', deaths: 'Deaths', x: 'Ratio', index: 'Index',
-  people: 'People', households: 'Households', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
+  people: 'People', 'average-people': 'People (average)', households: 'Households', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
 };
 const FREQUENCY_NAMES = {
   daily: 'daily', weekly: 'weekly', 'four-week-average': 'four-week averages', monthly: 'monthly',

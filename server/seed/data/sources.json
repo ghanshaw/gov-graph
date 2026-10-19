@@ -1071,9 +1071,9 @@
       "description": "The Census Bureau's reports from the Current Population Survey and population estimates, with their detailed tables: P20 (population characteristics, families and living arrangements), P23, P25, P60 (income, poverty, health insurance) and others. One program for every series (user, 2026-10-13).",
       "homepage": "https://www.census.gov/library/publications/time-series/p60.html",
       "licence": { "type": "public-domain" },
-      "access": { "used": [], "best": "file", "note": "Detailed tables as spreadsheets beside each report." }, "collected": false,
+      "access": { "used": ["file"], "note": "Detailed tables as spreadsheets beside each report; the historical tables (demo/tables/…/time-series) are read." },
       "status": "active",
-      "paths": []
+      "paths": ["www2.census.gov/programs-surveys/demo/tables/"]
     },
     {
       "slug": "nsc-injury-facts", "name": "Injury Facts",

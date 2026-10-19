@@ -373,6 +373,24 @@ Book order. **Section 1, Population:**
   one value each. Breakdown `population_component`. Tables 2, 4, 13, 14, 15 stay `partly`: the totals, state
   populations and state components 2011–2025 are loaded; regions, ranks, density, monthly totals and the 2000s
   components are not.
+- **Families and living arrangements (tables 56, 59–62, 67–69, 72; 2026-10-19).** Census's historical CPS tables
+  (`demo/tables/families/time-series/`: MS-1, MS-3, HH-1–4, HH-6, FM-1, FM-2, SHP-1, CH-1–6, AD-3), read by
+  `server/lib/census-history.js` (years down the side, in race blocks; each table's columns named by number and
+  checked against their headings) through the same build and load as above. 339 series in thousands as printed, dated
+  March 1 (April 1 for census years), from 1940 where printed. Rules: a year printed twice after a change of weights
+  or method ("2021r" over "2021", the parent-pointer methods x/y/z) is taken from its first row, as for H-5; where
+  Census marks rows a and b for race alone and alone or in combination (MS-1, FM-2, CH-2, CH-3) those are separate
+  series, with the years before 2003 in the race-alone series. 12 measures (marital status; households; median age of
+  householders; people per household; families with own children; family groups with children; subfamilies; married
+  couples by race of spouses; stay-at-home parents, families and children; children by living arrangement; adults
+  living alone) and breakdowns for marital status, type and size of household, type of family, subfamily, race of
+  spouses, stay-at-home parent, living arrangement and parent's marital status; new unit `average-people`. Program
+  `census-current-population-reports` is now collected (path `demo/tables/`). Table 68 `have`; the others `partly`
+  (Census prints no percent distributions, no both-sexes totals and fewer race blocks than the Abstract; MS-3 stops in
+  2002, CH-5/6 and the subfamily blocks in 2014 and 2006). HH-5, HH-7, MS-2, FM-3, AD-1, AD-2, UC-1 and CH-7 are on
+  disk but printed by no Abstract table of Section 1; MC-1 waits for table 601. Still to do for families: 64 (no
+  Census history table by number of children), and the snapshots 57, 58, 65, 66, 71 (yearly detailed tables, not
+  yet downloaded).
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
@@ -426,5 +444,5 @@ Book order. **Section 1, Population:**
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
 - [x] Phase 5a: the download list for the 279 programs still to collect, measured: 22.75 GB in 21,601 files; 87 with no file (2026-10-18)
 - [x] Phase 5b: download everything (throttled, logged): 21,245 files, 33 GB (2026-10-19)
-- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections, estimates by age, sex, race done)
+- [ ] Phase 5c: load section by section from disk (book order; Section 1: projections, estimates by age, sex, race, families and living arrangements done)
 - [ ] Phase 5: collect, section by section

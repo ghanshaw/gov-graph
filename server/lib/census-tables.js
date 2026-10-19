@@ -14,6 +14,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { MAX_NAME } from './series-names.js';
+import { HISTORY_TABLES, HISTORY_MEASURES, historyDimensions, historySeries, historyValues } from './census-history.js';
 
 // The series list, written by server/seed/build-census-tables.js from the tables on disk (the tables' rows are their
 // series, so the list is read from the files once, not each time the module loads).
@@ -193,6 +194,8 @@ export const CENSUS_TABLE_MEASURES = {
   [ESTIMATED]: { label: 'Resident population', dims: GROUPS },
   [ESTIMATED_MEDIAN_AGE]: { label: 'Median age', dims: GROUPS.filter(d => d !== 'age') },
   [COMPONENTS_OF_CHANGE]: { label: 'Components of population change', dims: ['population_component', 'race', 'race_scope', 'hispanic_origin'] },
+  // Families and living arrangements (lib/census-history.js).
+  ...HISTORY_MEASURES,
 };
 
 /** The breakdowns these tables add or add values to: ages, races, alone or in combination, Hispanic origin ({ id: { label, values } }). */
@@ -203,8 +206,10 @@ export function censusTableDimensions() {
     '25 to 44 years', '45 to 64 years', '18 to 64 years', '15 to 44 years', '5 to 13 years', '65 years and over', '85 years and over', '100 years and over',
     '16 years and over', '18 years and over'];
   const age = Object.fromEntries(AGES.map(ageOf).map(a => [a.key, a.label]));
+  const { age: historyAges, ...history } = historyDimensions();
   return {
-    age: { label: 'Age', values: age }, race: { label: 'Race and ethnicity', values: race },
+    ...history,
+    age: { label: 'Age', values: { ...historyAges.values, ...age } }, race: { label: 'Race and ethnicity', values: race },
     race_scope: { label: 'Race counted', values: { alone: 'One race alone', 'in-combination': 'Alone or in combination with other races' } },
     hispanic_origin: { label: 'Hispanic origin', values: { hispanic: 'Hispanic (of any race)', 'not-hispanic': 'Not Hispanic' } },
     population_component: { label: 'Component of change', values: Object.fromEntries(Object.values(COMPONENTS).map(c => [c.key, c.label])) },
@@ -323,6 +328,8 @@ export const TABLES = [
     source: ESTIMATES_2000, column: estimateColumn, fixed,
     take: labels => (labels.sex || !(labels.age || labels.median) ? null : estimates(labels)),
   })),
+  // Families and living arrangements, years down (Abstract tables 56, 59–62, 67–69, 72; lib/census-history.js).
+  ...HISTORY_TABLES,
 ];
 // Each age key's printed words, for names ("5-9" → "5 to 9 years").
 for (const label of ['Under 5 years', 'Under 18 years', ...Array.from({ length: 20 }, (_, i) => `${i * 5} to ${i * 5 + 4} years`), '14 to 17 years', '18 to 24 years',
@@ -348,6 +355,16 @@ export function buildCensusTableSeries(rowsOf) {
     const rows = rowsOf(t.url, t.sheet);
     // The title as printed: the first line that is not the note for screen readers.
     t.title ??= text(rows.find(r => text(r?.[0]) && !/^table with row headers/i.test(text(r[0])))?.[0]).replace(/^Table \d+\. /, '');
+    if (t.layout === 'history') {
+      for (const x of historySeries(t, rows)) {
+        add(x.slug, t, x.part, () => {
+          const made = x.make();
+          if (made.name.length > MAX_NAME) throw new Error(`census-tables: ${x.slug} name "${made.name}" is over ${MAX_NAME} characters`);
+          return made;
+        }, x.dates);
+      }
+      continue;
+    }
     if (t.layout === 'columns') {
       const cols = readCensusColumns(rows);
       for (const [column, c] of Object.entries(t.columns)) {
@@ -399,7 +416,9 @@ export function buildCensusTableSeries(rowsOf) {
     const from = spans.length > 1 ? ` Years from each table: ${spans.map(sp => `${sp.from}${sp.to !== sp.from ? `–${sp.to}` : ''} ${sp.id.split(':')[0]}`).join('; ')}.` : '';
     for (const p of parts) p.title = TABLES.find(t => t.id === p.table).title;
     return {
-      ...s, source: 'census-tables', source_id: parts.map(p => `${p.table}: ${p.row}${p.column ? ` (${Object.values(p.column).join(', ')})` : ''}`).join('; '),
+      ...s, source: 'census-tables', source_id: parts.map(p => (p.heading != null
+        ? `${p.table}: ${p.row}, ${p.heading}${p.scope === 'in-combination' ? ' (alone or in combination)' : ''}`
+        : `${p.table}: ${p.row}${p.column ? ` (${Object.values(p.column).join(', ')})` : ''}`)).join('; '),
       url: tables.at(-1).url, frequency: 'annual', category: 'population', parts,
       abstract: [...new Set(tables.flatMap(t => t.abstract))],
       description: `${description} ${[...new Set(tables.map(t => t.source))].join('; ')}: ${[...new Set(tables.map(t => `“${t.title}”`))].join(', ')}.${from}`,
@@ -415,7 +434,8 @@ export function readCensusTable(s, rowsOf) {
     if (!t) throw new Error(`${s.slug}: no table ${part.table}`);
     const rows = rowsOf(t.url, t.sheet);
     let values;
-    if (t.layout === 'columns') values = readCensusColumns(rows).get(part.row)?.map(([y, v]) => [`${y}-07-01`, v]);
+    if (t.layout === 'history') values = historyValues(t, rows, part);
+    else if (t.layout === 'columns') values = readCensusColumns(rows).get(part.row)?.map(([y, v]) => [`${y}-07-01`, v]);
     else {
       const { columns, rows: grid } = readCensusGrid(rows);
       const r = grid.find(x => x.path.join(' / ') === part.row);
@@ -432,4 +452,4 @@ export function readCensusTable(s, rowsOf) {
 }
 
 /** The table titles a series is read from, for its publisher's title. */
-export const censusTableTitle = s => s.parts.map(p => `${p.title}: ${p.row}${p.column ? ` (${p.column.sex ? (p.column.sex === 'men' ? 'Male' : 'Female') : Object.values(p.column).join(', ')})` : ''}`).join('; ');
+export const censusTableTitle = s => s.parts.map(p => (p.heading != null ? `${p.title}: ${p.row === '(all)' ? '' : `${p.row}, `}${p.heading}${p.scope === 'in-combination' ? ' (race alone or in combination)' : ''}` : null) ?? `${p.title}: ${p.row}${p.column ? ` (${p.column.sex ? (p.column.sex === 'men' ? 'Male' : 'Female') : Object.values(p.column).join(', ')})` : ''}`).join('; ');
