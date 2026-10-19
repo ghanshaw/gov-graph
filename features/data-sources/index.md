@@ -78,6 +78,7 @@ governments' data is not public domain under U.S. law.
 `licensed` datasets are listed with a link and not collected, for now (user, 2026-10-13).
 
 ## Moving off API keys
+The three still to do come after the Statistical Abstract's Phase 5b download (user, 2026-10-19).
 | Used before | Bulk instead | Status |
 |---|---|---|
 | EIA API (`EIA_API_KEY`) | EIA petroleum bulk file `PET.zip` (www.eia.gov/opendata/bulk/), no key | **Done** 2026-10-13: 12 series, same values |

@@ -308,6 +308,29 @@ international accounts (not in hand).
 2025 dollars, 18 series. Census changed its race question in 2002, so each race is two series ("Since 2002", and the
 old definition with its own years), not joined; household income gains `race` and `race_definition`.
 
+### Phase 5a — the download list (done 2026-10-18)
+`server/seed/data/downloads.json` (hand-kept, checked by `server/lib/downloads.js` against `sources.json`) names the files
+of all 279 programs still to collect; `server/seed/size-downloads.js` measured them (HEAD or a one-byte range; nothing
+downloaded) into `download-sizes.json`. Entries: one `url`, a `url` with `{year}`/`{yy}` and `years`, a `list` of a folder
+or page (`match`, `recursive`, `follow` one level of linked pages) or a DCAT `catalog` filtered by `title` (data.cms.gov,
+data.cdc.gov, whose file paths change on each release). A web page saved on purpose has `name: '….html'`.
+
+- **22.75 GB in 21,601 files, 192 programs.** The largest: Census Business Dynamics 3.5 GB, NASS Quick Stats 2.2 GB,
+  Census government statistics 1.4 GB, BLS injuries 1.2 GB, QCEW 1.1 GB. The SEC was cut from 63 GB (every SEC data set)
+  to its summary metrics by exchange (table 1209). Summaries only, no microdata or event rows (FEC itemized files left out).
+- **87 programs have nothing to fetch as a file** (`none`): 64 `needs: scrape` (figures only in PDFs or web pages,
+  mostly non-federal), 5 `decision` (ANES, Current Population Reports, MLA, TechAmerica, the farmers market directory,
+  which is one row per market), 4 `api-key` (BEA international accounts, Census International Database, FAS GATS,
+  the Congressional Directory).
+- **User-Agent:** a browser string ending `govgraph-research` (BLS keeps the contact address). ed.gov's Azure firewall,
+  acf.gov and the USDA local food portal refuse anything else. www.cdc.gov, medicaid.gov, dol.gov, uscg.mil and OPTN are
+  behind Akamai and foreignassistance.gov behind a Cloudflare challenge; these are not bypassed. CDC data comes from
+  data.cdc.gov and ftp.cdc.gov instead; the CMS-64 reports, the NAMCS/NHAMCS summary tables (168, 170), DOL's state
+  minimum wage history, the Coast Guard's interdictions and OPTN's reports are left without a source for now.
+- **Still failing (142 files):** dead links on FHWA and NCES table pages (100), OECD (22; its API rate-limits data
+  queries per hour, so 5b must fetch them minutes apart), medicaid.gov (11, Akamai), Census serving a page for a file (6,
+  its rate limit), three dead links. About 450 files (APIs and CSV endpoints) give no size.
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or
@@ -316,8 +339,8 @@ old definition with its own years), not joined; household income gains `race` an
   publishers usually print a new one each year. Show them as series of yearly snapshots by place or group, or as
   tables of their own?
 - **Order of sections** for Phase 5c.
-- **Download first, then load** (user, 2026-10-17): every file before any more loading. Estimated 15–40 GB compressed
-  against 62 GB free; the inventory (5a) measures it first.
+- **Download first, then load** (user, 2026-10-17): every file before any more loading. Measured at 22.75 GB (5a, 2026-10-18)
+  against 62 GB free.
 - **Documents in the Abstract.** Elections and Courts tables count things GovGraph holds as documents (bills
   vetoed, measures enacted, Supreme Court cases). Collect the publishers' counts and link them to the documents?
 - **Storage.** Unknown until Phase 3; the database is about 2.1 GB.
@@ -358,6 +381,6 @@ old definition with its own years), not joined; household income gains `race` an
 - [x] Phase 5, OMB: tables 469 and 475 (2026-10-17); 1300's services by type are BEA's (not in hand)
 - [x] Phase 5, household income by race: table 691 from Census Table H-5 (2026-10-17)
 - [ ] Phase 5: population/ACS tables in hand (demographic loader)
-- [ ] Phase 5a: inventory the 279 programs still to collect: URLs and sizes, access for the 56 without one (next; user, 2026-10-17)
+- [x] Phase 5a: the download list for the 279 programs still to collect, measured: 22.75 GB in 21,601 files; 87 with no file (2026-10-18)
 - [ ] Phase 5b: download everything (throttled, logged); 5c: load section by section from disk
 - [ ] Phase 5: collect, section by section

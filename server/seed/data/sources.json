@@ -1081,7 +1081,7 @@
       "description": "The National Safety Council's statistics of deaths and injuries (work, home, road), annual as Accident Facts to 1998, then Injury Facts; online since 2018.",
       "homepage": "https://injuryfacts.nsc.org",
       "licence": { "type": "unchecked", "note": "Its terms page refused the request, and no terms were found by search (2026-10-14). The Abstract printed it as copyright." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -1091,7 +1091,7 @@
       "description": "Union membership and coverage by state, sector, industry and occupation from 1973 (1983 for most), compiled from the CPS; published as a book by BNA (Bloomberg BNA) and online at unionstats.com.",
       "homepage": "https://www.unionstats.com",
       "licence": { "type": "free-with-terms", "url": "https://www.unionstats.com", "checked": "2026-10-14", "limits": "Free online; figures must be cited (Hirsch and Macpherson, Industrial and Labor Relations Review 56(2), 2003). No other terms stated." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -1101,7 +1101,7 @@
       "description": "A survey of employers with 50 or more employees on leave, flexibility and other work-life benefits: 1998, 2005, 2008, 2012, with SHRM from 2012.",
       "homepage": "https://www.familiesandwork.org",
       "licence": { "type": "unchecked", "note": "The Abstract printed it as copyright; reports only, no data files found."},
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -1931,7 +1931,7 @@
       "description": "Caseloads of state trial and appellate courts.",
       "homepage": "https://www.courtstatistics.org",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. The data comes from the state court administrators." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2276,7 +2276,7 @@
       "description": "Governors by state and party.",
       "homepage": "https://www.nga.org/governors/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2296,7 +2296,7 @@
       "description": "Party control of state legislatures and governorships.",
       "homepage": "https://www.ncsl.org/about-state-legislatures/state-partisan-composition",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. NCSL’s terms say it owns the material on its site; the licence section was not read." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2306,7 +2306,7 @@
       "description": "Women holding federal, state and local offices.",
       "homepage": "https://cawp.rutgers.edu/",
       "licence": { "type": "free-with-terms", "url": "https://cawp.rutgers.edu/", "checked": "2026-10-14", "limits": "Non-commercial reproduction encouraged with visible credit to CAWP and its footnotes; commercial reproduction needs written permission." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2316,7 +2316,7 @@
       "description": "Latino elected officials by office and state.",
       "homepage": "https://naleo.org",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2326,7 +2326,7 @@
       "description": "State spending by fund and function, and general fund balances, yearly.",
       "homepage": "https://www.nasbo.org/reports-data",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Reports are marked copyright, all rights reserved." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2346,7 +2346,7 @@
       "description": "State and local taxes paid by a family at several incomes in the largest city of each state, and property tax rates, yearly.",
       "homepage": "https://cfo.dc.gov/release/tax-rate-comparison-booklets-now-available",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "notes": "Published yearly under Public Law 93-407; the latest edition found is for 2021 (issued May 2023).",
       "paths": []
@@ -2427,7 +2427,7 @@
       "description": "Workers’ compensation benefits and costs by state, yearly (Social Security Administration until 1994).",
       "homepage": "https://www.nasi.org/research/workers-compensation/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. From the 2023 data the report comes with a downloadable dataset." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2699,7 +2699,7 @@
       "description": "Research articles of the Federal Reserve Bank of Philadelphia (Business Review, now Economic Insights).",
       "homepage": "https://www.philadelphiafed.org/the-economy",
       "licence": { "type": "free-with-terms", "url": "https://www.philadelphiafed.org/about-us/privacy-notice", "checked": "2026-10-14", "limits": "For informational, educational and research use; copyrighted material needs the owner’s permission; the Bank’s name may not be used commercially." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -2921,7 +2921,7 @@
       "description": "Analysis of federal R&D budgets by agency.",
       "homepage": "https://www.aaas.org/programs/r-d-budget-and-policy",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3504,8 +3504,9 @@
       "description": "Country profiles: geography, people, government, economy, military, exchange rates.",
       "homepage": "https://www.cia.gov/the-world-factbook/",
       "licence": { "type": "public-domain" },
-      "access": { "used": [], "best": "file" }, "collected": false,
-      "status": "active",
+      "access": { "used": [], "best": "archive" }, "collected": false,
+      "status": "discontinued", "ended": "2026-02-04",
+      "notes": "The CIA retired The World Factbook on 2026-02-04 (\u201cSpotlighting The World Factbook as We Bid a Fond Farewell\u201d); its last field pages are kept by the Internet Archive.",
       "paths": []
     },
     {
@@ -3556,7 +3557,7 @@
       "description": "Puerto Rico’s gross product, income, transfer payments and economy, yearly.",
       "homepage": "https://jp.pr.gov",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3566,7 +3567,7 @@
       "description": "OECD statistics: health, labour, national accounts, prices, taxes, education, migration, R&D, aid, investment, insurance.",
       "homepage": "https://data-explorer.oecd.org",
       "licence": { "type": "open-licence", "name": "CC BY 4.0", "url": "https://www.oecd.org/en/about/terms-conditions.html", "checked": "2026-10-14", "note": "Open access under CC BY 4.0 since 1 July 2024; third-party content in OECD data may carry other terms." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "api" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3576,7 +3577,7 @@
       "description": "Development statistics for every country, including gross national income and external debt.",
       "homepage": "https://datatopics.worldbank.org/world-development-indicators/",
       "licence": { "type": "open-licence", "name": "CC BY 4.0", "url": "https://datacatalog.worldbank.org", "checked": "2026-10-14", "note": "The World Bank’s default licence for its data, WDI included; some indicators carry third-party terms." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "bulk" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3586,7 +3587,7 @@
       "description": "Prices, exchange rates, reserves, trade prices and balances of payments for every member country.",
       "homepage": "https://data.imf.org",
       "licence": { "type": "free-with-terms", "url": "https://www.imf.org/en/About/copyright-and-terms", "checked": "2026-10-14", "limits": "Free to download, copy and make derivative works of IMF statistical data (IFS included); commercial reuse needs permission (copyright@imf.org)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "api" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3596,7 +3597,7 @@
       "description": "Telephone, mobile and internet subscriptions and use by country.",
       "homepage": "https://www.itu.int/en/ITU-D/Statistics/",
       "licence": { "type": "open-licence", "name": "CC BY-NC-SA 3.0 IGO", "url": "https://datahub.itu.int/about", "checked": "2026-10-14", "note": "The free ITU DataHub is non-commercial, share-alike; the complete World Telecommunication/ICT Indicators Database is sold." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3606,7 +3607,7 @@
       "description": "People living with HIV, new infections and deaths by region.",
       "homepage": "https://aidsinfo.unaids.org",
       "licence": { "type": "free-with-terms", "url": "https://unaids.org/en/terms-of-use", "checked": "2026-10-14", "limits": "Personal, non-commercial use and extracts for research, credited to UNAIDS with the page’s address; substantial reproduction needs written permission." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3658,7 +3659,7 @@
       "description": "Congregations and adherents by county and religious group, every ten years.",
       "homepage": "https://www.usreligioncensus.org",
       "licence": { "type": "free-with-terms", "url": "https://www.usreligioncensus.org/faq", "checked": "2026-10-14", "limits": "Free download; ASARB holds the copyright and does not want the dataset or its products distributed without permission." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3668,7 +3669,7 @@
       "description": "Abortions and providers by state, every few years, and patients’ characteristics.",
       "homepage": "https://www.guttmacher.org",
       "licence": { "type": "free-with-terms", "url": "https://www.guttmacher.org/public-use-datasets", "checked": "2026-10-14", "limits": "Free to copy, redistribute and adapt with credit to the Guttmacher Institute, passed on to others; datasets free with citation. The Data Center itself has closed." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3698,7 +3699,7 @@
       "description": "Osteopathic physicians by specialty and state, yearly.",
       "homepage": "https://osteopathic.org/about/aoa-statistics/",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3728,7 +3729,7 @@
       "description": "Cosmetic surgical and nonsurgical procedures, yearly.",
       "homepage": "https://www.theaestheticsociety.org/media/statistics",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3738,7 +3739,7 @@
       "description": "Estimated new cancer cases and deaths by site and state, yearly.",
       "homepage": "https://www.cancer.org/research/cancer-facts-statistics.html",
       "licence": { "type": "free-with-terms", "url": "https://www.cancer.org/about-us/policies/user-agreement.html", "checked": "2026-10-14", "limits": "The Cancer Statistics Center asks reuse to credit the American Cancer Society; the site’s user agreement allows personal, non-commercial use only and requires written consent to reproduce." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3748,7 +3749,7 @@
       "description": "Public school enrollment, teachers, salaries, revenue and spending by state, yearly.",
       "homepage": "https://www.nea.org/resource-library/educator-pay-and-student-spending-how-does-your-state-rank",
       "licence": { "type": "free-with-terms", "url": "https://www.nea.org/resource-library/educator-pay-and-student-spending-how-does-your-state-rank", "checked": "2026-10-14", "limits": "No reproduction without permission from NEA Research, except by NEA affiliates; credit line and copyright notice required (RankingsEstimates@nea.org)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3769,7 +3770,7 @@
       "description": "SAT scores and test takers’ characteristics, yearly.",
       "homepage": "https://reports.collegeboard.org",
       "licence": { "type": "free-with-terms", "url": "https://reports.collegeboard.org", "checked": "2026-10-14", "limits": "Copyright College Board; reports are embargoed until release; no general reuse grant found; permission through communications@collegeboard.org." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3779,7 +3780,7 @@
       "description": "ACT scores and test takers, yearly.",
       "homepage": "https://www.act.org/content/act/en/research/services-and-resources/data-and-visualization.html",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. The national report is marked confidential." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3789,7 +3790,7 @@
       "description": "International students in the United States and U.S. students abroad, yearly.",
       "homepage": "https://opendoorsdata.org",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Funded by the State Department; an archived copy is on DataLumos/ICPSR." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3799,7 +3800,7 @@
       "description": "College enrollments by language, about every four years.",
       "homepage": "https://apps.mla.org/flsurvey_search",
       "licence": { "type": "free-with-terms", "url": "https://apps.mla.org/flsurvey_search", "checked": "2026-10-14", "limits": "Copyright MLA: quoting as fair use; any other reproduction needs written permission." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "file" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3809,7 +3810,7 @@
       "description": "Entering college students’ characteristics and attitudes, yearly.",
       "homepage": "https://heri.ucla.edu/cirp-freshman-survey/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Trend files to 2008 are public; newer data through HERI’s data access for researchers." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3819,7 +3820,7 @@
       "description": "Inflation index for colleges’ costs, yearly.",
       "homepage": "https://www.commonfund.org/higher-education-price-index",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. NCES’s Digest of Education Statistics reprints the index." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3829,7 +3830,7 @@
       "description": "State and local support for higher education by state, yearly.",
       "homepage": "https://shef.sheeo.org",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3869,7 +3870,7 @@
       "description": "Property and casualty insurance, fire losses and other insurance statistics.",
       "homepage": "https://www.iii.org/publications",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. The Fact Book is sold." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -3879,7 +3880,7 @@
       "description": "Fires, deaths, injuries and losses by type, and fire departments and personnel, yearly.",
       "homepage": "https://www.nfpa.org/education-and-research/research/nfpa-research",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4010,7 +4011,7 @@
       "description": "Aerospace sales, orders, backlog and trade.",
       "homepage": "https://www.aia-aerospace.org",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Prepared with S&P Global Market Intelligence." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4020,7 +4021,7 @@
       "description": "Franchised new car dealerships: number, sales, employment, finances, yearly.",
       "homepage": "https://www.nada.org/nada/nada-data",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. NADA Data reports are a free download." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4050,7 +4051,7 @@
       "description": "U.S. airline traffic, finances and passenger airline cost index.",
       "homepage": "https://www.airlines.org/dataset/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4070,7 +4071,7 @@
       "description": "Traffic congestion and its cost by urban area.",
       "homepage": "https://mobility.tamu.edu/umr/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Reports are free to download; the speed data inside is INRIX’s." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4080,7 +4081,7 @@
       "description": "Transit ridership, vehicles, finances.",
       "homepage": "https://www.apta.com/news-research/",
       "licence": { "type": "free-with-terms", "url": "https://www.apta.com/news-research/", "checked": "2026-10-14", "limits": "Fact Book editions 2006–2015 say their material may be quoted or reproduced without permission, with a citation; its figures come mainly from the FTA’s National Transit Database." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4130,7 +4131,7 @@
       "description": "Recorded music shipments and revenue by format, yearly.",
       "homepage": "https://www.riaa.com/u-s-sales-database/",
       "licence": { "type": "free-with-terms", "url": "https://www.riaa.com/u-s-sales-database/", "checked": "2026-10-14", "limits": "RIAA (2016): permission to cite or copy the statistics is granted with attribution to the RIAA. No formal licence found." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4171,7 +4172,7 @@
       "description": "Adults’ internet, broadband and online activities, from surveys since 1995.",
       "homepage": "https://www.pewresearch.org/internet/",
       "licence": { "type": "free-with-terms", "url": "https://www.pewresearch.org/about/terms-and-conditions/", "checked": "2026-10-14", "limits": "Personal, educational or news-reporting use, credited to Pew Research Center; content credited to others may not be republished on its own; no use implying a political position." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4201,7 +4202,7 @@
       "description": "Debt market issuance and outstanding by type of security.",
       "homepage": "https://www.sifma.org/resources/archive/research/statistics/",
       "licence": { "type": "free-with-terms", "url": "https://www.sifma.org/terms-of-use", "checked": "2026-10-14", "limits": "Reproduction needs SIFMA’s permission (request form; one-time or up to a year), subject to its terms of use." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4262,7 +4263,7 @@
       "description": "Life insurance in force, purchases, companies’ finances.",
       "homepage": "https://www.acli.com/about-the-industry/life-insurers-fact-book",
       "licence": { "type": "free-with-terms", "url": "https://www.acli.com/about-the-industry/life-insurers-fact-book", "checked": "2026-10-14", "limits": "Free to read; copyright ACLI, no reproduction without the publisher’s permission." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4282,7 +4283,7 @@
       "description": "State arts agency funding by state, yearly.",
       "homepage": "https://nasaa-arts.org/research/funding/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. A newsletter invites readers to circulate the figures." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4312,7 +4313,7 @@
       "description": "College athletes by sport and sex, yearly.",
       "homepage": "https://www.ncaa.org/sports/2018/10/10/ncaa-sports-sponsorship-and-participation-rates-database.aspx",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4322,7 +4323,7 @@
       "description": "High school athletes by sport and sex, yearly.",
       "homepage": "https://www.nfhs.org/sports-resource-content/high-school-participation-survey-archive/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4342,7 +4343,7 @@
       "description": "State parks: acreage, visits, finances, staff.",
       "homepage": "https://www.naspd.org",
       "licence": { "type": "unchecked", "note": "Not a federal work; terms not read yet (2026-10-14)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4352,7 +4353,7 @@
       "description": "Gaming revenue by industry and state.",
       "homepage": "https://www.americangaming.org/research/",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Its figures come from state regulators’ reports." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4362,7 +4363,7 @@
       "description": "Cruise passengers, spending and employment in the United States.",
       "homepage": "https://cruising.org",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. " },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },
@@ -4392,7 +4393,7 @@
       "description": "Hotels, rooms, occupancy and revenue.",
       "homepage": "https://www.ahla.com",
       "licence": { "type": "unchecked", "note": "Searched on 2026-10-14; no terms of use for the data found. Hotel performance figures are STR’s (CoStar)." },
-      "access": { "used": [] }, "collected": false,
+      "access": { "used": [], "best": "page" }, "collected": false,
       "status": "active",
       "paths": []
     },

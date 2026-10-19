@@ -614,7 +614,8 @@ program (`sources.test.js`, and the loader reports files that match none).
   Licensed data is listed, not collected (user, 2026-10-13).
 - Access, most preferred first: bulk, file, API, API with key, web page, Internet Archive. Bulk downloads are
   preferred over API keys (user, 2026-10-13). A contact address goes in the User-Agent only where the publisher
-  requires one (BLS) (user, 2026-10-13).
+  requires one (BLS) (user, 2026-10-13). Elsewhere scripts send a browser User-Agent ending `govgraph-research`, since several
+  federal firewalls refuse any other (user, 2026-10-18); sites behind Akamai or a Cloudflare challenge are not bypassed.
 - A program the Statistical Abstract does not cite has `in_abstract: false` and says why (`outside_abstract`).
 - The University of Michigan's consumer sentiment and Freddie Mac's mortgage rates are kept for now, although
   their terms forbid republishing (user, 2026-10-13); both are recorded as `free-with-terms` with the limits quoted.
@@ -674,7 +675,7 @@ database) gives every table `programs` (slugs in `sources.json`), `coverage`, `s
 
 - `coverage`: `have` (every series it prints is loaded), `partly`, `wanted`, `licensed` (only for licensed programs),
   `discontinued` (the note names the successor), `unpublished` and `compiled` (no programs; the Abstract built it from
-  unpublished data or from sources named in footnotes). Totals (2026-10-17, after the national accounts, CPI, CPS and EIA tables): 40 have, 34
+  unpublished data or from sources named in footnotes). Totals (2026-10-17, after the first Phase 5 batch, through Table 691): 45 have, 29
   partly, 1,140 wanted, 95 licensed, 67 discontinued, 25 unpublished, 5 compiled.
 - `shape`: `time-series`, `by-place`, `snapshot`. `in_hand`: the publisher's file is in the data folder, not loaded (25; 81 before Phase 5).
 - `series` (required for have / partly, only for them): what is loaded, as series slugs, measures (a measure covers its
@@ -705,8 +706,8 @@ parameter, which "Loaded:" names would link to.
 | 3. Source notes → programs | Every table's programs, coverage (have / partly / wanted / licensed / discontinued / unpublished / compiled) and shape in `server/seed/data/statistical-abstract-coverage.json` (checked by `server/lib/abstract-coverage.js`); 409 programs in `sources.json`. Every Census "Current Population Reports" series (P20, P25, P60, …) is one program | Done (2026-10-14): all 30 sections, reviewed; report at `/sources/abstract-coverage` |
 | 4. Placements | Every measure placed from the tables (17 by table, 12 by judgement) | Done (2026-10-14), with wanted tables shown as "Not here yet" under each subsection in the catalogue's Build tab |
 | 5. Collect | Load the publisher's current data, label, name, place; first the 81 tables whose files were in hand | **Under way**: 20 NIPA tables (2026-10-15); 5 CPI, 20 CPS, 4 EIA, 2 H.15, 2 home-price, 2 OMB tables and 691 (2026-10-17). 45 have, 29 partly, 1,140 wanted |
-| 5a. Inventory | For each of the 279 programs still to collect (cited by wanted or partly tables, not licensed): the exact URLs and sizes (HEAD requests), in `sources.json`; settle the 56 with no access method | **Next** |
-| 5b. Download | Everything in one throttled run (2 requests at a time, backing off on 429), each file through `recordFetch`; compressed, at the frequency the tables use | After 5a |
+| 5a. Inventory | For each of the 279 programs still to collect (cited by wanted or partly tables, not licensed): the files, in `server/seed/data/downloads.json` (checked by `server/lib/downloads.js`), measured by `server/seed/size-downloads.js` into `download-sizes.json` (HEAD requests; nothing downloaded) | Done (2026-10-18): 22.75 GB in 21,601 files, 192 programs; 87 with no file (64 only in PDFs or pages, 5 to decide, 4 key-only); details in the feature file |
+| 5b. Download | **Next.** Everything in one throttled run (2 requests at a time, backing off on 429), each file through `recordFetch`; compressed, at the frequency the tables use | After 5a |
 | 5c. Load | Section by section from disk | After 5b |
 
 **Phase 5, national accounts (2026-10-15).** Whole publisher tables, yearly and quarterly where both are printed
@@ -738,7 +739,7 @@ since its file is a cube (2026-10-17; `cps-tables.json`); otherwise the rows eac
 published. Loads run the series schema before their transaction (an ALTER inside it locked the site's economic pages).
 
 Other work in hand (user, 2026-10-13): move the remaining API-key fetches to bulk files (economic data done; Congress.gov,
-including the app's live call in `resolvers.js`, then govinfo, then CourtListener; `features/data-sources`); drop the
+including the app's live call in `resolvers.js`, then govinfo, then CourtListener; `features/data-sources`); after Phase 5b (user, 2026-10-19); drop the
 contact address from fetches to publishers that do not require it (`fetchFile` in `fetch-economic-series.js` still sends
 it to BEA, Freddie Mac, FHFA and others). The work is on branch `sources-and-structures`, not yet merged to `main`.
 
