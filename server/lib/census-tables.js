@@ -132,7 +132,7 @@ export function rowLabels(rowPath) {
     if (p in ORIGINS) { out.hispanic_origin = ORIGINS[p]; continue; }
     if (p === 'race alone or in combination') { out.race_scope = 'in-combination'; continue; }
     if (p === 'one race' && !last) { out.race_scope = 'alone'; continue; }
-    if (p === 'non-hispanic white') { out.race = 'white'; out.hispanic_origin = 'not-hispanic'; continue; }
+    if (p === 'non-hispanic white' || p === 'white alone, not hispanic') { out.race = 'white'; out.hispanic_origin = 'not-hispanic'; continue; }
     if (p in RACES) { out.race = RACES[p].key; continue; }
     if (p === 'median age (years)') { out.median = true; continue; }
     const age = ageOf(text(part));
@@ -145,13 +145,32 @@ export function rowLabels(rowPath) {
   return out;
 }
 
-/** A column's date and sex from its heading path: a July 1 estimate or projection; April 1 bases and counts are left out. */
+/**
+ * A column's date and labels from its heading path ({ date, labels }): a July 1 estimate or projection, with its sex
+ * where sexes are columns; April 1 bases and counts are left out.
+ */
 function estimateColumn(headings) {
   if (headings.some(h => /^April 1\b/i.test(h))) return null;
   const year = [...headings].reverse().map(h => /\b((?:19|20)\d{2})/.exec(h)?.[1]).find(Boolean);
   if (!year) return null;
   const sex = headings.map(h => clean(h)).find(h => h in SEXES);
-  return { date: `${year}-07-01`, sex: sex ? SEXES[sex] : undefined };
+  return { date: `${year}-07-01`, labels: sex && SEXES[sex] ? { sex: SEXES[sex] } : {} };
+}
+
+// The components of population change as Census heads them, and their words in names ("Black Births").
+const COMPONENTS = {
+  'total population change': { key: 'total-change', label: 'Total change', name: '{who} Population Change' },
+  'natural increase': { key: 'natural-increase', label: 'Natural increase (births less deaths)', name: '{who} Natural Increase' },
+  births: { key: 'births', label: 'Births', name: '{who} Births' },
+  deaths: { key: 'deaths', label: 'Deaths', name: '{who} Deaths' },
+  'net international migration': { key: 'international-migration', label: 'Net international migration', name: '{who} Net International Migration' },
+};
+
+/** A components table's column: the year to July 1 (the cumulative change since the census is left out) and the component. */
+function componentColumn(headings) {
+  const year = headings.map(h => /^July 1, \d{4} to July 1, (\d{4})$/.exec(h)?.[1]).find(Boolean);
+  const component = COMPONENTS[clean(headings.at(-1))];
+  return year && component ? { date: `${year}-07-01`, labels: { population_component: component.key } } : null;
 }
 
 // ---------------------------------------------------------------------------
@@ -164,6 +183,7 @@ const PROJECTED = `${BY_GROUP}/projected-population`;
 const PROJECTED_MEDIAN_AGE = `${BY_GROUP}/projected-median-age`;
 const ESTIMATED = `${BY_GROUP}/resident-population`;
 const ESTIMATED_MEDIAN_AGE = `${BY_GROUP}/median-age`;
+const COMPONENTS_OF_CHANGE = `${BY_GROUP}/components-of-population-change`;
 const GROUPS = ['sex', 'age', 'race', 'race_scope', 'hispanic_origin'];
 
 export const CENSUS_TABLE_MEASURES = {
@@ -172,6 +192,7 @@ export const CENSUS_TABLE_MEASURES = {
   [PROJECTED_MEDIAN_AGE]: { label: 'Projected median age', dims: ['sex'] },
   [ESTIMATED]: { label: 'Resident population', dims: GROUPS },
   [ESTIMATED_MEDIAN_AGE]: { label: 'Median age', dims: GROUPS.filter(d => d !== 'age') },
+  [COMPONENTS_OF_CHANGE]: { label: 'Components of population change', dims: ['population_component', 'race', 'race_scope', 'hispanic_origin'] },
 };
 
 /** The breakdowns these tables add or add values to: ages, races, alone or in combination, Hispanic origin ({ id: { label, values } }). */
@@ -186,6 +207,7 @@ export function censusTableDimensions() {
     age: { label: 'Age', values: age }, race: { label: 'Race and ethnicity', values: race },
     race_scope: { label: 'Race counted', values: { alone: 'One race alone', 'in-combination': 'Alone or in combination with other races' } },
     hispanic_origin: { label: 'Hispanic origin', values: { hispanic: 'Hispanic (of any race)', 'not-hispanic': 'Not Hispanic' } },
+    population_component: { label: 'Component of change', values: Object.fromEntries(Object.values(COMPONENTS).map(c => [c.key, c.label])) },
   };
 }
 
@@ -209,6 +231,7 @@ function nameOf(prefix, labels) {
   const who = [words, SEX_ADJECTIVES[labels.sex]].filter(Boolean).join(' ');
   const age = labels.age ? ` ${ageOf(AGE_LABELS[labels.age]).words}` : '';
   if (labels.median) return `${prefix}Median Age${who ? ` of the ${who} Population` : ''}${scope}`;
+  if (labels.population_component) return `${Object.values(COMPONENTS).find(c => c.key === labels.population_component).name.replace('{who}', who)}${scope}`;
   return `${prefix}${who ? `${who} ` : ''}Population${age}${scope}`;
 }
 const SEX_ADJECTIVES = { men: 'Male', women: 'Female' };
@@ -216,14 +239,15 @@ const AGE_LABELS = {};
 
 /** What a series counts, for its description: "the number of Black (one race alone) females aged 5 to 9". */
 function whatOf(labels) {
-  const race = labels.race ? `${raceRecord(labels.race).label}${labels.race_scope === 'in-combination' ? ' (alone or in combination with other races)' : labels.race_scope === 'alone' ? ' (one race alone)' : ''}` : '';
+  const race = labels.race ? `${labels.race === 'one-race' ? 'one-race' : raceRecord(labels.race).label}${labels.race_scope === 'in-combination' ? ' (alone or in combination with other races)' : labels.race_scope === 'alone' ? ' (one race alone)' : ''}` : '';
   const origin = labels.hispanic_origin === 'hispanic' ? 'Hispanic' : labels.hispanic_origin === 'not-hispanic' ? 'non-Hispanic' : '';
   const who = [origin, race, { men: 'males', women: 'females' }[labels.sex] ?? 'people'].filter(Boolean).join(' ');
   const age = labels.age ? ` ${ageOf(AGE_LABELS[labels.age]).words.toLowerCase()}` : '';
+  if (labels.population_component) return `${Object.values(COMPONENTS).find(c => c.key === labels.population_component).label.toLowerCase()} of the ${who.replace(/ people$/, '')} population in the year to July 1`;
   return labels.median ? `the median age of ${who}` : `the number of ${who}${age}`;
 }
 
-const slugOf = (prefix, labels) => [prefix, labels.sex, labels.hispanic_origin, labels.race, labels.race_scope === 'in-combination' ? 'in-combination' : null, labels.age]
+const slugOf = (prefix, labels) => [prefix, labels.population_component, labels.sex, labels.hispanic_origin, labels.race, labels.race_scope === 'in-combination' ? 'in-combination' : null, labels.age]
   .filter(Boolean).join('--');
 
 // ---------------------------------------------------------------------------
@@ -287,6 +311,13 @@ export const TABLES = [
       id: `${id}:${sheet}`, abstract: [10], url, sheet, layout: 'grid', vintage, source, column: estimateColumn, fixed,
       take: labels => (labels.sex || !(labels.age || labels.median) ? null : estimates(labels)),
     }))),
+  // Components of change by race and Hispanic origin, the latest year only (Abstract table 5; Census prints one year
+  // and the change since the census in each vintage).
+  {
+    id: 'nc-est2025-compn', abstract: [5], url: `${POPEST}2020-2025/national/asrh/nc-est2025-compn.xlsx`, layout: 'grid', vintage: 2025, source: ESTIMATES_2020,
+    column: componentColumn,
+    take: labels => (labels.race || labels.hispanic_origin ? { measure: COMPONENTS_OF_CHANGE, prefix: 'population-change', unit: 'people' } : null),
+  },
   ...Object.entries(EST00_RACES).map(([code, fixed]) => ({
     id: `us-est00int-03-${code}`, abstract: [10], url: `${POPEST}2000-2010/intercensal/national/us-est00int-03-${code}.xls`, layout: 'grid', vintage: 2010,
     source: ESTIMATES_2000, column: estimateColumn, fixed,
@@ -330,27 +361,28 @@ export function buildCensusTableSeries(rowsOf) {
     for (const r of grid) {
       const own = rowLabels(r.path);
       if (!own) throw new Error(`${t.id}: no reading for the row "${r.path.join(' / ')}"`);
-      // Where sexes are columns, each sex is its own series.
-      const bySex = new Map();
+      // Where a column says more than the date (a sex, a component), each is its own series.
+      const byColumn = new Map();
       for (const [j, value] of r.values) {
         const c = t.column(columns[j]);
         if (!c) continue;
-        const key = c.sex ?? null;
-        if (!bySex.has(key)) bySex.set(key, []);
-        bySex.get(key).push([c.date, value]);
+        const key = JSON.stringify(c.labels ?? {});
+        if (!byColumn.has(key)) byColumn.set(key, []);
+        byColumn.get(key).push([c.date, value]);
       }
-      for (const [sex, values] of bySex) {
-        const labels = { ...own, ...(t.fixed ?? {}), ...(sex ? { sex } : {}) };
+      for (const [key, values] of byColumn) {
+        const column = JSON.parse(key);
+        const labels = { ...own, ...(t.fixed ?? {}), ...column };
         if (labels.race && !labels.race_scope && labels.race !== 'two-or-more' && labels.race !== 'one-race') labels.race_scope = 'alone';
         const kind = t.take(labels);
         if (!kind) continue;
         const { median, ...dims } = labels;
         const slug = slugOf(kind.prefix, labels);
-        add(slug, t, { table: t.id, row: r.path.join(' / '), ...(sex !== null ? { sex } : {}) }, () => {
+        add(slug, t, { table: t.id, row: r.path.join(' / '), ...(Object.keys(column).length ? { column } : {}) }, () => {
           const name = nameOf(kind.name ?? '', labels);
           if (name.length > MAX_NAME) throw new Error(`census-tables: ${slug} name "${name}" is over ${MAX_NAME} characters`);
           const what = whatOf(labels) + (kind.unit === 'thousands' ? ', in thousands' : '');
-          return { labels: { measure: kind.measure, form: 'level', ...dims }, name, unit: kind.unit, description: `${what[0].toUpperCase()}${what.slice(1)}, on July 1.` };
+          return { labels: { measure: kind.measure, form: 'level', ...dims }, name, unit: kind.unit, description: `${what[0].toUpperCase()}${what.slice(1)}${labels.population_component ? '' : ', on July 1'}.` };
         }, values.map(([d]) => d));
       }
     }
@@ -367,7 +399,7 @@ export function buildCensusTableSeries(rowsOf) {
     const from = spans.length > 1 ? ` Years from each table: ${spans.map(sp => `${sp.from}${sp.to !== sp.from ? `–${sp.to}` : ''} ${sp.id.split(':')[0]}`).join('; ')}.` : '';
     for (const p of parts) p.title = TABLES.find(t => t.id === p.table).title;
     return {
-      ...s, source: 'census-tables', source_id: parts.map(p => `${p.table}: ${p.row}${p.sex ? ` (${p.sex})` : ''}`).join('; '),
+      ...s, source: 'census-tables', source_id: parts.map(p => `${p.table}: ${p.row}${p.column ? ` (${Object.values(p.column).join(', ')})` : ''}`).join('; '),
       url: tables.at(-1).url, frequency: 'annual', category: 'population', parts,
       abstract: [...new Set(tables.flatMap(t => t.abstract))],
       description: `${description} ${[...new Set(tables.map(t => t.source))].join('; ')}: ${[...new Set(tables.map(t => `“${t.title}”`))].join(', ')}.${from}`,
@@ -389,7 +421,7 @@ export function readCensusTable(s, rowsOf) {
       const r = grid.find(x => x.path.join(' / ') === part.row);
       values = r && [...r.values].flatMap(([j, v]) => {
         const c = t.column(columns[j]);
-        return c && (c.sex ?? undefined) === part.sex ? [[c.date, v]] : [];
+        return c && JSON.stringify(c.labels ?? {}) === JSON.stringify(part.column ?? {}) ? [[c.date, v]] : [];
       });
     }
     if (!values?.length) throw new Error(`${s.slug}: nothing at "${part.row}" in ${t.id}`);
@@ -400,4 +432,4 @@ export function readCensusTable(s, rowsOf) {
 }
 
 /** The table titles a series is read from, for its publisher's title. */
-export const censusTableTitle = s => s.parts.map(p => `${p.title}: ${p.row}${p.sex ? ` (${p.sex === 'men' ? 'Male' : 'Female'})` : ''}`).join('; ');
+export const censusTableTitle = s => s.parts.map(p => `${p.title}: ${p.row}${p.column ? ` (${p.column.sex ? (p.column.sex === 'men' ? 'Male' : 'Female') : Object.values(p.column).join(', ')})` : ''}`).join('; ');

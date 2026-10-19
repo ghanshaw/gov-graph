@@ -368,6 +368,11 @@ Book order. **Section 1, Population:**
   origin; race alone by Hispanic origin and age, both sexes. New breakdowns `race_scope` and `hispanic_origin` (the
   projections' Hispanic and non-Hispanic white rows moved to them). Names say Male and Female ("Female Population Aged
   85 and Over"): Census counts every age. Tables 6, 8, 10 `have`; 7 `partly` (ages before 2000 on disk, not loaded).
+- **Components of change by race (table 5, `partly`; 2026-10-19).** Census's `compn` table, the year to July 1, 2025
+  only (each vintage prints one year and the change since the census; the cumulative change is not loaded): 70 series,
+  one value each. Breakdown `population_component`. Tables 2, 4, 13, 14, 15 stay `partly`: the totals, state
+  populations and state components 2011–2025 are loaded; regions, ranks, density, monthly totals and the 2000s
+  components are not.
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see

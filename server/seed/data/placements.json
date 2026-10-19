@@ -53,7 +53,8 @@
       "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-population": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [9, 12], "reason": "Census Bureau national population projections by sex and age (Table 9) and by race and Hispanic origin (Table 12)."},
       "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [9], "reason": "Census Bureau national population projections: median age by sex (Table 9)."},
       "population/estimates-and-projections-by-age-sex-race-ethnicity/resident-population": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [6, 7, 8, 10], "reason": "Census Bureau population estimates by sex, race and Hispanic origin (Table 6), sex and age (7, 8), and race, Hispanic origin and age (10)."},
-      "population/estimates-and-projections-by-age-sex-race-ethnicity/median-age": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [7, 8, 10], "reason": "Census Bureau population estimates: median age by sex (Tables 7, 8) and by race and Hispanic origin (10)."}
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/median-age": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [7, 8, 10], "reason": "Census Bureau population estimates: median age by sex (Tables 7, 8) and by race and Hispanic origin (10)."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/components-of-population-change": {"category": "population/estimates-and-projections-by-age-sex-race-ethnicity", "basis": "table", "tables": [5], "reason": "Census Bureau population estimates: births, deaths and net international migration by race and Hispanic origin (Table 5)."}
     }
   },
   "comparative-agendas": {
@@ -109,7 +110,8 @@
       "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-population": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
       "population/estimates-and-projections-by-age-sex-race-ethnicity/projected-median-age": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
       "population/estimates-and-projections-by-age-sex-race-ethnicity/resident-population": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
-      "population/estimates-and-projections-by-age-sex-race-ethnicity/median-age": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."}
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/median-age": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."},
+      "population/estimates-and-projections-by-age-sex-race-ethnicity/components-of-population-change": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself."}
     }
   }
 }
