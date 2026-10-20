@@ -85,10 +85,10 @@ function readSource(s) {
   if (s.source === 'eia') return readEiaBulkFile();
   // A Census table series may be read from several tables (one per decade), some by sheet.
   if (s.source === 'census-tables') return (url, sheet) => readFile(mirrorFile(url), false, sheet);
-  // NCHS's tables are CSVs; a series may be read from two.
+  // NCHS's tables are CSVs, and Health, United States's workbooks with indented rows; a series may be read from two.
   if (s.source === 'nchs') return url => {
     const file = mirrorFile(url);
-    if (!files.has(file)) files.set(file, parseCsv(fs.readFileSync(file, 'utf8')));
+    if (!files.has(file)) files.set(file, file.endsWith('.xlsx') ? { rows: readXlsx(file), indents: readXlsxIndents(file) } : parseCsv(fs.readFileSync(file, 'utf8')));
     return files.get(file);
   };
   // DHS's Yearbook shows a row's depth by its indent.

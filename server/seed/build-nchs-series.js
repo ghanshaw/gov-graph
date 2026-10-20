@@ -10,11 +10,14 @@
 import fs from 'fs';
 import { mirrorFile } from '../lib/data-dir.js';
 import { parseCsv } from '../lib/parse-fjc-justices.js';
+import { readXlsx, readXlsxIndents } from '../lib/xlsx.js';
 import { buildNchsSeries, NCHS_SERIES_FILE } from '../lib/nchs-series.js';
 
 const rowsOf = url => {
   const file = mirrorFile(url);
   if (!fs.existsSync(file)) throw new Error(`no file at ${file}; run fetch-downloads.js first`);
+  // Health, United States's tables are workbooks whose rows are indented under their parents.
+  if (file.endsWith('.xlsx')) return { rows: readXlsx(file), indents: readXlsxIndents(file) };
   return parseCsv(fs.readFileSync(file, 'utf8'));
 };
 

@@ -42,6 +42,7 @@ export function formatValue(value, unit) {
   if (unit === 'per-1000-births') return `${value} per 1,000 births`;
   if (unit === 'per-100k') return `${value} per 100,000`;
   if (unit === 'life-years') return `${value.toFixed(1)} years`;
+  if (unit === 'per-100k-born') return `${Math.round(value).toLocaleString()} of 100,000`;
   // Demographic counts (lib/population/series.js): whole people, households, seats.
   if (unit === 'people' || unit === 'households' || unit === 'petitions' || unit === 'births') return Math.abs(value) >= 1e6 ? `${(value / 1e6).toFixed(1)} million` : Math.round(value).toLocaleString();
   if (unit === 'seats') return `${value} ${value === 1 ? 'seat' : 'seats'}`;
@@ -694,7 +695,7 @@ const UNIT_NAMES = {
   '%': 'Percent', '$/bbl': 'Dollars a barrel', '$/gal': 'Dollars a gallon', thousands: 'Thousands',
   'kb/d': 'Thousand barrels a day', kbbl: 'Thousand barrels', weeks: 'Weeks', hours: 'Hours a week', deaths: 'Deaths', x: 'Ratio', index: 'Index',
   people: 'People', 'average-people': 'People (average)', households: 'Households', petitions: 'Petitions', births: 'Births', 'per-1000': 'Per 1,000 people', 'per-1000-births': 'Per 1,000 live births',
-  'per-100k': 'Per 100,000 people', 'life-years': 'Years of life', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
+  'per-100k': 'Per 100,000 people', 'life-years': 'Years of life', 'per-100k-born': 'Survivors per 100,000 born', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
 };
 const FREQUENCY_NAMES = {
   daily: 'daily', weekly: 'weekly', 'four-week-average': 'four-week averages', monthly: 'monthly',

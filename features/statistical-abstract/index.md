@@ -436,9 +436,28 @@ Book order. **Section 1, Population:**
   Program `nchs-national-vital-statistics-system` collected (paths: the NVSR folder and each NCHS table on
   data.cdc.gov). All `partly`: NCHS stopped updating these tables between 2013 and 2019; the later final years are in
   NCHS's reports (PDF) and CDC WONDER. Two percent-distribution tables print damaged values and are left out.
-  Still to read for Section 2: the life tables (NVSR 75-05, 2024; tables 105, 106), the provisional quarterly
-  indicators to 2026 (`76vv-a7x8`, `489q-934x`, `jqwm-z2g9`), Health, United States 2020–21 (110, 115, 117, 124–129),
-  NSFG, the ART summary, the marriage and divorce rates (133).
+- **Health, United States, 2020–2021 (tables 104, 115, 117, 124–126, 128, 129; 2026-10-19).** The edition's trend
+  tables as Excel (data through 2019; later editions only in a Data Finder that refuses scripts), read in
+  `nchs-series.js` beside the data.cdc.gov tables, so a series both print is joined year by year (life expectancy and
+  infant mortality gain 2014–2019). Two layouts: `hus-across` (years across, groups as blocks of rows, causes indented
+  under their parent; SlctMort, SuicMort) and `hus-down` (years down, groups as column headings; LExpMort, IMMort).
+  605 more series: age-adjusted death rates for 21 causes by sex, race and Hispanic origin (1950–2019); suicide rates
+  by sex, race, Hispanic origin and age; life expectancy at birth, 65 and 75; infant, neonatal, early neonatal and
+  postneonatal mortality by race of child or mother. Where a table prints 2018 twice (bridged race, then single race),
+  the single-race printing is a race's `race_scope: alone` series, as for births. Names leave "age-adjusted" to the
+  description (NCHS's headline rate: "Lung Cancer Death Rate of Non-Hispanic Black People"); crude rates say "Crude".
+  Program `nchs-health-united-states` collected. The 2019 edition (on disk) has the age-specific rates for heart
+  disease, stroke, cancer and HIV (124–126, 129), not read.
+- **Life tables (tables 104–106, 108; 2026-10-19).** NCHS's U.S. life tables 2018–2024 (NVSR 69-12 to 75-05, one
+  workbook per group, single race; read in `nchs-series.js` as layout `life-table`, the folders listed in
+  `US_LIFE_TABLES`) give life expectancy and survivors (l(x), new measure, unit `per-100k-born`) at the Abstract's
+  ages 0, 1, 5, … 100 for 18 groups; the state life tables 2018–2022 give life expectancy at birth by state and sex.
+  Values rounded as the reports print them (one decimal; survivors whole): the workbooks carry float noise
+  (78.971031…). Life expectancy at birth, 65 and 75 now runs to 2024. Editions before 2018 (bridged race) are on disk,
+  not read.
+  Still to read for Section 2: the provisional quarterly
+  indicators to 2026 (`76vv-a7x8`, `489q-934x`, `jqwm-z2g9`), the leading-causes rankings (118–122), NSFG, the ART
+  summary, the marriage and divorce rates (133).
 
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see

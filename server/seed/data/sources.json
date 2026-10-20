@@ -1426,9 +1426,9 @@
       "description": "NCHS’s yearly report on the nation’s health, drawing on its surveys and others’: mortality, health behaviours, care, insurance, spending.",
       "homepage": "https://www.cdc.gov/nchs/hus/",
       "licence": { "type": "public-domain" },
-      "access": { "used": [], "best": "file" }, "collected": false,
+      "access": { "used": ["file"], "best": "file", "note": "The trend tables of the 2020–2021 edition (Excel, data through 2019) are read. Later editions are served only by the Data Finder on www.cdc.gov, which refuses scripts." },
       "status": "active",
-      "paths": []
+      "paths": ["ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/Health_US/"]
     },
     {
       "slug": "nchs-national-health-interview-survey", "name": "National Health Interview Survey (NHIS)",
