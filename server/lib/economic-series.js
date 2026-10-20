@@ -1420,7 +1420,7 @@ export function publisherTitle(s, files) {
       // Each table's title as Census prints it, then the row's labels (block down) or the column heading.
       return { title: censusTableTitle(s), from: 'Census table titles, and row labels or column headings' };
     case 'nchs':
-      return { title: nchsTitle(s), from: 'data.cdc.gov table title and column' };
+      return { title: nchsTitle(s), from: 'NCHS table title (data.cdc.gov, Health, United States, or the life tables) and column' };
     case 'dhs-yearbook':
       return { title: dhsYearbookTitle(s), from: 'DHS Yearbook table title, row label and column heading' };
     case 'census-nrs': {
