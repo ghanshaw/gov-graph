@@ -60,6 +60,7 @@
 //        refuses scripted requests, so the file comes from the Internet Archive (`archive`).
 //   census-trade  Census Bureau, U.S. trade in goods and services on a balance of payments basis
 //   census-tables Census Bureau printed tables collected for the Statistical Abstract's Section 1 (lib/census-tables.js)
+//   nchs      NCHS's vital statistics tables on data.cdc.gov for the Abstract's Section 2 (lib/nchs-series.js)
 //   dhs-yearbook  DHS's Yearbook of Immigration Statistics tables for the Abstract's Section 1 (lib/dhs-yearbook.js)
 //        (the FT-900 history), .xlsx: by year from 1960 (gands.xlsx) and by month, seasonally
 //        adjusted, from 1992 (exhibit_history.xlsx). A series is a column.
@@ -79,6 +80,7 @@ import { cpsSeries } from './cps-series.js';
 import { eiaSeries } from './eia-series.js';
 import { censusSeries, readCensusTable, censusTableTitle } from './census-tables.js';
 import { dhsSeries, readDhsYearbook, dhsYearbookTitle } from './dhs-yearbook.js';
+import { nchsSeries, readNchsSeries, nchsTitle } from './nchs-series.js';
 
 export const EIA_PET_BULK = 'https://www.eia.gov/opendata/bulk/PET.zip';
 const EIA_FREQUENCY = { daily: 'D', weekly: 'W', 'four-week-average': '4', monthly: 'M' };
@@ -783,9 +785,10 @@ const HAND_SERIES = [
 // written above at one frequency is added at the other as its twin.
 // Then every CPI-U item (U.S. city average) and every area's all-items index (lib/cpi-series.js), and the CPS series
 // printing the Abstract's labor force tables (lib/cps-series.js), and EIA's petroleum series for its tables (lib/eia-series.js),
-// and the Census printed tables of the Abstract's Section 1 (lib/census-tables.js), and DHS's immigration Yearbook (lib/dhs-yearbook.js).
+// and the Census printed tables of the Abstract's Section 1 (lib/census-tables.js), and DHS's immigration Yearbook (lib/dhs-yearbook.js),
+// and NCHS's vital statistics (lib/nchs-series.js).
 export const SERIES = [...HAND_SERIES, ...nameNipaSeries(nipaSeries(HAND_SERIES).series, new Set(HAND_SERIES.map(s => s.name))),
-  ...cpiSeries(HAND_SERIES), ...cpsSeries(HAND_SERIES), ...eiaSeries(HAND_SERIES), ...censusSeries(), ...dhsSeries()];
+  ...cpiSeries(HAND_SERIES), ...cpsSeries(HAND_SERIES), ...eiaSeries(HAND_SERIES), ...censusSeries(), ...dhsSeries(), ...nchsSeries()];
 
 /**
  * Where a series' downloaded rows are kept, under the API's own path with the series as the file
@@ -1329,6 +1332,7 @@ export function readObservations(s, file) {
   if (s.source === 'census-trade') return readCensusTrade(s, file);
   if (s.source === 'census-tables') return readCensusTable(s, file);
   if (s.source === 'dhs-yearbook') return readDhsYearbook(s, file);
+  if (s.source === 'nchs') return readNchsSeries(s, file);
   if (s.source === 'treasury-mts') return readMts(s, file);
   if (s.source === 'treasury-mts-1') return readMts1(s, file);
   if (s.source === 'treasury-mts-4') return readMts4(s, file);
@@ -1415,6 +1419,8 @@ export function publisherTitle(s, files) {
     case 'census-tables':
       // Each table's title as Census prints it, then the row's labels (block down) or the column heading.
       return { title: censusTableTitle(s), from: 'Census table titles, and row labels or column headings' };
+    case 'nchs':
+      return { title: nchsTitle(s), from: 'data.cdc.gov table title and column' };
     case 'dhs-yearbook':
       return { title: dhsYearbookTitle(s), from: 'DHS Yearbook table title, row label and column heading' };
     case 'census-nrs': {

@@ -37,8 +37,13 @@ export function formatValue(value, unit) {
   if (unit === '$') return `$${Math.round(value).toLocaleString()}`;
   if (unit === 'x') return `${value.toFixed(1)}×`;
   if (unit === 'deaths') return `${Math.round(value).toLocaleString()} deaths`;
+  // Vital statistics (lib/nchs-series.js): rates as NCHS prints them, and years of life expected.
+  if (unit === 'per-1000') return `${value} per 1,000`;
+  if (unit === 'per-1000-births') return `${value} per 1,000 births`;
+  if (unit === 'per-100k') return `${value} per 100,000`;
+  if (unit === 'life-years') return `${value.toFixed(1)} years`;
   // Demographic counts (lib/population/series.js): whole people, households, seats.
-  if (unit === 'people' || unit === 'households' || unit === 'petitions') return Math.abs(value) >= 1e6 ? `${(value / 1e6).toFixed(1)} million` : Math.round(value).toLocaleString();
+  if (unit === 'people' || unit === 'households' || unit === 'petitions' || unit === 'births') return Math.abs(value) >= 1e6 ? `${(value / 1e6).toFixed(1)} million` : Math.round(value).toLocaleString();
   if (unit === 'seats') return `${value} ${value === 1 ? 'seat' : 'seats'}`;
   if (unit === 'years') return `${value.toFixed(1)} years`;
   if (unit === 'average-people') return `${value.toFixed(2)} people`;
@@ -60,7 +65,7 @@ export function formatTick(value, unit) {
   if (unit === '$') return value >= 1000 ? `$${value / 1000}k` : `$${value}`;
   if (unit === 'x') return `${value}×`;
   if (unit === 'deaths') return value >= 1000 ? `${value / 1000}k` : String(value);
-  if (unit === 'people' || unit === 'households' || unit === 'petitions') {
+  if (unit === 'people' || unit === 'households' || unit === 'petitions' || unit === 'births') {
     const a = Math.abs(value);
     return a >= 1e6 ? `${+(value / 1e6).toFixed(2)}M` : a >= 1e3 ? `${+(value / 1e3).toFixed(1)}k` : String(value);
   }
@@ -76,12 +81,12 @@ export function formatChange(before, after, unit) {
     return `${pts > 0 ? '+' : pts < 0 ? '−' : ''}${Math.abs(pts).toFixed(1)} pts`;
   }
   // Seats, ages, average household sizes and the Gini index change by amounts, not by percent.
-  if (unit === 'seats' || unit === 'years' || unit === 'gini' || unit === 'average-people') {
+  if (unit === 'seats' || unit === 'years' || unit === 'life-years' || unit === 'gini' || unit === 'average-people') {
     const d = after - before;
     const sign = d > 0 ? '+' : d < 0 ? '−' : '';
     if (unit === 'seats') return `${sign}${Math.abs(d)} ${Math.abs(d) === 1 ? 'seat' : 'seats'}`;
     if (unit === 'average-people') return `${sign}${Math.abs(d).toFixed(2)} people`;
-    return unit === 'years' ? `${sign}${Math.abs(d).toFixed(1)} years` : `${sign}${Math.abs(d).toFixed(3)}`;
+    return unit === 'years' || unit === 'life-years' ? `${sign}${Math.abs(d).toFixed(1)} years` : `${sign}${Math.abs(d).toFixed(3)}`;
   }
   const pct = ((after - before) / Math.abs(before)) * 100;
   return `${pct > 0 ? '+' : pct < 0 ? '−' : ''}${Math.abs(pct).toFixed(1)}%`;
@@ -688,7 +693,8 @@ const DOLLAR_SCALE = { '$': 1, '$k': 1e3, '$m': 1e6, '$bn': 1e9 };
 const UNIT_NAMES = {
   '%': 'Percent', '$/bbl': 'Dollars a barrel', '$/gal': 'Dollars a gallon', thousands: 'Thousands',
   'kb/d': 'Thousand barrels a day', kbbl: 'Thousand barrels', weeks: 'Weeks', hours: 'Hours a week', deaths: 'Deaths', x: 'Ratio', index: 'Index',
-  people: 'People', 'average-people': 'People (average)', households: 'Households', petitions: 'Petitions', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
+  people: 'People', 'average-people': 'People (average)', households: 'Households', petitions: 'Petitions', births: 'Births', 'per-1000': 'Per 1,000 people', 'per-1000-births': 'Per 1,000 live births',
+  'per-100k': 'Per 100,000 people', 'life-years': 'Years of life', seats: 'House seats', years: 'Years of age', gini: 'Gini index',
 };
 const FREQUENCY_NAMES = {
   daily: 'daily', weekly: 'weekly', 'four-week-average': 'four-week averages', monthly: 'monthly',

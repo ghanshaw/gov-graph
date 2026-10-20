@@ -419,6 +419,27 @@ Book order. **Section 1, Population:**
   (unauthorized population) is a separate report, not downloaded. DHS's enforcement workbook (its Tables 33–42, fiscal 2022) is on disk
   for Abstract tables 530–533.
 
+**Section 2, Births, Deaths, Marriages, and Divorces:**
+- **NCHS vital statistics on data.cdc.gov (tables 78–80, 84, 85, 89, 104, 110, 111, 113–115, 117, 123; 2026-10-19).**
+  `server/lib/nchs-series.js` reads 15 of NCHS's tidy CSV tables (a year, breakdowns, value columns; `TABLES` says
+  which is which); `server/seed/build-nchs-series.js` writes `nchs-series.json`; load with `--source nchs`. 1,484
+  series (209 national, 1,275 state places of them): births, crude birth rate and general fertility rate (1909–2018),
+  by race and Hispanic origin (bridged race to 2015, single race alone from 2016, `race_scope: alone`) and Hispanic
+  group; birth rates by age (1940–2018), teen birth rates by race (1960–2019) and by state (1990–2019); births to
+  unmarried women and their birth rates (1940/1970–2015); life expectancy and age-adjusted death rates by race and sex
+  (1900–2018); age-adjusted death rates for five causes (1900–2018) and deaths and rates for the ten leading causes by
+  state (1999–2017); childhood death rates (1900–2018); infant and neonatal mortality (1915–2013). A series printed by
+  two tables takes each year from the first listed (teen birth rates gain 2019 from the state table). 7 measures
+  (births; birth rates; fertility rates; age-adjusted death rates; death rates; infant mortality rates; life
+  expectancy) plus the existing deaths measure; new form `per-population`, units `births`, `per-1000`,
+  `per-1000-births`, `per-100k`, `life-years`; breakdowns `hispanic_subgroup`, `cause_of_death`, `infant_period`.
+  Program `nchs-national-vital-statistics-system` collected (paths: the NVSR folder and each NCHS table on
+  data.cdc.gov). All `partly`: NCHS stopped updating these tables between 2013 and 2019; the later final years are in
+  NCHS's reports (PDF) and CDC WONDER. Two percent-distribution tables print damaged values and are left out.
+  Still to read for Section 2: the life tables (NVSR 75-05, 2024; tables 105, 106), the provisional quarterly
+  indicators to 2026 (`76vv-a7x8`, `489q-934x`, `jqwm-z2g9`), Health, United States 2020–21 (110, 115, 117, 124–129),
+  NSFG, the ART summary, the marriage and divorce rates (133).
+
 ## Open questions
 - **Economy tabs.** They cross-list (tariff revenue is under Trade and under Tax revenue; see
   `features/series-dimensions`). Keep them as they are and use the Abstract's order only in the catalogue, or

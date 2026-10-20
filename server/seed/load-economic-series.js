@@ -27,6 +27,7 @@ import pg from 'pg';
 import { storeSeries } from '../lib/series-storage.js';
 import { SERIES, SCHEMA, seriesFile, readObservations, publisherTitle, FED_OMO_PAGES, EIA_PET_BULK, eiaBulkId } from '../lib/economic-series.js';
 import { mirrorFile } from '../lib/data-dir.js';
+import { parseCsv } from '../lib/parse-fjc-justices.js';
 import { seriesNameProblems } from '../lib/series-names.js';
 
 const arg = name => {
@@ -84,6 +85,12 @@ function readSource(s) {
   if (s.source === 'eia') return readEiaBulkFile();
   // A Census table series may be read from several tables (one per decade), some by sheet.
   if (s.source === 'census-tables') return (url, sheet) => readFile(mirrorFile(url), false, sheet);
+  // NCHS's tables are CSVs; a series may be read from two.
+  if (s.source === 'nchs') return url => {
+    const file = mirrorFile(url);
+    if (!files.has(file)) files.set(file, parseCsv(fs.readFileSync(file, 'utf8')));
+    return files.get(file);
+  };
   // DHS's Yearbook shows a row's depth by its indent.
   if (s.source === 'dhs-yearbook') return (url, sheet) => {
     const key = `${mirrorFile(url)}#${sheet}#indents`;

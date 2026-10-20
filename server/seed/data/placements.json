@@ -73,7 +73,14 @@
       "population/native-and-foreign-born-populations/naturalization-petitions-filed": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [47], "reason": "Table 47 prints petitions for naturalization filed (DHS Yearbook Table 20)."},
       "population/native-and-foreign-born-populations/people-naturalized": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [47], "reason": "Table 47 prints persons naturalized (DHS Yearbook Table 20)."},
       "population/native-and-foreign-born-populations/naturalization-petitions-denied": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [47], "reason": "Table 47 prints petitions for naturalization denied (DHS Yearbook Table 20)."},
-      "population/native-and-foreign-born-populations/immigrant-orphans-adopted": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [46], "reason": "Table 46 prints immigrant orphans adopted by U.S. citizens (DHS Yearbook Table 12)."}
+      "population/native-and-foreign-born-populations/immigrant-orphans-adopted": {"category": "population/native-and-foreign-born-populations", "basis": "table", "tables": [46], "reason": "Table 46 prints immigrant orphans adopted by U.S. citizens (DHS Yearbook Table 12)."},
+      "births-deaths-marriages-and-divorces/births/births": {"category": "births-deaths-marriages-and-divorces/births", "basis": "table", "tables": [78, 79, 80, 85], "reason": "Tables 78–80 and 85 print NCHS’s births, by race, Hispanic origin and age of mother, and to unmarried women."},
+      "births-deaths-marriages-and-divorces/births/birth-rates": {"category": "births-deaths-marriages-and-divorces/births", "basis": "table", "tables": [78, 79, 80, 84, 85, 89], "reason": "Tables 78–80, 84, 85 and 89 print NCHS’s birth rates, overall and by age, race, Hispanic origin, marital status and state."},
+      "births-deaths-marriages-and-divorces/births/fertility-rates": {"category": "births-deaths-marriages-and-divorces/births", "basis": "table", "tables": [78, 79, 80], "reason": "Tables 78–80 print NCHS’s general fertility rates by race and Hispanic origin."},
+      "births-deaths-marriages-and-divorces/deaths/age-adjusted-death-rates": {"category": "births-deaths-marriages-and-divorces/deaths", "basis": "table", "tables": [111, 117, 123], "reason": "Tables 111, 117 and 123 print NCHS’s age-adjusted death rates by race, sex, cause and state."},
+      "births-deaths-marriages-and-divorces/deaths/death-rates": {"category": "births-deaths-marriages-and-divorces/deaths", "basis": "table", "tables": [110], "reason": "Table 110 prints death rates by age."},
+      "births-deaths-marriages-and-divorces/deaths/infant-mortality-rates": {"category": "births-deaths-marriages-and-divorces/deaths", "basis": "table", "tables": [114, 115], "reason": "Tables 114 and 115 print infant and neonatal mortality rates."},
+      "births-deaths-marriages-and-divorces/life-expectancy/life-expectancy": {"category": "births-deaths-marriages-and-divorces/life-expectancy", "basis": "table", "tables": [104], "reason": "Table 104 prints life expectancy at birth by race and sex."}
     }
   },
   "comparative-agendas": {
@@ -149,7 +156,14 @@
       "population/native-and-foreign-born-populations/naturalization-petitions-filed": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
       "population/native-and-foreign-born-populations/people-naturalized": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
       "population/native-and-foreign-born-populations/naturalization-petitions-denied": {"category": "900", "basis": "judgement", "reason": "Immigration: “issues related to immigration, refugees, and citizenship.”"},
-      "population/native-and-foreign-born-populations/immigrant-orphans-adopted": {"category": "900", "basis": "judgement", "reason": "Immigration: the children are admitted as immigrants (immediate relatives of U.S. citizens)."}
+      "population/native-and-foreign-born-populations/immigrant-orphans-adopted": {"category": "900", "basis": "judgement", "reason": "Immigration: the children are admitted as immigrants (immediate relatives of U.S. citizens)."},
+      "births-deaths-marriages-and-divorces/births/births": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself (as for households)."},
+      "births-deaths-marriages-and-divorces/births/birth-rates": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself (as for households)."},
+      "births-deaths-marriages-and-divorces/births/fertility-rates": {"category": "2013", "basis": "judgement", "reason": "Census & Statistics: CAP has no topic for population itself (as for households)."},
+      "births-deaths-marriages-and-divorces/deaths/age-adjusted-death-rates": {"category": "300", "basis": "judgement", "reason": "Health, General, as for deaths."},
+      "births-deaths-marriages-and-divorces/deaths/death-rates": {"category": "300", "basis": "judgement", "reason": "Health, General, as for deaths."},
+      "births-deaths-marriages-and-divorces/deaths/infant-mortality-rates": {"category": "300", "basis": "judgement", "reason": "Health, General, as for deaths."},
+      "births-deaths-marriages-and-divorces/life-expectancy/life-expectancy": {"category": "300", "basis": "judgement", "reason": "Health, General, as for deaths."}
     }
   }
 }

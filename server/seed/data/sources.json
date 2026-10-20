@@ -1416,9 +1416,9 @@
       "description": "Births, deaths, fetal deaths, life tables, and (until 1996 in detail) marriages and divorces, from the states’ records; the National Vital Statistics Reports and CDC WONDER.",
       "homepage": "https://www.cdc.gov/nchs/nvss/",
       "licence": { "type": "public-domain" },
-      "access": { "used": [], "best": "bulk" }, "collected": false,
+      "access": { "used": ["file"], "best": "bulk", "note": "NCHS’s vital statistics tables on data.cdc.gov (CSV; most stop between 2013 and 2019, when NCHS stopped updating them) and the life tables of the National Vital Statistics Reports (Excel). The later final years are in the reports’ PDFs and CDC WONDER." },
       "status": "active",
-      "paths": []
+      "paths": ["ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/NVSR/", "data.cdc.gov/api/v3/views/3h58-x6cd/", "data.cdc.gov/api/v3/views/44rk-q6r2/", "data.cdc.gov/api/v3/views/489q-934x/", "data.cdc.gov/api/v3/views/6rkc-nb2q/", "data.cdc.gov/api/v3/views/6tkz-y37d/", "data.cdc.gov/api/v3/views/76vv-a7x8/", "data.cdc.gov/api/v3/views/7pcd-2tnr/", "data.cdc.gov/api/v3/views/89yk-m38d/", "data.cdc.gov/api/v3/views/bi63-dtpu/", "data.cdc.gov/api/v3/views/ddsk-zebd/", "data.cdc.gov/api/v3/views/e6fc-ccez/", "data.cdc.gov/api/v3/views/e8kx-wbww/", "data.cdc.gov/api/v3/views/epev-k6ss/", "data.cdc.gov/api/v3/views/g6qk-ngsf/", "data.cdc.gov/api/v3/views/hdy7-e2a3/", "data.cdc.gov/api/v3/views/hzd8-r9mj/", "data.cdc.gov/api/v3/views/isx2-c2ii/", "data.cdc.gov/api/v3/views/jqwm-z2g9/", "data.cdc.gov/api/v3/views/jvf6-ix4w/", "data.cdc.gov/api/v3/views/jx6g-fdh6/", "data.cdc.gov/api/v3/views/mc4y-cbbv/", "data.cdc.gov/api/v3/views/nt65-c7a7/", "data.cdc.gov/api/v3/views/p56q-jrxg/", "data.cdc.gov/api/v3/views/pbkm-d27e/", "data.cdc.gov/api/v3/views/rg8a-czmp/", "data.cdc.gov/api/v3/views/rpvx-m2md/", "data.cdc.gov/api/v3/views/s54h-bixi/", "data.cdc.gov/api/v3/views/v6ab-adf5/", "data.cdc.gov/api/v3/views/vc9m-u7tv/", "data.cdc.gov/api/v3/views/vdpk-qzpr/", "data.cdc.gov/api/v3/views/w9j2-ggv5/", "data.cdc.gov/api/v3/views/xbxb-epbu/", "data.cdc.gov/api/v3/views/y268-sna3/", "data.cdc.gov/api/v3/views/yt7u-eiyg/"]
     },
     {
       "slug": "nchs-health-united-states", "name": "Health, United States",

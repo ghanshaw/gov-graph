@@ -17,6 +17,7 @@ import { CPS_MEASURES, cpsDimensions } from './cps-series.js';
 import { EIA_MEASURES, eiaDimensions } from './eia-series.js';
 import { CENSUS_TABLE_MEASURES, censusTableDimensions } from './census-tables.js';
 import { DHS_MEASURES, dhsDimensions } from './dhs-yearbook.js';
+import { NCHS_MEASURES, nchsDimensions } from './nchs-series.js';
 
 const V = (label, parent) => (parent ? { label, parent } : { label });
 export const DIMENSIONS = {
@@ -25,7 +26,7 @@ export const DIMENSIONS = {
     level: V('Amount'), rate: V('Rate'), index: V('Index'), 'growth-rate': V('Growth rate'),
     'share-of-gdp': V('Share of GDP'), 'share-of-total': V('Share of the total'), 'share-of-income': V('Share of income'),
     'share-of-expected': V('Share of expected'), 'share-of-national-income': V('Share of national income'),
-    'per-person': V('Per person'), 'per-employee': V('Per full-time employee'), 'purchasing-power': V('Value of a dollar'), average: V('Average'),
+    'per-person': V('Per person'), 'per-population': V('Per 1,000 or 100,000'), 'per-employee': V('Per full-time employee'), 'purchasing-power': V('Value of a dollar'), average: V('Average'),
   } },
   adjustment: { label: 'Dollars', values: { nominal: V('Dollars of the day'), real: V('Adjusted for inflation') } },
   seasonal: { label: 'Seasonal adjustment', values: {
@@ -233,6 +234,15 @@ for (const [id, d] of Object.entries(dhsDimensions())) {
   for (const [value, label] of Object.entries(d.values)) DIMENSIONS[id].values[value] ??= V(label);
 }
 for (const [key, m] of Object.entries(DHS_MEASURES)) MEASURES[key] = { label: m.label, dims: m.dims };
+// NCHS's vital statistics (lib/nchs-series.js): deaths join the CDC's COVID-19 counts' measure.
+for (const [id, d] of Object.entries(nchsDimensions())) {
+  DIMENSIONS[id] ??= { label: d.label, values: {} };
+  for (const [value, label] of Object.entries(d.values)) DIMENSIONS[id].values[value] ??= V(label);
+}
+for (const [key, m] of Object.entries(NCHS_MEASURES)) {
+  if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
+  else MEASURES[key] = { label: m.label, dims: m.dims };
+}
 for (const [key, m] of Object.entries(CPS_MEASURES)) {
   if (MEASURES[key]) MEASURES[key].dims = [...new Set([...MEASURES[key].dims, ...m.dims])];
   else MEASURES[key] = { label: m.label, dims: m.dims };
@@ -527,7 +537,7 @@ function readLabels(s) {
 const FREQUENCY = { daily: 'daily', weekly: 'weekly', 'four-week-average': 'four-week', monthly: 'monthly', quarterly: 'quarterly',
   annual: 'yearly', 'fiscal-year': 'yearly', irregular: 'irregular' };
 const PUBLISHER = { eia: 'eia', bls: 'bls', 'bls-bulk': 'bls', bea: 'bea', treasury: 'treasury', 'treasury-mts': 'treasury',
-  'treasury-mts-1': 'treasury', 'census-tables': 'census', 'dhs-yearbook': 'dhs', 'treasury-mts-4': 'treasury', 'treasury-dts': 'treasury', 'treasury-dts-iv': 'treasury', omb: 'omb',
+  'treasury-mts-1': 'treasury', 'census-tables': 'census', 'dhs-yearbook': 'dhs', nchs: 'cdc', 'treasury-mts-4': 'treasury', 'treasury-dts': 'treasury', 'treasury-dts-iv': 'treasury', omb: 'omb',
   cbo: 'cbo', 'irs-soi': 'irs', usitc: 'usitc', census: 'census', 'census-nrs': 'census', 'census-trade': 'census', umich: 'umich',
   freddiemac: 'freddiemac', fhfa: 'fhfa', atlantafed: 'atlantafed', cdc: 'cdc', 'fed-h15': 'fed', 'fed-omo': 'fed' };
 const DOLLARS = /^\$/;
