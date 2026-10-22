@@ -7,13 +7,13 @@ import Crumbs from '../components/Crumbs';
 import { RailGroup, RadioOptions, Fact } from '../components/Rail';
 import Loading from '../components/Loading';
 import SearchBox from '../components/SearchBox';
-import { bytes, LICENCE_CHIP, accessChip, ABSTRACT_OPTIONS, publishers } from '../sources';
+import { bytes, LICENCE_CHIP, accessChip, ABSTRACT_OPTIONS, DOWNLOAD_OPTIONS, publishers } from '../sources';
 
 // Every program (statistics) and collection (documents) GovGraph uses (seed/data/sources.json): who publishes it,
 // its terms, how it is fetched, and what was downloaded. Programs first, then collections, each in the file's order.
 export default function DataSources() {
   const { data, loading, error } = useQuery(GET_SOURCE_PROGRAMS);
-  const [filters, setFilters] = useState({ publisher: null, licence: null, access: null, abstract: null });
+  const [filters, setFilters] = useState({ publisher: null, licence: null, access: null, abstract: null, download: null });
   const [search, setSearch] = useState('');
   const all = data?.sourcePrograms ?? [];
   const vocabulary = data?.sourceVocabulary;
@@ -31,6 +31,7 @@ export default function DataSources() {
     licence: v => d => d.licence === v,
     access: v => d => d.accessUsed.includes(v),
     abstract: v => ABSTRACT_OPTIONS.find(o => o.value === v).test,
+    download: v => DOWNLOAD_OPTIONS.find(o => o.value === v).test,
   };
   const passes = (d, except) => matches(d) && Object.entries(filters).every(([key, v]) => key === except || v == null || tests[key](v)(d));
   const shown = all.filter(d => passes(d));
@@ -56,6 +57,11 @@ export default function DataSources() {
         <Fact label="Publishers">{organizations}</Fact>
         <Fact label="Files">{files.toLocaleString()}</Fact>
         <Fact label="On disk">{bytes(size)}</Fact>
+      </RailGroup>
+      <RailGroup title="Downloads">
+        <RadioOptions label="Downloads"
+          options={options('download', Object.fromEntries(DOWNLOAD_OPTIONS.map(o => [o.value, o.label])))}
+          value={filters.download} onChange={set('download')} />
       </RailGroup>
       <RailGroup title="Publisher">
         <RadioOptions label="Publisher" options={options('publisher', vocabulary.organizationKinds)} value={filters.publisher} onChange={set('publisher')} />
@@ -126,7 +132,8 @@ export default function DataSources() {
                   <td className="wide-only">
                     <div className="chips">
                       {d.collected ? d.accessUsed.map(a => <span key={a} className={accessChip(a)}>{vocabulary.access[a]}</span>)
-                        : <span className="chip">Not collected</span>}
+                        : <span className="chip">{d.fileCount ? 'Downloaded, not loaded' : 'Not collected'}</span>}
+                      {d.downloadState === 'to-get' && <span className="chip">Still to get</span>}
                     </div>
                   </td>
                   <td className="date">

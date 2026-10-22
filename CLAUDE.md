@@ -619,6 +619,9 @@ program (`sources.test.js`, and the loader reports files that match none).
 - A program the Statistical Abstract does not cite has `in_abstract: false` and says why (`outside_abstract`).
 - The University of Michigan's consumer sentiment and Freddie Mac's mortgage rates are kept for now, although
   their terms forbid republishing (user, 2026-10-13); both are recorded as `free-with-terms` with the limits quoted.
+- Downloads (2026-10-21): a file fetched by `fetch-downloads.js` belongs to the program whose `downloads.json` entry
+  listed it (`plannedFiles`, `lib/downloads.js`), so every file in the data folder has a program. Each program page shows
+  its download list and what of it is not on disk (`SourceProgram.downloadPlan`); `/sources` filters by Downloads.
 - The list page has a search field (every word must appear in a program's name, description, notes or its
   organizations' names) that combines with the rail's filters; it is not kept in the URL.
 - Every downloader calls `recordFetch(file, url, { archive })` (`lib/data-dir.js`), which appends to

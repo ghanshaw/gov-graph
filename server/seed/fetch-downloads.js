@@ -17,8 +17,8 @@ import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
 import { pipeline } from 'stream/promises';
-import { readDownloads, expandEntry, SIZES_FILE } from '../lib/downloads.js';
-import { DATA_DIR, mirrorFile, recordFetch } from '../lib/data-dir.js';
+import { readDownloads, readSizes, plannedFiles, ARCHIVED } from '../lib/downloads.js';
+import { DATA_DIR, recordFetch } from '../lib/data-dir.js';
 import { polite, headersFor, htmlExpected } from '../lib/polite-fetch.js';
 
 const arg = name => {
@@ -32,38 +32,11 @@ const MIN_FREE = Number(arg('--min-free') ?? 8) * 1e9;
 const AT_ONCE = 6;
 
 const downloads = readDownloads();
-const sizes = JSON.parse(fs.readFileSync(SIZES_FILE, 'utf8'));
+const sizes = readSizes();
 
-// The names given in downloads.json, for URLs whose path does not end in the file's name (Output.aspx?rel=G19).
-const names = new Map();
-for (const p of Object.values(downloads.programs)) {
-  for (const e of p.files ?? []) {
-    if (!e.name) continue;
-    const urls = expandEntry(e);
-    const years = e.years ? String(e.years) : null;
-    urls.forEach((u, i) => {
-      const y = years ? String(expandEntry({ url: '{year}', years })[i]) : null;
-      names.set(u, y ? e.name.replaceAll('{year}', y).replaceAll('{yy}', y.slice(-2)) : e.name);
-    });
-  }
-}
-
-// An Internet Archive capture is kept at the original address, with the capture in the log.
-const ARCHIVED = /^https?:\/\/web\.archive\.org\/web\/\d+(?:id_)?\/(https?:\/\/.+)$/;
-
-/** Where a URL is saved: the publisher's path, its given name in that folder, or index.html for a page address. */
-function fileFor(url) {
-  const original = url.match(ARCHIVED)?.[1] ?? url;
-  const u = new URL(original);
-  const base = mirrorFile(u.origin + u.pathname);
-  const name = names.get(url);
-  if (name) return path.join(u.pathname.endsWith('/') ? base : path.dirname(base), name);
-  return u.pathname.endsWith('/') ? path.join(base, 'index.html') : base;
-}
-
-const todo = Object.entries(sizes.files)
-  .filter(([, f]) => f.status < 400 && downloads.programs[f.program]?.files && (!ONLY || ONLY.includes(f.program)))
-  .map(([url, f]) => ({ url, program: f.program, bytes: f.bytes ?? 0, file: fileFor(url) }));
+const todo = plannedFiles(downloads, sizes)
+  .filter(f => f.status < 400 && downloads.programs[f.program]?.files && (!ONLY || ONLY.includes(f.program)))
+  .map(f => ({ url: f.url, program: f.program, bytes: f.bytes ?? 0, file: f.file }));
 
 const taken = new Map();
 for (const t of todo) {

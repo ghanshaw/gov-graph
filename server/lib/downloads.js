@@ -19,6 +19,9 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { mirrorFile, DATA_DIR } from './data-dir.js';
+
+const dataPath = file => path.relative(DATA_DIR, file).split(path.sep).join('/');
 
 const DATA = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'seed', 'data');
 export const DOWNLOADS_FILE = path.join(DATA, 'downloads.json');
@@ -75,4 +78,43 @@ export function checkDownloads(downloads, sources) {
     }
   }
   return problems;
+}
+
+export const readSizes = () => JSON.parse(fs.readFileSync(SIZES_FILE, 'utf8'));
+
+// An Internet Archive capture is kept at the original address, with the capture in the log.
+export const ARCHIVED = /^https?:\/\/web\.archive\.org\/web\/\d+(?:id_)?\/(https?:\/\/.+)$/;
+
+/** The names given in downloads.json, for URLs whose path does not end in the file's name (Output.aspx?rel=G19). */
+function givenNames(downloads) {
+  const names = new Map();
+  for (const p of Object.values(downloads.programs)) {
+    for (const e of p.files ?? []) {
+      if (!e.name) continue;
+      const urls = expandEntry(e);
+      const years = e.years ? String(e.years) : null;
+      urls.forEach((u, i) => {
+        const y = years ? String(expandEntry({ url: '{year}', years })[i]) : null;
+        names.set(u, y ? e.name.replaceAll('{year}', y).replaceAll('{yy}', y.slice(-2)) : e.name);
+      });
+    }
+  }
+  return names;
+}
+
+/**
+ * Every file measured into download-sizes.json, with where 5b saves it in the data folder (`path`, relative, with
+ * forward slashes; `file` is the full path): the publisher's path, its given name in that folder, or index.html for a
+ * page address: [{ url, program, status, bytes, file, path }]. Files that failed to measure (status 400 and over) are included.
+ */
+export function plannedFiles(downloads = readDownloads(), sizes = readSizes()) {
+  const names = givenNames(downloads);
+  return Object.entries(sizes.files).map(([url, f]) => {
+    const u = new URL(url.match(ARCHIVED)?.[1] ?? url);
+    const base = mirrorFile(u.origin + u.pathname);
+    const name = names.get(url);
+    const file = name ? path.join(u.pathname.endsWith('/') ? base : path.dirname(base), name)
+      : u.pathname.endsWith('/') ? path.join(base, 'index.html') : base;
+    return { url, program: f.program, status: f.status ?? null, bytes: f.bytes ?? null, file, path: dataPath(file) };
+  });
 }

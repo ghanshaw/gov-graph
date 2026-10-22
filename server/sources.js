@@ -12,6 +12,8 @@ import { cpsTable } from './lib/cps-series.js';
 import { eiaTable } from './lib/eia-series.js';
 import { dhsTable } from './lib/dhs-yearbook.js';
 import { coverageReport, COVERAGE, SHAPES } from './lib/abstract-coverage.js';
+import fs from 'fs';
+import { readDownloads, readSizes, plannedFiles, DOWNLOADS_FILE, SIZES_FILE, NEEDS } from './lib/downloads.js';
 
 const PROGRAM_COLUMNS = `d.slug, d.name, d.kind, d.description, d.homepage, d.licence, d.licence_detail AS "licenceDetail",
   d.access_used AS "accessUsed", d.access_best AS "accessBest", d.access_key AS "accessKey", d.access_contact AS "accessContact",
@@ -130,6 +132,65 @@ function indexOfSeries() {
   return seriesIndex;
 }
 
+// The download list (lib/downloads.js: downloads.json, measured into download-sizes.json), read from the files and kept
+// until one changes; which of its files are on disk comes from source_files, refreshed every minute (paths compared
+// without case, as the disk compares them).
+let downloadList = null;
+function readDownloadList() {
+  const stamp = [DOWNLOADS_FILE, SIZES_FILE].map(f => fs.statSync(f).mtimeMs).join();
+  if (downloadList?.stamp !== stamp) {
+    const downloads = readDownloads();
+    const sizes = readSizes();
+    const byProgram = new Map();
+    for (const f of plannedFiles(downloads, sizes)) {
+      if (!byProgram.has(f.program)) byProgram.set(f.program, []);
+      byProgram.get(f.program).push(f);
+    }
+    downloadList = { stamp, programs: downloads.programs, files: byProgram, errors: sizes.listing_errors ?? {} };
+  }
+  return downloadList;
+}
+
+let pathsOnDisk = null;
+function onDisk() {
+  if (!pathsOnDisk) {
+    pathsOnDisk = pool.query('SELECT path FROM source_files')
+      .then(({ rows }) => new Set(rows.map(r => r.path.toLowerCase())))
+      .catch(e => { pathsOnDisk = null; throw e; });
+    setTimeout(() => { pathsOnDisk = null; }, 60_000);
+  }
+  return pathsOnDisk;
+}
+
+// Why a listed file is not on disk, from what measuring it found (download-sizes.json `status`).
+const missingReason = status => (status === 'html' ? 'A web page came back, not the file'
+  : Number(status) >= 400 ? `Refused (HTTP ${status})` : 'Not fetched yet');
+
+/**
+ * A program's entry on the download list and what of it is still to get: files listed but not on disk (refused when
+ * measured, or not fetched), folders or pages that listed nothing, and anything only an API key, web pages or a
+ * decision would get (`needs`). Null for a program not on the list.
+ */
+async function downloadPlan(slug) {
+  const list = readDownloadList();
+  const d = list.programs[slug];
+  if (!d) return null;
+  const disk = await onDisk();
+  const files = list.files.get(slug) ?? [];
+  const missing = files.filter(f => !disk.has(f.path.toLowerCase()))
+    .map(f => ({ url: f.url, path: f.path, bytes: f.bytes, status: Number(f.status) || null, reason: missingReason(f.status) }));
+  const listingErrors = list.errors[slug] ?? [];
+  const toGet = missing.length > 0 || listingErrors.length > 0 || Boolean(d.needs);
+  return {
+    checked: d.checked, needs: d.needs ?? null, needsLabel: NEEDS[d.needs] ?? null, none: d.none ?? null, note: d.note ?? null,
+    draft: Boolean(d.draft), entries: d.files ?? [],
+    listed: files.length, listedBytes: files.reduce((n, f) => n + (f.bytes ?? 0), 0), have: files.length - missing.length,
+    missing, listingErrors, toGet,
+    // to-get: something is left to fetch or settle; nothing: the program has no file to get (ended, or printed elsewhere).
+    state: toGet ? 'to-get' : d.none ? 'nothing' : 'done',
+  };
+}
+
 const TABLE_SERIES = {
   cps: { ids: cpsTable, source: 'bls-bulk', name: 'Current Population Survey' },
   eia: { ids: eiaTable, source: 'eia', name: 'EIA petroleum data' },
@@ -195,6 +256,10 @@ export const sourceResolvers = {
     },
   },
   SourceProgram: {
+    // Its entry on the download list (downloads.json) and what is still to get.
+    downloadPlan: d => downloadPlan(d.slug),
+    // to-get | nothing | done, or null when it is not on the download list.
+    downloadState: async d => (await downloadPlan(d.slug))?.state ?? null,
     // The Abstract's tables that cite this program.
     abstractTables: d => coverageReport().byProgram.get(d.slug) ?? [],
     // Files by the folder they are in, in path order.

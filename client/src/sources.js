@@ -27,6 +27,14 @@ export const ABSTRACT_OPTIONS = [
   { value: 'unknown', label: 'Not yet compared', test: d => d.inAbstract == null },
 ];
 
+// Where a program stands on the download list (server/sources.js, downloadPlan); a program may be in more than one.
+export const DOWNLOAD_OPTIONS = [
+  { value: 'files', label: 'Files on disk', test: d => d.fileCount > 0 },
+  { value: 'to-get', label: 'Still to get', test: d => d.downloadState === 'to-get' },
+  { value: 'nothing', label: 'No file to get', test: d => d.downloadState === 'nothing' },
+  { value: 'none', label: 'Nothing downloaded', test: d => d.fileCount === 0 },
+];
+
 export const publishers = d => d.organizations.filter(o => o.role === 'publisher').map(o => o.organization);
 
 // How much of an Abstract table GovGraph holds (lib/abstract-coverage.js), as a chip; the order the report counts them in.

@@ -100,7 +100,8 @@ export default function SourceProgram() {
           {l.limits && <><dt>Limits</dt><dd>{l.limits}</dd></>}
           {l.note && <><dt>Note</dt><dd>{l.note}</dd></>}
           {l.checked && <><dt>Checked</dt><dd>{shortDate(l.checked)}</dd></>}
-          {!d.collected && <><dt>Collected</dt><dd>{d.licence === 'licensed' ? 'No: licensed data is listed here but not collected.' : 'Not yet: a Statistical Abstract table names it.'}</dd></>}
+          {!d.collected && <><dt>Collected</dt><dd>{d.licence === 'licensed' ? 'No: licensed data is listed here but not collected.'
+            : d.fileCount ? 'Downloaded, not loaded yet.' : 'Not yet: a Statistical Abstract table names it.'}</dd></>}
         </dl>
       </section>
 
@@ -193,6 +194,8 @@ export default function SourceProgram() {
         </section>
       )}
 
+      {d.downloadPlan && <DownloadList plan={d.downloadPlan} />}
+
       {d.folders.length > 0 && (
         <section className="page-section">
           <h2 className="section-title">Files</h2>
@@ -209,6 +212,82 @@ export default function SourceProgram() {
         </section>
       )}
     </PageLayout>
+  );
+}
+
+// What one entry of the download list asks for, in words.
+function entryText(e) {
+  const where = e.url ?? e.list ?? e.catalog;
+  const what = e.catalog ? `Datasets titled /${e.title}/ in the catalog`
+    : e.list ? `Every file ${e.page ? 'the page links to' : 'in the folder'}${e.match ? ` matching /${e.match}/` : ''}${e.recursive ? ', with subfolders' : ''}${e.follow ? `, through pages matching /${e.follow}/` : ''}`
+    : 'One file';
+  return { where, what: e.years ? `${what}, ${e.years}` : what };
+}
+
+// The program's entry on the download list (seed/data/downloads.json, Phase 5a) and what of it is not on disk.
+function DownloadList({ plan }) {
+  const [showAll, setShowAll] = useState(false);
+  const missing = showAll ? plan.missing : plan.missing.slice(0, 50);
+  const summary = plan.state === 'nothing' ? 'No file to get'
+    : plan.toGet ? 'Still to get' : 'Everything listed is on disk';
+  return (
+    <section className="page-section">
+      <h2 className="section-title">Download list <small>{summary}</small></h2>
+      <dl className="source-terms">
+        {plan.needsLabel && <><dt>Left to settle</dt><dd><span className="chip">{plan.needsLabel}</span></dd></>}
+        {plan.none && <><dt>No file</dt><dd>{plan.none}</dd></>}
+        {plan.note && <><dt>Note</dt><dd>{plan.note}</dd></>}
+        {plan.listed > 0 && (
+          <><dt>Files</dt><dd>{plan.have.toLocaleString()} of {plan.listed.toLocaleString()} on disk{plan.listedBytes > 0 && ` (${bytes(plan.listedBytes)} measured)`}</dd></>
+        )}
+        <dt>Checked</dt><dd>{shortDate(plan.checked)}{plan.draft && ' (draft, not yet reviewed)'}</dd>
+      </dl>
+      {plan.entries.length > 0 && (
+        <table className="records">
+          <thead><tr><th>What the list asks for</th></tr></thead>
+          <tbody>
+            {plan.entries.map((e, i) => {
+              const { where, what } = entryText(e);
+              return (
+                <tr key={i}>
+                  <td className="title">
+                    {what}<span className="sub mono">{external(where.replace(/\{y(ear|y)\}/g, '…'), where)}</span>
+                    {e.note && <span className="sub">{e.note}</span>}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+      {plan.listingErrors.length > 0 && (
+        <>
+          <h3 className="download-subhead">Listed nothing</h3>
+          <ul className="source-lineage">{plan.listingErrors.map(x => <li key={x} className="mono">{x}</li>)}</ul>
+        </>
+      )}
+      {plan.missing.length > 0 && (
+        <>
+          <h3 className="download-subhead">Not on disk <small>{plan.missing.length.toLocaleString()}</small></h3>
+          <table className="records">
+            <thead><tr><th>File</th><th className="date">Size</th><th className="wide-only">Why</th></tr></thead>
+            <tbody>
+              {missing.map(f => (
+                <tr key={f.url}>
+                  <td className="mono">{external(f.url, f.path)}</td>
+                  <td className="date">{f.bytes ? bytes(f.bytes) : '—'}</td>
+                  <td className="meta wide-only">{f.reason}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {plan.missing.length > missing.length && (
+            <button type="button" className="btn" onClick={() => setShowAll(true)}>Show all {plan.missing.length.toLocaleString()}</button>
+          )}
+        </>
+      )}
+      <p className="note">From the download list (Phase 5a), the files each program needs from its publisher; fetched into the data folder in Phase 5b.</p>
+    </section>
   );
 }
 

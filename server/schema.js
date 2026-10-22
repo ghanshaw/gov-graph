@@ -523,6 +523,35 @@ export const typeDefs = `#graphql
     abstractTables: [AbstractTable!]!
     folders(limit: Int): [SourceFolder!]!
     series(limit: Int): [ProgramSeries!]!
+    downloadPlan: DownloadPlan
+    downloadState: String  # to-get | nothing | done; null when not on the download list
+  }
+
+  # A program's entry on the download list (seed/data/downloads.json, measured into download-sizes.json;
+  # lib/downloads.js) and what of it is not on disk.
+  type DownloadPlan {
+    checked: String!
+    needs: String          # api-key | scrape | decision: left for the user to settle
+    needsLabel: String
+    none: String           # why there is no file to fetch
+    note: String
+    draft: Boolean!
+    entries: JSON!         # the list's entries: { url | list | catalog, years, match, follow, title, note }
+    listed: Int!           # files the entries came to when measured
+    listedBytes: Float!
+    have: Int!             # of those, on disk
+    missing: [MissingFile!]!
+    listingErrors: [String!]!  # folders, pages or catalogs that listed nothing
+    toGet: Boolean!
+    state: String!         # to-get | nothing | done
+  }
+
+  type MissingFile {
+    url: String!
+    path: String!          # where it would be saved in the data folder
+    bytes: Float
+    status: Int
+    reason: String!
   }
 
   # A report of an investigation (reports; seed/data/reports.json): a commission's, a congressional

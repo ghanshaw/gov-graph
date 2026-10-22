@@ -1225,6 +1225,8 @@ ol.usc-outline > li { position: relative; padding-left: 16px; }
 .source-terms { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 8px 16px; margin: 0; font-size: 14px; line-height: 1.55; max-width: 760px; }
 .source-terms dt { color: var(--muted); font-size: 13px; }
 .source-terms dd { margin: 0; }
+.download-subhead { font-size: 13px; font-weight: 600; margin: 18px 0 8px; }
+.download-subhead small { margin-left: 6px; font-weight: 400; color: var(--muted); }
 .source-text { margin: 0; font-size: 14px; line-height: 1.6; max-width: 760px; }
 .inline-link { color: var(--accent); white-space: nowrap; }
 .inline-link:hover { text-decoration: underline; text-underline-offset: 3px; }

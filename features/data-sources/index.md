@@ -5,7 +5,7 @@ Renamed 2026-10-13 to follow `GLOSSARY.md`: the middle level of the sources is a
 one date-and-value line (`economic_series`).
 
 ## Status
-In use (2026-10-14). The sources are recorded and loaded: 45 organizations, 8 lineage entries, 44 programs, about 24,300
+In use (2026-10-14; downloads shown in the app 2026-10-21). The sources are recorded and loaded: 45 organizations, 8 lineage entries, 44 programs, about 24,300
 files, and all 51,406 economic and demographic series linked to a program. `/sources` and `/sources/:program` read
 them. Economic data no longer uses API keys (2026-10-13). Next: Congress.gov off its key (including the app's live call),
 then govinfo and CourtListener; the contact address only where required. The Statistical Abstract's Phase 3 adds
@@ -139,6 +139,14 @@ here. The Abstract's coverage report (`features/statistical-abstract`, Phase 3) 
 - `courtlistener.com/scotus-slip-opinions.json` is GovGraph's own match list, not a download.
 
 ## Done
+- [x] Downloads in the app (2026-10-21): every file 5b fetched belongs to the program whose download list fetched it
+  (`plannedFiles` in `lib/downloads.js`, shared with `fetch-downloads.js`; paths compared without case), so all 45,561
+  files (37 GB) now sit under a program, none unmatched. Each program page has a "Download list" section (what
+  `downloads.json` asks for, files on disk of those listed, what is not on disk and why, folders that listed nothing,
+  anything left to settle: API key, web pages only, a decision); `/sources` has a Downloads filter (Files on disk, Still
+  to get, No file to get, Nothing downloaded) and marks "Downloaded, not loaded" and "Still to get". GraphQL
+  `SourceProgram.downloadPlan` / `downloadState`, read from the files. As of today: 177 programs done, 85 still to get,
+  18 with no file to get; 142 listed files not on disk (119 answered with a web page, 23 refused)
 - [x] Coverage of the Statistical Abstract: `/sources/abstract-coverage`, each program's Abstract tables, table counts in the list (2026-10-14)
 - [x] Agreed the model (2026-10-13)
 - [x] `sources.json`: 44 organizations, 8 lineage entries, 43 datasets; non-federal terms read and dated (2026-10-13)

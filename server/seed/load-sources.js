@@ -22,6 +22,7 @@ import pg from 'pg';
 import { DATA_DIR, valuesClause } from '../lib/data-dir.js';
 import { readSources, checkSources, pathMatcher, seriesMatcher, readFetchLog, urlFromPath, SCHEMA } from '../lib/sources.js';
 import { SCHEMA as SERIES_SCHEMA } from '../lib/economic-series.js';
+import { plannedFiles } from '../lib/downloads.js';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const FILES = !process.argv.includes('--no-files');
@@ -45,9 +46,16 @@ const sha256 = file => new Promise((resolve, reject) => {
 
 const megabytes = bytes => `${(bytes / 1e6).toFixed(1)} MB`;
 
-/** Every file in the data folder: { path, program, size, modified_at }. */
+/**
+ * Every file in the data folder: { path, program, size, modified_at }. A file belongs to the program whose `paths`
+ * hold it, else to the program whose download list (downloads.json, Phase 5b) fetched it. Paths are compared without
+ * case: the disk ignores it, so va.gov/vetdata/… was saved into the VETDATA folder already there.
+ */
 function scan(programs) {
-  const programOf = pathMatcher(programs);
+  const byPath = pathMatcher(programs);
+  const known = new Set(programs.map(d => d.slug));
+  const planned = new Map(plannedFiles().filter(f => known.has(f.program)).map(f => [f.path.toLowerCase(), f.program]));
+  const programOf = rel => byPath(rel) ?? planned.get(rel.toLowerCase()) ?? null;
   const files = [];
   for (const full of walk(DATA_DIR)) {
     const stat = fs.statSync(full);

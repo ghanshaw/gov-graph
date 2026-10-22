@@ -673,7 +673,7 @@ const ABSTRACT_TABLE_FIELDS = `
 const SOURCE_PROGRAM_FIELDS = `
   slug name kind kindLabel description homepage licence licenceLabel licenceDetail
   accessUsed accessBest accessKey accessContact accessNote status statusLabel ended successor successorName
-  collected inAbstract outsideAbstract notes fileCount fileBytes lastModified seriesCount abstractTableCount
+  collected inAbstract outsideAbstract notes fileCount fileBytes lastModified seriesCount abstractTableCount downloadState
   organizations { role organization { slug name shortName kind kindLabel branch parent parentName url notes } }
 `;
 
@@ -693,6 +693,10 @@ export const GET_SOURCE_PROGRAM = gql`
       folders(limit: 200) { path count bytes lastModified }
       series(limit: 500) { slug name frequency unit firstDate lastDate }
       abstractTables { ${ABSTRACT_TABLE_FIELDS} }
+      downloadPlan {
+        checked needs needsLabel none note draft entries listed listedBytes have listingErrors toGet state
+        missing { url path bytes status reason }
+      }
     }
     sourceVocabulary
   }
