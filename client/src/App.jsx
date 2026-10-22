@@ -23,6 +23,7 @@ import AbstractCoverage from './pages/AbstractCoverage';
 import SourceProgram from './pages/SourceProgram';
 import TagsIndex from './pages/TagsIndex';
 import TagPage from './pages/TagPage';
+import Favorites from './pages/Favorites';
 import ExecutiveOrders from './pages/ExecutiveOrders';
 import People from './pages/People';
 import Person from './pages/Person';
@@ -63,6 +64,7 @@ export default function App() {
           <Route path="/sources/:slug" element={<SourceProgram />} />
           <Route path="/tags" element={<TagsIndex />} />
           <Route path="/tags/:word" element={<TagPage />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/executive-orders" element={<ExecutiveOrders />} />
           <Route path="/people" element={<People />} />
           <Route path="/people/:id" element={<Person />} />

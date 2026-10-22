@@ -16,6 +16,7 @@ const NAV = [
   { to: '/taxonomies', label: 'Taxonomies' },
   { to: '/sources', label: 'Sources' },
   { to: '/tags', label: 'Tags' },
+  { to: '/favorites', label: 'Favorites' },
 ];
 
 export default function Header() {

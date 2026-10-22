@@ -6,6 +6,7 @@ import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
 import Loading from '../components/Loading';
 import TagPanel from '../components/TagPanel';
+import FavoriteButton from '../components/FavoriteButton';
 import { RailGroup } from '../components/Rail';
 import { SectionItems } from '../components/OrderText';
 import { renderSpans } from '../components/spans';
@@ -106,6 +107,7 @@ export default function UsCodeSection() {
       </dl>
 
       <div className="actions">
+        <FavoriteButton itemRef={`usc:${s.identifier}`} />
         {structure.items.length > 0 && (
           <button type="button" className={showText ? 'btn active' : 'btn'} aria-expanded={showText} aria-controls="usc-text" onClick={() => setShowText(v => !v)}>
             {showText ? 'Hide full text' : 'Show full text'}

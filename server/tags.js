@@ -27,7 +27,7 @@ export const SCHEMA = `
 export const normalizeWord = word =>
   (word ?? '').trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-const REF = /^(fr|bill|scotus|usc|report):(.+)$/;
+export const REF = /^(fr|bill|scotus|usc|report):(.+)$/;
 
 const ordinal = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] ?? 'th');
 

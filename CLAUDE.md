@@ -78,6 +78,10 @@ does not define most of these. Tags: `tags` (the word) and `item_tags` (which it
 `fr:<document number>`, `bill:<source_id>`, `scotus:<slug>`, `usc:<identifier>`, `report:<slug>`), in `server/tags.js`;
 applied by hand only, and a new word is created on purpose, never by applying it (`features/tagging-system`).
 Collections, which draw on tags and rules, are planned in `features/collections`.
+Favorites: `users` (the app's users; never joined to `people`) and `favorites` (`user_id`, `ref`, `favorited_at`),
+by the same refs as tags, in `server/users.js` and `server/favorites.js`, created by `server/seed/create-user.js`.
+There is no sign-in: every request acts as `CURRENT_USER_ID` from `server/.env`, read only by `currentUser(req)`,
+which puts the user on the Apollo context (`context.user`) (`features/favorites`).
 
 `executive_documents`: `id` (uuid), `doc_type`, `number`, `title`, `president_id`,
 `signed_date`, `body`, `source_id` (unique; Federal Register document number), `source_url`,

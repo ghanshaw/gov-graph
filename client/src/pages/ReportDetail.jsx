@@ -9,6 +9,7 @@ import ReportText from '../components/ReportText';
 import ReportOutline from '../components/ReportOutline';
 import Loading from '../components/Loading';
 import TagPanel from '../components/TagPanel';
+import FavoriteButton from '../components/FavoriteButton';
 import { formatDate } from '../people';
 
 // govinfo's PDFs cannot be framed directly; server/pdf.js passes them through (/pdf/govinfo/…).
@@ -114,6 +115,7 @@ export default function ReportDetail() {
       </dl>
 
       <div className="actions">
+        <FavoriteButton itemRef={`report:${r.slug}`} />
         {structure && toggle(showText, setShowText, 'report-text', ['Show full text', 'Hide full text'])}
         {wholePdf && toggle(showPdf, setShowPdf, 'report-pdf', ['Show PDF', 'Hide PDF'])}
         {structure?.recommendations?.length > 0 && toggle(showRecs, setShowRecs, 'report-recommendations',

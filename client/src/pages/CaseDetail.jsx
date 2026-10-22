@@ -6,6 +6,7 @@ import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
 import { RailGroup, RadioOptions, Fact } from '../components/Rail';
 import TagPanel from '../components/TagPanel';
+import FavoriteButton from '../components/FavoriteButton';
 import OpinionText from '../components/OpinionText';
 import OpinionOutline from '../components/OpinionOutline';
 import CaseOutcome from '../components/CaseOutcome';
@@ -104,6 +105,7 @@ function Decision({ courtSlug, slug }) {
       </dl>
 
       <div className="actions">
+        <FavoriteButton itemRef={`scotus:${d.slug}`} />
         {structure && (
           <button
             type="button"

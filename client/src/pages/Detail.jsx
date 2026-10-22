@@ -6,6 +6,7 @@ import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
 import { RailGroup, RadioOptions, Fact } from '../components/Rail';
 import TagPanel from '../components/TagPanel';
+import FavoriteButton from '../components/FavoriteButton';
 import OrderText from '../components/OrderText';
 import OrderOutline from '../components/OrderOutline';
 import Loading from '../components/Loading';
@@ -127,6 +128,7 @@ export default function Detail() {
       </dl>
 
       <div className="actions">
+        {order.documentNumber && <FavoriteButton itemRef={`fr:${order.documentNumber}`} />}
         {hasText && (
           <button
             type="button"

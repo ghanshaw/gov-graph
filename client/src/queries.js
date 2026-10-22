@@ -472,6 +472,33 @@ export const DELETE_TAG = gql`
   }
 `;
 
+// Favorites of the current user (server/favorites.js), by item ref.
+export const GET_FAVORITE_STATE = gql`
+  query GetFavoriteState($ref: String!) {
+    me { id }
+    isFavorite(ref: $ref)
+  }
+`;
+
+export const GET_FAVORITES = gql`
+  query GetFavorites {
+    me { id name }
+    favorites { ref kind label title date href favoritedAt }
+  }
+`;
+
+export const ADD_FAVORITE = gql`
+  mutation AddFavorite($ref: String!) {
+    addFavorite(ref: $ref)
+  }
+`;
+
+export const REMOVE_FAVORITE = gql`
+  mutation RemoveFavorite($ref: String!) {
+    removeFavorite(ref: $ref)
+  }
+`;
+
 // People (members of Congress, presidents, vice presidents) and what they did in each role.
 export const GET_PEOPLE = gql`
   query GetPeople($search: String, $roleType: String, $current: Boolean, $party: String, $state: String, $sort: String, $page: Int, $perPage: Int) {

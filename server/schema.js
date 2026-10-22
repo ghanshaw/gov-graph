@@ -42,6 +42,24 @@ export const typeDefs = `#graphql
     note: String
   }
 
+  # A user of the app (server/users.js); not a person in \`people\`.
+  type User {
+    id: String!
+    name: String!
+  }
+
+  # An item the current user keeps (server/favorites.js), by the same refs as tags.
+  # kind is null if the item is no longer stored.
+  type FavoriteItem {
+    ref: String!
+    kind: String
+    label: String
+    title: String
+    date: String
+    href: String
+    favoritedAt: String!
+  }
+
   type TagPageResult {
     tag: Tag!
     items: [TaggedItem!]!
@@ -898,6 +916,11 @@ export const typeDefs = `#graphql
     tags: [Tag!]!
     tagPage(word: String!): TagPageResult
     tagsForItem(ref: String!): [Tag!]!
+
+    # The current user (CURRENT_USER_ID until there is sign-in); null if none is set.
+    me: User
+    favorites: [FavoriteItem!]!
+    isFavorite(ref: String!): Boolean!
   }
 
   type Mutation {
@@ -908,5 +931,9 @@ export const typeDefs = `#graphql
     describeTag(word: String!, description: String): Tag!
     mergeTag(from: String!, into: String!): Tag!
     deleteTag(word: String!): Boolean!
+
+    # Favorites of the current user (server/favorites.js). Each returns whether the item is now a favorite.
+    addFavorite(ref: String!): Boolean!
+    removeFavorite(ref: String!): Boolean!
   }
 `;

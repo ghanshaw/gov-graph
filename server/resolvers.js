@@ -12,6 +12,8 @@ import { sourceQueries, sourceResolvers } from './sources.js';
 import { economicQueries, economicResolvers } from './economic.js';
 import { uscQueries } from './usc.js';
 import { tagQueries, tagMutations } from './tags.js';
+import { userQueries } from './users.js';
+import { favoriteQueries, favoriteMutations } from './favorites.js';
 import { populationQueries } from './population.js';
 import { withUscReferences } from './lib/usc-references.js';
 import { parseBillQuery, KIND_WEIGHT } from './lib/bill-search.js';
@@ -401,6 +403,8 @@ export const resolvers = {
     ...economicQueries,
     ...uscQueries,
     ...tagQueries,
+    ...userQueries,
+    ...favoriteQueries,
     ...populationQueries,
     executiveOrders: async (_, { president, documentType = 'executive_order', page = 1, perPage = 20, search, year, order }) => {
       // Federal Register sort orders; anything else falls back to oldest first.
@@ -982,5 +986,6 @@ export const resolvers = {
 
   Mutation: {
     ...tagMutations,
+    ...favoriteMutations,
   },
 };

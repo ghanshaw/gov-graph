@@ -6,6 +6,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs } from './schema.js';
 import { resolvers } from './resolvers.js';
 import { pdfRouter } from './pdf.js';
+import { currentUser } from './users.js';
 
 https.globalAgent.setMaxListeners(50);
 
@@ -18,7 +19,10 @@ await server.start();
 
 app.use(cors());
 app.use(express.json());
-app.use('/graphql', expressMiddleware(server));
+// Resolvers read the user from context.user; only currentUser knows where it comes from.
+app.use('/graphql', expressMiddleware(server, {
+  context: async ({ req }) => ({ user: await currentUser(req) }),
+}));
 app.use('/pdf', pdfRouter);
 
 app.get('/health', (_, res) => res.json({ status: 'ok' }));

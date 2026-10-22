@@ -6,6 +6,7 @@ import PageLayout from '../components/PageLayout';
 import Crumbs from '../components/Crumbs';
 import { RailGroup, RadioOptions, Fact } from '../components/Rail';
 import TagPanel from '../components/TagPanel';
+import FavoriteButton from '../components/FavoriteButton';
 import BillText from '../components/BillText';
 import BillOutline from '../components/BillOutline';
 import BillVotes from '../components/BillVotes';
@@ -453,6 +454,7 @@ export default function BillDetail() {
 
       {/* Same row of buttons as the executive order page, without the full text for now. */}
       <div className="actions">
+        <FavoriteButton itemRef={`bill:${bill.id}`} />
         {packageId && (
           <button
             type="button"
